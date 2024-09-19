@@ -43,9 +43,11 @@ export default function ToolCategories() {
         </div>
 
         <div className="mt-16 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Can't find what you're looking for?</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Can&apos;t find what you&apos;re looking for?
+          </h2>
           <p className="text-xl text-gray-300 mb-8">
-            We're always adding new tools. Let us know what you need!
+            We&apos;re always adding new tools. Let us know what you need!
           </p>
           <Link
             href="/contact"

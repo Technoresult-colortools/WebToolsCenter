@@ -11,7 +11,6 @@ import {Switch} from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Copy, Download, Plus, Minus, RotateCcw } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
-import { Value } from '@radix-ui/react-select';
 
 type GradientStop = {
   color: string;
@@ -231,9 +230,9 @@ export default function GradientGeneratorPage() {
           <ol className="list-decimal list-inside text-white space-y-2">
             <li>Choose a gradient type: linear, radial, or conic.</li>
             <li>Adjust the angle for linear and conic gradients.</li>
-            <li>Toggle the "Repeating Gradient" switch for a repeating pattern.</li>
+            <li>Toggle the &quot;Repeating Gradient&quot; switch for a repeating pattern.</li>
             <li>Add or remove color stops (minimum 2, maximum 5).</li>
-            <li>Adjust each color stop's color and position.</li>
+            <li>Adjust each color stop&apos;s color and position.</li>
             <li>Copy the generated CSS code or download the gradient as a PNG.</li>
             <li>Use the Reset button to start over with default settings.</li>
           </ol>
