@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {Button} from "@/components/ui/Button";
@@ -12,32 +12,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Copy, Download, Plus, Minus, RotateCcw } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 
-type GradientStop = {
-  color: string;
-  position: number;
-};
-
 type GradientType = 'linear' | 'radial' | 'conic';
 
 export default function GradientGeneratorPage() {
-  const [stops, setStops] = useState<GradientStop[]>([
+  const [stops, setStops] = useState([
     { color: '#ff0000', position: 0 },
     { color: '#0000ff', position: 100 },
   ]);
-  const [gradientType, setGradientType] = useState<GradientType>('linear');
+  const [gradientType, setGradientType] = useState('linear');
   const [angle, setAngle] = useState(90);
   const [repeating, setRepeating] = useState(false);
   const [cssCode, setCssCode] = useState('');
 
-  useEffect(() => {
-    generateCssCode();
-  }, [stops, gradientType, angle, repeating]);
-
-  const generateCssCode = () => {
+  const generateCssCode = useCallback(() => {
     const sortedStops = [...stops].sort((a, b) => a.position - b.position);
     const stopsString = sortedStops.map(stop => `${stop.color} ${stop.position}%`).join(', ');
-    let gradientString = '';
 
+    let gradientString = '';
     if (gradientType === 'linear') {
       gradientString = `${repeating ? 'repeating-' : ''}linear-gradient(${angle}deg, ${stopsString})`;
     } else if (gradientType === 'radial') {
@@ -47,7 +38,10 @@ export default function GradientGeneratorPage() {
     }
 
     setCssCode(`background: ${gradientString};`);
-  };
+  }, [stops, gradientType, angle, repeating]); 
+  useEffect(() => {
+    generateCssCode(); 
+  }, [generateCssCode]); 
 
   const addStop = () => {
     if (stops.length < 5) {
@@ -142,8 +136,8 @@ export default function GradientGeneratorPage() {
                       min={0}
                       max={360}
                       step={1}
-                      value={angle}  // Ensure Value is a number
-                      onChange={(value) => setAngle(value)}  // onChange should match SliderProps
+                      value={angle} 
+                      onChange={(value) => setAngle(value)} 
                     />
 
                   </div>

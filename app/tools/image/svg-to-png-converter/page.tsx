@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
+import NextImage from 'next/image';
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +22,8 @@ export default function SvgToPngConverter() {
   const [error, setError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'image/svg+xml') {
@@ -29,6 +32,7 @@ export default function SvgToPngConverter() {
       setSvgUrl(url);
       setPngUrl('');
       setError(null);
+      loadSvgDimensions(url);
       toast.success('SVG file uploaded successfully!');
     } else {
       toast.error('Please upload a valid SVG file.');
@@ -36,9 +40,25 @@ export default function SvgToPngConverter() {
   };
 
   const handleUrlInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSvgUrl(event.target.value);
+    const url = event.target.value;
+    setSvgUrl(url);
     setPngUrl('');
     setError(null);
+    if (url) {
+      loadSvgDimensions(url);
+    }
+  };
+
+  const loadSvgDimensions = (url: string) => {
+    const img = new Image();
+    img.onload = () => {
+      setSvgDimensions({ width: img.width, height: img.height });
+    };
+    img.onerror = () => {
+      setError('Failed to load SVG dimensions.');
+      toast.error('Failed to load SVG.');
+    };
+    img.src = url;
   };
 
   const handleConvert = useCallback(async () => {
@@ -137,6 +157,9 @@ export default function SvgToPngConverter() {
                 <span className="mt-2 text-base leading-normal">Select SVG file</span>
                 <input type="file" className="hidden" onChange={handleFileUpload} accept=".svg,image/svg+xml" />
               </label>
+              {svgFile && (
+                <p className="text-white mt-2">Uploaded File: {svgFile.name}</p>
+              )}
               <div className="flex items-center space-x-2">
                 <Input
                   type="text"
@@ -163,12 +186,11 @@ export default function SvgToPngConverter() {
             <div className="mb-8">
               <h3 className="text-xl font-bold text-white mb-4">SVG Preview</h3>
               <div className="relative h-64 bg-gray-700 rounded-lg overflow-hidden">
-                <img 
+                <NextImage 
                   src={svgUrl} 
-                  alt="SVG Preview" 
+                  alt="SVG Preview"
+                  fill 
                   style={{ 
-                    width: '100%', 
-                    height: '100%', 
                     objectFit: 'contain',
                     backgroundColor: showBackground ? backgroundColor : 'transparent'
                   }}
@@ -223,26 +245,24 @@ export default function SvgToPngConverter() {
             <div className="mb-8">
               <h3 className="text-xl font-bold text-white mb-4">PNG Preview</h3>
               <div className="relative h-64 bg-gray-700 rounded-lg overflow-hidden">
-                <img 
-                  src={pngUrl} 
-                  alt="PNG Preview" 
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                <NextImage
+                  src={pngUrl}
+                  alt="PNG Preview"
+                  fill
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
             </div>
           )}
 
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button onClick={handleConvert} className="bg-green-600 hover:bg-green-700 text-white" disabled={isLoading}>
-              {isLoading ? 'Converting...' : 'Convert to PNG'}
+          <div className="flex space-x-4">
+            <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Download size={20} />
+              <span className="ml-2">Download PNG</span>
             </Button>
-            <Button onClick={handleDownload} disabled={!pngUrl} className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50">
-              <Download className="h-5 w-5 mr-2" />
-              Download PNG
-            </Button>
-            <Button onClick={handleReset} className="bg-red-600 hover:bg-red-700 text-white">
-              <RefreshCw className="h-5 w-5 mr-2" />
-              Reset
+            <Button onClick={handleReset} className="bg-yellow-600 hover:bg-yellow-700 text-white">
+              <RefreshCw size={20} />
+              <span className="ml-2">Reset</span>
             </Button>
           </div>
         </div>

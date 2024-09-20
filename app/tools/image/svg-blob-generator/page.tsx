@@ -51,21 +51,21 @@ export default function SVGBlobGenerator() {
   useEffect(() => {
     if (isAnimating) {
       const animate = () => {
-        generateBlobs(); // Update blobs
-        animationRef.current = requestAnimationFrame(animate); // Continue the animation
+        generateBlobs(); 
+        animationRef.current = requestAnimationFrame(animate);
       };
       
-      animationRef.current = requestAnimationFrame(animate); // Start the animation
+      animationRef.current = requestAnimationFrame(animate); 
     } else {
       if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current); // Stop the animation
-        animationRef.current = undefined; // Clear the reference
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = undefined;
       }
     }
     
     return () => {
       if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current); // Cleanup on unmount
+        cancelAnimationFrame(animationRef.current); 
       }
     };
   }, [isAnimating]);
