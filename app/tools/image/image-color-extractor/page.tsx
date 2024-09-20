@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { Upload, X } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -23,12 +24,6 @@ export default function ColorExtractor() {
       document.body.removeChild(script);
     };
   }, []);
-
-  useEffect(() => {
-    if (image) {
-      extractColors(image);
-    }
-  }, [colorCount, image]);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -68,16 +63,17 @@ export default function ColorExtractor() {
   };
 
   const extractColors = React.useCallback((imageSrc: string) => {
-    const img = new Image();
+    const NativeImage = window.Image; 
+    const img = new NativeImage();
     img.crossOrigin = 'Anonymous';
     img.onload = () => {
       const colorThief = (window as any).ColorThief ? new (window as any).ColorThief() : null;
       if (colorThief) {
-        const palette = colorThief.getPalette(img, colorCount);
-        setColors(palette.map((color: number[]) => {
-          const hex = rgbToHex(color[0], color[1], color[2]);
-          const rgb = `RGB: ${color[0]}, ${color[1]}, ${color[2]}`;
-          const hsl = rgbToHsl(color[0], color[1], color[2]);
+        const palette: number[][] = colorThief.getPalette(img, colorCount);
+        setColors(palette.map(([r, g, b]) => {
+          const hex = rgbToHex(r, g, b);
+          const rgb = `RGB: ${r}, ${g}, ${b}`;
+          const hsl = rgbToHsl(r, g, b);
           return { hex, rgb, hsl };
         }));
       } else {
@@ -86,6 +82,12 @@ export default function ColorExtractor() {
     };
     img.src = imageSrc;
   }, [colorCount]);
+  
+  useEffect(() => {
+    if (image) {
+      extractColors(image);
+    }
+  }, [colorCount, image]);
   
   useEffect(() => {
     if (image) {
@@ -151,11 +153,11 @@ export default function ColorExtractor() {
               />
             </div>
           ) : (
-            <div className="relative" ref={imageContainerRef}>
+            <div className="relative" ref={imageContainerRef} style={{ width: '400px', height: '400px' }}>
               <img
                 src={image}
                 alt="Uploaded"
-                className="max-w-full h-auto rounded-lg mx-auto"
+                className="w-full h-full object-cover rounded-lg mx-auto"
               />
               <button
                 className="absolute top-0 right-0 m-2 text-white bg-red-500 hover:bg-red-700 rounded-full p-2"
@@ -167,6 +169,7 @@ export default function ColorExtractor() {
                 <X size={24} />
               </button>
             </div>
+
           )}
         </div>
 
