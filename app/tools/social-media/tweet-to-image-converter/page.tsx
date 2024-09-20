@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, } from 'react';
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
-import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, Camera, Maximize, Image, Twitter } from 'lucide-react';
+import { Download, Camera, Maximize, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import html2canvas from 'html2canvas';
@@ -28,11 +26,11 @@ type GradientKey = keyof typeof gradients;
 export default function TweetToImageConverter() {
   const [tweetUrl, setTweetUrl] = useState('');
   const [tweetData, setTweetData] = useState({
-    username: '10015io',
-    handle: '@10015io',
-    content: 'Hello world! 👋 Do you know that 10015.io offers the best online tool for converting tweets into fancy images with lots of customization options? 📸🎨🔧',
-    date: 'Feb 19, 2022',
-    time: '7:13 PM',
+    username: 'WebToolsCenter',
+    handle: '@WTS',
+    content: 'Hello world! 👋 WebCenterTools has lot of online tools, this Tweet to image convertsion tool, convert your Tweets to fancy Images? 📸🎨🔧',
+    date: 'Sep 20, 2024',
+    time: '7:13 AM',
   });
   const [layout, setLayout] = useState<'wide' | 'compact' | 'square'>('wide');
   const [backgroundType, setBackgroundType] = useState<'gradient' | 'solid' | 'image'>('gradient');
@@ -46,8 +44,42 @@ export default function TweetToImageConverter() {
   const tweetRef = useRef<HTMLDivElement>(null);
 
   const handleCapture = async () => {
-    // In a real implementation, this would fetch the tweet data from the Twitter API
-    // For this example, we'll just use the mock data
+    const tweetId = tweetUrl.split('/').pop(); // Extract tweet ID from URL
+  
+    if (!tweetId) {
+      toast.error('Invalid Tweet URL');
+      return;
+    }
+  
+    try {
+      const response = await fetch(`https://api.twitter.com/2/tweets/${tweetId}?expansions=author_id&tweet.fields=created_at&user.fields=username`, {
+        headers: {
+          'Authorization': `Bearer AAAAAAAAAAAAAAAAAAAAAMbtvwEAAAAAbnarBuH8OkIA1Baj85Z96PlphCY%3DyzTVutYe4oY7fwep7MX53m7LBEAfCk1HP56xUUX9Abw43KubPy`, // Use your Bearer Token here
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch tweet');
+      }
+  
+      const data = await response.json();
+      const tweet = data.data;
+      const user = data.includes.users[0];
+  
+      setTweetData({
+        username: user.name,
+        handle: `@${user.username}`,
+        content: tweet.text,
+        date: new Date(tweet.created_at).toLocaleDateString(),
+        time: new Date(tweet.created_at).toLocaleTimeString(),
+      });
+  
+      toast.success('Tweet captured successfully!');
+    } catch (error) {
+      console.error('Error fetching tweet:', error);
+      toast.error('Failed to capture tweet');
+    }
+  
     toast.success('Tweet captured successfully!');
   };
 

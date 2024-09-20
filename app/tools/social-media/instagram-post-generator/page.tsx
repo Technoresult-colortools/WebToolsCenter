@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, Upload, Instagram, Camera, User, Calendar, Hash, MapPin, Clock } from 'lucide-react';
+import { Download, Camera, User, Settings } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -34,6 +34,7 @@ export default function InstagramPostGenerator() {
   const [hashtags, setHashtags] = useState('');
   const [mentions, setMentions] = useState('');
   const [postTime, setPostTime] = useState('');
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     const now = new Date();
@@ -76,92 +77,101 @@ export default function InstagramPostGenerator() {
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Instagram Post Generator</h1>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-6xl mx-auto mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Post Preview</h2>
-              <div className={`bg-${theme === 'light' ? 'white' : 'gray-900'} rounded-lg overflow-hidden`}>
-                <div className="p-4 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
-                      {avatarUrl ? (
-                        <img src={avatarUrl} alt="User avatar" className="w-full h-full object-cover" />
-                      ) : (
-                        <User className="w-full h-full text-gray-600" />
-                      )}
-                    </div>
-                    <div>
-                      <p className={`font-semibold ${theme === 'light' ? 'text-black' : 'text-white'}`}>
-                        {username}
-                        {isVerified && (
-                          <span className="ml-1 text-blue-500">✓</span>
-                        )}
-                      </p>
-                      <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>{description}</p>
-                    </div>
+          {/* Preview Section */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-4">Post Preview</h2>
+            <div className={`bg-${theme === 'light' ? 'white' : 'gray-900'} rounded-lg overflow-hidden`}>
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
+                    {avatarUrl ? (
+                      <img src={avatarUrl} alt="User avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-full h-full text-gray-600" />
+                    )}
                   </div>
-                  <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>•••</button>
+                  <div>
+                    <p className={`font-semibold ${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                      {username}
+                      {isVerified && (
+                        <span className="ml-1 text-blue-500">✓</span>
+                      )}
+                    </p>
+                    <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>{description}</p>
+                  </div>
                 </div>
-                <div className="aspect-w-1 aspect-h-1 bg-gray-200">
-                  {postImageUrl ? (
-                    <img src={postImageUrl} alt="Post image" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Camera className="w-16 h-16 text-gray-400" />
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex space-x-4">
-                      <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                      </button>
-                      <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                        </svg>
-                      </button>
-                      <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                        </svg>
-                      </button>
-                    </div>
+                <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>•••</button>
+              </div>
+              <div className="aspect-w-1 aspect-h-1 bg-gray-200">
+                {postImageUrl ? (
+                  <img src={postImageUrl} alt="Post image" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Camera className="w-16 h-16 text-gray-400" />
+                  </div>
+                )}
+              </div>
+              <div className="p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex space-x-4">
                     <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      </svg>
+                    </button>
+                    <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                    </button>
+                    <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                       </svg>
                     </button>
                   </div>
-                  <p className={`font-semibold ${theme === 'light' ? 'text-black' : 'text-white'} mb-1`}>{likeCount.toLocaleString()} likes</p>
-                  <p className={`${theme === 'light' ? 'text-black' : 'text-white'}`}>
-                    <span className="font-semibold">{username}</span> {postText}
-                  </p>
-                  {hashtags && (
-                    <p className={`text-blue-500 mt-1`}>
-                      {hashtags.split(',').map(tag => `#${tag.trim()}`).join(' ')}
-                    </p>
-                  )}
-                  {mentions && (
-                    <p className={`text-blue-500 mt-1`}>
-                      {mentions.split(',').map(mention => `@${mention.trim()}`).join(' ')}
-                    </p>
-                  )}
-                  <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} mt-2`}>
-                    View all {commentCount.toLocaleString()} comments
-                  </p>
-                  <p className={`text-xs ${theme === 'light' ? 'text-gray-500' : 'text-gray-500'} mt-1`}>
-                    {postDate} {postTime}
-                  </p>
+                  <button className={`text-${theme === 'light' ? 'gray-600' : 'gray-400'}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                    </svg>
+                  </button>
                 </div>
+                <p className={`font-semibold ${theme === 'light' ? 'text-black' : 'text-white'} mb-1`}>{likeCount.toLocaleString()} likes</p>
+                <p className={`${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                  <span className="font-semibold">{username}</span> {postText}
+                </p>
+                {hashtags && (
+                  <p className={`text-blue-500 mt-1`}>
+                    {hashtags.split(',').map(tag => `#${tag.trim()}`).join(' ')}
+                  </p>
+                )}
+                {mentions && (
+                  <p className={`text-blue-500 mt-1`}>
+                    {mentions.split(',').map(mention => `@${mention.trim()}`).join(' ')}
+                  </p>
+                )}
+                <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'} mt-2`}>
+                  View all {commentCount.toLocaleString()} comments
+                </p>
+                <p className={`text-xs ${theme === 'light' ? 'text-gray-500' : 'text-gray-500'} mt-1`}>
+                  {postDate} {postTime}
+                </p>
               </div>
             </div>
+          </div>
 
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Post Settings</h2>
-              <div className="space-y-4">
+          {/* Compact Settings Button */}
+          <div className="flex justify-center mb-4">
+            <Button onClick={() => setShowSettings(!showSettings)} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Settings className="h-5 w-5 mr-2" />
+              {showSettings ? 'Hide Settings' : 'Show Settings'}
+            </Button>
+          </div>
+
+          {/* Settings Section */}
+          {showSettings && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
                   <Select value={theme} onValueChange={setTheme}>
@@ -249,7 +259,7 @@ export default function InstagramPostGenerator() {
                 </div>
 
                 <div>
-                  <Label htmlFor="post-text" className="text-white mb-2 block">Post Text (max. 2200 characters)</Label>
+                  <Label htmlFor="post-text" className="text-white mb-2 block">Post Text</Label>
                   <Textarea
                     id="post-text"
                     value={postText}
@@ -261,7 +271,7 @@ export default function InstagramPostGenerator() {
                 </div>
 
                 <div>
-                  <Label htmlFor="hashtags" className="text-white mb-2 block">Hashtags (comma-separated)</Label>
+                  <Label htmlFor="hashtags" className="text-white mb-2 block">Hashtags</Label>
                   <Input
                     id="hashtags"
                     value={hashtags}
@@ -272,7 +282,7 @@ export default function InstagramPostGenerator() {
                 </div>
 
                 <div>
-                  <Label htmlFor="mentions" className="text-white mb-2 block">Mentions (comma-separated)</Label>
+                  <Label htmlFor="mentions" className="text-white mb-2 block">Mentions</Label>
                   <Input
                     id="mentions"
                     value={mentions}
@@ -381,7 +391,7 @@ export default function InstagramPostGenerator() {
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="mt-8 flex justify-center">
             <Button onClick={handleExport} className="bg-blue-600 hover:bg-blue-700 text-white">

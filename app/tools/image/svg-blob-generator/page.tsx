@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Sliders, Download, Copy, Layers, Play, Pause, RefreshCw, Upload, Link } from 'lucide-react'
+import {  Download, Copy, Play, Pause, RefreshCw, Upload,} from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
@@ -43,7 +43,7 @@ export default function SVGBlobGenerator() {
   const [selectedLayer, setSelectedLayer] = useState<string>('1')
   const [isAnimating, setIsAnimating] = useState(false)
   const [animationSpeed, setAnimationSpeed] = useState(50)
-  const [canvasSize, setCanvasSize] = useState({ width: 400, height: 400 })
+  const [canvasSize, ] = useState({ width: 400, height: 400 })
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const animationRef = useRef<number>()

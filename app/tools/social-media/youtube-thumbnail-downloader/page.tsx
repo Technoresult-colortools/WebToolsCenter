@@ -6,6 +6,8 @@ import React, { useState, useRef } from 'react'
 import { Search, Download, RefreshCw, Clipboard, Check, AlertCircle, Image as ImageIcon } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Image from 'next/image';
+
 
 interface ThumbnailQuality {
   url: string
@@ -30,7 +32,8 @@ function YouTubeThumbnailDownloader() {
   const fetchThumbnails = async () => {
     setError('')
     setThumbnails([])
-    setLoading(true)
+    setLoading(true);
+  
 
     const videoId = extractVideoId(videoUrl)
     if (!videoId) {
@@ -38,30 +41,43 @@ function YouTubeThumbnailDownloader() {
       setLoading(false)
       return
     }
+    
 
+    type ThumbnailQuality = {
+      url: string;
+      width: number;
+      height: number;
+    };
+    
     try {
-      const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=AIzaSyA0PxWAlxu6KE9o9bkn1K5mjlbtBFiSmes`)
-      const data = await response.json()
-
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=AIzaSyA0PxWAlxu6KE9o9bkn1K5mjlbtBFiSmes`
+      );
+      const data = await response.json();
+    
       if (data.items && data.items.length > 0) {
-        const thumbnailsData = data.items[0].snippet.thumbnails
-        const thumbnailQualities: ThumbnailQuality[] = Object.values(thumbnailsData)
-          .map((thumb: any) => ({
+        const thumbnailsData = data.items[0].snippet.thumbnails;
+        const thumbnailQualities: ThumbnailQuality[] = (Object.values(thumbnailsData) as {
+          url: string;
+          width: number;
+          height: number;
+        }[])
+          .map((thumb) => ({
             url: thumb.url,
             width: thumb.width,
-            height: thumb.height
+            height: thumb.height,
           }))
-          .sort((a, b) => b.width - a.width)
-
-        setThumbnails(thumbnailQualities)
+          .sort((a, b) => b.width - a.width);        
+    
+        setThumbnails(thumbnailQualities);
       } else {
-        setError('No thumbnail found for this video')
+        setError('No thumbnail found for this video');
       }
     } catch (err) {
-      setError('Failed to fetch thumbnail. Please try again.')
+      setError('Failed to fetch thumbnail. Please try again.');
     }
-
-    setLoading(false)
+    
+    setLoading(false);
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -148,11 +164,14 @@ function YouTubeThumbnailDownloader() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {thumbnails.map((thumb, index) => (
                   <div key={index} className="bg-gray-700 rounded-lg p-4">
-                    <img
-                      src={thumb.url}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="w-full h-auto rounded-md mb-2"
+                    <Image 
+                      src={thumb.url} 
+                      alt="Video Thumbnail" 
+                      width={thumb.width} 
+                      height={thumb.height} 
+                      layout="responsive" 
                     />
+
                     <p className="text-white mb-2">
                       Quality: {thumb.width}x{thumb.height}
                     </p>

@@ -19,6 +19,12 @@ type FontSettings = {
   letterSpacing: number;
 };
 
+type Font = {
+  family: string;
+  category: string;
+  variants: string[];
+};
+
 const initialHeadingFont: FontSettings = {
   family: 'Roboto',
   size: 32,
@@ -39,7 +45,7 @@ export default function GoogleFontsPairFinder() {
   const [headingFont, setHeadingFont] = useState<FontSettings>(initialHeadingFont);
   const [bodyFont, setBodyFont] = useState<FontSettings>(initialBodyFont);
   const [activeTab, setActiveTab] = useState<'profile' | 'article' | 'card'>('profile');
-  const [fonts, setFonts] = useState<any[]>([]);
+  const [fonts, setFonts] = useState<Font[]>([]);
   const [loadingFonts, setLoadingFonts] = useState(false);
 
   useEffect(() => {

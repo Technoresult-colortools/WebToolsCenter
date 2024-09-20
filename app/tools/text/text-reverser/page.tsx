@@ -13,7 +13,7 @@ export default function TextReverser() {
   const [reverseMode, setReverseMode] = useState('character'); // options: 'character', 'word', 'sentence'
 
   const reverseText = () => {
-    let text = inputText.trim();
+    const text = inputText.trim();
     if (reverseMode === 'character') {
       setReversedText(text.split('').reverse().join(''));
     } else if (reverseMode === 'word') {

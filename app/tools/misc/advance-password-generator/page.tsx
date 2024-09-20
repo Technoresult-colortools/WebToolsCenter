@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import Slider from "@/components/ui/Slider";
-import { Switch } from "@/components/ui/switch";
 import Checkbox from "@/components/ui/Checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';

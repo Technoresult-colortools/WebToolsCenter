@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, Search, Instagram, AlertTriangle } from 'lucide-react';
+import { Download, Search, AlertTriangle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -31,19 +31,27 @@ export default function InstagramPhotoDownloader() {
 
   const handleSearch = async () => {
     setIsLoading(true);
-    // In a real implementation, this would make an API call to fetch Instagram photos
-    // For demonstration purposes, we'll simulate a delay and use placeholder images
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    const placeholderImages = [
-      'https://picsum.photos/400/400?random=1',
-      'https://picsum.photos/400/400?random=2',
-      'https://picsum.photos/400/400?random=3',
-      'https://picsum.photos/400/400?random=4',
-    ];
-    setImageUrls(placeholderImages);
-    setIsLoading(false);
-    toast.success('Photos fetched successfully!');
-  };
+    
+    try {
+        // Replace this URL with your actual API endpoint
+        const response = await fetch(`https://your-api-endpoint.com/fetch-photos?url=${encodeURIComponent(url)}&access_token=YOUR_ACCESS_TOKEN`);
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch photos');
+        }
+        
+        const data = await response.json();
+        
+        // Assuming the API returns an array of image URLs
+        setImageUrls(data.imageUrls);
+        toast.success('Photos fetched successfully!');
+    } catch (error) {
+        console.error('Error fetching photos:', error);
+        toast.error('Failed to fetch photos. Please check the URL and try again.');
+    } finally {
+        setIsLoading(false);
+    }
+};
 
   const handleImageSelect = (imageUrl: string) => {
     setSelectedImages(prev => 

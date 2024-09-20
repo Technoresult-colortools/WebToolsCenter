@@ -11,15 +11,15 @@ export default function CharacterFrequencyCounter() {
   const [inputText, setInputText] = useState('');
   const [charFrequency, setCharFrequency] = useState<Record<string, number>>({});
   const [wordFrequency, setWordFrequency] = useState<Record<string, number>>({});
-  const [mode, setMode] = useState('character'); // 'character' or 'word'
+  const [mode, setMode] = useState('character'); 
 
   const calculateFrequency = () => {
-    let text = inputText.trim().toLowerCase();
+    const text = inputText.trim().toLowerCase();
     const charFreq: Record<string, number> = {};
     const wordFreq: Record<string, number> = {};
 
     if (mode === 'character') {
-      for (let char of text) {
+      for (const char of text) {
         if (char !== ' ') {
           charFreq[char] = (charFreq[char] || 0) + 1;
         }
@@ -27,7 +27,7 @@ export default function CharacterFrequencyCounter() {
       setCharFrequency(charFreq);
     } else if (mode === 'word') {
       const words = text.split(/\s+/);
-      for (let word of words) {
+      for (const word of words) {
         wordFreq[word] = (wordFreq[word] || 0) + 1;
       }
       setWordFrequency(wordFreq);
