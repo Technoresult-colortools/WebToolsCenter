@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { ChevronRight } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCode, faPaintBrush, faShapes, faBox, faSquare, faBorderAll } from '@fortawesome/free-solid-svg-icons';
+import { faCode, faPaintBrush, faShapes, faBox, faBorderAll } from '@fortawesome/free-solid-svg-icons';
 
 const cssTools = [
   { name: 'CSS Clip Path Generator', href: '/tools/css/clip-path-generator', icon: faShapes },

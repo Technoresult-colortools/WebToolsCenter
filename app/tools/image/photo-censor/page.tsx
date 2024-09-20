@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Upload, Download, RefreshCw, Eye } from 'lucide-react';
+import { Upload, Download, RefreshCw, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';

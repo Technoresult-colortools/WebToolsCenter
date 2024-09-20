@@ -6,7 +6,6 @@ import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import Slider from "@/components/ui/Slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
-import { Switch } from "@/components/ui/switch";
 import { Toaster, toast } from 'react-hot-toast';
 import { Download, RefreshCw, Copy } from 'lucide-react';
 import Header from '@/components/Header';

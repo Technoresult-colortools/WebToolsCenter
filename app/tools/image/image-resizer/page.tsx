@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, } from 'react';
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import Checkbox from "@/components/ui/Checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
-import { Upload, Download, RefreshCw, ArrowLeftRight, ArrowUpDown } from 'lucide-react';
+import { Upload, Download, RefreshCw, ArrowLeftRight, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 

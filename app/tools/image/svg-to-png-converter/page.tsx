@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Upload, Download, RefreshCw, ZoomIn, ZoomOut, Eye, EyeOff, Palette, AlertTriangle } from 'lucide-react';
+import { Upload, Download, RefreshCw, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 

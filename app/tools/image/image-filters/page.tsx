@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Upload, X, Download, RefreshCw, Sliders, Eye, EyeOff } from 'lucide-react'
+import { Upload, X, Download, RefreshCw, Sliders, } from 'lucide-react'
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Upload, X, RefreshCw, Download, Droplet, Palette } from 'lucide-react'
+import { Upload, X, Download, Droplet, Palette } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 

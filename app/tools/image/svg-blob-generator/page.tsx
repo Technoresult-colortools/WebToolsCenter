@@ -49,22 +49,33 @@ export default function SVGBlobGenerator() {
   const animationRef = useRef<number>()
 
   useEffect(() => {
-    generateBlobs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
     if (isAnimating) {
-      const animateStep = () => {
-        generateBlobs()
-        animationRef.current = requestAnimationFrame(animateStep)
-      }
-      animationRef.current = requestAnimationFrame(animateStep)
+      const animate = () => {
+        generateBlobs(); // Update blobs
+        animationRef.current = requestAnimationFrame(animate); // Continue the animation
+      };
+      
+      animationRef.current = requestAnimationFrame(animate); // Start the animation
     } else {
-      cancelAnimationFrame(animationRef.current!)
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current); // Stop the animation
+        animationRef.current = undefined; // Clear the reference
+      }
     }
-    return () => cancelAnimationFrame(animationRef.current!)
-  }, [isAnimating])
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current); // Cleanup on unmount
+      }
+    };
+  }, [isAnimating]);
+
+  const animate = () => {
+    generateBlobs();
+    animationRef.current = setTimeout(() => {
+      requestAnimationFrame(animate);
+    }, 1000 / (animationSpeed / 10)) as unknown as number;
+  };
 
   const generateBlobs = () => {
     setLayers(prevLayers => 
@@ -74,14 +85,6 @@ export default function SVGBlobGenerator() {
         params: { ...layer.params, seed: layer.params.seed + 0.01 }
       }))
     )
-  }
-
-
-  const animate = () => {
-    generateBlobs()
-    animationRef.current = setTimeout(() => {
-      requestAnimationFrame(animate)
-    }, 1000 / (animationSpeed / 10)) as unknown as number
   }
 
   const generateBlobPath = (params: BlobParams): string => {
