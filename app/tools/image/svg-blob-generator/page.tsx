@@ -1,7 +1,12 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
-import {  Download, Copy, Play, Pause, RefreshCw, Upload,} from 'lucide-react'
+import React, { useState, useRef, useEffect } from 'react'
+import { Download, Copy, RefreshCw, Upload } from 'lucide-react'
+import { Button } from "@/components/ui/Button"
+import  Input from "@/components/ui/Input"
+import { Label } from "@/components/ui/label"
+import Slider from "@/components/ui/Slider"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
@@ -19,7 +24,7 @@ interface Layer {
   id: string
   params: BlobParams
   path: string
-  blendMode: string
+  blendMode: React.CSSProperties['mixBlendMode']
 }
 
 const defaultParams: BlobParams = {
@@ -32,7 +37,7 @@ const defaultParams: BlobParams = {
   strokeWidth: 0
 }
 
-const blendModes = [
+const blendModes: React.CSSProperties['mixBlendMode'][] = [
   'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
   'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference',
   'exclusion', 'hue', 'saturation', 'color', 'luminosity'
@@ -41,48 +46,20 @@ const blendModes = [
 export default function SVGBlobGenerator() {
   const [layers, setLayers] = useState<Layer[]>([{ id: '1', params: defaultParams, path: '', blendMode: 'normal' }])
   const [selectedLayer, setSelectedLayer] = useState<string>('1')
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [animationSpeed, setAnimationSpeed] = useState(50)
-  const [canvasSize, ] = useState({ width: 400, height: 400 })
+  const [canvasSize] = useState({ width: 400, height: 400 })
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null)
   const svgRef = useRef<SVGSVGElement>(null)
-  const animationRef = useRef<number>()
 
   useEffect(() => {
-    if (isAnimating) {
-      const animate = () => {
-        generateBlobs(); 
-        animationRef.current = requestAnimationFrame(animate);
-      };
-      
-      animationRef.current = requestAnimationFrame(animate); 
-    } else {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = undefined;
-      }
-    }
-    
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current); 
-      }
-    };
-  }, [isAnimating]);
-
-  const animate = () => {
-    generateBlobs();
-    animationRef.current = setTimeout(() => {
-      requestAnimationFrame(animate);
-    }, 1000 / (animationSpeed / 10)) as unknown as number;
-  };
+    generateBlobs()
+  }, [])
 
   const generateBlobs = () => {
     setLayers(prevLayers => 
       prevLayers.map(layer => ({
         ...layer,
         path: generateBlobPath(layer.params),
-        params: { ...layer.params, seed: layer.params.seed + 0.01 }
+        params: { ...layer.params, seed: Math.random() }
       }))
     )
   }
@@ -112,7 +89,6 @@ export default function SVGBlobGenerator() {
            ' Z'
   }
 
-
   const handleParamChange = (param: keyof BlobParams, value: number | string) => {
     setLayers(prevLayers => 
       prevLayers.map(layer => 
@@ -124,7 +100,7 @@ export default function SVGBlobGenerator() {
     generateBlobs()
   }
 
-  const handleBlendModeChange = (blendMode: string) => {
+  const handleBlendModeChange = (blendMode: React.CSSProperties['mixBlendMode']) => {
     setLayers(prevLayers => 
       prevLayers.map(layer => 
         layer.id === selectedLayer
@@ -177,7 +153,7 @@ export default function SVGBlobGenerator() {
       const ctx = canvas.getContext('2d')
       const img = new Image()
       img.onload = () => {
-        ctx!.drawImage(img, 0, 0)
+        ctx?.drawImage(img, 0, 0)
         const pngUrl = canvas.toDataURL('image/png')
         const downloadLink = document.createElement('a')
         downloadLink.href = pngUrl
@@ -219,249 +195,214 @@ export default function SVGBlobGenerator() {
         <h1 className="text-4xl font-bold text-white mb-8 text-center">SVG Blob Generator</h1>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="w-full lg:w-1/2">
-                <div className="bg-gray-700 rounded-lg p-4 mb-4">
-                    <svg
-                    ref={svgRef}
-                    width={canvasSize.width}
-                    height={canvasSize.height}
-                    viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`}
-                    xmlns="http://www.w3.org/2000/svg"
-                    >
-                    <defs>
-                        {layers.map(layer => (
-                        <clipPath key={`clip-${layer.id}`} id={`clip-path-${layer.id}`}>
-                            <path d={layer.path} />
-                        </clipPath>
-                        ))}
-                    </defs>
-                    {layers.map(layer => (
-                        <g key={layer.id} style={{ mixBlendMode: layer.blendMode as any }}>
-                        {backgroundImage && (
-                            <image
-                            href={backgroundImage}
-                            width={canvasSize.width}
-                            height={canvasSize.height}
-                            preserveAspectRatio="xMidYMid slice"
-                            clipPath={`url(#clip-path-${layer.id})`}
-                            />
-                        )}
-                        <path
-                            d={layer.path}
-                            fill={backgroundImage ? 'none' : layer.params.fill}
-                            stroke={layer.params.stroke}
-                            strokeWidth={layer.params.strokeWidth}
-                        />
-                        </g>
-                    ))}
-                    </svg>
-                </div>
-              <div className="flex justify-between">
-                <button
-                  onClick={() => setIsAnimating(!isAnimating)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300 flex items-center"
-                >
-                  {isAnimating ? <Pause className="mr-2" /> : <Play className="mr-2" />}
-                  {isAnimating ? 'Pause' : 'Animate'}
-                </button>
-                <button
-                  onClick={generateBlobs}
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300 flex items-center"
-                >
-                  <RefreshCw className="mr-2" />
-                  Regenerate
-                </button>
+          <div className="bg-gray-700 rounded-lg p-4 mb-4">
+            <svg
+              ref={svgRef}
+              width={canvasSize.width}
+              height={canvasSize.height}
+              viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                {layers.map(layer => (
+                  <clipPath key={`clip-${layer.id}`} id={`clip-path-${layer.id}`}>
+                    <path d={layer.path} />
+                  </clipPath>
+                ))}
+              </defs>
+              {layers.map(layer => (
+                <g key={layer.id} style={{ mixBlendMode: layer.blendMode }}>
+                  {backgroundImage && (
+                    <image
+                      href={backgroundImage}
+                      width={canvasSize.width}
+                      height={canvasSize.height}
+                      preserveAspectRatio="xMidYMid slice"
+                      clipPath={`url(#clip-path-${layer.id})`}
+                    />
+                  )}
+                  <path
+                    d={layer.path}
+                    fill={backgroundImage ? 'none' : layer.params.fill}
+                    stroke={layer.params.stroke}
+                    strokeWidth={layer.params.strokeWidth}
+                  />
+                </g>
+              ))}
+            </svg>
+          </div>
+          <div className="flex justify-center space-x-4 mb-8">
+            <Button onClick={generateBlobs} variant="secondary">
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Regenerate
+            </Button>
+            <Button onClick={exportSVG} variant="secondary">
+              <Download className="mr-2 h-4 w-4" />
+              Export SVG
+            </Button>
+            <Button onClick={exportPNG} variant="secondary">
+              <Download className="mr-2 h-4 w-4" />
+              Export PNG
+            </Button>
+            <Button onClick={copySVGCode} variant="secondary">
+              <Copy className="mr-2 h-4 w-4" />
+              Copy SVG Code
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">Layers</h3>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {layers.map(layer => (
+                  <Button
+                    key={layer.id}
+                    onClick={() => setSelectedLayer(layer.id)}
+                    variant={selectedLayer === layer.id ? "default" : "outline"}
+                  >
+                    Layer {layer.id}
+                  </Button>
+                ))}
+                <Button onClick={addLayer} variant="secondary">
+                  + Add Layer
+                </Button>
               </div>
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Animation Speed
-                </label>
-                <input
-                  type="range"
-                  min="1"
-                  max="100"
-                  value={animationSpeed}
-                  onChange={(e) => setAnimationSpeed(parseInt(e.target.value))}
-                  className="w-full"
+            </div>
+            {layers.find(layer => layer.id === selectedLayer) && (
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-2">Layer Settings</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="edgeCount">Edge Count: {layers.find(layer => layer.id === selectedLayer)!.params.edgeCount}</Label>
+                    <Slider
+                      id="edgeCount"
+                      min={3}
+                      max={20}
+                      step={1}
+                      value={layers.find(layer => layer.id === selectedLayer)!.params.edgeCount}
+                      onChange={(value) => handleParamChange('edgeCount', value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contrast">Contrast: {layers.find(layer => layer.id === selectedLayer)!.params.contrast.toFixed(2)}</Label>
+                    <Slider
+                      id="contrast"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={layers.find(layer => layer.id === selectedLayer)!.params.contrast}
+                      onChange={(value) => handleParamChange('contrast', value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="smoothness">Smoothness: {layers.find(layer => layer.id === selectedLayer)!.params.smoothness.toFixed(2)}</Label>
+                    <Slider
+                      id="smoothness"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={layers.find(layer => layer.id === selectedLayer)!.params.smoothness}
+                      onChange={(value) => handleParamChange('smoothness', value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="fill">Fill Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        id="fill"
+                        type="color"
+                        value={layers.find(layer => layer.id === selectedLayer)!.params.fill}
+                        onChange={(e) => handleParamChange('fill', e.target.value)}
+                        className="w-12 h-12 p-1 rounded"
+                      />
+                      <Input
+                        type="text"
+                        value={layers.find(layer => layer.id === selectedLayer)!.params.fill}
+                        onChange={(e) => handleParamChange('fill', e.target.value)}
+                        className="flex-grow"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="stroke">Stroke Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        id="stroke"
+                        type="color"
+                        value={layers.find(layer => layer.id === selectedLayer)!.params.stroke}
+                        onChange={(e) => handleParamChange('stroke', e.target.value)}
+                        className="w-12 h-12 p-1 rounded"
+                      />
+                      <Input
+                        type="text"
+                        value={layers.find(layer => layer.id === selectedLayer)!.params.stroke}
+                        onChange={(e) => handleParamChange('stroke', e.target.value)}
+                        className="flex-grow"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="strokeWidth">Stroke Width: {layers.find(layer => layer.id === selectedLayer)!.params.strokeWidth}</Label>
+                    <Slider
+                      id="strokeWidth"
+                      min={0}
+                      max={10}
+                      step={1}
+                      value={layers.find(layer => layer.id === selectedLayer)!.params.strokeWidth}
+                      onChange={(value) => handleParamChange('strokeWidth', value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="blendMode">Blend Mode</Label>
+                    <Select
+                      value={layers.find(layer => layer.id === selectedLayer)!.blendMode}
+                      onValueChange={(value) => handleBlendModeChange(value as React.CSSProperties['mixBlendMode'])}
+                    >
+                      <SelectTrigger id="blendMode">
+                        <SelectValue placeholder="Select blend mode" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {blendModes.map(mode => (
+                          <SelectItem key={mode} value={mode as string}>
+                            {mode}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <Button
+                  onClick={() => removeLayer(selectedLayer)}
+                  variant="destructive"
+                  className="mt-4"
+                >
+                  Remove Layer
+                </Button>
+              </div>
+            )}
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">Background Image</h3>
+              <div className="flex items-center space-x-2 mb-2">
+                <Label htmlFor="bgImageUpload" className="cursor-pointer">
+                  <Button variant="secondary" className="mr-2">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload Image
+                  </Button>
+                </Label>
+                <Input
+                  id="bgImageUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleBackgroundImageUpload}
+                  className="hidden"
+                />
+                <Input
+                  type="text"
+                  placeholder="Or enter image URL"
+                  onChange={handleBackgroundImageURL}
                 />
               </div>
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold text-white mb-2">Background Image</h3>
-                <div className="flex items-center space-x-2 mb-2">
-                  <label className="flex items-center justify-center px-4 py-2 bg-purple-500 text-white rounded cursor-pointer hover:bg-purple-600 transition duration-300">
-                    <Upload className="mr-2" />
-                    Upload Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleBackgroundImageUpload}
-                      className="hidden"
-                    />
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Or enter image URL"
-                    onChange={handleBackgroundImageURL}
-                    className="flex-grow px-3 py-2 bg-gray-700 text-white rounded"
-                  />
-                </div>
-              </div>
             </div>
-            <div className="w-full lg:w-1/2">
-              <div className="bg-gray-700 rounded-lg p-4 mb-4">
-                <h2 className="text-xl font-bold text-white mb-4">Layers</h2>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {layers.map(layer => (
-                    <button
-                      key={layer.id}
-                      onClick={() => setSelectedLayer(layer.id)}
-                      className={`px-3 py-1 rounded ${
-                        selectedLayer === layer.id
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
-                      }`}
-                    >
-                      Layer {layer.id}
-                    </button>
-                  ))}
-                  <button
-                    onClick={addLayer}
-                    className="px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600"
-                  >
-                    + Add Layer
-                  </button>
-                </div>
-                {layers.find(layer => layer.id === selectedLayer) && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">Layer Settings</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Edge Count
-                        </label>
-                        <input
-                          type="range"
-                          min="3"
-                          max="20"
-                          value={layers.find(layer => layer.id === selectedLayer)!.params.edgeCount}
-                          onChange={(e) => handleParamChange('edgeCount', parseInt(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Contrast
-                        </label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.1"
-                          value={layers.find(layer => layer.id === selectedLayer)!.params.contrast}
-                          onChange={(e) => handleParamChange('contrast', parseFloat(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Smoothness
-                        </label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.1"
-                          value={layers.find(layer => layer.id === selectedLayer)!.params.smoothness}
-                          onChange={(e) => handleParamChange('smoothness', parseFloat(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Fill Color
-                        </label>
-                        <input
-                          type="color"
-                          value={layers.find(layer => layer.id === selectedLayer)!.params.fill}
-                          onChange={(e) => handleParamChange('fill', e.target.value)}
-                          className="w-full h-8 rounded"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Stroke Color
-                        </label>
-                        <input
-                          type="color"
-                          value={layers.find(layer => layer.id === selectedLayer)!.params.stroke}
-                          onChange={(e) => handleParamChange('stroke', e.target.value)}
-                          className="w-full h-8 rounded"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Stroke Width
-                        </label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="10"
-                          value={layers.find(layer => layer.id === selectedLayer)!.params.strokeWidth}
-                          onChange={(e) => handleParamChange('strokeWidth', parseInt(e.target.value))}
-                          className="w-full"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
-                          Blend Mode
-                        </label>
-                        <select
-                          value={layers.find(layer => layer.id === selectedLayer)!.blendMode}
-                          onChange={(e) => handleBlendModeChange(e.target.value)}
-                          className="w-full bg-gray-600 text-white rounded px-2 py-1"
-                        >
-                          {blendModes.map(mode => (
-                            <option key={mode} value={mode}>
-                              {mode}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => removeLayer(selectedLayer)}
-                      className="mt-4 px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600"
-                    >
-                      Remove Layer
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 flex justify-center space-x-4">
-            <button
-              onClick={exportSVG}
-              className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-300 flex items-center"
-            >
-              <Download className="mr-2" />
-              Export SVG
-            </button>
-            <button
-              onClick={exportPNG}
-              className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition duration-300 flex items-center"
-            >
-              <Download className="mr-2" />
-              Export PNG
-            </button>
-            <button
-              onClick={copySVGCode}
-              className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition duration-300 flex items-center"
-            >
-              <Copy className="mr-2" />
-              Copy SVG Code
-            </button>
           </div>
         </div>
 
@@ -471,7 +412,7 @@ export default function SVGBlobGenerator() {
               <h2 className="text-xl font-semibold text-white mb-2">About SVG Blob Generator</h2>
               <p className="text-white">
                 This SVG Blob Generator allows you to create unique, customizable blob shapes for your design projects. 
-                You can adjust various parameters, add multiple layers with different blend modes, animate your blobs, and even add background images. 
+                You can adjust various parameters, add multiple layers with different blend modes, and even add background images. 
                 Export your creations as SVG or PNG files, or copy the SVG code directly.
               </p>          
             </section>
@@ -482,11 +423,9 @@ export default function SVGBlobGenerator() {
                 1. Adjust the parameters (edge count, contrast, smoothness) to change the blob shape.<br />
                 2. Customize the fill color, stroke color, and stroke width.<br />
                 3. Add multiple layers and experiment with different blend modes.<br />
-                4. Use the animation feature to see how your blob changes over time.<br />
-                5. Adjust the animation speed to control how quickly the blob morphs.<br />
-                6. Add a background image by uploading a file or entering a URL.<br />
-                7. Export your blob as an SVG or PNG file, or copy the SVG code.<br />
-                8. Regenerate the blob or individual layers to create new variations.
+                4. Add a background image by uploading a file or entering a URL.<br />
+                5. Export your blob as an SVG or PNG file, or copy the SVG code.<br />
+                6. Regenerate the blob or individual layers to create new variations.
               </p>
             </section>
 
@@ -497,7 +436,6 @@ export default function SVGBlobGenerator() {
                 <li>Edge count control for complexity adjustment</li>
                 <li>Multiple customizable parameters</li>
                 <li>Multi-layer support with blend modes</li>
-                <li>Animation option with speed control</li>
                 <li>Background image support (upload or URL)</li>
                 <li>SVG and PNG export</li>
                 <li>Copy SVG code functionality</li>
@@ -511,4 +449,3 @@ export default function SVGBlobGenerator() {
     </div>
   )
 }
-

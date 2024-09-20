@@ -185,6 +185,11 @@ export default function SvgToPngConverter() {
           {svgUrl && !error && (
             <div className="mb-8">
               <h3 className="text-xl font-bold text-white mb-4">SVG Preview</h3>
+              {svgDimensions.width > 0 && svgDimensions.height > 0 && (
+                <div className="mb-4 text-white">
+                  <p>SVG Dimensions: {svgDimensions.width} x {svgDimensions.height}</p>
+                </div>
+              )}
               <div className="relative h-64 bg-gray-700 rounded-lg overflow-hidden">
                 <NextImage 
                   src={svgUrl} 
