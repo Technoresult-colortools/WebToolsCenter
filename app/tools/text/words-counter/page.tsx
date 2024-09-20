@@ -138,11 +138,11 @@ export default function WordsCounter() {
               <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
               <ol className="text-white list-decimal list-inside">
                 <li>Paste or type your text in the input area.</li>
-                <li>Click "Update Counts" to view the number of words and characters.</li>
-                <li>Use the "Shuffle Words" button to rearrange the words randomly.</li>
-                <li>Click "Copy" to copy the text to your clipboard.</li>
-                <li>Select "Download" to save the text as a .txt file.</li>
-                <li>Click "Clear" to reset the input and output fields.</li>
+                <li>Click &quot;Update Counts&quot; to view the number of words and characters.</li>
+                <li>Use the &quot;Shuffle Words&quot; button to rearrange the words randomly.</li>
+                <li>Click &quot;Copy&quot; to copy the text to your clipboard.</li>
+                <li>Select &quot;Download&quot; to save the text as a .txt file.</li>
+                <li>Click &quot;Clear&quot; to reset the input and output fields.</li>
               </ol>
             </section>
 

@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import Input from "@/components/ui/Input";
 import { Toaster, toast } from 'react-hot-toast';
-import { Copy, RefreshCw, ArrowDown, ArrowUp, Hash } from 'lucide-react';
+import { Copy, RefreshCw, ArrowDown, ArrowUp, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -25,7 +25,7 @@ export default function DuplicateLineRemover() {
   }, [inputText, caseSensitive, trimWhitespace, keepFirstOccurrence, addLineNumbers, startingLineNumber]);
 
   const removeDuplicates = (text: string) => {
-    let lines = text.split('\n');
+    const lines = text.split('\n');
     const seen = new Set();
     const result = [];
 
@@ -178,7 +178,7 @@ export default function DuplicateLineRemover() {
             The Duplicate Line Remover is a powerful tool designed to clean up your text by removing duplicate lines. It offers several features to customize how duplicates are identified and removed, making it useful for a variety of text processing tasks.
           </p>
           <p className="text-gray-300">
-            Whether you're cleaning up data, organizing lists, or preparing text for further processing, this tool can help you quickly and efficiently remove unwanted duplicate lines.
+            Whether you&apos;re cleaning up data, organizing lists, or preparing text for further processing, this tool can help you quickly and efficiently remove unwanted duplicate lines.
           </p>
         </div>
 
@@ -194,22 +194,23 @@ export default function DuplicateLineRemover() {
                 <li>Add line numbers: Prefix each line with a number in the output.</li>
               </ul>
             </li>
-            <li>If "Add line numbers" is enabled, you can set the starting line number.</li>
-            <li>Use the "Sort A-Z" or "Sort Z-A" buttons to sort the output alphabetically.</li>
-            <li>Click the "Copy Result" button to copy the processed text to your clipboard.</li>
-            <li>Use the "Clear" button to reset both input and output fields.</li>
+            <li>If &quot;Add line numbers&quot; is enabled, you can set the starting line number.</li>
+            <li>Use the &quot;Sort A-Z&quot; or &quot;Sort Z-A&quot; buttons to sort the output alphabetically.</li>
+            <li>Click the &quot;Copy Result&quot; button to copy the processed text to your clipboard.</li>
+            <li>Use the &quot;Clear&quot; button to reset both input and output fields.</li>
           </ol>
         </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-white mb-4">Tips and Tricks</h2>
           <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Use the "Case sensitive" option when you need to distinguish between uppercase and lowercase versions of the same word or phrase.</li>
-            <li>The "Trim whitespace" option is useful for cleaning up data where extra spaces might have been introduced accidentally.</li>
-            <li>"Keep first occurrence" is helpful when you want to maintain the original order of your list while removing subsequent duplicates.</li>
+            <li>Use the &quot;Case sensitive&quot; option when you need to distinguish between uppercase and lowercase versions of the same word or phrase.</li>
+            <li>The &quot;Trim whitespace&quot; option is useful for cleaning up data where extra spaces might have been introduced accidentally.</li>
+            <li>&quot;Keep first occurrence&quot; is helpful when you want to maintain the original order of your list while removing subsequent duplicates.</li>
             <li>Adding line numbers can be useful for referencing specific lines in the processed text, especially in large datasets.</li>
             <li>The sorting feature can help you organize your data alphabetically after removing duplicates.</li>
             <li>You can use this tool to clean up lists of email addresses, remove duplicate log entries, or consolidate any type of line-based data.</li>
+
           </ul>
         </div>
       </main>

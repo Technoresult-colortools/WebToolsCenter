@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Toaster, toast } from 'react-hot-toast';
-import { Copy, RefreshCw, ArrowRight, Wand2, Code, FileCode, FileText } from 'lucide-react';
+import { Copy, RefreshCw, Wand2, Code, FileText } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -201,28 +201,28 @@ export default function HTMLEncoderDecoder() {
           <h2 className="text-2xl font-bold text-white mb-4">How to Use</h2>
           <ol className="list-decimal list-inside text-gray-300 space-y-2">
             <li>Enter or paste your text into the input field at the top of the page.</li>
-            <li>Choose between "Encode" and "Decode" mode depending on your needs.</li>
+            <li>Choose between &quot;Encode&quot; and &quot;Decode&quot; mode depending on your needs.</li>
             <li>Use the toggle switches to customize the encoding process:
               <ul className="list-disc list-inside ml-6 mt-2">
-                <li>"Preserve newlines" keeps line breaks in the encoded output.</li>
-                <li>"Encode quotes" converts quotation marks to their HTML entities.</li>
-                <li>"Encode non-ASCII" converts non-ASCII characters to their numeric character references.</li>
+                <li>&quot;Preserve newlines&quot; keeps line breaks in the encoded output.</li>
+                <li>&quot;Encode quotes&quot; converts quotation marks to their HTML entities.</li>
+                <li>&quot;Encode non-ASCII&quot; converts non-ASCII characters to their numeric character references.</li>
               </ul>
             </li>
-            <li>Click the "Encode" or "Decode" button to manually trigger the process (it also happens automatically as you type).</li>
-            <li>Click the "Copy Result" button to copy the processed text to your clipboard.</li>
-            <li>Use the "Clear" button to reset both input and output fields.</li>
+            <li>Click the &quot;Encode&quot; or &quot;Decode&quot; button to manually trigger the process (it also happens automatically as you type).</li>
+            <li>Click the &quot;Copy Result&quot; button to copy the processed text to your clipboard.</li>
+            <li>Use the &quot;Clear&quot; button to reset both input and output fields.</li>
           </ol>
         </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-white mb-4">Tips and Tricks</h2>
           <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Use the "Encode" mode when preparing text to be inserted into HTML documents to prevent potential rendering issues or security vulnerabilities.</li>
-            <li>The "Decode" mode is useful for converting HTML-encoded text back to its original form, which can be helpful when editing or reviewing encoded content.</li>
-            <li>The "Preserve newlines" option is particularly useful when encoding multi-line text, such as paragraphs or code snippets.</li>
-            <li>"Encode quotes" is important when your text will be used within HTML attributes to prevent attribute value conflicts.</li>
-            <li>Use "Encode non-ASCII" when you need to ensure your text is compatible with older systems or when you want to represent all characters using only ASCII characters.</li>
+            <li>Use the &quot;Encode&quot; mode when preparing text to be inserted into HTML documents to prevent potential rendering issues or security vulnerabilities.</li>
+            <li>The &quot;Decode&quot; mode is useful for converting HTML-encoded text back to its original form, which can be helpful when editing or reviewing encoded content.</li>
+            <li>The &quot;Preserve newlines&quot; option is particularly useful when encoding multi-line text, such as paragraphs or code snippets.</li>
+            <li>&quot;Encode quotes&quot; is important when your text will be used within HTML attributes to prevent attribute value conflicts.</li>
+            <li>Use &quot;Encode non-ASCII&quot; when you need to ensure your text is compatible with older systems or when you want to represent all characters using only ASCII characters.</li>
             <li>Remember that while HTML encoding helps prevent certain issues, it's not a substitute for proper sanitization when dealing with user-generated content. Always implement appropriate security measures on the server-side.</li>
           </ul>
         </div>

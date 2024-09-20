@@ -82,16 +82,12 @@ export default function WordScrambler() {
             />
           </div>
         </div>
-
-        {/* About section */}
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">About Word Scrambler</h2>
           <p className="text-gray-300 mb-4">
             The Word Scrambler tool allows you to shuffle the letters of each word in your input text. This can be useful for creating puzzles, games, or simply for fun. Just enter your text, click the "Scramble Words" button, and see the scrambled result.
           </p>
         </div>
-
-        {/* How to Use section */}
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">How to Use</h2>
           <ol className="list-decimal list-inside text-gray-300 space-y-2">
@@ -101,8 +97,6 @@ export default function WordScrambler() {
             <li>Click the "Clear" button to reset both the input and output fields.</li>
           </ol>
         </div>
-
-        {/* Tips and Tricks section */}
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-white mb-4">Tips and Tricks</h2>
           <ul className="list-disc list-inside text-gray-300 space-y-2">

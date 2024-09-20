@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
@@ -9,15 +10,16 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download,} from 'lucide-react';
+import { Download } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import dynamic from 'next/dynamic';
 
+// Use dynamic import for QRCodeCanvas without a duplicate declaration
 const QRCodeCanvas = dynamic(() => import('qrcode.react').then(mod => mod.QRCodeCanvas), { ssr: false });
 
 type QRCodeType = 'url' | 'text' | 'email' | 'phone' | 'sms' | 'wifi';
 type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
+
 
 export default function QRCodeGenerator() {
   // State variables
@@ -380,23 +382,20 @@ export default function QRCodeGenerator() {
               <h2 className="text-2xl font-bold text-white mb-4">Generated QR Code</h2>
               <div className="bg-white p-4 rounded-lg flex items-center justify-center" style={{ minHeight: '300px' }}>
                 <QRCodeCanvas
-                  id="qr-code"
-                  value={generateQRValue()}
-                  size={qrSize}
-                  fgColor={qrFgColor}
-                  bgColor={qrBgColor}
-                  level={errorCorrectionLevel}
-                  includeMargin={includeMargin}
-                  imageSettings={logoUrl ? {
-                    src: logoUrl,
-                    x: undefined,
-                    y: undefined,
-                    height: logoSize,
-                    width: logoSize,
-                    excavate: true,
-                  } : undefined}
-                  
-                />
+                    id="qr-code"
+                    value={generateQRValue()}
+                    size={qrSize}
+                    fgColor={qrFgColor}
+                    bgColor={qrBgColor}
+                    level={errorCorrectionLevel}
+                    includeMargin={includeMargin}
+                    imageSettings={logoUrl ? {
+                      src: logoUrl,
+                      height: logoSize,
+                      width: logoSize,
+                      excavate: true,
+                    } : undefined}
+                  />
               </div>
               <div className="mt-4 flex justify-center">
                 <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">

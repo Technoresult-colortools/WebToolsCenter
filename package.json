@@ -19,6 +19,7 @@
     "@radix-ui/react-tabs": "^1.1.0",
     "@types/react-easy-crop": "^1.16.0",
     "framer-motion": "^11.5.5",
+    "html2canvas": "^1.4.1",
     "jsbarcode": "^3.11.6",
     "lucide-react": "^0.441.0",
     "next": "^14.2.11",

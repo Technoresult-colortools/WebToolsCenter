@@ -119,7 +119,7 @@ export default function LoremIpsumGenerator() {
                 onChange={() => setStartWithLoremIpsum(!startWithLoremIpsum)}
                 className="mr-2"
               />
-              Start with "Lorem ipsum"
+              Start with &quot;Lorem ipsum&quot;
             </label>
             <label className="flex items-center text-sm text-gray-300">
               <input
@@ -172,7 +172,7 @@ export default function LoremIpsumGenerator() {
                 <section>
                 <h2 className="text-xl font-semibold text-white mb-2">About Lorem Ipsum Generator</h2>
                 <p className="text-white">
-                    This tool allows you to generate placeholder text using Lorem Ipsum. It's perfect for designers, developers, and anyone who needs dummy text for layout design or content testing. The tool also offers options to shuffle words, copy text, download it, and clear the input and output fields.
+                    This tool allows you to generate placeholder text using Lorem Ipsum. It&apos;s perfect for designers, developers, and anyone who needs dummy text for layout design or content testing. The tool also offers options to shuffle words, copy text, download it, and clear the input and output fields.
                 </p>
                 </section>
 
@@ -180,11 +180,11 @@ export default function LoremIpsumGenerator() {
                 <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
                 <ol className="text-white list-decimal list-inside">
                     <li>Enter the number of paragraphs, sentences, or words you need.</li>
-                    <li>Click the "Generate" button to create Lorem Ipsum text.</li>
-                    <li>Use the "Shuffle Words" button to rearrange the text randomly.</li>
-                    <li>Click "Copy" to copy the generated text to your clipboard.</li>
-                    <li>Select "Download" to save the generated text as a .txt file.</li>
-                    <li>Click "Clear" to reset the input fields and output area.</li>
+                    <li>Click the &quot;Generate&quot; button to create Lorem Ipsum text.</li>
+                    <li>Use the &quot;Shuffle Words&quot; button to rearrange the text randomly.</li>
+                    <li>Click &quot;Copy&quot; to copy the generated text to your clipboard.</li>
+                    <li>Select &quot;Download&quot; to save the generated text as a .txt file.</li>
+                    <li>Click &quot;Clear&quot; to reset the input fields and output area.</li>
                 </ol>
                 </section>
 

@@ -287,7 +287,7 @@ export default function ColorPaletteGenerator() {
                 <li>Choose a base color using the color picker.</li>
                 <li>Select a harmony type (complementary, analogous, etc.).</li>
                 <li>Adjust the number of colors in your palette.</li>
-                <li>Click "Generate Palette" to create your color scheme.</li>
+                <li>Click &quot;Generate Palette&quot; to create your color scheme.</li>
                 <li>Use the preview section to see how your colors work together.</li>
                 <li>Copy individual colors or download the entire palette.</li>
               </ul>
@@ -299,7 +299,7 @@ export default function ColorPaletteGenerator() {
                 <li>Experiment with different harmony types to find the perfect combination.</li>
                 <li>Use the preview section to see how your colors look in a real design context.</li>
                 <li>Try adjusting the base color slightly to fine-tune your palette.</li>
-                <li>Don't be afraid to regenerate – sometimes it takes a few tries to find the perfect palette!</li>
+                <li>Don&apos;t be afraid to regenerate – sometimes it takes a few tries to find the perfect palette!</li>
               </ul>
             </section>
           </div>
