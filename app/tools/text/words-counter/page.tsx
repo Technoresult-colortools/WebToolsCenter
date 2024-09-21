@@ -13,18 +13,18 @@ export default function WordsCounter() {
   const [charCount, setCharCount] = useState(0);
   const [includeSpaces, setIncludeSpaces] = useState(true);
 
-  // Function to update word and character counts
+  
   const updateCounts = () => {
     const words = text.trim().split(/\s+/);
     setWordCount(words.length);
     setCharCount(includeSpaces ? text.length : text.replace(/\s+/g, '').length);
   };
 
-  // Update counts when text changes
-  const handleTextChange = (e) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     updateCounts();
   };
+   
 
   const handleCopy = () => {
     navigator.clipboard.writeText(text);
