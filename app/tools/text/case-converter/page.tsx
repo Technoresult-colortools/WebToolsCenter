@@ -199,7 +199,7 @@ export default function CaseConverter() {
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
-              <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
+              <h2 className="text-xl font-semibold text-white mb-2">How to Use Case Converter?</h2>
               <ol className="text-white list-decimal list-inside">
                 <li>Enter or paste your text in the input area.</li>
                 <li>Select the desired case conversion from the dropdown menu.</li>

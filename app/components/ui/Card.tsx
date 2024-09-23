@@ -5,7 +5,7 @@ interface CardProps {
   className?: string;
 }
 
-export function Card({ children, className }: CardProps) {
+const Card = ({ children, className }: CardProps) => {
   return (
     <div className={`rounded-lg shadow-lg overflow-hidden ${className}`}>
       {children}
@@ -13,12 +13,7 @@ export function Card({ children, className }: CardProps) {
   );
 }
 
-interface CardHeaderProps {
-  children: ReactNode;
-  className?: string;
-}
-
-export function CardHeader({ children, className }: CardHeaderProps) {
+const CardHeader = ({ children, className }: { children: ReactNode; className?: string }) => {
   return (
     <div className={`p-6 ${className}`}>
       {children}
@@ -26,12 +21,7 @@ export function CardHeader({ children, className }: CardHeaderProps) {
   );
 }
 
-interface CardTitleProps {
-  children: ReactNode;
-  className?: string;
-}
-
-export function CardTitle({ children, className }: CardTitleProps) {
+const CardTitle = ({ children, className }: { children: ReactNode; className?: string }) => {
   return (
     <h3 className={`text-2xl font-bold ${className}`}>
       {children}
@@ -39,15 +29,28 @@ export function CardTitle({ children, className }: CardTitleProps) {
   );
 }
 
-interface CardContentProps {
-  children: ReactNode;
-  className?: string;
+const CardDescription = ({ children, className }: { children: ReactNode; className?: string }) => {
+  return (
+    <p className={`text-sm text-gray-500 dark:text-gray-400 ${className}`}>
+      {children}
+    </p>
+  );
 }
 
-export function CardContent({ children, className }: CardContentProps) {
+const CardContent = ({ children, className }: { children: ReactNode; className?: string }) => {
   return (
     <div className={`p-6 pt-0 ${className}`}>
       {children}
     </div>
   );
 }
+
+const CardFooter = ({ children, className }: { children: ReactNode; className?: string }) => {
+  return (
+    <div className={`p-6 pt-0 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };

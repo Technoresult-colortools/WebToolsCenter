@@ -346,14 +346,14 @@ export default function GoogleFontsPairFinder() {
                       fontWeight: headingFont.weight,
                       lineHeight: headingFont.lineHeight,
                       letterSpacing: `${headingFont.letterSpacing}px`,
-                    }}>Jane Doe</h2>
+                    }}>Premnash</h2>
                     <p style={{
                       fontFamily: `'${bodyFont.family}', ${fonts.find(f => f.family === bodyFont.family)?.category}`,
                       fontSize: `${bodyFont.size}px`,
                       fontWeight: bodyFont.weight,
                       lineHeight: bodyFont.lineHeight,
                       letterSpacing: `${bodyFont.letterSpacing}px`,
-                    }}>UI/UX Lead at Cool Company</p>
+                    }}>Software Engineer - Microsoft</p>
                   </div>
                 </div>
                 <div style={{
@@ -363,9 +363,9 @@ export default function GoogleFontsPairFinder() {
                   lineHeight: bodyFont.lineHeight,
                   letterSpacing: `${bodyFont.letterSpacing}px`,
                 }}>
-                  <p className="mb-2">jane.doe@coolcompany.com</p>
-                  <p className="mb-2">+1 123 456 78 90</p>
-                  <p className="mb-4">New York, USA</p>
+                  <p className="mb-2">premnash@mario.com</p>
+                  <p className="mb-2">+13 345 325 123</p>
+                  <p className="mb-4">Las Vegas, USA</p>
                   <h3 style={{
                     fontFamily: `'${headingFont.family}', ${fonts.find(f => f.family === headingFont.family)?.category}`,
                     fontSize: `${headingFont.size * 0.8}px`,
@@ -374,7 +374,7 @@ export default function GoogleFontsPairFinder() {
                     letterSpacing: `${headingFont.letterSpacing}px`,
                   }} className="mb-2">Biography</h3>
                   <p className="mb-4">
-                    I'm Jane Doe, UI/UX lead at Cool Company based in New York. I'm passionate about creating intuitive and beautiful user interfaces that enhance the user experience.
+                     I'm Premnash, a software engineer at Innovative Tech Solutions in San Francisco. I specialize in developing robust applications that deliver seamless functionality and enhance user engagement.
                   </p>
                   <h3 style={{
                     fontFamily: `'${headingFont.family}', ${fonts.find(f => f.family === headingFont.family)?.category}`,
@@ -384,7 +384,7 @@ export default function GoogleFontsPairFinder() {
                     letterSpacing: `${headingFont.letterSpacing}px`,
                   }} className="mb-2">Hobbies</h3>
                   <p>
-                    In my spare time, I enjoy exploring new design tools, reading about typography, and experimenting with different font combinations to improve my craft.
+                    In my spare time, I love hiking in nature, trying out new recipes in the kitchen, and practicing photography to capture the beauty around me.
                   </p>
                 </div>
               </div>
@@ -397,7 +397,7 @@ export default function GoogleFontsPairFinder() {
                   fontWeight: headingFont.weight,
                   lineHeight: headingFont.lineHeight,
                   letterSpacing: `${headingFont.letterSpacing}px`,
-                }} className="mb-4">The Art of Typography</h2>
+                }} className="mb-4">The Art of Web Design: Crafting Engaging Digital Experiences</h2>
                 <p style={{
                   fontFamily: `'${bodyFont.family}', ${fonts.find(f => f.family === bodyFont.family)?.category}`,
                   fontSize: `${bodyFont.size}px`,
@@ -405,7 +405,7 @@ export default function GoogleFontsPairFinder() {
                   lineHeight: bodyFont.lineHeight,
                   letterSpacing: `${bodyFont.letterSpacing}px`,
                 }}>
-                  Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing (leading), and letter-spacing (tracking), and adjusting the space between pairs of letters (kerning).
+                  Web design is the creative process of planning and building websites, focusing on aesthetics, usability, and user experience. It involves a blend of graphic design, interface design, and interaction design to create visually appealing and functional websites. Effective web design enhances user engagement by ensuring that content is organized, easy to navigate, and responsive across devices. Key elements include color schemes, typography, imagery, and layout, all harmonizing to convey a brand’s message. As technology evolves, trends in web design continue to shift, emphasizing minimalism, accessibility, and interactivity. A well-designed website not only attracts visitors but also fosters trust and encourages conversions, making it a crucial aspect of any online presence. Embracing the principles of web design can transform a simple webpage into a captivating digital experience that resonates with users.
                 </p>
               </div>
             </TabsContent>
@@ -434,6 +434,42 @@ export default function GoogleFontsPairFinder() {
             </TabsContent>
           </Tabs>
         </div>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-2">About Google Fonts Pair Finder</h2>
+            <p className="text-white">
+              The Google Fonts Pair Finder tool helps users discover harmonious font combinations from the extensive library of Google Fonts. It's ideal for designers and developers seeking the perfect typography pairing for their projects, whether for web design, print, or branding.
+            </p>
+          </section>
+        </div>
+
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-2">How to Use Google Fonts Pair Finder?</h2>
+            <ol className="text-white list-decimal list-inside">
+              <li>Enter a font name in the search bar to find compatible pairings.</li>
+              <li>Browse through the suggested font combinations displayed.</li>
+              <li>Select a pairing to see a live preview of how they work together.</li>
+              <li>Click on the &quot;Copy CSS&quot; button to copy the necessary code for your selected fonts.</li>
+              <li>Use the &quot;Download&quot; option to save your selected font pairings for offline use.</li>
+              <li>Experiment with different font styles until you find the perfect combination for your design.</li>
+            </ol>
+          </section>
+        </div>
+
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-2">Features</h2>
+            <ul className="text-white list-disc list-inside">
+              <li>Font Search: Easily find fonts by name or style.</li>
+              <li>Pair Suggestions: Automatically generates complementary font pairings.</li>
+              <li>Live Preview: See how the fonts look together in real-time.</li>
+              <li>Copy CSS: Quickly copy the CSS code for your chosen fonts.</li>
+              <li>Download Options: Save your selected fonts for later use.</li>
+            </ul>
+          </section>
+        </div>
+
       </main>
       <Footer />
     </div>

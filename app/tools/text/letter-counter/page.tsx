@@ -22,23 +22,18 @@ export default function LetterCounter() {
   }, [text])
 
   const analyzeText = (inputText: string) => {
-    // Count letters
+
     const letterFrequency: Record<string, number> = {}
     inputText.toLowerCase().replace(/[^a-z]/g, '').split('').forEach(char => {
       letterFrequency[char] = (letterFrequency[char] || 0) + 1
     })
     setLetterCount(letterFrequency)
-
-    // Count words
     setWordCount(inputText.trim().split(/\s+/).filter(word => word !== '').length)
 
-    // Count sentences
     setSentenceCount(inputText.split(/[.!?]+/).filter(sentence => sentence.trim() !== '').length)
 
-    // Count paragraphs
     setParagraphCount(inputText.split('\n\n').filter(para => para.trim() !== '').length)
 
-    // Find most common letter
     const sortedLetters = Object.entries(letterFrequency).sort((a, b) => b[1] - a[1])
     setMostCommonLetter(sortedLetters.length > 0 ? sortedLetters[0][0] : '')
   }
@@ -151,17 +146,18 @@ export default function LetterCounter() {
           </div>
         </div>
 
-        <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-2xl mx-auto">
-          <div className="space-y-6">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
               <h2 className="text-xl font-semibold text-white mb-2">About Letter Counter</h2>
               <p className="text-white">
                 This tool helps you quickly count the number of letters, words, and characters in your text. It's useful for writers, editors, and anyone who needs to analyze text length and frequency. The tool also provides options to show, copy, and download analytics for further review.
               </p>
             </section>
+        </div>
 
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
-              <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
+              <h2 className="text-xl font-semibold text-white mb-2">How to Use Letter Counter?</h2>
               <ol className="text-white list-decimal list-inside">
                 <li>Enter or paste your text in the input area.</li>
                 <li>Click the "Show Stats" button to view the letter, word, and character counts.</li>
@@ -170,6 +166,9 @@ export default function LetterCounter() {
                 <li>Select "Download Analytics" to save the statistics as a file.</li>
               </ol>
             </section>
+        </div>
+        
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
 
             <section>
               <h2 className="text-xl font-semibold text-white mb-2">Features</h2>
@@ -180,7 +179,7 @@ export default function LetterCounter() {
                 <li>Copy Analytics: Copies the results to the clipboard for easy sharing.</li>
               </ul>
             </section>
-          </div>
+
         </div>
       </main>
       <Footer />

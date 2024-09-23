@@ -137,17 +137,17 @@ export default function WhiteSpaceRemover() {
           </div>
         </div>
 
-        <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-2xl mx-auto">
-          <div className="space-y-6">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
               <h2 className="text-xl font-semibold text-white mb-2">About White Space Remover</h2>
               <p className="text-white">
                 This tool allows you to clean up your text by removing unwanted white spaces, extra spaces between words, and compressing multiple line breaks. It’s useful for formatting text to ensure consistency and readability.
               </p>
             </section>
-
+        </div>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
-              <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
+              <h2 className="text-xl font-semibold text-white mb-2">How to Use White Space Remover?</h2>
               <ol className="text-white list-decimal list-inside">
                 <li>Paste or type your text in the input area.</li>
                 <li>Select the options for removing white spaces, extra spaces, and compressing line breaks as needed.</li>
@@ -157,7 +157,8 @@ export default function WhiteSpaceRemover() {
                 <li>Click "Clear" to reset the input and output fields.</li>
               </ol>
             </section>
-
+        </div>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
               <h2 className="text-xl font-semibold text-white mb-2">Features</h2>
               <ul className="text-white list-disc list-inside">
@@ -169,7 +170,6 @@ export default function WhiteSpaceRemover() {
                 <li>Download: Saves the cleaned text as a .txt file.</li>
               </ul>
             </section>
-          </div>
         </div>
       </main>
       <Footer />

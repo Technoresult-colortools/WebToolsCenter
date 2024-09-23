@@ -88,7 +88,7 @@ export default function WordsCounter() {
                 checked={includeSpaces}
                 onChange={() => {
                   setIncludeSpaces(!includeSpaces);
-                  updateCounts(); // Update counts when checkbox changes
+                  updateCounts(); 
                 }}
                 className="mr-2"
               />
@@ -125,17 +125,17 @@ export default function WordsCounter() {
           </div>
         </div>
 
-        <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-2xl mx-auto">
-          <div className="space-y-6">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
               <h2 className="text-xl font-semibold text-white mb-2">About Words Counter</h2>
               <p className="text-white">
                 This tool allows you to count the number of words and characters in your text. You can choose whether to include spaces in the character count. It also provides options to shuffle words, copy the text, download it, and clear the input and output fields.
               </p>
             </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
+        </div> 
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+           <section>
+              <h2 className="text-xl font-semibold text-white mb-2">How to Use Words Counter?</h2>
               <ol className="text-white list-decimal list-inside">
                 <li>Paste or type your text in the input area.</li>
                 <li>Click &quot;Update Counts&quot; to view the number of words and characters.</li>
@@ -145,7 +145,9 @@ export default function WordsCounter() {
                 <li>Click &quot;Clear&quot; to reset the input and output fields.</li>
               </ol>
             </section>
+        </div>
 
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section>
               <h2 className="text-xl font-semibold text-white mb-2">Features</h2>
               <ul className="text-white list-disc list-inside">
@@ -157,8 +159,7 @@ export default function WordsCounter() {
                 <li>Download: Saves the text as a .txt file for offline use.</li>
               </ul>
             </section>
-          </div>
-        </div>
+        </div>  
       </main>
       <Footer />
     </div>

@@ -10,7 +10,7 @@ import { Copy, Download, RefreshCw, Settings, } from 'lucide-react';
 export default function TextReverser() {
   const [inputText, setInputText] = useState('');
   const [reversedText, setReversedText] = useState('');
-  const [reverseMode, setReverseMode] = useState('character'); // options: 'character', 'word', 'sentence'
+  const [reverseMode, setReverseMode] = useState('character');
 
   const reverseText = () => {
     const text = inputText.trim();
@@ -109,16 +109,17 @@ export default function TextReverser() {
             />
           </div>
         </div>
-        <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-2xl mx-auto mt-8">
-            <div className="space-y-6">
-                <section>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+              <section>
                 <h2 className="text-xl font-semibold text-white mb-2">About Text Reverser</h2>
                 <p className="text-white">
                     The Text Reverser is a simple yet powerful tool that allows you to reverse the order of characters in your text. Whether you want to reverse a sentence, a word, or a block of text, this tool makes it easy to do so in just one click. It's great for creating puzzles, experimenting with text formatting, or simply having fun with your content!
                 </p>
-                </section>
+              </section>
+        </div>
 
-                <section>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+              <section>
                 <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
                 <ol className="text-white list-decimal list-inside">
                     <li>Enter or paste the text you want to reverse into the input field.</li>
@@ -127,19 +128,19 @@ export default function TextReverser() {
                     <li>Use the "Copy" button to copy the reversed text to your clipboard.</li>
                     <li>Click "Clear" to reset the input and output fields for new text.</li>
                 </ol>
-                </section>
+              </section>
+        </div>
 
-                <section>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+              <section>
                 <h2 className="text-xl font-semibold text-white mb-2">Features</h2>
                 <ul className="text-white list-disc list-inside">
                     <li>Reverse: Instantly reverses the characters in the provided text.</li>
                     <li>Copy: Copies the reversed text to your clipboard for easy use.</li>
                     <li>Clear: Clears the input and output areas to start fresh.</li>
                 </ul>
-                </section>
-            </div>
-            </div>
-
+              </section>
+        </div>
       </main>
       <Footer />
     </div>

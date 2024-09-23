@@ -167,17 +167,18 @@ export default function LoremIpsumGenerator() {
             />
           </div>
         </div>
-        <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-2xl mx-auto">
-            <div className="space-y-6">
-                <section>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+             <section>
                 <h2 className="text-xl font-semibold text-white mb-2">About Lorem Ipsum Generator</h2>
                 <p className="text-white">
                     This tool allows you to generate placeholder text using Lorem Ipsum. It&apos;s perfect for designers, developers, and anyone who needs dummy text for layout design or content testing. The tool also offers options to shuffle words, copy text, download it, and clear the input and output fields.
                 </p>
-                </section>
+              </section>
+        </div>
 
-                <section>
-                <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+             <section>
+                <h2 className="text-xl font-semibold text-white mb-2">How to Use Lorem Ipsum Generator?</h2>
                 <ol className="text-white list-decimal list-inside">
                     <li>Enter the number of paragraphs, sentences, or words you need.</li>
                     <li>Click the &quot;Generate&quot; button to create Lorem Ipsum text.</li>
@@ -186,9 +187,12 @@ export default function LoremIpsumGenerator() {
                     <li>Select &quot;Download&quot; to save the generated text as a .txt file.</li>
                     <li>Click &quot;Clear&quot; to reset the input fields and output area.</li>
                 </ol>
-                </section>
+              </section>
 
-                <section>
+        </div> 
+
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+              <section>
                 <h2 className="text-xl font-semibold text-white mb-2">Features</h2>
                 <ul className="text-white list-disc list-inside">
                     <li>Generate: Creates placeholder Lorem Ipsum text based on your input specifications.</li>
@@ -197,10 +201,8 @@ export default function LoremIpsumGenerator() {
                     <li>Copy: Copies the generated text to the clipboard for easy use.</li>
                     <li>Download: Saves the generated text as a .txt file for offline use.</li>
                 </ul>
-                </section>
-            </div>
-            </div>
-
+              </section>
+        </div>           
       </main>
       <Footer />
     </div>

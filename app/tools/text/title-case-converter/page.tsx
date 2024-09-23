@@ -26,21 +26,28 @@ export default function TitleCaseConverter() {
 
   const convertToTitleCase = (text: string) => {
     const words = text.split(/\s+/);
+  
     const titleCaseWords = words.map((word, index) => {
       if (respectAcronyms && word === word.toUpperCase() && word.length > 1) {
         return word;
       }
-
+  
       const lowerWord = word.toLowerCase();
-      
-      if (capitalizeFirst || index === 0 || index === words.length - 1 || !lowercaseWords.has(lowerWord)) {
+  
+      if (capitalizeFirst) {
         return lowerWord.charAt(0).toUpperCase() + lowerWord.slice(1);
       }
-      
+
+      if (index === 0 || index === words.length - 1 || !lowercaseWords.has(lowerWord)) {
+        return lowerWord.charAt(0).toUpperCase() + lowerWord.slice(1);
+      }
+  
       return lowerWord;
     });
+  
     setOutputText(titleCaseWords.join(' '));
   };
+  
 
   const handleCopy = () => {
     navigator.clipboard.writeText(outputText);
