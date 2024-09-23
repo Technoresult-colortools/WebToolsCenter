@@ -90,8 +90,8 @@ export default function CodeToImageConverter() {
   }
 
   const getThemeStyle = (themeName: string) => {
-    return (prismStyles as Record<string, any>)[themeName] || prismStyles.atomDark
-  }
+    return (prismStyles as Record<string, { [key: string]: React.CSSProperties }>)[themeName] || prismStyles.atomDark;
+  };
 
   const handleBackgroundImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]

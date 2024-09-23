@@ -90,7 +90,7 @@ export default function URLEncoderDecoder() {
           toast.success('File uploaded successfully!')
         }
       }
-      reader.onerror = (e) => {
+      reader.onerror = () => {
         toast.error('Error reading file. Please try again.')
       }
       reader.readAsText(file)

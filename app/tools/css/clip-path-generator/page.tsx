@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw, Image } from 'lucide-react'
+import { Copy, RefreshCw,} from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 

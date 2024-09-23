@@ -3,12 +3,20 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search,BarChart,Download, Video,Scale, ChevronDown, ArrowRight, ChevronRight, Type, Image, Palette, Code, Droplet, Share2, Wrench, TextCursor,SwatchBook, ALargeSmall, FileText, Crop, Filter, Maximize2, ClipboardCheck, Copy, Shuffle, Scissors, RefreshCw, FileCode, BookMarked, Zap, Grid, EyeOff, Blend, Box, Loader, AlertTriangle, Link2, Lock, QrCode, KeyRound, Instagram, Twitter, Pipette, BookType } from 'lucide-react'
+import { Search,BarChart,Download, Video,Scale, ArrowRight, ChevronRight, Type, Image, Palette, Code, Droplet, Share2, Wrench, TextCursor,SwatchBook, ALargeSmall, FileText, Crop, Filter, Maximize2, ClipboardCheck, Copy, Shuffle, Scissors, RefreshCw, FileCode, BookMarked, Zap, Grid, EyeOff, Blend, Box, Loader, AlertTriangle, Link2, Lock, QrCode, Instagram, Twitter, Pipette, BookType } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
 import Input from "@/components/ui/Input"
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+
+type Tool = {
+  name: string;
+  category: string;
+  href: string;
+  description: string;
+  icon: React.ElementType;
+}
 
 const categories = [
   { name: 'Text Tools', tools: '/tools/text', color: 'from-blue-500 to-blue-600', icon: Type },
@@ -121,7 +129,7 @@ export default function HomePage() {
     handleSearch(searchTerm)
   }, [searchTerm, handleSearch])
 
-  const renderToolCard = (tool: any) => (
+  const renderToolCard = (tool: Tool) => (
     <Card className="bg-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg h-[300px] flex flex-col justify-between">
       <CardHeader>
         <CardTitle className="text-blue-400 flex items-center">

@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Slider  from "@/components/ui/Slider"
+import Slider from "@/components/ui/Slider"
 import { Label } from "@/components/ui/label"
 import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/Card"
-import { Smartphone, Monitor, Copy, TabletSmartphone } from 'lucide-react'
+import { Smartphone, Copy, TabletSmartphone } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -27,21 +27,28 @@ export default function ShadowGenerator() {
     setShadowRadius(shadowDepth * 0.81)
   }, [shadowDepth])
 
-  const shadowStyle = {
-    boxShadow: `${shadowOffsetWidth}px ${shadowOffsetHeight}px ${shadowRadius}px ${shadowColor}${Math.round(shadowOpacity * 255).toString(16).padStart(2, '0')}`,
+  // Generate shadow style based on active tab
+  const getShadowStyle = () => {
+    const colorHex = `${Math.round(shadowOpacity * 255).toString(16).padStart(2, '0')}`
+    const shadowStyle = {
+      boxShadow: `${shadowOffsetWidth}px ${shadowOffsetHeight}px ${shadowRadius}px ${shadowColor}${colorHex}`,
+    }
+
+    // Optionally, you could modify styles based on activeTab if needed
+    return shadowStyle
   }
 
   const copyToClipboard = () => {
     const code = `
         shadowColor: "${shadowColor}",
         shadowOffset: {
-        width: ${shadowOffsetWidth},
-        height: ${shadowOffsetHeight},
+          width: ${shadowOffsetWidth},
+          height: ${shadowOffsetHeight},
         },
         shadowOpacity: ${shadowOpacity.toFixed(2)},
         shadowRadius: ${shadowRadius.toFixed(2)},
         elevation: ${elevation}
-            `.trim()
+    `.trim()
     navigator.clipboard.writeText(code)
     toast.success('Shadow style copied to clipboard!')
   }
@@ -51,7 +58,7 @@ export default function ShadowGenerator() {
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">React Native Shadow Generator</h1>
-        
+
         <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <CardContent className="p-6">
             <Tabs defaultValue="ios" className="w-full" onValueChange={setActiveTab}>
@@ -67,24 +74,19 @@ export default function ShadowGenerator() {
               </TabsList>
               <TabsContent value="ios">
                 <div className="bg-gray-200 p-8 rounded-lg flex justify-center items-center">
-                  <div
-                    className="w-32 h-32 bg-white rounded-lg"
-                    style={shadowStyle}
-                  ></div>
+                  <div className="w-32 h-32 bg-white rounded-lg" style={getShadowStyle()}></div>
                 </div>
               </TabsContent>
               <TabsContent value="android">
                 <div className="bg-gray-200 p-8 rounded-lg flex justify-center items-center">
-                  <div
-                    className="w-32 h-32 bg-white rounded-lg"
-                    style={shadowStyle}
-                  ></div>
+                  <div className="w-32 h-32 bg-white rounded-lg" style={getShadowStyle()}></div>
                 </div>
               </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
 
+        {/* Shadow Properties Form */}
         <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <CardContent className="p-6">
             <div className="space-y-6">
@@ -106,30 +108,31 @@ export default function ShadowGenerator() {
                   />
                 </div>
               </div>
-              
-              {[
-                { id: "shadowDepth", label: "Shadow Depth", value: shadowDepth, min: 0, max: 50, onChange: setShadowDepth },
+
+              {/* Slider for shadow properties */}
+              {[{ id: "shadowDepth", label: "Shadow Depth", value: shadowDepth, min: 0, max: 50, onChange: setShadowDepth },
                 { id: "shadowOffsetWidth", label: "Shadow Offset Width", value: shadowOffsetWidth, min: -50, max: 50, onChange: setShadowOffsetWidth },
                 { id: "shadowOffsetHeight", label: "Shadow Offset Height", value: shadowOffsetHeight, min: -50, max: 50, onChange: setShadowOffsetHeight },
-                { id: "shadowOpacity", label: "Shadow Opacity", value: shadowOpacity, min: 0, max: 1, step: 0.01, onChange: setShadowOpacity },
-              ].map((slider) => (
-                <div key={slider.id} className="space-y-2">
-                  <Label htmlFor={slider.id} className="text-white">{slider.label}: {slider.value.toFixed(2)}</Label>
-                  <Slider
-                    id={slider.id}
-                    min={slider.min}
-                    max={slider.max}
-                    step={slider.step || 1}
-                    value={slider.value}
-                    onChange={(value) => slider.onChange(value)}
-                    className="w-full"
-                  />
-                </div>
-              ))}
+                { id: "shadowOpacity", label: "Shadow Opacity", value: shadowOpacity, min: 0, max: 1, step: 0.01, onChange: setShadowOpacity }]
+                .map((slider) => (
+                  <div key={slider.id} className="space-y-2">
+                    <Label htmlFor={slider.id} className="text-white">{slider.label}: {slider.value.toFixed(2)}</Label>
+                    <Slider
+                      id={slider.id}
+                      min={slider.min}
+                      max={slider.max}
+                      step={slider.step || 1}
+                      value={slider.value}
+                      onChange={(value) => slider.onChange(value)}
+                      className="w-full"
+                    />
+                  </div>
+                ))}
             </div>
           </CardContent>
         </Card>
 
+        {/* Generated Code Section */}
         <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <CardContent className="p-6">
             <div className="space-y-4">
@@ -152,6 +155,7 @@ elevation: ${elevation}`}
           </CardContent>
         </Card>
 
+        {/* About Section */}
         <Card className="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mt-8 mx-auto">
           <CardContent>
             <div className="space-y-6">

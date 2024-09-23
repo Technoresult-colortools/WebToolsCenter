@@ -6,8 +6,6 @@ import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Slider from "@/components/ui/Slider"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Copy, Shuffle, Plus, Minus } from 'lucide-react'
 import { toast, Toaster } from 'react-hot-toast'
 import Header from '@/components/Header'
