@@ -160,9 +160,10 @@ export default function HomePage() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h1 className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
             WebToolsCenter
           </h1>
+
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Discover powerful tools for your web projects
           </p>
