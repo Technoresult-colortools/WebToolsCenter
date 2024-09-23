@@ -20,7 +20,7 @@ export default function ShadowGenerator() {
   const [shadowOpacity, setShadowOpacity] = useState(0.24)
   const [shadowRadius, setShadowRadius] = useState(15.38)
   const [elevation, setElevation] = useState(19)
-  const [activeTab, setActiveTab] = useState("ios")
+  const [, setActiveTab] = useState("ios")
 
   useEffect(() => {
     setElevation(shadowDepth)
