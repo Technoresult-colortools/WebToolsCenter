@@ -235,7 +235,23 @@ export default function ImageResizer() {
         </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">How to Use</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">About Image Resizer</h2>
+          The Image Resizer tool allows you to quickly resize images to specific dimensions. You can upload your image, adjust its width and height, and choose from different output formats such as PNG, JPEG, or WebP. Whether you're looking to resize images for social media, web use, or other purposes, this tool is simple and easy to use.
+          <h3 className="text-2xl mt-2 font-semibold text-white mb-4">Features of Image Resizer:</h3>
+          <ul className="list-disc list-inside text-white mb-4">
+            <li>Upload any image format (PNG, JPEG, WebP, etc.)</li>
+            <li>Adjust width and height manually</li>
+            <li>Option to preserve the aspect ratio of the image</li>
+            <li>Swap image dimensions with a single click</li>
+            <li>Choose output formats: PNG, JPEG, or WebP</li>
+            <li>Preview resized image before download</li>
+            <li>Download resized image in your selected format</li>
+            <li>Reset the image and resizing settings</li>
+          </ul>
+        </div>
+
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+          <h2 className="text-2xl font-bold text-white mb-4">How to Use Image Resizer?</h2>
           <ol className="list-decimal list-inside text-gray-300 space-y-2">
             <li>Click the "Select an image file" button to upload your image.</li>
             <li>Once uploaded, you'll see the original image and its dimensions.</li>

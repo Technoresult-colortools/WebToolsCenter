@@ -195,21 +195,21 @@ export default function ImageFilters() {
                   </div>
                 </div>
               )}
-              <div className="flex justify-between">
+              <div className="flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0 sm:space-x-4">
                 <button
                   onClick={() => {
                     setSelectedFilter(null)
                     applyFilter()
                     setShowOriginal(true)
                   }}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-300 flex items-center"
+                  className="w-full sm:w-auto bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-300 flex items-center justify-center"
                 >
                   <RefreshCw size={16} className="mr-2" />
                   Reset Filter
                 </button>
                 <button
                   onClick={downloadFilteredImage}
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300 flex items-center"
+                  className="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300 flex items-center justify-center"
                 >
                   <Download size={16} className="mr-2" />
                   Download Filtered Image
@@ -219,19 +219,18 @@ export default function ImageFilters() {
           )}
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <div className="mt-8">
-            <section className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-2">About Image Filters</h2>
-              <p className="text-white">
-                This Image Filters tool allows you to apply various filters to your uploaded images. 
+        <div className="bg-gray-800 mt-6 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+        <h2 className="text-xl font-semibold text-white mb-2">About Image Filters</h2>
+          <p className="text-white">
+               This Image Filters tool allows you to apply various filters to your uploaded images. 
                 You can adjust the intensity of each filter and compare the filtered image with the original. 
                 Once you're satisfied with the result, you can download the filtered image.
-              </p>          
-            </section>
+          </p>
+        </div>
 
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <section className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-2">How to Use It?</h2>
+              <h2 className="text-xl font-semibold text-white mb-2">How to Use Image Filter?</h2>
               <p className="text-white">
                 1. Upload an image by clicking on the upload area.<br />
                 2. Select a filter from the available options.<br />
@@ -241,8 +240,9 @@ export default function ImageFilters() {
                 6. When satisfied, click "Download Filtered Image" to save your work.
               </p>
             </section>
-
-            <section>
+        </div>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+           <section>
               <h2 className="text-xl font-semibold text-white mb-2">Available Filters</h2>
               <ul className="list-disc list-inside text-white">
                 <li>Grayscale</li>
@@ -255,7 +255,6 @@ export default function ImageFilters() {
                 <li>Saturate</li>
               </ul>
             </section>
-          </div>
         </div>
       </main>
       <Footer />
