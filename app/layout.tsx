@@ -5,7 +5,7 @@ config.autoAddCss = false;
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Head from 'next/head'; // Import Head for meta tags
+import Script from 'next/script'; // Import Script from next/script
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,10 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
-        {/* Google Analytics Script */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB0SJSJQ1H"></script>
-        <script
+      <head>
+        {/* Google Analytics Script with next/script */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-DB0SJSJQ1H"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -34,7 +39,7 @@ export default function RootLayout({
             `,
           }}
         />
-      </Head>
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );

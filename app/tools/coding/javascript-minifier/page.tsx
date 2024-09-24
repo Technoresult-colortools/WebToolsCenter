@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import { FileMinus, Copy, RefreshCw, Upload, Download, Settings } from 'lucide-react'
+import { FileMinus, Copy, RefreshCw, Upload, Download, } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
