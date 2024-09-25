@@ -1,13 +1,11 @@
-// ./app/tools/social-media/youtube-thumbnail-downloader/page.tsx
-
 'use client'
-
 import React, { useState, useRef } from 'react'
 import { Search, Download, RefreshCw, Clipboard, Check, AlertCircle, Image as ImageIcon } from 'lucide-react'
+import { Button } from "@/components/ui/Button"
+import Input from "@/components/ui/Input"
+import { Toaster, toast } from 'react-hot-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import Image from 'next/image';
-
 
 interface ThumbnailQuality {
   url: string
@@ -15,7 +13,7 @@ interface ThumbnailQuality {
   height: number
 }
 
-function YouTubeThumbnailDownloader() {
+export default function YouTubeThumbnailDownloader() {
   const [videoUrl, setVideoUrl] = useState('')
   const [thumbnails, setThumbnails] = useState<ThumbnailQuality[]>([])
   const [error, setError] = useState('')
@@ -32,8 +30,7 @@ function YouTubeThumbnailDownloader() {
   const fetchThumbnails = async () => {
     setError('')
     setThumbnails([])
-    setLoading(true);
-  
+    setLoading(true)
 
     const videoId = extractVideoId(videoUrl)
     if (!videoId) {
@@ -41,43 +38,33 @@ function YouTubeThumbnailDownloader() {
       setLoading(false)
       return
     }
-    
 
-    type ThumbnailQuality = {
-      url: string;
-      width: number;
-      height: number;
-    };
-    
     try {
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=AIzaSyA0PxWAlxu6KE9o9bkn1K5mjlbtBFiSmes`
-      );
-      const data = await response.json();
-    
+      )
+      const data = await response.json()
+
       if (data.items && data.items.length > 0) {
-        const thumbnailsData = data.items[0].snippet.thumbnails;
-        const thumbnailQualities: ThumbnailQuality[] = (Object.values(thumbnailsData) as {
-          url: string;
-          width: number;
-          height: number;
-        }[])
-          .map((thumb) => ({
+        const thumbnailsData = data.items[0].snippet.thumbnails
+        const thumbnailQualities: ThumbnailQuality[] = Object.values(thumbnailsData)
+          .map((thumb: any) => ({
             url: thumb.url,
             width: thumb.width,
             height: thumb.height,
           }))
-          .sort((a, b) => b.width - a.width);        
-    
-        setThumbnails(thumbnailQualities);
+          .sort((a, b) => b.width - a.width)
+
+        setThumbnails(thumbnailQualities)
+        toast.success('Thumbnails fetched successfully!')
       } else {
-        setError('No thumbnail found for this video');
+        setError('No thumbnail found for this video')
       }
     } catch (err) {
-      setError('Failed to fetch thumbnail. Please try again.');
+      setError('Failed to fetch thumbnail. Please try again.')
     }
-    
-    setLoading(false);
+
+    setLoading(false)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -98,6 +85,7 @@ function YouTubeThumbnailDownloader() {
   const copyToClipboard = (url: string) => {
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true)
+      toast.success('URL copied to clipboard!')
       setTimeout(() => setCopied(false), 2000)
     })
   }
@@ -109,28 +97,30 @@ function YouTubeThumbnailDownloader() {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+    toast.success('Thumbnail downloaded!')
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+      <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">YouTube Thumbnail Downloader</h1>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="mb-8">
-            <div className="flex items-center mb-4">
-              <input
+        
+        <div className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto mb-8">
+          <form onSubmit={handleSubmit} className="mb-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <Input
                 ref={inputRef}
                 type="text"
                 value={videoUrl}
                 onChange={(e) => setVideoUrl(e.target.value)}
                 placeholder="Enter YouTube video URL"
-                className="flex-grow px-4 py-2 rounded-l-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-grow bg-gray-700 text-white border-gray-600 focus:ring-blue-500"
               />
-              <button
+              <Button
                 type="submit"
-                className="bg-blue-500 text-white px-6 py-2 rounded-r-md hover:bg-blue-600 transition duration-300 flex items-center"
+                className="bg-blue-500 hover:bg-blue-600 text-white"
                 disabled={loading}
               >
                 {loading ? (
@@ -139,53 +129,52 @@ function YouTubeThumbnailDownloader() {
                   <Search className="mr-2" size={20} />
                 )}
                 {loading ? 'Fetching...' : 'Fetch'}
-              </button>
+              </Button>
+              <Button
+                type="button"
+                onClick={handleReset}
+                className="bg-red-500 hover:bg-red-600 text-white"
+              >
+                <RefreshCw className="mr-2" size={20} />
+                Reset
+              </Button>
             </div>
-            <button
-              type="button"
-              onClick={handleReset}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300 flex items-center mx-auto"
-            >
-              <RefreshCw className="mr-2" size={20} />
-              Reset
-            </button>
           </form>
 
           {error && (
-            <div className="bg-red-500 text-white p-4 rounded-md mb-4 flex items-center">
-              <AlertCircle className="mr-2" size={20} />
-              {error}
+            <div className="bg-red-500 text-white p-4 rounded-md mb-6 flex items-center">
+              <AlertCircle className="mr-2 flex-shrink-0" size={20} />
+              <span>{error}</span>
             </div>
           )}
 
-          {thumbnails.length > 0 && (
+          {thumbnails.length > 0 ? (
             <div>
               <h2 className="text-2xl font-bold text-white mb-4">Available Thumbnails</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {thumbnails.map((thumb, index) => (
-                  <div key={index} className="bg-gray-700 rounded-lg p-4">
-                    <Image 
-                      src={thumb.url} 
-                      alt="Video Thumbnail" 
-                      width={thumb.width} 
-                      height={thumb.height} 
-                      layout="responsive" 
-                    />
-
-                    <p className="text-white mb-2">
+                  <div key={index} className="bg-gray-700 rounded-lg p-4 shadow-md">
+                    <div className="aspect-w-16 aspect-h-9 mb-4">
+                      <img
+                        src={thumb.url}
+                        alt={`Thumbnail ${thumb.width}x${thumb.height}`}
+                        className="object-cover w-full h-full rounded-md"
+                      />
+                    </div>
+                    <p className="text-white mb-3">
                       Quality: {thumb.width}x{thumb.height}
                     </p>
-                    <div className="flex space-x-2">
-                      <button
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button
                         onClick={() => downloadThumbnail(thumb.url, `${thumb.width}x${thumb.height}`)}
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300 flex items-center"
+                        className="bg-green-500 hover:bg-green-600 text-white flex-1"
                       >
                         <Download className="mr-2" size={16} />
                         Download
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         onClick={() => copyToClipboard(thumb.url)}
-                        className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-300 flex items-center"
+                        className="bg-purple-500 hover:bg-purple-600 text-white flex-1"
                       >
                         {copied ? (
                           <Check className="mr-2" size={16} />
@@ -193,15 +182,13 @@ function YouTubeThumbnailDownloader() {
                           <Clipboard className="mr-2" size={16} />
                         )}
                         {copied ? 'Copied!' : 'Copy URL'}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          )}
-
-          {!thumbnails.length && !error && (
+          ) : (
             <div className="text-center text-gray-400 py-12">
               <ImageIcon size={48} className="mx-auto mb-4" />
               <p>Enter a YouTube video URL to fetch thumbnails</p>
@@ -209,45 +196,28 @@ function YouTubeThumbnailDownloader() {
           )}
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <div className="mt-8">
-            <section className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-2">About YouTube Thumbnail Downloader</h2>
-              <p className="text-white">
-                This advanced YouTube Thumbnail Downloader allows you to easily fetch and download thumbnails from YouTube videos in various qualities. 
-                Simply paste the YouTube video URL, and the tool will retrieve all available thumbnail sizes for you to download or copy.
-              </p>          
-            </section>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-white mb-4">How to Use</h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 mb-6">
+            <li>Enter a valid YouTube video URL in the input field.</li>
+            <li>Click the "Fetch" button to retrieve available thumbnails.</li>
+            <li>Once thumbnails are loaded, you can download them or copy their URLs.</li>
+            <li>Use the "Reset" button to clear the input and start over.</li>
+          </ol>
 
-            <section className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-2">How to Use It?</h2>
-              <p className="text-white">
-                1. Paste a valid YouTube video URL into the input field.<br />
-                2. Click the "Fetch" button to retrieve available thumbnails.<br />
-                3. Once thumbnails are loaded, you can download them or copy their URLs.<br />
-                4. Use the "Reset" button to clear the input and start over.<br />
-                5. The tool supports various YouTube URL formats, including shortened URLs.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-semibold text-white mb-2">Features</h2>
-              <ul className="list-disc list-inside text-white">
-                <li>Supports multiple YouTube URL formats</li>
-                <li>Fetches thumbnails in all available qualities</li>
-                <li>Option to download thumbnails directly</li>
-                <li>Copy thumbnail URLs to clipboard</li>
-                <li>Responsive design for various screen sizes</li>
-                <li>Error handling for invalid URLs or API issues</li>
-                <li>Loading indicator during thumbnail fetching</li>
-              </ul>
-            </section>
-          </div>
+          <h2 className="text-2xl font-bold text-white mb-4">Features</h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2">
+            <li>Supports multiple YouTube URL formats</li>
+            <li>Fetches thumbnails in all available qualities</li>
+            <li>Option to download thumbnails directly</li>
+            <li>Copy thumbnail URLs to clipboard</li>
+            <li>Responsive design for various screen sizes</li>
+            <li>Error handling for invalid URLs or API issues</li>
+            <li>Loading indicator during thumbnail fetching</li>
+          </ul>
         </div>
       </main>
       <Footer />
     </div>
   )
 }
-
-export default YouTubeThumbnailDownloader
