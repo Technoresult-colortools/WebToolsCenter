@@ -13,6 +13,13 @@ interface ThumbnailQuality {
   height: number
 }
 
+interface YouTubeThumbnail {
+  url: string
+  width: number
+  height: number
+}
+
+
 export default function YouTubeThumbnailDownloader() {
   const [videoUrl, setVideoUrl] = useState('')
   const [thumbnails, setThumbnails] = useState<ThumbnailQuality[]>([])
@@ -47,13 +54,14 @@ export default function YouTubeThumbnailDownloader() {
 
       if (data.items && data.items.length > 0) {
         const thumbnailsData = data.items[0].snippet.thumbnails
-        const thumbnailQualities: ThumbnailQuality[] = Object.values(thumbnailsData)
-          .map((thumb: any) => ({
+        const thumbnailQualities: ThumbnailQuality[] = (Object.values(thumbnailsData) as YouTubeThumbnail[])
+          .map((thumb) => ({
             url: thumb.url,
             width: thumb.width,
             height: thumb.height,
           }))
           .sort((a, b) => b.width - a.width)
+
 
         setThumbnails(thumbnailQualities)
         toast.success('Thumbnails fetched successfully!')

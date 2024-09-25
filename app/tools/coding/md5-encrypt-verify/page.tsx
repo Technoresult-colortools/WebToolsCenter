@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Toaster, toast } from 'react-hot-toast'
-import { Hash, Copy, RefreshCw, Upload, Download, CheckCircle2, XCircle, FileText, Clipboard } from 'lucide-react'
+import { Hash, Copy, RefreshCw, Upload, Download, CheckCircle2, Clipboard } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import crypto from 'crypto-js'
