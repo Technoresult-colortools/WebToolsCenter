@@ -38,7 +38,7 @@ export default function JWTEncoderDecoder() {
 
   const handleEncode = () => {
     try {
-      let payload: any
+      let payload: Record<string, any>;
       try {
         payload = JSON.parse(jsonInput)
       } catch (parseError) {
