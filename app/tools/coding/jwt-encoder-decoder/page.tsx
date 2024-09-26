@@ -16,6 +16,26 @@ import { KJUR } from 'jsrsasign'
 
 type Algorithm = 'HS256' | 'HS384' | 'HS512' | 'RS256' | 'RS384' | 'RS512' | 'ES256' | 'ES384' | 'ES512'
 
+interface JWTPayload {
+  [key: string]: string | number | boolean | undefined;
+  iat?: number;
+  exp?: number;
+  nbf?: number;
+  sub?: string;
+  iss?: string;
+  aud?: string;
+  jti?: string;
+}
+
+interface Claims {
+  exp: string;
+  nbf: string;
+  sub: string;
+  iss: string;
+  aud: string;
+  jti: string;
+}
+
 export default function JWTEncoderDecoder() {
   const [activeTab, setActiveTab] = useState<'encode' | 'decode'>('encode')
   const [algorithm, setAlgorithm] = useState<Algorithm>('HS256')
@@ -27,7 +47,7 @@ export default function JWTEncoderDecoder() {
   const [decodedPayload, setDecodedPayload] = useState('')
   const [autoSetIat, setAutoSetIat] = useState(true)
   const [showAdditionalClaims, setShowAdditionalClaims] = useState(false)
-  const [claims, setClaims] = useState({
+  const [claims, setClaims] = useState<Claims>({
     exp: '',
     nbf: '',
     sub: '',
@@ -38,40 +58,44 @@ export default function JWTEncoderDecoder() {
 
   const handleEncode = () => {
     try {
-      let payload: Record<string, any>;
+      let payload: JWTPayload;
       try {
-        payload = JSON.parse(jsonInput)
+        payload = JSON.parse(jsonInput);
       } catch (parseError) {
-        throw new Error('Invalid JSON input')
+        throw new Error('Invalid JSON input');
       }
 
       if (autoSetIat) {
-        payload.iat = Math.floor(Date.now() / 1000)
+        payload.iat = Math.floor(Date.now() / 1000);
       }
 
       Object.entries(claims).forEach(([key, value]) => {
         if (value) {
-          payload[key] = key === 'exp' || key === 'nbf' ? Math.floor(Date.now() / 1000) + parseInt(value) : value
+          if (key === 'exp' || key === 'nbf') {
+            payload[key] = Math.floor(Date.now() / 1000) + parseInt(value);
+          } else {
+            payload[key] = value;
+          }
         }
-      })
+      });
 
       if (!signingKey) {
-        throw new Error('Signing key is required')
+        throw new Error('Signing key is required');
       }
 
-      const header = { alg: algorithm, typ: 'JWT' }
-      const sHeader = JSON.stringify(header)
-      const sPayload = JSON.stringify(payload)
-      const token = KJUR.jws.JWS.sign(null, sHeader, sPayload, signingKey)
+      const header = { alg: algorithm, typ: 'JWT' };
+      const sHeader = JSON.stringify(header);
+      const sPayload = JSON.stringify(payload);
+      const token = KJUR.jws.JWS.sign(null, sHeader, sPayload, signingKey);
 
-      setJwtOutput(token)
-      setDecodedHeader(JSON.stringify(header, null, 2))
-      setDecodedPayload(JSON.stringify(payload, null, 2))
-      toast.success('JWT encoded successfully!')
+      setJwtOutput(token);
+      setDecodedHeader(JSON.stringify(header, null, 2));
+      setDecodedPayload(JSON.stringify(payload, null, 2));
+      toast.success('JWT encoded successfully!');
     } catch (error) {
-      toast.error('Error encoding JWT: ' + (error as Error).message)
+      toast.error('Error encoding JWT: ' + (error as Error).message);
     }
-  }
+  };
 
   const handleDecode = () => {
     try {
@@ -292,71 +316,66 @@ export default function JWTEncoderDecoder() {
           </Tabs>
         </div>
         <div>
-            <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-                <h2 className="text-xl md:text-2xl font-semibold text-white mb-4">What is JWT?</h2>
-                
-                {/* Explanation of JWT */}
-                <div className="text-white space-y-4">
-                    <p className="text-gray-300">
-                    JSON Web Token (JWT) is a compact, URL-safe way of representing claims to be transferred between two parties. The token consists of three parts: Header, Payload, and Signature.
-                    </p>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4">What is JWT?</h2>
+            
+            <div className="text-white space-y-4">
+              <p className="text-gray-300">
+                JSON Web Token (JWT) is a compact, URL-safe way of representing claims to be transferred between two parties. The token consists of three parts: Header, Payload, and Signature.
+              </p>
 
-                    <h3 className="text-lg font-semibold text-white">JWT Structure</h3>
-                    <ul className="list-disc list-inside text-gray-300">
-                    <li><strong>Header</strong>: Specifies the signing algorithm and token type.</li>
-                    <li><strong>Payload</strong>: Contains the claims, usually information about the user.</li>
-                    <li><strong>Signature</strong>: Verifies the integrity and authenticity of the token.</li>
-                    </ul>
+              <h3 className="text-lg font-semibold text-white">JWT Structure</h3>
+              <ul className="list-disc list-inside text-gray-300">
+                <li><strong>Header</strong>: Specifies the signing algorithm and token type.</li>
+                <li><strong>Payload</strong>: Contains the claims, usually information about the user.</li>
+                <li><strong>Signature</strong>: Verifies the integrity and authenticity of the token.</li>
+              </ul>
 
-                    <h3 className="text-lg font-semibold text-white">Example JWT</h3>
-                    <div className="bg-gray-700 rounded-lg p-4 text-sm font-mono text-green-400 overflow-auto">
-                    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-                    </div>
+              <h3 className="text-lg font-semibold text-white">Example JWT</h3>
+              <div className="bg-gray-700 rounded-lg p-4 text-sm font-mono text-green-400 overflow-auto">
+                eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+              </div>
 
-                    {/* How encoding and decoding works */}
-                    <h3 className="text-lg font-semibold text-white">JWT Encode and Decode</h3>
-                    <p className="text-gray-300">
-                    The process of encoding and decoding a JWT involves converting the claims into a base64-encoded string and adding a digital signature.
-                    </p>
+              <h3 className="text-lg font-semibold text-white">JWT Encode and Decode</h3>
+              <p className="text-gray-300">
+                The process of encoding and decoding a JWT involves converting the claims into a base64-encoded string and adding a digital signature.
+              </p>
 
-                    <h4 className="text-md font-semibold text-white">JWT Encoding (Example)</h4>
-                    <pre className="bg-gray-700 rounded-lg p-4 text-sm font-mono text-green-400 overflow-auto">
+              <h4 className="text-md font-semibold text-white">JWT Encoding (Example)</h4>
+              <pre className="bg-gray-700 rounded-lg p-4 text-sm font-mono text-green-400 overflow-auto">
                 {`const header = {
-                "alg": "HS256",
-                "typ": "JWT"
-                };
+  "alg": "HS256",
+  "typ": "JWT"
+};
 
-                const payload = {
-                "sub": "1234567890",
-                "name": "John Doe",
-                "iat": 1516239022
-                };
+const payload = {
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+};
 
-                // Create a JWT (encoded)
-                const encodedToken = base64UrlEncode(header) + "." + base64UrlEncode(payload) + "." + sign(header, payload);`}
-                    </pre>
+// Create a JWT (encoded)
+const encodedToken = base64UrlEncode(header) + "." + base64UrlEncode(payload) + "." + sign(header, payload);`}
+              </pre>
 
-                    <h4 className="text-md font-semibold text-white">JWT Decoding (Example)</h4>
-                    <pre className="bg-gray-700 rounded-lg p-4 text-sm font-mono text-green-400 overflow-auto">
+              <h4 className="text-md font-semibold text-white">JWT Decoding (Example)</h4>
+              <pre className="bg-gray-700 rounded-lg p-4 text-sm font-mono text-green-400 overflow-auto">
                 {`const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
-                // Split the token into parts
-                const [header, payload, signature] = token.split('.');
+// Split the token into parts
+const [header, payload, signature] = token.split('.');
 
-                // Decode the header and payload (they are base64Url encoded)
-                const decodedHeader = base64UrlDecode(header);
-                const decodedPayload = base64UrlDecode(payload);`}
-                    </pre>
-                    
-                    <p className="text-gray-300">
-                    The signature is verified using a secret key or a public/private key pair.
-                    </p>
+// Decode the header and payload (they are base64Url encoded)
+const decodedHeader = base64UrlDecode(header);
+const decodedPayload = base64UrlDecode(payload);`}
+              </pre>
+              
+              <p className="text-gray-300">
+                The signature is verified using a secret key or a public/private key pair.
+              </p>
             </div>
+          </div>
         </div>
-
-
-        </div>
-
       </main>
       <Footer />
     </div>
