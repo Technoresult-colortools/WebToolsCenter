@@ -21,12 +21,12 @@ const codingTools = [
   { name: 'JavaScript Formatter', href: '/tools/coding/javascript-formatter', icon: faFileCode },
   { name: 'MD5 Generator and Verifier', href: '/tools/coding/md5-encrypt-verify', icon: faLock },
   { name: 'SHA1 Encrypt and Verifier', href: '/tools/coding/sha1-encrypt-verify', icon: faLock },
-  { name: 'SHA224 Encrypt/Decrypt', href: '/tools/coding/sha224-encrypt-decrypt', icon: faLock },
-  { name: 'SHA256 Encrypt/Decrypt', href: '/tools/coding/sha256-encrypt-decrypt', icon: faLock },
-  { name: 'SHA384 Encrypt/Decrypt', href: '/tools/coding/sha384-encrypt-decrypt', icon: faLock },
-  { name: 'SHA512 Encrypt/Decrypt', href: '/tools/coding/sha512-encrypt-decrypt', icon: faLock },
+  { name: 'SHA224 Encrypt and Verifier', href: '/tools/coding/sha224-encrypt-verify', icon: faLock },
+  { name: 'SHA256 Encrypt and Verifier', href: '/tools/coding/sha256-encrypt-verify', icon: faLock },
+  { name: 'SHA384 Encrypt and Verifier', href: '/tools/coding/sha384-encrypt-verify', icon: faLock },
+  { name: 'SHA512 Encrypt and Verifier', href: '/tools/coding/sha512-encrypt-verify', icon: faLock },
   { name: 'JWT Encoder/Decoder', href: '/tools/coding/jwt-encoder-decoder', icon: faLock },
-  { name: 'JSON Tree Viewer', href: '/tools/coding/json-tree-viewer', icon: faDatabase },
+  { name: 'Advance JSON Tree Viewer', href: '/tools/coding/json-tree-viewer', icon: faDatabase },
 ];
 
 export default function CodingToolsPage() {
