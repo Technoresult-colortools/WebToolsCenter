@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Key, Lock, HelpCircle, Copy, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react'
+import { Key, Lock, Copy, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -9,7 +9,6 @@ import Input from "@/components/ui/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Switch } from "@/components/ui/switch"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import toast, { Toaster } from 'react-hot-toast'
