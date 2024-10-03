@@ -9,7 +9,8 @@ import {
   faRandom,
   faQrcode,
   faBarcode,
-  faWeightHanging
+  faWeightHanging,
+  faLink
 } from '@fortawesome/free-solid-svg-icons'; 
 
 const miscellaneousTools = [
@@ -18,6 +19,7 @@ const miscellaneousTools = [
   { name: 'QR Code Generator', href: '/tools/misc/qr-code-generator', icon: faQrcode, description: 'Create QR codes for URLs and text.' },
   { name: 'BarCode Generator', href: '/tools/misc/barcode-generator', icon: faBarcode, description: 'Generate barcodes for various purposes.' },
   { name: 'Unit Converter', href: '/tools/misc/unit-converter', icon: faWeightHanging, description: 'Convert Between Various Units.' },
+  { name: 'URL Shortener', href: '/tools/misc/url-shortener', icon: faLink, description: 'Convert Between Various Units.' },
 ];
 
 const MiscellaneousToolsPage: React.FC = () => {
@@ -25,7 +27,7 @@ const MiscellaneousToolsPage: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="flex-grow container mx-auto px-4 py-8 max-w-5xl">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Miscellaneous Tools Categories</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

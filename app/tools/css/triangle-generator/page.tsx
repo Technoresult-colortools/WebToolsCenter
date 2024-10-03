@@ -14,7 +14,7 @@ import Footer from '@/components/Footer'
 type Direction = 'top' | 'top-right' | 'right' | 'bottom-right' | 'bottom' | 'bottom-left' | 'left' | 'top-left'
 
 const TriangleGenerator = () => {
-  const [direction, setDirection] = useState<Direction>('top-left')
+  const [direction, setDirection] = useState<Direction>('top')
   const [color, setColor] = useState('#000000')
   const [width, setWidth] = useState(100)
   const [height, setHeight] = useState(100)

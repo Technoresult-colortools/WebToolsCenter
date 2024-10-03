@@ -36,6 +36,8 @@ const colorTools = [
   { name: 'Color Palette Generator', href: '/tools/color/color-palette-generator', icon: faMicrochip, description: 'Create stunning color palettes for your designs.' },
   { name: 'Color Wheel', href: '/tools/color/color-wheel', icon: faPalette, description: 'Visualize colors and find perfect combinations using the color wheel.' },
   { name: 'Gradient Generator', href: '/tools/color/color-gradient-generator', icon: faPalette, description: 'Design beautiful gradients with custom colors and stops.' },
+  { name: 'Tailwind CSS Color Palette', href: '/tools/color/tailwind-color-generator', icon: faPalette, description: 'Convert TailWind CSS to Hex, Generate TailWind Colors.' },
+  { name: 'Color Converter', href: '/tools/color/color-converter', icon: faPalette, description: 'Convert color codes from Hex to RGBA, HSL, HSV, RGB and viceversa.' },
 ];
 
 export default function CategoriesPage() {
@@ -43,7 +45,7 @@ export default function CategoriesPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="flex-grow container mx-auto px-4 py-8 max-w-5xl">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Color Tools Categories</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -24,7 +24,7 @@ export default function SocialMediaToolsPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="flex-grow container mx-auto px-4 py-8 max-w-5xl">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Social Media Tools Categories</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -46,6 +46,7 @@ export default function SocialMediaToolsPage() {
             </Link>
           ))}
         </div>
+        
       </main>
 
       <Footer />

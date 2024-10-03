@@ -17,6 +17,7 @@ const cssTools = [
   { name: 'CSS Triangle Generator', href: '/tools/css/triangle-generator', icon: faShapes },
   { name: 'CSS Box Shadow Generator', href: '/tools/css/box-shadow-generator', icon: faCode },
   { name: 'CSS Border Radius Generator', href: '/tools/css/border-radius-generator', icon: faBox },
+  { name: 'CSS FlexBox Generator', href: '/tools/css/flexbox-generator', icon: faBox },
 ];
 
 export default function CSSToolsPage() {
@@ -24,7 +25,7 @@ export default function CSSToolsPage() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="flex-grow container mx-auto px-4 py-8 max-w-5xl">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">CSS Tools Categories</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

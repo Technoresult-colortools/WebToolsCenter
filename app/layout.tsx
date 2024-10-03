@@ -5,7 +5,7 @@ config.autoAddCss = false;
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Script from 'next/script'; // Import Script from next/script
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +22,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google Analytics Script with next/script */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-DB0SJSJQ1H"
           strategy="afterInteractive"
@@ -40,7 +39,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      
+        <main className="flex-grow pt-16">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }

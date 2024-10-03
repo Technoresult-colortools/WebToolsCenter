@@ -25,23 +25,18 @@ const initialShapes: Record<Shape, number[][]> = {
   custom: [[50, 0], [100, 50], [50, 100], [0, 50]],
 }
 
-const sampleImages = [
-  '/placeholder.svg?height=400&width=600',
-  '/placeholder.svg?height=400&width=600&text=Sample+2',
-  '/placeholder.svg?height=400&width=600&text=Sample+3',
-  '/placeholder.svg?height=400&width=600&text=Sample+4',
-]
 
 export default function ClipPathGenerator() {
   const [shape, setShape] = useState<Shape>('triangle')
   const [points, setPoints] = useState(initialShapes.triangle)
   const [clipPath, setClipPath] = useState('')
-  const [imageUrl, setImageUrl] = useState(sampleImages[0])
-  const [showOutside, setShowOutside] = useState(true)
+  const [imageUrl, setImageUrl] = useState('https://picsum.photos/seed/1/600/400')
+  const [showOutside, setShowOutside] = useState(false)
   const [hideGuides, setHideGuides] = useState(false)
   const [useCustomBackground, setUseCustomBackground] = useState(false)
   const [customBackgroundUrl, setCustomBackgroundUrl] = useState('')
   const [opacity, setOpacity] = useState(100)
+  const [outsideColor, setOutsidecolor] = useState('#ffffff')
   const previewRef = useRef<HTMLDivElement>(null)
   const isDragging = useRef(false)
   const activePointIndex = useRef(-1)
@@ -66,8 +61,8 @@ export default function ClipPathGenerator() {
   }
 
   const handleShuffleImage = () => {
-    const randomIndex = Math.floor(Math.random() * sampleImages.length)
-    setImageUrl(sampleImages[randomIndex])
+    const randomId = Math.floor(Math.random() * 1000)
+    setImageUrl(`https://picsum.photos/seed/${randomId}/600/400`)
   }
 
   const handleCopy = () => {
@@ -78,12 +73,13 @@ export default function ClipPathGenerator() {
   const handleReset = () => {
     setShape('triangle')
     setPoints(initialShapes.triangle)
-    setImageUrl(sampleImages[0])
+    setImageUrl('/placeholder.svg?height=400&width=600')
     setShowOutside(true)
     setHideGuides(false)
     setUseCustomBackground(false)
     setCustomBackgroundUrl('')
     setOpacity(100)
+    setOutsidecolor('#ffffff');
   }
 
   const handleCustomBackgroundUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,13 +125,13 @@ export default function ClipPathGenerator() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">CSS Clip Path Generator</h1>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-6xl mx-auto mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h2 className="text-2xl font-bold text-white mb-4">Clip Path Preview</h2>
               <div 
                 ref={previewRef}
-                className="relative bg-white rounded-lg overflow-hidden"
+                className="relative rounded-lg overflow-hidden"
                 style={{ width: '100%', paddingBottom: '66.67%' }}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -160,10 +156,12 @@ export default function ClipPathGenerator() {
                 )}
                 {showOutside && (
                   <div 
-                    className="absolute inset-0 bg-gray-800 opacity-50"
+                    className="absolute inset-0"
                     style={{ 
-                      clipPath: `polygon(0 0, 100% 0, 100% 100%, 0 100%)`,
-                      WebkitClipPath: `polygon(0 0, 100% 0, 100% 100%, 0 100%)`,
+                      backgroundImage: `url(${useCustomBackground && customBackgroundUrl ? customBackgroundUrl : imageUrl})`,
+                      backgroundSize: 'cover',
+                      backgroundColor: outsideColor,
+                      opacity: 0.2,
                     }}
                   ></div>
                 )}
@@ -185,7 +183,7 @@ export default function ClipPathGenerator() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Settings</h2>
+              <h2 className="text-2xl font-bold mt-4 text-white mb-4">Settings</h2>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="shape" className="text-white mb-2 block">Clip Path Shape</Label>
