@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
@@ -109,6 +109,18 @@ export default function TweetToImageConverter() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const tweetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log('Tweet data updated:', tweetData);
+  }, [tweetData]); // Runs when tweetData changes
+
+  useEffect(() => {
+    // Reset settings when tweet URL changes
+    setBackgroundImage('');
+    setWatermark('');
+    setComment('');
+    // You can add any other state resets if necessary
+  }, [tweetUrl]);
 
   const handleCapture = async () => {
     const tweetId = tweetUrl.split('/').pop();
