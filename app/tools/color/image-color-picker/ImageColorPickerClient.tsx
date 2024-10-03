@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, X, RefreshCw, Droplet } from 'lucide-react';
+import { Upload, X, RefreshCw, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/Button";
@@ -172,7 +172,7 @@ export default function ImageColorPicker() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       toast.success('Copied to clipboard!');
-    }, (err) => {
+    }, () => {
       toast.error('Failed to copy');
     });
   };

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button } from "@/components/ui/Button"
 import  Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Slider  from "@/components/ui/Slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Toaster, toast } from 'react-hot-toast'
+import { Toaster,} from 'react-hot-toast'
 import { Download, Camera, User, MoreHorizontal, Bookmark } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -64,7 +64,6 @@ const InstagramPost = React.forwardRef<HTMLDivElement, InstagramPostProps>(({
   likeCount,
   commentCount,
   isLikedByViewer,
-  isSomeoneTagged,
   hasInstagramStory,
   areCommentsDisplayed,
   hashtags,

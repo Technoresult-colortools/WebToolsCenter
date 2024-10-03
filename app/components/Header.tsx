@@ -152,11 +152,6 @@ export default function Header() {
     setIsSearchOpen(false)
   }
 
-  const toggleSearch = () => {
-    setIsSearchOpen(!isSearchOpen)
-    setIsMenuOpen(false)
-  }
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {

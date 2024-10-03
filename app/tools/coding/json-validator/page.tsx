@@ -3,7 +3,6 @@
 import React, { useState, useRef } from 'react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -18,7 +17,7 @@ const JsonValidator = () => {
   const [formattedJson, setFormattedJson] = useState('')
   const [jsonSchema, setJsonSchema] = useState('')
   const [jsonPath, setJsonPath] = useState('')
-  const [jsonPathResult, setJsonPathResult] = useState('')
+  const [jsonPathResult] = useState('')
   const [indentSize, setIndentSize] = useState(2)
 
   const fileInputRef = useRef<HTMLInputElement>(null)

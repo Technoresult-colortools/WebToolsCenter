@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { ChevronRight, Search, ArrowRight, Zap, TrendingUp } from 'lucide-react'
+import { Search, ArrowRight, Zap, TrendingUp } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import Header from '@/components/Header'

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, } from 'react'
 import { FileMinus, Copy, RefreshCw, Upload, Download } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import { Textarea } from "@/components/ui/textarea"

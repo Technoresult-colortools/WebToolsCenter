@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider from "@/components/ui/Slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, Search, AlertTriangle, User, Image as ImageIcon } from 'lucide-react';
+import { Download, Search, AlertTriangle,} from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 

@@ -31,7 +31,7 @@ const minifyCSS = (css: string): string => {
 
 const beautifyCSS = (css: string): string => {
   let depth = 0;
-  let beautified = css.replace(/([{}:;])/g, (match) => {
+  const beautified = css.replace(/([{}:;])/g, (match) => {
     if (match === '{') {
       depth++;
       return ' {\n' + '  '.repeat(depth);

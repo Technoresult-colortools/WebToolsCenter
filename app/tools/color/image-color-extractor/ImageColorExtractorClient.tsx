@@ -139,7 +139,7 @@ export default function ColorExtractor() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       toast.success('Copied to clipboard!');
-    }, (err) => {
+    }, () => {
       toast.error('Failed to copy');
     });
   };
