@@ -150,18 +150,22 @@ export default function CSSMinifierBeautifier() {
   }
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    const file = e.dataTransfer.files[0]
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
     if (file) {
-      const input = fileInputRef.current
+      const input = fileInputRef.current;
       if (input) {
-        const dataTransfer = new DataTransfer()
-        dataTransfer.items.add(file)
-        input.files = dataTransfer.files
-        handleFileUpload({ target: input } as any)
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        input.files = dataTransfer.files;
+        
+        // Correct type for the event
+        const event = { target: input } as React.ChangeEvent<HTMLInputElement>;
+        handleFileUpload(event);
       }
     }
-  }
+  };
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">

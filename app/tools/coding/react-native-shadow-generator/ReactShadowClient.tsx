@@ -43,55 +43,56 @@ export default function ShadowGenerator() {
     
     if (activeTab === "ios") {
       code = `// iOS Shadow Style
-{
-  shadowColor: "${shadowColor}",
-  shadowOffset: {
-    width: ${shadowOffsetWidth},
-    height: ${shadowOffsetHeight}
-  },
-  shadowOpacity: ${shadowOpacity.toFixed(2)},
-  shadowRadius: ${shadowRadius.toFixed(2)}
-}`
+  {
+    shadowColor: "${shadowColor}",
+    shadowOffset: {
+      width: ${shadowOffsetWidth},
+      height: ${shadowOffsetHeight}
+    },
+    shadowOpacity: ${shadowOpacity.toFixed(2)},
+    shadowRadius: ${shadowRadius.toFixed(2)}
+  }`
     } else {
       code = `// Android Shadow Style
-{
-  elevation: ${elevation},
-  shadowColor: "${androidColor}",
-  backgroundColor: "${androidBackgroundColor}", // Required for Android shadows
-  // Android additional properties (optional)
-  overflow: "hidden", // Recommended for Android to clip shadow properly
-}`
+  {
+    elevation: ${elevation},
+    shadowColor: "${androidColor}",
+    backgroundColor: "${androidBackgroundColor}", // Required for Android shadows
+    overflow: "hidden", // Recommended for Android to clip shadow properly
+  }`
     }
-
+  
     // Add Platform-specific implementation
     const platformCode = `// Cross-platform shadow implementation
-import { Platform } from 'react-native';
-
-const styles = {
-  shadowBox: {
-    backgroundColor: "${androidBackgroundColor}", // Required for Android
-    ...Platform.select({
-      ios: {
-        shadowColor: "${shadowColor}",
-        shadowOffset: {
-          width: ${shadowOffsetWidth},
-          height: ${shadowOffsetHeight}
+  import { Platform } from 'react-native';
+  
+  const styles = {
+    shadowBox: {
+      backgroundColor: "${androidBackgroundColor}", // Required for Android
+      ...Platform.select({
+        ios: {
+          shadowColor: "${shadowColor}",
+          shadowOffset: {
+            width: ${shadowOffsetWidth},
+            height: ${shadowOffsetHeight}
+          },
+          shadowOpacity: ${shadowOpacity.toFixed(2)},
+          shadowRadius: ${shadowRadius.toFixed(2)}
         },
-        shadowOpacity: ${shadowOpacity.toFixed(2)},
-        shadowRadius: ${shadowRadius.toFixed(2)}
-      },
-      android: {
-        elevation: ${elevation},
-        shadowColor: "${androidColor}",
-        overflow: "hidden"
-      }
-    })
+        android: {
+          elevation: ${elevation},
+          shadowColor: "${androidColor}",
+          overflow: "hidden"
+        }
+      })
+    }
+  }`
+  
+    // Combine `code` and `platformCode` and copy to clipboard
+    navigator.clipboard.writeText(`${code}\n\n${platformCode}`);
+    toast.success('Shadow style copied to clipboard!');
   }
-}`
-
-    navigator.clipboard.writeText(platformCode)
-    toast.success('Shadow style copied to clipboard!')
-  }
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">

@@ -13,6 +13,25 @@ import { Download, Search, AlertTriangle,} from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
+interface InstagramMediaItem {
+  id: string;
+  media_url: string;
+  media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
+}
+
+interface InstagramApiResponse {
+  data: InstagramMediaItem[];
+}
+
+interface ProfileData {
+  username: string;
+  fullName: string;
+  biography: string;
+  followersCount: number;
+  followingCount: number;
+  postsCount: number;
+}
+
 type ImageQuality = 'low' | 'medium' | 'high';
 
 export default function InstagramPhotoDownloader() {
@@ -25,7 +44,7 @@ export default function InstagramPhotoDownloader() {
   const [watermarkText, setWatermarkText] = useState<string>('');
   const [watermarkOpacity, setWatermarkOpacity] = useState<number>(50);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [profileData, setProfileData] = useState<any>(null);
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
@@ -35,19 +54,17 @@ export default function InstagramPhotoDownloader() {
     setIsLoading(true);
   
     try {
-      // Replace with Instagram Graph API
       const response = await fetch(`https://graph.instagram.com/me/media?fields=id,media_url,media_type&access_token=YOUR_ACCESS_TOKEN`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch photos');
       }
       
-      const data = await response.json();
+      const data: InstagramApiResponse = await response.json();
       
-      // Assuming API returns an array of media objects
       const images = data.data
-        .filter((item: any) => item.media_type === 'IMAGE') // Filter only images
-        .map((item: any) => item.media_url);
+        .filter(item => item.media_type === 'IMAGE')
+        .map(item => item.media_url);
   
       setImageUrls(images);
       toast.success('Photos fetched successfully!');
@@ -63,14 +80,13 @@ export default function InstagramPhotoDownloader() {
     setIsLoading(true);
     
     try {
-      // Replace this URL with your actual API endpoint for profile data
       const response = await fetch(`https://your-api-endpoint.com/fetch-profile?url=${encodeURIComponent(url)}&access_token=YOUR_ACCESS_TOKEN`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch profile data');
       }
       
-      const data = await response.json();
+      const data: ProfileData = await response.json();
       
       setProfileData(data);
       toast.success('Profile data fetched successfully!');
@@ -81,6 +97,7 @@ export default function InstagramPhotoDownloader() {
       setIsLoading(false);
     }
   };
+
 
   const handleImageSelect = (imageUrl: string) => {
     setSelectedImages(prev => 

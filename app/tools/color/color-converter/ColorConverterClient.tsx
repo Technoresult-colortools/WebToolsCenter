@@ -96,12 +96,12 @@ const ColorConverter: React.FC = () => {
     b /= 255
     const max = Math.max(r, g, b)
     const min = Math.min(r, g, b)
-    let h, s 
+    let h 
     const v = max
-
+  
     const d = max - min
-    s = max === 0 ? 0 : d / max
-
+    const s = max === 0 ? 0 : d / max
+  
     if (max === min) {
       h = 0
     } else {
@@ -112,9 +112,10 @@ const ColorConverter: React.FC = () => {
       }
       h! /= 6
     }
-
+  
     return { h: Math.round(h! * 360), s: Math.round(s * 100), v: Math.round(v * 100) }
   }
+  
 
   const hsvToRgb = (h: number, s: number, v: number): { r: number; g: number; b: number } => {
     s /= 100

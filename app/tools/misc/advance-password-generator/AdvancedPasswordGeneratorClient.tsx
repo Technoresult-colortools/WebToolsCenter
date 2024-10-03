@@ -297,11 +297,12 @@ export default function AdvancedPasswordGenerator() {
                   className="w-full h-40 p-2 bg-gray-700 text-white border border-gray-600 rounded-md font-mono"
                   style={{ 
                     resize: 'none',
-                    //@ts-ignore
+                    // @ts-expect-error - WebkitTextSecurity may not be recognized by TypeScript
                     WebkitTextSecurity: showPassword ? 'none' : 'disc',
                     textSecurity: showPassword ? 'none' : 'disc'
                   }}
                 />
+
                 <button
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute top-2 right-2 text-gray-400 hover:text-white"
