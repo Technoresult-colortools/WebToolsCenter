@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { ChevronLeft, ChevronRight, Copy, Settings, Code } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Copy, Settings, } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 

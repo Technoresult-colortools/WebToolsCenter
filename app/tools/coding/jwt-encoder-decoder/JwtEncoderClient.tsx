@@ -67,7 +67,7 @@ export default function JWTEncoderDecoder() {
   const [showAdditionalClaims, setShowAdditionalClaims] = useState(false)
   const [claims, setClaims] = useState<Claims>(DEFAULT_CLAIMS)
   const [isEncoding, setIsEncoding] = useState(false)
-  const [isDecoding, setIsDecoding] = useState(false)
+  const [, setIsDecoding] = useState(false)
 
   const validateInput = useCallback(() => {
     if (!signingKey.trim()) {
@@ -178,15 +178,7 @@ export default function JWTEncoderDecoder() {
     toast.success('Reset successful!');
   };
 
-  const handleJsonInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJsonInput(e.target.value);
-    if (isValidJSON(e.target.value)) {
-      try {
-        const formatted = JSON.stringify(JSON.parse(e.target.value), null, 2);
-        setJsonInput(formatted);
-      } catch {} // Ignore formatting errors
-    }
-  };
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
