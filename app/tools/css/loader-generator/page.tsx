@@ -4,369 +4,560 @@ import React, { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Slider from "@/components/ui/Slider"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw } from 'lucide-react'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { ChevronLeft, ChevronRight, Copy, Settings, Code } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-type LoaderType = 'spinner' | 'dots' | 'pulse' | 'wave' | 'bar' | 'circleBounce' | 'cubeGrid' | 'ring' | 'fadingCircle';
-
-const loaderStyles: Record<LoaderType, string> = {
-  spinner: `
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #3498db;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-    }
-  `,
-  dots: `
-    @keyframes dots {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1.0); }
-    }
-    .loader {
-      display: flex;
-      justify-content: space-between;
-      width: 60px;
-    }
-    .loader > div {
-      width: 12px;
-      height: 12px;
-      background-color: #3498db;
-      border-radius: 100%;
-      animation: dots 1.4s infinite ease-in-out both;
-    }
-    .loader > div:nth-child(1) { animation-delay: -0.32s; }
-    .loader > div:nth-child(2) { animation-delay: -0.16s; }
-  `,
-  pulse: `
-    @keyframes pulse {
-      0% { transform: scale(0.8); opacity: 0.5; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .loader {
-      width: 40px;
-      height: 40px;
-      background-color: #3498db;
-      border-radius: 100%;
-      animation: pulse 1s infinite ease-in-out alternate;
-    }
-  `,
-  wave: `
-    @keyframes wave {
-      0%, 100% { transform: scaleY(0.4); }
-      50% { transform: scaleY(1.0); }
-    }
-    .loader {
-      display: flex;
-      justify-content: space-between;
-      width: 60px;
-      height: 40px;
-    }
-    .loader > div {
-      background-color: #3498db;
-      height: 100%;
-      width: 6px;
-      animation: wave 1.2s infinite ease-in-out;
-    }
-    .loader > div:nth-child(2) { animation-delay: -1.1s; }
-    .loader > div:nth-child(3) { animation-delay: -1.0s; }
-    .loader > div:nth-child(4) { animation-delay: -0.9s; }
-    .loader > div:nth-child(5) { animation-delay: -0.8s; }
-  `,
-  bar: `
-    @keyframes bar {
-      0% { width: 0%; }
-      100% { width: 100%; }
-    }
-    .loader {
-      width: 200px;
-      height: 20px;
-      background-color: #f3f3f3;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .loader > div {
-      width: 0%;
-      height: 100%;
-      background-color: #3498db;
-      animation: bar 2s linear infinite;
-    }
-  `,
-   // New loader: Circle Bounce
-   circleBounce: `
-   @keyframes circleBounce {
-     0%, 100% { transform: scale(0); }
-     50% { transform: scale(1); }
-   }
-   .loader {
-     display: flex;
-     justify-content: space-around;
-     width: 80px;
-   }
-   .loader > div {
-     width: 20px;
-     height: 20px;
-     background-color: #3498db;
-     border-radius: 50%;
-     animation: circleBounce 1.5s infinite ease-in-out;
-   }
-   .loader > div:nth-child(2) { animation-delay: -0.5s; }
- `,
-
- // New loader: Cube Grid
- cubeGrid: `
-   @keyframes cubeGrid {
-     0%, 100% { transform: scale(1); }
-     50% { transform: scale(1.5); }
-   }
-   .loader {
-     display: grid;
-     grid-template-columns: repeat(3, 20px);
-     grid-gap: 5px;
-     width: 80px;
-     height: 80px;
-   }
-   .loader > div {
-     width: 20px;
-     height: 20px;
-     background-color: #3498db;
-     animation: cubeGrid 1.2s infinite ease-in-out;
-   }
-   .loader > div:nth-child(1), .loader > div:nth-child(5), .loader > div:nth-child(9) { animation-delay: 0.2s; }
-   .loader > div:nth-child(3), .loader > div:nth-child(7) { animation-delay: 0.4s; }
- `,
-
- // New loader: Ring
- ring: `
-   @keyframes ring {
-     0% { transform: rotate(0deg); }
-     100% { transform: rotate(360deg); }
-   }
-   .loader {
-     display: inline-block;
-     width: 64px;
-     height: 64px;
-   }
-   .loader:after {
-     content: " ";
-     display: block;
-     width: 46px;
-     height: 46px;
-     margin: 8px;
-     border-radius: 50%;
-     border: 6px solid #3498db;
-     border-color: #3498db transparent #3498db transparent;
-     animation: ring 1.2s linear infinite;
-   }
- `,
-
- // New loader: Fading Circle
- fadingCircle: `
-   @keyframes fadingCircle {
-     0%, 39%, 100% { opacity: 0; }
-     40% { opacity: 1; }
-   }
-   .loader {
-     position: relative;
-     width: 64px;
-     height: 64px;
-   }
-   .loader > div {
-     position: absolute;
-     top: 50%;
-     left: 50%;
-     width: 6px;
-     height: 6px;
-     background-color: #3498db;
-     border-radius: 50%;
-     margin: -6px;
-     animation: fadingCircle 1.2s infinite ease-in-out both;
-   }
-   .loader > div:nth-child(1) { transform: rotate(0deg); animation-delay: -1.1s; }
-   .loader > div:nth-child(2) { transform: rotate(30deg); animation-delay: -1s; }
-   .loader > div:nth-child(3) { transform: rotate(60deg); animation-delay: -0.9s; }
-   .loader > div:nth-child(4) { transform: rotate(90deg); animation-delay: -0.8s; }
-   .loader > div:nth-child(5) { transform: rotate(120deg); animation-delay: -0.7s; }
-   .loader > div:nth-child(6) { transform: rotate(150deg); animation-delay: -0.6s; }
-   .loader > div:nth-child(7) { transform: rotate(180deg); animation-delay: -0.5s; }
-   .loader > div:nth-child(8) { transform: rotate(210deg); animation-delay: -0.4s; }
- `,
+// Type definitions
+interface LoaderCustomization {
+  size: number;
+  primaryColor: string;
+  secondaryColor: string;
+  backgroundColor: string;
+  speed: number;
 }
 
-export default function LoaderGenerator() {
-  const [loaderType, setLoaderType] = useState<LoaderType>('spinner')
-  const [size, setSize] = useState(40)
-  const [color, setColor] = useState('#3498db')
-  const [speed, setSpeed] = useState(1)
-  const [css, setCSS] = useState('')
+interface LoaderCustomizations {
+  [key: string]: LoaderCustomization;
+}
 
-  useEffect(() => {
-    generateCSS()
-  }, [loaderType, size, color, speed])
+interface LoaderCategory {
+  [key: string]: string;
+}
 
-  const generateCSS = () => {
-    let generatedCSS = loaderStyles[loaderType]
-    generatedCSS = generatedCSS.replace(/40px/g, `${size}px`)
-    generatedCSS = generatedCSS.replace(/#3498db/g, color)
-    generatedCSS = generatedCSS.replace(/1s|1.4s|1.2s|2s/g, `${speed}s`)
-    setCSS(generatedCSS)
+interface LoaderCategories {
+  [key: string]: LoaderCategory;
+}
+// Categorized loader types
+const loaderCategories: LoaderCategories = {
+  'Spinners': {
+    'Basic': `
+      .spinner-basic {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: 9px solid;
+        border-color: #dbdcef;
+        border-right-color: #474bff;
+        animation: spinner-basic 1s infinite linear;
+      }
+      @keyframes spinner-basic {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+    `,
+    'Comet': `
+      .spinner-comet {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: radial-gradient(farthest-side,#474bff 94%,#0000) top/9px 9px no-repeat,
+               conic-gradient(#0000 30%,#474bff);
+        -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
+        animation: spinner-comet 1s infinite linear;
+      }
+      @keyframes spinner-comet {
+        100% {
+          transform: rotate(1turn);
+        }
+      }
+    `,
+    'Orbit': `
+      .spinner-orbit {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        position: relative;
+        animation: spinner-orbit 1.5s linear infinite;
+      }
+      .spinner-orbit::before {
+        content: '';
+        width: 24px;
+        height: 24px;
+        background: #474bff;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      @keyframes spinner-orbit {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    `,
+    'Ripple': `
+      .spinner-ripple {
+        width: 56px;
+        height: 56px;
+        position: relative;
+        background: transparent;
+      }
+      .spinner-ripple::before, .spinner-ripple::after {
+        content: '';
+        position: absolute;
+        border: 4px solid #474bff;
+        border-radius: 50%;
+        animation: ripple 1.2s infinite ease-in-out;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+      }
+      .spinner-ripple::after {
+        animation-delay: 0.6s;
+      }
+      @keyframes ripple {
+        0% {
+          transform: scale(0.1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0;
+        }
+      }
+    `,
+    'DualRing': `
+  .spinner-dualring {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    position: relative;
+  }
+  .spinner-dualring::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 6px solid #474bff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    animation: spin 1.2s linear infinite;
+  }
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`,
+
+  },
+  
+  'Bars': {
+    'Progress': `
+      .spinner-progress {
+        width: 56px;
+        height: 8px;
+        background: #dbdcef;
+        position: relative;
+        overflow: hidden;
+      }
+      .spinner-progress::after {
+        content: '';
+        width: 40%;
+        height: 100%;
+        background: #474bff;
+        position: absolute;
+        left: -20%;
+        animation: bar-progress 1s linear infinite;
+      }
+      @keyframes bar-progress {
+        to {
+          transform: translateX(300%);
+        }
+      }
+    `,
+    'Equalizer': `
+      .spinner-equalizer {
+        width: 56px;
+        height: 26px;
+        display: flex;
+        gap: 4px;
+      }
+      .spinner-equalizer::after,
+      .spinner-equalizer::before {
+        content: "";
+        height: 100%;
+        width: 25%;
+        background: #474bff;
+        animation: eq-bars 1s ease-in-out infinite alternate;
+      }
+      .spinner-equalizer::before {
+        animation-delay: -1s;
+      }
+      @keyframes eq-bars {
+        0% { height: 100%; }
+        100% { height: 20%; }
+      }
+    `,
+  },
+  'Dots': {
+    'Pulse': `
+      .spinner-pulse {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #474bff;
+        animation: pulse-dot 1s infinite ease-in-out;
+      }
+      @keyframes pulse-dot {
+        0% { transform: scale(0.3); opacity: 0.3; }
+        50% { transform: scale(1); opacity: 0.8; }
+        100% { transform: scale(0.3); opacity: 0.3; }
+      }
+    `,
+    'Bounce': `
+      .spinner-bounce {
+        width: 56px;
+        height: 13.6px;
+        background: radial-gradient(circle closest-side,#474bff 90%,#0000) 0%   50%,
+               radial-gradient(circle closest-side,#474bff 90%,#0000) 50%  50%,
+               radial-gradient(circle closest-side,#474bff 90%,#0000) 100% 50%;
+        background-size: calc(100%/3) 100%;
+        background-repeat: no-repeat;
+        animation: bounce-dots 1s infinite linear;
+      }
+      @keyframes bounce-dots {
+        20% { background-position: 0%   0%, 50%  50%, 100% 50%; }
+        40% { background-position: 0% 100%, 50%   0%, 100% 50%; }
+        60% { background-position: 0%  50%, 50% 100%, 100%  0%; }
+        80% { background-position: 0%  50%, 50%  50%, 100% 100%; }
+      }
+    `,
+  }
+}
+
+const defaultCustomization: LoaderCustomization = {
+  size: 56,
+  primaryColor: '#474bff',
+  secondaryColor: '#dbdcef',
+  backgroundColor: '#ffffff',
+  speed: 1
+}
+
+
+export default function CSSLoaderGenerator() {
+  const [selectedCategory, setSelectedCategory] = useState<string>('Spinners')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [loaderCustomizations, setLoaderCustomizations] = useState<LoaderCustomizations>({})
+  const [activeLoader, setActiveLoader] = useState<string | null>(null)
+  const [tempCustomization, setTempCustomization] = useState<LoaderCustomization>(defaultCustomization)
+  const loadersPerPage = 6
+
+  const generateLoaderCSS = (
+    category: string, 
+    type: string, 
+    customization: LoaderCustomization
+  ): string => {
+    const css = loaderCategories[category]?.[type]
+    if (!css) return ''
+    
+    return css
+      .replace(/56px/g, `${customization.size}px`)
+      .replace(/#474bff/g, customization.primaryColor)
+      .replace(/#dbdcef/g, customization.secondaryColor)
+      .replace(/1s/g, `${customization.speed}s`)
   }
 
-  const handleCopy = () => {
+  const handleCustomization = (
+    key: keyof LoaderCustomization, 
+    value: string | number
+  ): void => {
+    setTempCustomization(prev => ({
+      ...prev,
+      [key]: value
+    }))
+  }
+
+  const copyToClipboard = (css: string): void => {
     navigator.clipboard.writeText(css)
     toast.success('CSS copied to clipboard!')
   }
 
-  const handleReset = () => {
-    setLoaderType('spinner')
-    setSize(40)
-    setColor('#3498db')
-    setSpeed(1)
+  const renderLoader = (category: string, type: string, customization: LoaderCustomization): JSX.Element => {
+    const css = generateLoaderCSS(category, type, customization)
+    const className = `spinner-${type.toLowerCase().replace(/\s+/g, '-')}`
+    
+    return (
+      <div className="w-full h-32 flex items-center justify-center rounded-md" style={{ backgroundColor: customization.backgroundColor }}>
+        <style dangerouslySetInnerHTML={{ __html: css }} />
+        <div className={className} />
+      </div>
+    )
   }
 
+  const getCategoryLoaders = (category: string): string[] => {
+    return Object.keys(loaderCategories[category] || {})
+  }
+
+  const categoryLoaders = getCategoryLoaders(selectedCategory)
+  const totalPages = Math.ceil(categoryLoaders.length / loadersPerPage)
+  const paginatedLoaders = categoryLoaders.slice(
+    (currentPage - 1) * loadersPerPage,
+    currentPage * loadersPerPage
+  )
+
+  const handleDialogOpen = (type: string) => {
+    setActiveLoader(type)
+    setTempCustomization(loaderCustomizations[type] || defaultCustomization)
+  }
+
+  const handleDialogClose = () => {
+    setActiveLoader(null)
+    setTempCustomization(defaultCustomization)
+  }
+
+  const handleSaveCustomization = () => {
+    if (activeLoader) {
+      setLoaderCustomizations(prev => ({
+        ...prev,
+        [activeLoader]: tempCustomization
+      }))
+    }
+  }
+
+  useEffect(() => {
+    if (activeLoader) {
+      handleSaveCustomization()
+    }
+  }, [tempCustomization])
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <div className="min-h-screen flex flex-col bg-gray-900">
       <Toaster position="top-right" />
       <Header />
+      
       <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">CSS Loader Generator</h1>
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">
+            CSS Loader Generator
+          </h1>
+          
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-6 lg:p-8 mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+              <Select 
+                value={selectedCategory} 
+                onValueChange={(value: string) => setSelectedCategory(value)}
+              >
+                <SelectTrigger className="w-full sm:w-48 bg-gray-700 text-white border-gray-600">
+                  <SelectValue placeholder="Select Category" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
+                  {Object.keys(loaderCategories).map((category) => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <span className="text-gray-300 text-sm font-medium">
+                {categoryLoaders.length} loaders available
+              </span>
+            </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Loader Preview</h2>
-              <div className="bg-white rounded-lg p-8 flex items-center justify-center" style={{ height: '200px' }}>
-                <div className="loader" dangerouslySetInnerHTML={{ __html: loaderType === 'dots' || loaderType === 'wave' ? '<div></div><div></div><div></div><div></div><div></div>' : '<div></div>' }} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {paginatedLoaders.map((type) => (
+                <Card key={type} className="overflow-hidden bg-gray-700 border-gray-600 hover:shadow-lg transition-shadow">
+                  <CardHeader className="bg-gray-600 p-3 mb-4">
+                    <CardTitle className="text-lg font-semibold text-white">{type}</CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent className="p-3 space-y-4">
+                    <div className="w-full h-32 flex items-center justify-center bg-gray-800 rounded-md">
+                      {renderLoader(selectedCategory, type, loaderCustomizations[type] || defaultCustomization)}
+                    </div>
+                  
+                    <div className="flex justify-center gap-2">
+                      <Dialog onOpenChange={(open) => open ? handleDialogOpen(type) : handleDialogClose()}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" className="flex-1 bg-gray-600 text-white hover:bg-gray-500">
+                            <Settings className="w-4 h-4 mr-2" />
+                            Customize
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[90vw] md:max-w-[600px] bg-gray-800 text-white">
+                          <DialogHeader>
+                            <DialogTitle className="text-white">Customize {type}</DialogTitle>
+                          </DialogHeader>
+                          
+                          <Tabs defaultValue="customize" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2">
+                              <TabsTrigger value="customize">Customize</TabsTrigger>
+                              <TabsTrigger value="code">Get Code</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="customize">
+                              <div className="space-y-6 py-4">
+                                <div className="space-y-2">
+                                  <Label className="text-white">Size</Label>
+                                  <Slider
+                                    min={20}
+                                    max={100}
+                                    step={1}
+                                    value={tempCustomization.size}
+                                    onChange={(value) => handleCustomization('size', value)}
+                                    className="bg-gray-700"
+                                  />
+                                  <span className="text-sm text-gray-300">
+                                    {tempCustomization.size}px
+                                  </span>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label className="text-white">Primary Color</Label>
+                                  <div className="flex gap-2">
+                                    <Input
+                                      type="color"
+                                      value={tempCustomization.primaryColor}
+                                      onChange={(e) => handleCustomization('primaryColor', e.target.value)}
+                                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                                    />
+                                    <Input
+                                      type="text"
+                                      value={tempCustomization.primaryColor}
+                                      onChange={(e) => handleCustomization('primaryColor', e.target.value)}
+                                      className="flex-1 bg-gray-700 text-white border-gray-600"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label className="text-white">Secondary Color</Label>
+                                  <div className="flex gap-2">
+                                    <Input
+                                      type="color"
+                                      value={tempCustomization.secondaryColor}
+                                      onChange={(e) => handleCustomization('secondaryColor', e.target.value)}
+                                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                                    />
+                                    <Input
+                                      type="text"
+                                      value={tempCustomization.secondaryColor}
+                                      onChange={(e) => handleCustomization('secondaryColor', e.target.value)}
+                                      className="flex-1 bg-gray-700 text-white border-gray-600"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label className="text-white">Background Color</Label>
+                                  <div className="flex gap-2">
+                                    <Input
+                                      type="color"
+                                      value={tempCustomization.backgroundColor}
+                                      onChange={(e) => handleCustomization('backgroundColor', e.target.value)}
+                                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                                    />
+                                    <Input
+                                      type="text"
+                                      value={tempCustomization.backgroundColor}
+                                      onChange={(e) => handleCustomization('backgroundColor', e.target.value)}
+                                      className="flex-1 bg-gray-700 text-white border-gray-600"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label className="text-white">Speed</Label>
+                                  <Slider
+                                    min={0.1}
+                                    max={3}
+                                    step={0.1}
+                                    value={tempCustomization.speed}
+                                    onChange={(value) => handleCustomization('speed', value)}
+                                    className="bg-gray-700"
+                                  />
+                                  <span className="text-sm text-gray-300">
+                                    {tempCustomization.speed}s
+                                  </span>
+                                </div>
+
+                                <div className="pt-4">
+                                  <Label className="text-white">Preview</Label>
+                                  <div className="bg-gray-800 rounded-md p-4">
+                                    {renderLoader(selectedCategory, type, tempCustomization)}
+                                  </div>
+                                </div>
+                              </div>
+                            </TabsContent>
+                            <TabsContent value="code">
+                              <div className="mt-4">
+                                <SyntaxHighlighter 
+                                  language="css" 
+                                  style={atomDark}
+                                  className="rounded-md max-h-[60vh] overflow-auto"
+                                >
+                                  {generateLoaderCSS(selectedCategory, type, tempCustomization)}
+                                </SyntaxHighlighter>
+                                <Button
+                                  onClick={() => copyToClipboard(generateLoaderCSS(selectedCategory, type, tempCustomization))}
+                                  className="mt-4 w-full bg-blue-600 hover:bg-blue-700"
+                                >
+                                  <Copy className="w-4 h-4 mr-2" />
+                                  Copy Code
+                                </Button>
+                              </div>
+                            </TabsContent>
+                          </Tabs>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center mt-8 gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-8 h-8 p-0 ${
+                      currentPage === page 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-gray-700 text-white border-gray-600 hover:bg-gray-600'
+                    }`}
+                  >
+                    {page}
+                  </Button>
+                ))}
+                
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
               </div>
-              <style>{css}</style>
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Settings</h2>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="loaderType" className="text-white mb-2 block">Loader Type</Label>
-                  <Select value={loaderType} onValueChange={(value: LoaderType) => setLoaderType(value)}>
-                    <SelectTrigger id="loaderType" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select loader type" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="spinner">Spinner</SelectItem>
-                        <SelectItem value="dots">Dots</SelectItem>
-                        <SelectItem value="pulse">Pulse</SelectItem>
-                        <SelectItem value="wave">Wave</SelectItem>
-                        <SelectItem value="bar">Bar</SelectItem>
-                        <SelectItem value="circleBounce">Circle Bounce</SelectItem>
-                        <SelectItem value="cubeGrid">Cube Grid</SelectItem>
-                        <SelectItem value="ring">Ring</SelectItem>
-                        <SelectItem value="fadingCircle">Fading Circle</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="size" className="text-white mb-2 block">Size: {size}px</Label>
-                  <Slider
-                    id="size"
-                    min={20}
-                    max={100}
-                    step={1}
-                    value={size}
-                    onChange={(value) => setSize(value)}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="color" className="text-white mb-2 block">Color</Label>
-                  <div className="flex space-x-2">
-                    <Input
-                      id="color"
-                      type="color"
-                      value={color}
-                      onChange={(e) => setColor(e.target.value)}
-                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
-                    />
-                    <Input
-                      type="text"
-                      value={color}
-                      onChange={(e) => setColor(e.target.value)}
-                      className="flex-grow bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="speed" className="text-white mb-2 block">Animation Speed: {speed}s</Label>
-                  <Slider
-                    id="speed"
-                    min={0.1}
-                    max={3}
-                    step={0.1}
-                    value={speed}
-                    onChange={(value) => setSpeed(value)}
-                  />
-                </div>
-              </div>
-            </div>
+            )}
           </div>
-
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold text-white mb-4">Generated CSS</h2>
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <pre className="text-white whitespace-pre-wrap break-all text-sm">
-                {css}
-              </pre>
-            </div>
-            <div className="mt-4 flex justify-end space-x-2">
-              <Button onClick={handleReset} variant="outline" className="text-white border-white hover:bg-gray-700">
-                <RefreshCw className="h-5 w-5 mr-2" />
-                Reset
-              </Button>
-              <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
-                <Copy className="h-5 w-5 mr-2" />
-                Copy CSS
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">How to Use</h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2">
-            <li>Select a loader type from the dropdown menu.</li>
-            <li>Adjust the size using the slider.</li>
-            <li>Choose a color using the color picker or enter a hex value.</li>
-            <li>Set the animation speed using the slider.</li>
-            <li>Preview the loader in real-time.</li>
-            <li>Copy the generated CSS and use it in your project.</li>
-            <li>Click the Reset button to start over with default settings.</li>
-          </ol>
-        </div>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-white mb-4">Features</h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Five different loader types: Spinner, Dots, Pulse, Wave, and Bar</li>
-            <li>Customizable size for all loader types</li>
-            <li>Color picker for easy color selection</li>
-            <li>Adjustable animation speed</li>
-            <li>Real-time preview of the loader</li>
-            <li>Generated CSS code with one-click copy functionality</li>
-            <li>Reset option to quickly return to default settings</li>
-            <li>Responsive design for use on various devices</li>
-          </ul>
         </div>
       </main>
+      
       <Footer />
     </div>
   )

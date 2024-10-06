@@ -122,8 +122,23 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Tool[]>([])
+  const [isMobile, setIsMobile] = useState(false)
   const router = useRouter()
   const searchRef = useRef<HTMLDivElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value
@@ -145,38 +160,41 @@ export default function Header() {
     setSearchQuery('')
     setSearchResults([])
     setIsSearchOpen(false)
+    setIsMenuOpen(false)
   }
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen)
+    if (!isSearchOpen) {
+      setTimeout(() => {
+        searchInputRef.current?.focus()
+      }, 100)
+    }
+  }
+
+  const closeSearch = () => {
     setIsSearchOpen(false)
+    setSearchQuery('')
+    setSearchResults([])
   }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Check if the click is outside the search container
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setSearchResults([])
-        setIsSearchOpen(false)
+        closeSearch()
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    // Only add the event listener if the search overlay is open
+    if (isSearchOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsMenuOpen(false)
-        setIsSearchOpen(false)
-      }
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [isSearchOpen]) // Add isSearchOpen to dependency array
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-gray-800 bg-opacity-90 backdrop-filter backdrop-blur-lg shadow-lg">
@@ -185,54 +203,110 @@ export default function Header() {
           <Link href="/" className="text-2xl font-bold text-white">
             Web<span className="text-blue-400">Tools</span>Center
           </Link>
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/categories" className="text-gray-300 hover:text-blue-400 transition duration-200">Categories</Link>
-            <Link href="/about" className="text-gray-300 hover:text-blue-400 transition duration-200">About</Link>
-            <Link href="/contact" className="text-gray-300 hover:text-blue-400 transition duration-200">Contact</Link>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link href="/categories" className="text-gray-300 hover:text-blue-400 transition duration-200">
+              Categories
+            </Link>
+            <Link href="/about" className="text-gray-300 hover:text-blue-400 transition duration-200">
+              About
+            </Link>
+            <Link href="/contact" className="text-gray-300 hover:text-blue-400 transition duration-200">
+              Contact
+            </Link>
+            <button
+              onClick={toggleSearch}
+              className="text-gray-300 hover:text-blue-400 transition duration-200"
+              aria-label="Search"
+            >
+              <Search size={20} />
+            </button>
           </nav>
-          <div className="flex items-center space-x-4">
-            <div className="relative" ref={searchRef}>
-              <input
-                type="text"
-                placeholder="Search tools..."
-                value={searchQuery}
-                onChange={handleSearch}
-                onFocus={() => setIsSearchOpen(true)}
-                className="pl-10 pr-4 py-2 rounded-full bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 w-full md:w-64"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              {isSearchOpen && searchResults.length > 0 && (
-                <div className="absolute mt-2 w-full bg-gray-700 rounded-md shadow-lg overflow-hidden z-50">
-                  <div className="max-h-60 overflow-y-auto">
-                    {searchResults.map((tool, index) => (
-                      <div
-                        key={index}
-                        className="px-4 py-2 hover:bg-gray-600 cursor-pointer text-white"
-                        onClick={() => handleToolSelect(tool)}
-                      >
-                        <div className="font-semibold">{tool.name}</div>
-                        <div className="text-sm text-gray-400">{tool.category}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+
+          {/* Mobile Menu and Search Buttons */}
+          <div className="md:hidden flex items-center space-x-4">
+            <button
+              onClick={toggleSearch}
+              className="text-gray-300 hover:text-white transition duration-200"
+              aria-label="Search"
+            >
+              <Search size={24} />
+            </button>
             <button 
-              className="md:hidden text-gray-300 hover:text-white transition duration-200"
-              onClick={toggleMenu}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-300 hover:text-white transition duration-200"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
+
+        {/* Search Overlay */}
+        {isSearchOpen && (
+          <div 
+            className="fixed inset-0 bg-gray-900 bg-opacity-50 z-50"
+          >
+            <div className="container mx-auto px-4 pt-20">
+              <div 
+                ref={searchRef}
+                className="bg-gray-800 rounded-lg shadow-xl max-w-2xl mx-auto"
+              >
+                <div className="p-4">
+                  <div className="relative flex items-center">
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      placeholder="Search tools..."
+                      value={searchQuery}
+                      onChange={handleSearch}
+                      className="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                    />
+                    <Search className="absolute left-3 text-gray-400" size={20} />
+                    <button
+                      onClick={closeSearch}
+                      className="ml-2 p-2 text-gray-400 hover:text-white"
+                      aria-label="Close search"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                  {searchResults.length > 0 && (
+                    <div className="mt-2 max-h-96 overflow-y-auto">
+                      {searchResults.map((tool, index) => (
+                        <div
+                          key={index}
+                          className="px-4 py-2 hover:bg-gray-700 cursor-pointer text-white rounded-md"
+                          onClick={() => handleToolSelect(tool)}
+                        >
+                          <div className="font-semibold">{tool.name}</div>
+                          <div className="text-sm text-gray-400">{tool.category}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="mt-4 md:hidden">
-            <Link href="/categories" className="block py-2 text-gray-300 hover:text-blue-400 transition duration-200">Categories</Link>
-            <Link href="/about" className="block py-2 text-gray-300 hover:text-blue-400 transition duration-200">About</Link>
-            <Link href="/contact" className="block py-2 text-gray-300 hover:text-blue-400 transition duration-200">Contact</Link>
-          </nav>
+          <div className="md:hidden mt-4 bg-gray-700 rounded-lg overflow-hidden">
+            <nav className="py-2">
+              <Link href="/categories" className="block px-4 py-2 text-gray-300 hover:bg-gray-600 hover:text-blue-400 transition duration-200">
+                Categories
+              </Link>
+              <Link href="/about" className="block px-4 py-2 text-gray-300 hover:bg-gray-600 hover:text-blue-400 transition duration-200">
+                About
+              </Link>
+              <Link href="/contact" className="block px-4 py-2 text-gray-300 hover:bg-gray-600 hover:text-blue-400 transition duration-200">
+                Contact
+              </Link>
+            </nav>
+          </div>
         )}
       </div>
     </header>

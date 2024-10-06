@@ -12,7 +12,6 @@ import { RefreshCw, Download, ChevronRight, ChevronDown, Edit, Trash, Plus, Chec
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-
 type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue }
 type ThemeName = keyof typeof themes;
 
@@ -36,6 +35,9 @@ interface TreeViewProps {
   groupArraysAfterLength: number
   displayObjectSize: boolean
   displayDataTypes: boolean
+  enableEdit: boolean
+  enableDelete: boolean
+  enableAdd: boolean
   onEdit: (path: string[], value: JSONValue) => void
   onDelete: (path: string[]) => void
   onAdd: (path: string[], key: string, value: JSONValue) => void
@@ -51,6 +53,9 @@ const TreeView: React.FC<TreeViewProps> = ({
   groupArraysAfterLength,
   displayObjectSize,
   displayDataTypes,
+  enableEdit,
+  enableDelete,
+  enableAdd,
   onEdit,
   onDelete,
   onAdd
@@ -58,6 +63,9 @@ const TreeView: React.FC<TreeViewProps> = ({
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const [editingPath, setEditingPath] = useState<string[] | null>(null)
   const [editValue, setEditValue] = useState<string>('')
+  const [addingPath, setAddingPath] = useState<string[] | null>(null)
+  const [addKey, setAddKey] = useState<string>('')
+  const [addValue, setAddValue] = useState<string>('')
 
   useEffect(() => {
     if (collapseBranches === 'collapse all') {
@@ -70,11 +78,13 @@ const TreeView: React.FC<TreeViewProps> = ({
 
   const getAllPaths = (obj: JSONValue, path: string[] = []): string[] => {
     if (typeof obj !== 'object' || obj === null) {
-      return [path.join('.')]
+      return []
     }
-    return Object.entries(obj).flatMap(([key, value]) => 
+    const currentPath = path.length > 0 ? path.join('.') : ''
+    const childPaths = Object.entries(obj).flatMap(([key, value]) => 
       getAllPaths(value, [...path, key])
     )
+    return currentPath ? [currentPath, ...childPaths] : childPaths
   }
 
   const toggleExpand = (path: string) => {
@@ -87,184 +97,277 @@ const TreeView: React.FC<TreeViewProps> = ({
     setExpanded(newExpanded)
   }
 
-  const startEditing = (path: string[], value: JSONValue) => {
-    setEditingPath(path)
-    setEditValue(JSON.stringify(value))
-  }
-
-  const cancelEditing = () => {
-    setEditingPath(null)
-    setEditValue('')
-  }
-
-  const saveEditing = () => {
-    if (editingPath) {
-      try {
-        const parsedValue = JSON.parse(editValue)
-        onEdit(editingPath, parsedValue)
-        cancelEditing()
-      } catch (err) {
-        toast.error('Invalid JSON input')
-      }
-    }
-  }
-
   const renderValue = (value: JSONValue, path: string[]): JSX.Element => {
     const pathString = path.join('.')
     const isExpanded = expanded.has(pathString)
-    const isEditing = editingPath && pathString === editingPath.join('.')
 
-    if (isEditing) {
+    if (typeof value === 'string') {
+      const displayValue = collapseStringsAfterLength && value.length > collapseStringsAfterLength
+        ? `${value.slice(0, collapseStringsAfterLength)}...`
+        : value
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
+          <span className={theme.string}>
+            "{displayValue}"
+            {displayDataTypes && <span className={theme.type}> (string)</span>}
+          </span>
+          {renderActions(path, value)}
+        </div>
+      )
+    }
+
+    if (typeof value === 'number') {
+      return (
+        <div className="flex items-center gap-2">
+          <span className={theme.number}>
+            {value}
+            {displayDataTypes && <span className={theme.type}> (number)</span>}
+          </span>
+          {renderActions(path, value)}
+        </div>
+      )
+    }
+
+    if (typeof value === 'boolean') {
+      return (
+        <div className="flex items-center gap-2">
+          <span className={theme.boolean}>
+            {value.toString()}
+            {displayDataTypes && <span className={theme.type}> (boolean)</span>}
+          </span>
+          {renderActions(path, value)}
+        </div>
+      )
+    }
+
+    if (value === null) {
+      return (
+        <div className="flex items-center gap-2">
+          <span className={theme.null}>
+            null
+            {displayDataTypes && <span className={theme.type}> (null)</span>}
+          </span>
+          {renderActions(path, value)}
+        </div>
+      )
+    }
+
+    if (Array.isArray(value)) {
+      return renderArray(value, path, isExpanded)
+    }
+
+    if (typeof value === 'object') {
+      return renderObject(value, path, isExpanded)
+    }
+
+    return <span>Unknown type</span>
+  }
+
+  const renderActions = (path: string[], value: JSONValue) => {
+    if (editingPath && editingPath.join('.') === path.join('.')) {
+      return (
+        <div className="flex items-center gap-2">
           <Input
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             className="flex-grow"
           />
-          <Button variant="ghost" size="sm" onClick={saveEditing}>
+          <Button variant="ghost" size="sm" onClick={() => handleSave(path)}>
             <Check className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={cancelEditing}>
+          <Button variant="ghost" size="sm" onClick={() => setEditingPath(null)}>
             <X className="w-4 h-4" />
           </Button>
         </div>
       )
     }
 
-    if (typeof value === 'string') {
-      const displayValue = collapseStringsAfterLength && value.length > collapseStringsAfterLength
-        ? value.slice(0, collapseStringsAfterLength) + '...'
-        : value
-      return (
-        <span className={theme.string}>
-          "{displayValue}"
-          {displayDataTypes && <span className={theme.string}>(string)</span>}
-        </span>
-      )
-    }
-    if (typeof value === 'number') {
-      return (
-        <span className={theme.number}>
-          {value}
-          {displayDataTypes && <span className={theme.number}>(number)</span>}
-        </span>
-      )
-    }
-    if (typeof value === 'boolean') {
-      return (
-        <span className={theme.boolean}>
-          {value.toString()}
-          {displayDataTypes && <span className={theme.boolean}>(boolean)</span>}
-        </span>
-      )
-    }
-    if (value === null) {
-      return (
-        <span className={theme.null}>
-          null
-          {displayDataTypes && <span className={theme.null}>(null)</span>}
-        </span>
-      )
-    }
-    if (Array.isArray(value)) {
-      const shouldGroup = groupArraysAfterLength && value.length > groupArraysAfterLength
-      return (
-        <div>
-          <span
-            className={`cursor-pointer ${theme.string}`}
-            onClick={() => toggleExpand(pathString)}
-          >
-            {iconStyle === 'triangle' ? (isExpanded ? <ChevronDown className="inline" /> : <ChevronRight className="inline" />) : (isExpanded ? '▼' : '▶')} [
-            {displayObjectSize && <span className={`${theme}-size`}>({value.length})</span>}
-          </span>
-          {isExpanded && (
-            <div style={{ marginLeft: `${indentWidth * 8}px` }}>
-              {shouldGroup
-                ? chunk(value, groupArraysAfterLength).map((group, groupIndex) => (
-                    <div key={groupIndex}>
-                      <span className={theme.group}>
-                        [{groupIndex * groupArraysAfterLength} - {Math.min((groupIndex + 1) * groupArraysAfterLength - 1, value.length - 1)}]
-                      </span>
-                      {group.map((item, index) => (
-                        <div key={index} className="flex items-center">
-                          {renderValue(item, [...path, (groupIndex * groupArraysAfterLength + index).toString()])}
-                          <Button variant="ghost" size="sm" onClick={() => startEditing([...path, (groupIndex * groupArraysAfterLength + index).toString()], item)}>
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" onClick={() => onDelete([...path, (groupIndex * groupArraysAfterLength + index).toString()])}>
-                            <Trash className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  ))
-                : value.map((item, index) => (
-                    <div key={index} className="flex items-center">
-                      {renderValue(item, [...path, index.toString()])}
-                      <Button variant="ghost" size="sm" onClick={() => startEditing([...path, index.toString()], item)}>
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => onDelete([...path, index.toString()])}>
-                        <Trash className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))
-              }
-              <Button variant="ghost" size="sm" onClick={() => onAdd(path, value.length.toString(), null)}>
-                <Plus className="w-4 h-4" /> Add Item
-              </Button>
-            </div>
-          )}
-          <span>]</span>
-          {displayDataTypes && <span className={theme.type}>(array)</span>}
-        </div>
-      )
-    }
-    if (typeof value === 'object') {
-      return (
-        <div>
-          <span
-            className={`cursor-pointer ${theme.string}`}
-            onClick={() => toggleExpand(pathString)}
-          >
-            {iconStyle === 'triangle' ? (isExpanded ? <ChevronDown className="inline" /> : <ChevronRight className="inline" />) : (isExpanded ? '▼' : '▶')} {'{'}
-            {displayObjectSize && <span className={`${theme}-size`}>({Object.keys(value).length})</span>}
-          </span>
-          {isExpanded && (
-            <div style={{ marginLeft: `${indentWidth * 8}px` }}>
-              {Object.entries(value).map(([key, val]) => (
-                <div key={key} className="flex items-center">
-                  <span className={theme.key}>"{key}"</span>: {renderValue(val, [...path, key])}
-                  <Button variant="ghost" size="sm" onClick={() => startEditing([...path, key], val)}>
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => onDelete([...path, key])}>
-                    <Trash className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button variant="ghost" size="sm" onClick={() => onAdd(path, '', null)}>
-                <Plus className="w-4 h-4" /> Add Property
-              </Button>
-            </div>
-          )}
-          <span>{'}'}</span>
-          {displayDataTypes && <span className={theme.type}>(object)</span>}
-        </div>
-      )
-    }
-    return <span>Unknown type</span>
+    return (
+      <div className="flex items-center gap-2">
+        {enableEdit && (
+          <Button variant="ghost" size="sm" onClick={() => handleEdit(path, value)}>
+            <Edit className="w-4 h-4" />
+          </Button>
+        )}
+        {enableDelete && (
+          <Button variant="ghost" size="sm" onClick={() => onDelete(path)}>
+            <Trash className="w-4 h-4" />
+          </Button>
+        )}
+      </div>
+    )
   }
 
-  return <div className={`font-mono text-sm ${theme.background}`}>{renderValue(data, [])}</div>
+  const renderArray = (value: JSONValue[], path: string[], isExpanded: boolean) => {
+    const shouldGroup = groupArraysAfterLength && value.length > groupArraysAfterLength
+
+    return (
+      <div>
+        <div
+          className="cursor-pointer flex items-center"
+          onClick={() => toggleExpand(path.join('.'))}
+        >
+          {iconStyle === 'triangle' ? (
+            isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
+          ) : (
+            <span>{isExpanded ? '▼' : '▶'}</span>
+          )}
+          <span className={theme.string}>
+            [{displayObjectSize && <span className={theme.size}>{value.length}</span>}]
+            {displayDataTypes && <span className={theme.type}> (array)</span>}
+          </span>
+          {renderActions(path, value)}
+        </div>
+
+        {isExpanded && (
+          <div style={{ marginLeft: `${indentWidth * 8}px` }}>
+            {shouldGroup
+              ? renderGroupedArray(value, path)
+              : renderFullArray(value, path)
+            }
+            {enableAdd && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleAdd(path)}
+              >
+                <Plus className="w-4 h-4" /> Add Item
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const renderGroupedArray = (value: JSONValue[], path: string[]) => {
+    return chunk(value, groupArraysAfterLength).map((group, groupIndex) => (
+      <div key={groupIndex}>
+        <span className={theme.group}>
+          [{groupIndex * groupArraysAfterLength} - {Math.min((groupIndex + 1) * groupArraysAfterLength - 1, value.length - 1)}]
+        </span>
+        {group.map((item, index) => (
+          <div key={index}>
+            {renderValue(item, [...path, (groupIndex * groupArraysAfterLength + index).toString()])}
+          </div>
+        ))}
+      </div>
+    ))
+  }
+
+  const renderFullArray = (value: JSONValue[], path: string[]) => {
+    return value.map((item, index) => (
+      <div key={index}>
+        {renderValue(item, [...path, index.toString()])}
+      </div>
+    ))
+  }
+
+  const renderObject = (value: { [key: string]: JSONValue }, path: string[], isExpanded: boolean) => {
+    return (
+      <div>
+        <div
+          className="cursor-pointer flex items-center"
+          onClick={() => toggleExpand(path.join('.'))}
+        >
+          {iconStyle === 'triangle' ? (
+            isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
+          ) : (
+            <span>{isExpanded ? '▼' : '▶'}</span>
+          )}
+          <span className={theme.string}>
+            {'{'}
+            {displayObjectSize && <span className={theme.size}>{Object.keys(value).length}</span>}
+            {'}'}
+            {displayDataTypes && <span className={theme.type}> (object)</span>}
+          </span>
+          {renderActions(path, value)}
+        </div>
+
+        {isExpanded && (
+          <div style={{ marginLeft: `${indentWidth * 8}px` }}>
+            {Object.entries(value).map(([key, val]) => (
+              <div key={key} className="flex items-center">
+                <span className={theme.key}>"{key}"</span>: {renderValue(val, [...path, key])}
+              </div>
+            ))}
+            {enableAdd && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleAdd(path)}
+              >
+                <Plus className="w-4 h-4" /> Add Property
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const handleEdit = (path: string[], value: JSONValue) => {
+    setEditingPath(path)
+    setEditValue(JSON.stringify(value))
+  }
+
+  const handleSave = (path: string[]) => {
+    try {
+      const parsedValue = JSON.parse(editValue)
+      onEdit(path, parsedValue)
+      setEditingPath(null)
+    } catch (err) {
+      toast.error('Invalid JSON input')
+    }
+  }
+
+  const handleAdd = (path: string[]) => {
+    setAddingPath(path)
+    setAddKey('')
+    setAddValue('')
+  }
+
+  const handleAddSave = () => {
+    if (addingPath) {
+      try {
+        const parsedValue = JSON.parse(addValue)
+        onAdd(addingPath, addKey, parsedValue)
+        setAddingPath(null)
+      } catch (err) {
+        toast.error('Invalid JSON input')
+      }
+    }
+  }
+
+  return (
+    <div className={`font-mono text-sm ${theme.background}`}>
+      {renderValue(data, [])}
+      {addingPath && (
+        <div className="mt-4 p-4 bg-gray-700 rounded-md">
+          <Input
+            placeholder="Key"
+            value={addKey}
+            onChange={(e) => setAddKey(e.target.value)}
+            className="mb-2"
+          />
+          <Input
+            placeholder="Value (JSON format)"
+            value={addValue}
+            onChange={(e) => setAddValue(e.target.value)}
+            className="mb-2"
+          />
+          <Button onClick={handleAddSave}>Add</Button>
+          <Button variant="ghost" onClick={() => setAddingPath(null)}>Cancel</Button>
+        </div>
+      )}
+    </div>
+  )
 }
 
 const chunk = <T,>(arr: T[], size: number): T[][] =>
   Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size)
   )
-
 const themes = {
   'monokai': {
     background: 'bg-gray-900',
@@ -456,7 +559,6 @@ export default function JSONViewerEditor() {
   const [groupArraysAfterLength, setGroupArraysAfterLength] = useState<number>(100)
   const [displayObjectSize, setDisplayObjectSize] = useState<boolean>(false)
   const [displayDataTypes, setDisplayDataTypes] = useState<boolean>(false)
-  const [enableClipboard, setEnableClipboard] = useState<boolean>(false)
   const [enableAdd, setEnableAdd] = useState<boolean>(false)
   const [enableEdit, setEnableEdit] = useState<boolean>(false)
   const [enableDelete, setEnableDelete] = useState<boolean>(false)
@@ -481,10 +583,14 @@ export default function JSONViewerEditor() {
     setJsonInput('')
     setParsedJson(null)
     setError('')
-    setShowTreeView(true)
+    setShowTreeView(false)
   }
 
   const handleDownload = () => {
+    if (!jsonInput) {
+      toast.error('No JSON data to download')
+      return
+    }
     const element = document.createElement('a')
     const file = new Blob([jsonInput], {type: 'application/json'})
     element.href = URL.createObjectURL(file)
@@ -492,6 +598,7 @@ export default function JSONViewerEditor() {
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
+    toast.success('JSON file downloaded successfully')
   }
 
   const handleEdit = (path: string[], value: JSONValue) => {
@@ -585,6 +692,9 @@ export default function JSONViewerEditor() {
                 groupArraysAfterLength={groupArraysAfterLength}
                 displayObjectSize={displayObjectSize}
                 displayDataTypes={displayDataTypes}
+                enableEdit={enableEdit}
+                enableDelete={enableDelete}
+                enableAdd={enableAdd}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onAdd={handleAdd}
@@ -593,18 +703,18 @@ export default function JSONViewerEditor() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          <div>
-                <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
-                <Select value={theme} onValueChange={handleThemeChange}>
-                    <SelectTrigger id="theme" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select theme" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                    {(Object.keys(themes) as ThemeName[]).map((themeName) => (
-                        <SelectItem key={themeName} value={themeName}>{themeName}</SelectItem>
-                    ))}
-                    </SelectContent>
-                </Select>
+            <div>
+              <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
+              <Select value={theme} onValueChange={handleThemeChange}>
+                <SelectTrigger id="theme" className="bg-gray-700 text-white border-gray-600">
+                  <SelectValue placeholder="Select theme" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
+                  {(Object.keys(themes) as ThemeName[]).map((themeName) => (
+                    <SelectItem key={themeName} value={themeName}>{themeName}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="icon-style" className="text-white mb-2 block">Icon Style</Label>
@@ -694,14 +804,6 @@ export default function JSONViewerEditor() {
                 onCheckedChange={setDisplayDataTypes}
               />
               <Label htmlFor="display-data-types" className="text-white">Display Data Types</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="enable-clipboard"
-                checked={enableClipboard}
-                onCheckedChange={setEnableClipboard}
-              />
-              <Label htmlFor="enable-clipboard" className="text-white">Enable Clipboard</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Switch
