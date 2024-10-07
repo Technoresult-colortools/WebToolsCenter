@@ -237,16 +237,17 @@ export default function AdvancedPasswordGenerator() {
           
           <div className="relative">
              
-            <textarea
-              value={password}
-              readOnly
-              className="w-full h-24 sm:h-40 p-4 bg-gray-700 text-white border border-gray-600 rounded-md font-mono"
-              style={{ 
-                resize: 'none',
-                /* @ts-expect-error */
-                WebkitTextSecurity: showPassword ? 'none' : 'disc'
-              }}
-            />
+          <textarea
+            value={password}
+            readOnly
+            className="w-full h-24 sm:h-40 p-4 bg-gray-700 text-white border border-gray-600 rounded-md font-mono"
+            style={{ 
+              resize: 'none',
+              /* @ts-expect-error: Suppressing TypeScript error for WebkitTextSecurity style property */
+              WebkitTextSecurity: showPassword ? 'none' : 'disc'
+            }}
+          />
+
             <button
               onClick={() => setShowPassword(!showPassword)}
               className="absolute top-4 right-4 p-2 rounded-md bg-gray-600 text-gray-300 hover:bg-gray-500 hover:text-white transition-colors"
