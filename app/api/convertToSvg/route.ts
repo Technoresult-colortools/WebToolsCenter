@@ -16,13 +16,6 @@ declare module 'potrace' {
 const trace = promisify(potrace.trace)
 const posterize = promisify(potrace.posterize)
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
-}
 
 export async function POST(request: NextRequest) {
   try {
