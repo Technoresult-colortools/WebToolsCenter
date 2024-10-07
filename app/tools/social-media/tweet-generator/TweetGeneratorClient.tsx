@@ -41,11 +41,13 @@ const Tweet = React.forwardRef<HTMLDivElement, {
   tweetText: string;
   tweetImage: string;
   imageSize: number;
+  className?: string;
   engagementCounts: {
     replies: number;
     retweets: number;
     likes: number;
     views: number;
+    
   };
   formatDate: () => string;
   formatTweetText: (text: string) => string;
@@ -53,8 +55,8 @@ const Tweet = React.forwardRef<HTMLDivElement, {
 }>((props, ref) => (
   <div 
     ref={ref}
-    className={`bg-${props.theme === 'light' ? 'white' : 'black'} rounded-lg overflow-hidden p-4 max-w-xl mx-auto`}
-    style={{ width: '550px' }}
+    className={`bg-${props.theme === 'light' ? 'white' : 'black'} rounded-lg overflow-hidden p-4 mx-auto w-full ${props.className}`}
+    
   >
     <div className="flex items-start mb-4">
       <div className="w-12 h-12 rounded-full bg-gray-300 overflow-hidden mr-3 flex-shrink-0">
@@ -202,23 +204,26 @@ export default function TweetGeneratorClient() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-white mb-6 text-center">Tweet Generator</h1>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
           <h2 className="text-2xl font-bold text-white mb-4">Tweet Preview</h2>
-          <Tweet
-            ref={tweetRef}
-            theme={theme}
-            name={name}
-            username={username}
-            isVerified={isVerified}
-            avatarUrl={avatarUrl}
-            tweetText={tweetText}
-            tweetImage={tweetImage}
-            imageSize={imageSize}
-            engagementCounts={engagementCounts}
-            formatDate={formatDate}
-            formatTweetText={formatTweetText}
-            formatNumber={formatNumber}
-          />
+          <div className="w-full max-w-full flex justify-center">
+            <Tweet
+              ref={tweetRef}
+              theme={theme}
+              name={name}
+              username={username}
+              isVerified={isVerified}
+              avatarUrl={avatarUrl}
+              tweetText={tweetText}
+              tweetImage={tweetImage}
+              imageSize={imageSize}
+              engagementCounts={engagementCounts}
+              formatDate={formatDate}
+              formatTweetText={formatTweetText}
+              formatNumber={formatNumber}
+              className="w-full" // Ensures the tweet fits the parent container
+            />
+          </div>
         </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">

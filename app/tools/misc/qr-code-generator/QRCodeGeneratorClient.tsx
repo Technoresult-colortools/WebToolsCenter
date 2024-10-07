@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, } from 'lucide-react';
+import { Download, FileText, Brush, Sliders, Image } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -128,11 +128,23 @@ export default function QRCodeGenerator() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="content" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
-                <TabsTrigger value="content">Content</TabsTrigger>
-                <TabsTrigger value="appearance">Appearance</TabsTrigger>
-                <TabsTrigger value="advanced">Advanced</TabsTrigger>
-                <TabsTrigger value="logo">Logo</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-4 gap-2 mb-4">
+                <TabsTrigger value="content" className="flex items-center justify-center">
+                  <FileText className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Content</span>
+                </TabsTrigger>
+                <TabsTrigger value="appearance" className="flex items-center justify-center">
+                  <Brush className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Appearance</span>
+                </TabsTrigger>
+                <TabsTrigger value="advanced" className="flex items-center justify-center">
+                  <Sliders className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Advanced</span>
+                </TabsTrigger>
+                <TabsTrigger value="logo" className="flex items-center justify-center">
+                  <Image className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Logo</span>
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="content" className="space-y-4">
                 <div>
@@ -308,8 +320,8 @@ export default function QRCodeGenerator() {
                     <SelectTrigger id="qr-style" className="bg-gray-700 text-white border-gray-600">
                       <SelectValue placeholder="Select QR code style" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <Select value="squares">Squares</Select>
+                    <SelectContent className="bg-gray-700 text-white border-gray-600">
+                      <SelectItem value="squares">Squares</SelectItem>
                       <SelectItem value="dots">Dots</SelectItem>
                     </SelectContent>
                   </Select>
@@ -358,7 +370,7 @@ export default function QRCodeGenerator() {
                     <SelectTrigger id="error-correction" className="bg-gray-700 text-white border-gray-600">
                       <SelectValue placeholder="Select error correction level" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-gray-700 text-white border-gray-600">
                       <SelectItem value="L">Low (7%)</SelectItem>
                       <SelectItem value="M">Medium (15%)</SelectItem>
                       <SelectItem value="Q">Quartile (25%)</SelectItem>

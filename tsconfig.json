@@ -5,7 +5,10 @@
       "dom.iterable",
       "esnext"
     ],
-    "typeRoots": ["./types", "./node_modules/@types"],
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ],
     "target": "ES2015",
     "downlevelIteration": true,
     "allowJs": true,
@@ -38,14 +41,23 @@
       ],
       "@/lib/*": [
         "./app/lib/*"
+      ],
+      "@/types/*": [
+        "./types/*"
       ]
-    }
+    },
+    "types": [
+      "node",
+      "react",
+      "react-dom"
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

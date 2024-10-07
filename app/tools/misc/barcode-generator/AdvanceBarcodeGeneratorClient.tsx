@@ -78,6 +78,26 @@ export default function BarCodeGenerator() {
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+              <h2 className="text-2xl font-bold text-white mb-4">Generated Barcode</h2>
+              <div className="bg-white p-4 rounded-md mb-4">
+                {svgData && <img src={svgData} alt="Generated Barcode" className="mx-auto" />}
+              </div>
+              <div className="flex space-x-4">
+                <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Download className="h-5 w-5 mr-2" />
+                  Download
+                </Button>
+                <Button onClick={handleCopyToClipboard} className="bg-green-600 hover:bg-green-700 text-white">
+                  <Copy className="h-5 w-5 mr-2" />
+                  Copy SVG
+                </Button>
+                <Button onClick={generateBarcode} className="bg-purple-600 hover:bg-purple-700 text-white">
+                  <RefreshCw className="h-5 w-5 mr-2" />
+                  Regenerate
+                </Button>
+              </div>
+            </div>
             <div>
               <h2 className="text-2xl font-bold text-white mb-4">Barcode Settings</h2>
               <div className="space-y-4">
@@ -174,26 +194,7 @@ export default function BarCodeGenerator() {
               </div>
             </div>
 
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Generated Barcode</h2>
-              <div className="bg-white p-4 rounded-md mb-4">
-                {svgData && <img src={svgData} alt="Generated Barcode" className="mx-auto" />}
-              </div>
-              <div className="flex space-x-4">
-                <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Download className="h-5 w-5 mr-2" />
-                  Download
-                </Button>
-                <Button onClick={handleCopyToClipboard} className="bg-green-600 hover:bg-green-700 text-white">
-                  <Copy className="h-5 w-5 mr-2" />
-                  Copy SVG
-                </Button>
-                <Button onClick={generateBarcode} className="bg-purple-600 hover:bg-purple-700 text-white">
-                  <RefreshCw className="h-5 w-5 mr-2" />
-                  Regenerate
-                </Button>
-              </div>
-            </div>
+            
           </div>
         </div>
 

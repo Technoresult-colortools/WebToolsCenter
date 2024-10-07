@@ -243,7 +243,7 @@ export default function ListRandomizer() {
                 <Label htmlFor="separator" className="text-white mb-2 block">Separator</Label>
                 <Select value={separator} onValueChange={handleSeparatorChange}>
                   <SelectTrigger id="separator" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select separator" />
+                    <SelectValue>{separator === '\n' ? 'New line' : separator || 'Select separator'}</SelectValue>
                   </SelectTrigger>
                   <SelectContent className="bg-gray-700 text-white border-gray-600">
                     <SelectItem value="\n">New line</SelectItem>

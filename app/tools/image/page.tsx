@@ -32,6 +32,7 @@ const imageTools = [
   { name: 'SVG to PNG Converter', href: '/tools/image/svg-to-png-converter', icon: faFileImage, description: 'Convert SVG files to PNG format.' },
   { name: 'Image to Base64 Converter', href: '/tools/image/image-to-base64-converter', icon: faCode, description: 'Convert images to Base64 format for embedding.' },
   { name: 'Image Caption Generator', href: '/tools/image/image-caption-generator', icon: faCommentDots, description: 'Generate captions for your images using AI.' },
+  { name: 'PNG to SVG Converter', href: '/tools/image/png-to-svg-converter', icon: faFileImage, description: 'Convert PNG files to SVG format.' },
 ];
 
 export default function ImageToolsPage() {
