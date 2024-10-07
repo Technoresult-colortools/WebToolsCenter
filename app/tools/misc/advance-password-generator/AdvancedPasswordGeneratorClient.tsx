@@ -243,7 +243,7 @@ export default function AdvancedPasswordGenerator() {
               className="w-full h-24 sm:h-40 p-4 bg-gray-700 text-white border border-gray-600 rounded-md font-mono"
               style={{ 
                 resize: 'none',
-                /* @ts-ignore */
+                /* @ts-expect-error */
                 WebkitTextSecurity: showPassword ? 'none' : 'disc'
               }}
             />

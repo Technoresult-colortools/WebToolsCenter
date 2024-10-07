@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw, Download, Info, BookOpen, Lightbulb, ChevronUp, ChevronDown } from 'lucide-react'
+import { Copy, RefreshCw, Download, Info, BookOpen, Lightbulb, } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 

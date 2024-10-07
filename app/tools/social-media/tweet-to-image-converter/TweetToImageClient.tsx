@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, Camera, Info } from 'lucide-react';
+import { Download, Info } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { exportComponentAsJPEG, exportComponentAsPNG } from 'react-component-export-image';
@@ -65,6 +65,13 @@ interface TweetData {
     url: string;
   }>;
 }
+
+interface MediaItem {
+  type: string;
+  url?: string;
+  preview_image_url?: string;
+}
+
 
 const Tweet = React.forwardRef<HTMLDivElement, {
   tweetData: TweetData;
@@ -204,7 +211,7 @@ export default function TweetToImageConverter() {
         date: formatDate(data.created_at),
         time: formatTime(data.created_at),
         profileImage: data.user.profile_image_url,
-        media: data.media.map((item: any) => ({
+        media: data.media.map((item: MediaItem) => ({
           type: item.type,
           url: item.url || item.preview_image_url
         }))

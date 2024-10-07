@@ -1,8 +1,14 @@
-// app/api/tweet/[id]/route.ts
 import { NextResponse } from 'next/server';
 
 const TWITTER_API_TOKEN = process.env.TWITTER_API_TOKEN;
 const TWITTER_API_URL = 'https://api.twitter.com/2/tweets';
+
+// Define an interface for the media item
+interface MediaItem {
+  type: string;
+  url?: string;
+  preview_image_url?: string;
+}
 
 export async function GET(
   request: Request,
@@ -55,7 +61,7 @@ export async function GET(
         username: user.username,
         profile_image_url: user.profile_image_url,
       },
-      media: data.includes?.media?.map((item: any) => ({
+      media: data.includes?.media?.map((item: MediaItem) => ({
         type: item.type,
         url: item.url || item.preview_image_url,
       })) || [],
