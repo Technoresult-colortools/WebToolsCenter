@@ -3,6 +3,35 @@ import { NextResponse } from 'next/server';
 const TWITTER_API_TOKEN = process.env.TWITTER_API_TOKEN;
 const TWITTER_API_URL = 'https://api.twitter.com/2/tweets';
 
+interface User {
+  name: string;
+  username: string;
+  profile_image_url: string;
+}
+
+interface MediaItem {
+  type: string;
+  url: string | undefined;
+  preview_image_url?: string; // Added this line to include preview_image_url
+}
+
+interface TwitterApiResponse {
+  data: {
+    text: string;
+    created_at: string;
+  };
+  includes?: {
+    users?: User[];
+    media?: MediaItem[];
+  };
+}
+
+interface FetchError {
+  message: string;
+  name: string;
+  stack?: string;
+}
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
@@ -46,7 +75,7 @@ export async function GET(
       }, { status: response.status });
     }
 
-    const data = await response.json();
+    const data: TwitterApiResponse = await response.json();
 
     // Debug log 4: Log the response data structure
     console.log('Twitter API Response Structure:', {
@@ -78,7 +107,7 @@ export async function GET(
         username: user.username,
         profile_image_url: user.profile_image_url,
       },
-      media: data.includes?.media?.map((item: any) => ({
+      media: data.includes?.media?.map((item: MediaItem) => ({
         type: item.type,
         url: item.url || item.preview_image_url,
       })) || [],
@@ -88,18 +117,20 @@ export async function GET(
     console.log('Successfully formatted response');
     
     return NextResponse.json(formattedResponse);
-  } catch (error: any) {
+  } catch (error) {
+    const fetchError = error as FetchError; // Cast the error to the specific interface
+
     // Enhanced error logging
     console.error('Detailed error information:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
+      message: fetchError.message,
+      stack: fetchError.stack,
+      name: fetchError.name
     });
 
     return NextResponse.json({
       error: 'Failed to fetch tweet data',
-      details: error.message,
-      type: error.name
+      details: fetchError.message,
+      type: fetchError.name
     }, { status: 500 });
   }
 }

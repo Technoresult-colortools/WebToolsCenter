@@ -89,7 +89,7 @@ export default function TitleCaseConverter() {
       return;
     }
 
-    let words = preserveFormatting 
+    const words = preserveFormatting 
       ? text.split(/(\s+)/).filter(word => word.length > 0)
       : text.split(/\s+/);
 

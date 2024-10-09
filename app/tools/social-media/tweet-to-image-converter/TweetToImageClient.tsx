@@ -66,12 +66,6 @@ interface TweetData {
   }>;
 }
 
-interface MediaItem {
-  type: string;
-  url?: string;
-  preview_image_url?: string;
-}
-
 
 const Tweet = React.forwardRef<HTMLDivElement, {
   tweetData: TweetData;
