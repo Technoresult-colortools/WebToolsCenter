@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, FileText, Brush, Sliders, Image } from 'lucide-react';
+import { Download, FileText, Brush, Sliders, Image, Info, BookOpen, Lightbulb } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -423,47 +423,59 @@ export default function QRCodeGenerator() {
           </Button>
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">About Advanced Password Generator</h2>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            About QR Code Generator
+          </h2>
           <p className="text-gray-300 mb-4">
-            The Advanced Password Generator tool allows you to create strong, random passwords that are secure and difficult to guess. You can customize the length, include special characters, numbers, and even uppercase or lowercase letters. This tool ensures your passwords are complex enough to protect sensitive information.
+            The QR Code Generator is a powerful and versatile tool that allows you to create customized QR codes for various purposes. 
+            Whether you need to share a website URL, contact information, Wi-Fi credentials, or any other type of data, this generator provides an easy-to-use interface to create QR codes tailored to your needs.
           </p>
-          <p className="text-gray-300 mb-4">
-            Whether you're setting up a new account or updating your current passwords, this generator gives you full control over the password complexity. Simply adjust the settings to meet your security needs, and instantly generate a password.
-          </p>
-          <h2 className="text-2xl font-bold text-white mb-4">How to Use the Advanced Password Generator?</h2>
-          <p className="text-gray-300 mb-4">
-            Using the Advanced Password Generator is simple and efficient. Follow these steps:
-          </p>
-          <ul className="list-disc list-inside text-gray-300 mb-4">
-            <li>Select the desired password length (e.g., 8, 12, or 16 characters).</li>
-            <li>Choose the character types to include, such as uppercase, lowercase, numbers, or special symbols.</li>
-            <li>Click the "Generate Password" button, and your secure password will appear instantly.</li>
-            <li>Optionally, copy the generated password and save it to your password manager.</li>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <BookOpen className="w-6 h-6 mr-2" />
+            How to Use QR Code Generator
+          </h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Select the QR code type (URL, text, email, phone, SMS, or Wi-Fi) from the dropdown menu.</li>
+            <li>Enter the required information for the selected type in the provided fields.</li>
+            <li>Customize the appearance of your QR code using the options in the "Appearance" tab.</li>
+            <li>Adjust advanced settings like error correction level in the "Advanced" tab.</li>
+            <li>Optionally, add a logo to your QR code using the "Logo" tab.</li>
+            <li>Preview your QR code in real-time as you make changes.</li>
+            <li>Once satisfied, click the "Download QR Code" button to save your generated QR code.</li>
+          </ol>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Key Features and Tips
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Multiple QR Code Types: Create QR codes for URLs, plain text, email addresses, phone numbers, SMS messages, and Wi-Fi networks.</li>
+            <li>Customizable Appearance: Adjust the size, colors, and style (squares or dots) of your QR code to match your branding or preferences.</li>
+            <li>Error Correction Levels: Choose from four levels of error correction to balance between code size and scanning reliability.</li>
+            <li>Logo Integration: Add your own logo to the center of the QR code for brand recognition.</li>
+            <li>Real-time Preview: See your QR code update in real-time as you modify settings.</li>
+            <li>Responsive Design: The tool works well on both desktop and mobile devices.</li>
+            <li>Easy Download: Download your QR code as a PNG image with a single click.</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-white mb-4">Key Features</h2>
-          <p className="text-gray-300 mb-4">
-            The Advanced Password Generator tool is packed with features to enhance your password security:
-          </p>
-          <ul className="list-disc list-inside text-gray-300 mb-4">
-            <li>Customizable password length from 4 to 64 characters.</li>
-            <li>Option to include uppercase and lowercase letters, numbers, and special characters.</li>
-            <li>Generate multiple passwords at once for added convenience.</li>
-            <li>Passwords are generated locally on your device for maximum privacy.</li>
-          </ul>
-
-          <h2 className="text-2xl font-bold text-white mb-4">Tips and Tricks</h2>
-          <p className="text-gray-300 mb-4">
-            For the best security practices, consider the following tips:
-          </p>
-          <ul className="list-disc list-inside text-gray-300 mb-4">
-            <li>Use a combination of all character types (uppercase, lowercase, numbers, and symbols) for maximum strength.</li>
-            <li>Avoid using easily guessable information, such as your name, birthdate, or common words.</li>
-            <li>Regularly update your passwords, especially for important accounts like emails, banking, and social media.</li>
-            <li>Store your passwords in a secure password manager to avoid memorizing complex combinations.</li>
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Tips for Creating Effective QR Codes
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Keep the data concise to reduce QR code complexity.</li>
+            <li>Use a higher error correction level when adding a logo or when the code might be displayed in challenging environments.</li>
+            <li>Ensure sufficient contrast between the foreground and background colors for better scannability.</li>
+            <li>Test your QR code on multiple devices and scanning apps before wide distribution.</li>
+            <li>When using a logo, keep it small (around 20-25% of the QR code size) to maintain scannability.</li>
+            <li>For Wi-Fi QR codes, double-check the network name and password to avoid connection issues.</li>
+            <li>Consider the context where the QR code will be scanned when choosing its size and error correction level.</li>
           </ul>
         </div>
+
       </main>
       <Footer />
     </div>

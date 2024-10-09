@@ -209,7 +209,7 @@ export default function CodeToImageConverter() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="language" className="text-white mb-2 block">Language</Label>
+                  <label htmlFor="language" className="text-white mb-2 block">Language</label>
                   <Select value={language} onValueChange={setLanguage}>
                     <SelectTrigger id="language" className="w-full bg-gray-700 text-white border-gray-600">
                       <SelectValue placeholder="Select language" />

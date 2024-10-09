@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, Info } from 'lucide-react';
+import { Download, Info, Lightbulb, BookOpen } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { exportComponentAsJPEG, exportComponentAsPNG } from 'react-component-export-image';
@@ -164,7 +164,7 @@ export default function TweetToImageConverter() {
   const [tweetData, setTweetData] = useState<TweetData>({
     username: 'WebToolsCenter',
     handle: '@WTS',
-    content: 'Hello world! 👋 WebCenterTools has a lot of online tools. This Tweet to image conversion tool converts your Tweets to fancy Images! 📸🎨🔧',
+    content: 'Hello world! 👋 WebToolsCenter has a lot of online tools. This Tweet to image conversion tool converts your Tweets to fancy Images! 📸🎨🔧',
     date: 'Sep 20, 2024',
     time: '7:13 AM',
     profileImage: undefined,
@@ -188,22 +188,25 @@ export default function TweetToImageConverter() {
 
   const handleCapture = async () => {
     const tweetId = extractTweetId(tweetUrl);
-
+  
     if (!tweetId) {
       toast.error('Invalid Tweet URL. Please enter a valid Twitter/X post URL.');
       return;
     }
-
+  
     try {
-      const response = await fetch(`/api/tweet/${tweetId}`);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch tweet');
-      }
-
-      const data = await response.json();
+      console.log('Attempting to fetch tweet with ID:', tweetId);
       
+      const response = await fetch(`/api/tweet/${tweetId}`);
+      console.log('Response status:', response.status);
+  
+      const data = await response.json();
+      console.log('Response data:', data);
+  
+      if (!response.ok) {
+        throw new Error(data.error || data.details || 'Failed to fetch tweet');
+      }
+  
       setTweetData({
         username: data.user.name,
         handle: `@${data.user.username}`,
@@ -211,15 +214,15 @@ export default function TweetToImageConverter() {
         date: formatDate(data.created_at),
         time: formatTime(data.created_at),
         profileImage: data.user.profile_image_url,
-        media: data.media.map((item: MediaItem) => ({
-          type: item.type,
-          url: item.url || item.preview_image_url
-        }))
+        media: data.media
       });
-
+  
       toast.success('Tweet captured successfully!');
     } catch (error) {
-      console.error('Error fetching tweet:', error);
+      console.error('Detailed error information:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error
+      });
       toast.error(`Failed to capture tweet: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
@@ -290,11 +293,11 @@ export default function TweetToImageConverter() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
               <Label htmlFor="layout" className="text-white mb-2 block">Layout</Label>
-              <Select onValueChange={(value: 'wide' | 'compact' | 'square') => setLayout(value)}>
-                <SelectTrigger id="layout">
+              <Select onValueChange={(value: 'wide' | 'compact' | 'square') => setLayout(value)} >
+                <SelectTrigger className="bg-gray-700 text-white border-gray-600" id="layout">
                   <SelectValue placeholder="Select Layout" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
                   <SelectItem value="wide">Wide</SelectItem>
                   <SelectItem value="compact">Compact</SelectItem>
                   <SelectItem value="square">Square</SelectItem>
@@ -305,10 +308,10 @@ export default function TweetToImageConverter() {
             <div>
               <Label htmlFor="background-type" className="text-white mb-2 block">Background Type</Label>
               <Select onValueChange={(value: 'gradient' | 'solid' | 'image') => setBackgroundType(value)}>
-                <SelectTrigger id="background-type">
+                <SelectTrigger className="bg-gray-700 text-white border-gray-600" id="background-type">
                   <SelectValue placeholder="Select Background Type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
                   <SelectItem value="gradient">Gradient</SelectItem>
                   <SelectItem value="solid">Solid Color</SelectItem>
                   <SelectItem value="image">Image</SelectItem>
@@ -334,10 +337,10 @@ export default function TweetToImageConverter() {
             <div className="mb-6">
               <Label htmlFor="gradient-color" className="text-white mb-2 block">Gradient Color</Label>
               <Select onValueChange={(value: GradientKey) => setGradientColor(value)}>
-                <SelectTrigger id="gradient-color">
+                <SelectTrigger className="bg-gray-700 text-white border-gray-600" id="gradient-color">
                   <SelectValue placeholder="Select Gradient" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
                   {Object.keys(gradients).map((key) => (
                     <SelectItem key={key} value={key as GradientKey}>{key}</SelectItem>
                   ))}
@@ -383,19 +386,35 @@ export default function TweetToImageConverter() {
           </div>
 
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-            <Button onClick={() => handleExport('png')} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
+            <Button onClick={() => handleExport('png')} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
               <Download className="mr-2" /> Export as PNG
             </Button>
-            <Button onClick={() => handleExport('jpeg')} className="bg-yellow-600 hover:bg-yellow-700 w-full sm:w-auto">
+            <Button onClick={() => handleExport('jpeg')} className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
               <Download className="mr-2" /> Export as JPEG
             </Button>
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
           <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
             <Info className="w-6 h-6 mr-2" />
-            How to Use the Tweet to Image Converter
+            What is the Tweet to Image Converter?
+          </h2>
+          <p className="text-gray-300 mb-4">
+            The Tweet to Image Converter is a free online tool designed to turn tweets into images, providing you with a flexible way to capture and share tweet snapshots. You can easily add custom backgrounds to enhance the visual appeal of your tweets, making them perfect for sharing across different platforms.
+          </p>
+
+          <p className="text-gray-300 mb-4">
+            Tweets are brief messages that users post on Twitter, a popular platform for sharing news, updates, and media content. However, if a tweet is deleted or protected, it becomes inaccessible. With this tool, you can convert tweets into permanent images, ensuring they remain visible even if the original tweet is no longer available. You can then share these tweet images on platforms like Instagram, Pinterest, or Facebook.
+          </p>
+
+          <p className="text-gray-300 mb-4">If you're looking for an easy solution to share tweets on Instagram or Pinterest, this tool offers an image orientation option for a perfect fit. For instance, setting the orientation to "Square" ensures the tweet image is ready to be shared on platforms like Instagram and Pinterest, where square images are the norm. Additionally, you can further personalize your tweet image by adding a custom background to increase engagement and make your posts more eye-catching.</p>
+
+          <p className="text-gray-300 mb-4">Whether you're a social media influencer, business owner, or just someone who wants to share tweets across multiple platforms, this tool allows you to create professional-looking tweet images that can be shared effortlessly on Instagram, Pinterest, Facebook, and more.</p>
+          
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <BookOpen className="w-6 h-6 mr-2" />
+            How to Use the Tweet to Image Converter?
           </h2>
           <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
             <li>Enter a valid Twitter/X post URL in the input field.</li>
@@ -405,7 +424,35 @@ export default function TweetToImageConverter() {
             <li>Preview your customized tweet image in real-time.</li>
             <li>Export the image as PNG or JPEG using the provided buttons.</li>
           </ol>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Key Features
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Capture tweets automatically by inputting a URL.</li>
+            <li>Real-time preview of the tweet as an image.</li>
+            <li>Options to add background images, watermarks, or comments.</li>
+            <li>Multiple export formats (PNG and JPEG).</li>
+            <li>Custom layouts and square image option for Instagram and Pinterest.</li>
+            <li>Preserve tweet content even if the tweet is deleted or restricted.</li>
+            <li>Responsive design for mobile and desktop devices.</li>
+          </ul>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Tips and Tricks
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Use high-quality backgrounds to make your tweet image more appealing.</li>
+            <li>Experiment with different layouts to suit your sharing platform.</li>
+            <li>Add a watermark if you want to credit your account when sharing.</li>
+            <li>Use the square format for Instagram and Pinterest posts for the best fit.</li>
+            <li>Take advantage of real-time preview to tweak your design before exporting.</li>
+          </ul>
         </div>
+
+
       </main>
       <Footer />
     </div>

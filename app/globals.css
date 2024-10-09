@@ -77,3 +77,7 @@ body {
   visibility: visible;
 }
 
+/* Ensure the select dropdown is always on top */
+.select-container {
+  min-height: 40px; /* or whatever height matches your SelectTrigger */
+}
