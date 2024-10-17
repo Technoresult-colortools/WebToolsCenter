@@ -3,6 +3,11 @@ import { NextResponse } from 'next/server';
 const TWITTER_API_TOKEN = process.env.TWITTER_API_TOKEN;
 const TWITTER_API_URL = 'https://api.twitter.com/2/tweets';
 
+interface MediaItem {
+  type: string;
+  url?: string;
+  preview_image_url?: string;
+}
 
 export async function GET(
   request: Request,
@@ -10,7 +15,6 @@ export async function GET(
 ) {
   const id = params.id;
 
-  // Validate token
   if (!TWITTER_API_TOKEN) {
     console.error('Twitter API token is missing');
     return NextResponse.json(
@@ -79,7 +83,7 @@ export async function GET(
         username: user.username,
         profile_image_url: user.profile_image_url,
       },
-      media: data.includes?.media?.map(item => ({
+      media: data.includes?.media?.map((item: MediaItem) => ({
         type: item.type,
         url: item.url || item.preview_image_url,
       })) || [],
