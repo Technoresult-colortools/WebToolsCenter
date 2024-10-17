@@ -8,9 +8,11 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw } from 'lucide-react'
+import { BookOpen, Copy, Info, Lightbulb, RefreshCw } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Sidebar from '@/components/sidebarTools';
+
 
 const separators = [
   { value: 'hyphen', label: 'Hyphen (-)', char: '-' },
@@ -110,137 +112,138 @@ export default function URLSlugCreator() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">URL Slug Creator</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                URL Slug Creator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                Convert any text into a clean, SEO-friendly URL slug.
+            </p>
+          </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto mb-8">
-          <div className="space-y-6">
-            <div>
-              <Label htmlFor="input" className="text-white mb-2 block">Input Text</Label>
-              <div className="flex space-x-2">
-                <Input
-                  id="input"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  className="flex-grow bg-gray-700 text-white border-gray-600"
-                  placeholder="Enter text to convert to a slug"
-                />
-                <Button onClick={handleRandomize} className="bg-purple-600 hover:bg-purple-700">
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Randomize
-                </Button>
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="slug" className="text-white mb-2 block">Generated Slug</Label>
-              <div className="flex space-x-2">
-                <Input
-                  id="slug"
-                  value={slug}
-                  readOnly
-                  className="flex-grow bg-gray-700 text-white border-gray-600"
-                />
-                <Button onClick={copyToClipboard} className="bg-green-600 hover:bg-green-700">
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy
-                </Button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto mb-8">
+            <div className="space-y-6">
               <div>
-                <Label htmlFor="separator" className="text-white mb-2 block">Separator</Label>
-                <Select value={separator} onValueChange={setSeparator}>
-                  <SelectTrigger id="separator" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select separator" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    {separators.map((sep) => (
-                      <SelectItem key={sep.value} value={sep.value}>{sep.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="input" className="text-white mb-2 block">Input Text</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    id="input"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="flex-grow bg-gray-700 text-white border-gray-600"
+                    placeholder="Enter text to convert to a slug"
+                  />
+                  <Button onClick={handleRandomize} className="bg-purple-600 hover:bg-purple-700">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Randomize
+                  </Button>
+                </div>
               </div>
+
               <div>
-                <Label htmlFor="casing" className="text-white mb-2 block">Casing</Label>
-                <Select value={casing} onValueChange={setCasing}>
-                  <SelectTrigger id="casing" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select casing" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    {casings.map((c) => (
-                      <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="slug" className="text-white mb-2 block">Generated Slug</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    id="slug"
+                    value={slug}
+                    readOnly
+                    className="flex-grow bg-gray-700 text-white border-gray-600"
+                  />
+                  <Button onClick={copyToClipboard} className="bg-green-600 hover:bg-green-700">
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy
+                  </Button>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <Label htmlFor="maxLength" className="text-white mb-2 block">Maximum Length: {maxLength}</Label>
-              <Slider
-                id="maxLength"
-                min={10}
-                max={100}
-                step={1}
-                value={maxLength}
-                onChange={(value) => setMaxLength(value)}
-                className="w-full"
-              />
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="separator" className="text-white mb-2 block">Separator</Label>
+                  <Select value={separator} onValueChange={setSeparator}>
+                    <SelectTrigger id="separator" className="w-full bg-gray-700 text-white border-gray-600">
+                      <SelectValue placeholder="Select separator" />
+                    </SelectTrigger>
+                    <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
+                      {separators.map((sep) => (
+                        <SelectItem key={sep.value} value={sep.value}>{sep.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="casing" className="text-white mb-2 block">Casing</Label>
+                  <Select value={casing} onValueChange={setCasing}>
+                    <SelectTrigger id="casing" className="w-full bg-gray-700 text-white border-gray-600">
+                      <SelectValue placeholder="Select casing" />
+                    </SelectTrigger>
+                    <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
+                      {casings.map((c) => (
+                        <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="removeStopWords"
-                checked={removeStopWords}
-                onCheckedChange={setRemoveStopWords}
-              />
-              <Label htmlFor="removeStopWords" className="text-white">Remove Stop Words</Label>
-            </div>
+              <div>
+                <Label htmlFor="maxLength" className="text-white mb-2 block">Maximum Length: {maxLength}</Label>
+                <Slider
+                  id="maxLength"
+                  min={10}
+                  max={100}
+                  step={1}
+                  value={maxLength}
+                  onChange={(value) => setMaxLength(value)}
+                  className="w-full"
+                />
+              </div>
 
-            <div>
-              <Label htmlFor="customReplacements" className="text-white mb-2 block">Custom Replacements</Label>
-              <textarea
-                id="customReplacements"
-                value={customReplacements}
-                onChange={(e) => setCustomReplacements(e.target.value)}
-                className="w-full h-24 bg-gray-700 text-white border-gray-600 rounded-md p-2"
-                placeholder="Enter custom replacements (one per line)&#10;Example:&#10;& : and&#10;@ : at"
-              />
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="removeStopWords"
+                  checked={removeStopWords}
+                  onCheckedChange={setRemoveStopWords}
+                />
+                <Label htmlFor="removeStopWords" className="text-white">Remove Stop Words</Label>
+              </div>
+
+              <div>
+                <Label htmlFor="customReplacements" className="text-white mb-2 block">Custom Replacements</Label>
+                <textarea
+                  id="customReplacements"
+                  value={customReplacements}
+                  onChange={(e) => setCustomReplacements(e.target.value)}
+                  className="w-full h-24 bg-gray-700 text-white border-gray-600 rounded-md p-2"
+                  placeholder="Enter custom replacements (one per line)&#10;Example:&#10;& : and&#10;@ : at"
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">About URL to Slug Creator</h2>
-            <p className="text-gray-300">
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About URL to Slug Creator
+            </h2>
+            <p className="text-gray-300 mb-4">
               The URL to Slug Creator is a handy tool designed to convert any text into a clean, SEO-friendly URL slug. Whether you're building websites, blogs, or e-commerce platforms, this tool ensures your slugs are optimized for search engines and easy to read. Customize the output to fit your preferences with options for separators, case settings, and more.
             </p>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Key Features of URL to Slug Creator</h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2">
-              <li>Automatic slug generation from text input</li>
-              <li>Choose from different separator options (hyphen, underscore, dot, none, or custom)</li>
-              <li>Adjust case (lowercase, uppercase, capitalize) for slug</li>
-              <li>Maximum length control for slug output</li>
-              <li>Option to remove common stop words for cleaner slugs</li>
-              <li>Custom character/word replacement feature</li>
-              <li>Random input generation for testing</li>
-              <li>One-click copy to clipboard functionality</li>
-            </ul>
-          </section>
-
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">How to Use URL to Slug Creator?</h2>
-            <ol className="list-decimal list-inside text-gray-300 space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use URL to Slug Creator?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Enter or paste your text in the input field.</li>
               <li>The slug is automatically generated based on your settings.</li>
               <li>Customize your slug with the following options:</li>
-              <ul className="list-disc list-inside text-gray-300 ml-8">
+              <ul className="list-disc list-inside ml-6">
                 <li>Select a separator character (hyphen, underscore, dot, none, or custom).</li>
                 <li>Choose between lowercase, uppercase, or capitalize casing.</li>
                 <li>Adjust the slug length using the slider for a maximum length limit.</li>
@@ -250,11 +253,27 @@ export default function URLSlugCreator() {
               <li>Click the "Randomize" button to generate a random slug for testing.</li>
               <li>Click "Copy" to copy the slug to your clipboard.</li>
             </ol>
-          </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Automatic slug generation from text input.</li>
+              <li>Choose from different separator options (hyphen, underscore, dot, none, or custom).</li>
+              <li>Adjust case (lowercase, uppercase, capitalize) for slug.</li>
+              <li>Maximum length control for slug output.</li>
+              <li>Option to remove common stop words for cleaner slugs.</li>
+              <li>Custom character/word replacement feature.</li>
+              <li>Random input generation for testing.</li>
+              <li>One-click copy to clipboard functionality.</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips and Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Use hyphens for SEO-friendly slugs as search engines prefer them.</li>
               <li>Capitalize the slug for titles or headers to make them stand out visually.</li>
               <li>Remove stop words like "and", "the", or "of" to create shorter, cleaner slugs.</li>
@@ -262,63 +281,64 @@ export default function URLSlugCreator() {
               <li>Test various separators to see which fits your site's style or branding best.</li>
               <li>Use custom replacements to maintain consistency in branding or style (e.g., replacing "&" with "and").</li>
             </ul>
-          </section>
-        </div>
+          </div>
 
 
-        <div className="bg-gray-800 rounded-xl mt-4 shadow-lg p-6 md:p-8 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-semibold text-white mb-4">Custom Separator Explanation</h2>
-          
-          <p className="text-gray-300 mb-4">
-            The custom separator feature allows you to define your own unique separator for the URL slug. This gives you more flexibility in how words are separated in the final slug.
-          </p>
 
-          <h3 className="text-xl font-semibold text-white mt-6 mb-4">How It Works</h3>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2">
-            <li>In the "Separator" dropdown, select "Custom".</li>
-            <li>A new input field will appear labeled "Custom Separator".</li>
-            <li>Enter any character or string you want to use as a separator in this field.</li>
-            <li>The slug generator will use this custom separator to join words in the slug.</li>
-          </ol>
+          <div className="bg-gray-800 rounded-xl mt-4 shadow-lg p-6 md:p-8 max-w-4xl mx-auto">
+            <h2 className="text-2xl font-semibold text-white mb-4">Custom Separator Explanation</h2>
+            
+            <p className="text-gray-300 mb-4">
+              The custom separator feature allows you to define your own unique separator for the URL slug. This gives you more flexibility in how words are separated in the final slug.
+            </p>
 
-          <h3 className="text-xl font-semibold text-white mt-6 mb-4">Examples</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Using "|" as a custom separator:
-              <br />Input: "This is a test"
-              <br />Output: "this|is|a|test"
-            </li>
-            <li>Using "+" as a custom separator:
-              <br />Input: "Custom separator example"
-              <br />Output: "custom+separator+example"
-            </li>
-            <li>Using "--" as a custom separator:
-              <br />Input: "Multiple character separator"
-              <br />Output: "multiple--character--separator"
-            </li>
-          </ul>
+            <h3 className="text-xl font-semibold text-white mt-6 mb-4">How It Works</h3>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2">
+              <li>In the "Separator" dropdown, select "Custom".</li>
+              <li>A new input field will appear labeled "Custom Separator".</li>
+              <li>Enter any character or string you want to use as a separator in this field.</li>
+              <li>The slug generator will use this custom separator to join words in the slug.</li>
+            </ol>
 
-          <h3 className="text-xl font-semibold text-white mt-6 mb-4">Important Notes</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>The custom separator can be any character or string, including special characters and spaces.</li>
-            <li>Be cautious when using special characters, as some may not be URL-friendly.</li>
-            <li>The custom separator is used in place of spaces and other non-alphanumeric characters in the input text.</li>
-            <li>Leading and trailing occurrences of the custom separator are removed from the final slug.</li>
-            <li>The custom separator is respected when applying casing options (lowercase, uppercase, or capitalize).</li>
-          </ul>
+            <h3 className="text-xl font-semibold text-white mt-6 mb-4">Examples</h3>
+            <ul className="list-disc list-inside text-gray-300 space-y-2">
+              <li>Using "|" as a custom separator:
+                <br />Input: "This is a test"
+                <br />Output: "this|is|a|test"
+              </li>
+              <li>Using "+" as a custom separator:
+                <br />Input: "Custom separator example"
+                <br />Output: "custom+separator+example"
+              </li>
+              <li>Using "--" as a custom separator:
+                <br />Input: "Multiple character separator"
+                <br />Output: "multiple--character--separator"
+              </li>
+            </ul>
 
-          <h3 className="text-xl font-semibold text-white mt-6 mb-4">Use Cases</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Creating slugs for systems that require specific separators.</li>
-            <li>Generating unique identifiers with custom formatting.</li>
-            <li>Adapting to different URL structures or naming conventions.</li>
-          </ul>
+            <h3 className="text-xl font-semibold text-white mt-6 mb-4">Important Notes</h3>
+            <ul className="list-disc list-inside text-gray-300 space-y-2">
+              <li>The custom separator can be any character or string, including special characters and spaces.</li>
+              <li>Be cautious when using special characters, as some may not be URL-friendly.</li>
+              <li>The custom separator is used in place of spaces and other non-alphanumeric characters in the input text.</li>
+              <li>Leading and trailing occurrences of the custom separator are removed from the final slug.</li>
+              <li>The custom separator is respected when applying casing options (lowercase, uppercase, or capitalize).</li>
+            </ul>
 
-          <p className="text-gray-300 mt-4">
-            Remember, while custom separators offer flexibility, it's important to consider URL best practices and ensure your chosen separator doesn't conflict with URL parsing or cause issues with your target system.
-          </p>
-        </div>
+            <h3 className="text-xl font-semibold text-white mt-6 mb-4">Use Cases</h3>
+            <ul className="list-disc list-inside text-gray-300 space-y-2">
+              <li>Creating slugs for systems that require specific separators.</li>
+              <li>Generating unique identifiers with custom formatting.</li>
+              <li>Adapting to different URL structures or naming conventions.</li>
+            </ul>
 
-      </main>
+            <p className="text-gray-300 mt-4">
+              Remember, while custom separators offer flexibility, it's important to consider URL best practices and ensure your chosen separator doesn't conflict with URL parsing or cause issues with your target system.
+            </p>
+          </div>
+
+        </main>
+       </div> 
       <Footer />
     </div>
   )

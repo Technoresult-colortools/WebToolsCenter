@@ -7,10 +7,12 @@ import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/Button"
 import Slider from "@/components/ui/Slider"
-import { Copy, Palette,} from 'lucide-react'
-import { toast, Toaster } from 'react-hot-toast'
+import { Copy, Palette, Info, BookOpen, Lightbulb } from 'lucide-react'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Sidebar from '@/components/sidebarTools';
 
 const ColorConverter: React.FC = () => {
   const [hex, setHex] = useState('#3498db')
@@ -168,9 +170,23 @@ const ColorConverter: React.FC = () => {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      toast.success('Copied to clipboard!')
+      toast.success('Copied to clipboard!', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
     }, () => {
-      toast.error('Failed to copy')
+      toast.error('Failed to copy', {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
     })
   }
 
@@ -181,200 +197,232 @@ const ColorConverter: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Color Converter</h1>
+      <div className='flex-grow flex'>
+        <aside className="bg-gray-800">
+          <Sidebar /> 
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Color Converter
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Convert colors between HEX, RGB, HSL, HSV, and RGBA formats with ease.
+            </p>
+          </div>
 
-        <Card className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto mb-8">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-white">Color Preview</CardTitle>
-            <CardDescription className="text-gray-400">Current color: {hex}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
-              <div 
-                className="w-full sm:w-64 h-32 rounded-lg shadow-inner" 
-                style={{ backgroundColor: hex }}
-              ></div>
-              <div className="flex flex-col space-y-2">
-                <Button onClick={() => copyToClipboard(hex)} className="w-full">
-                  <Copy className="mr-2 h-4 w-4" /> Copy HEX
-                </Button>
-                <Button onClick={generateRandomColor} className="w-full">
-                  <Palette className="mr-2 h-4 w-4" /> Random Color
-                </Button>
+          <Card className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto mb-8">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-white">Color Preview</CardTitle>
+              <CardDescription className="text-gray-400">Current color: {hex}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+                <div 
+                  className="w-full sm:w-64 h-32 rounded-lg shadow-inner" 
+                  style={{ backgroundColor: hex }}
+                ></div>
+                <div className="flex flex-col space-y-2">
+                  <Button onClick={() => copyToClipboard(hex)} className="w-full">
+                    <Copy className="mr-2 h-4 w-4" /> Copy HEX
+                  </Button>
+                  <Button onClick={generateRandomColor} className="w-full">
+                    <Palette className="mr-2 h-4 w-4" /> Random Color
+                  </Button>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-white">Color Formats</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-4">
-                <TabsTrigger value="hex">HEX</TabsTrigger>
-                <TabsTrigger value="rgb">RGB</TabsTrigger>
-                <TabsTrigger value="hsl">HSL</TabsTrigger>
-                <TabsTrigger value="hsv">HSV</TabsTrigger>
-                <TabsTrigger value="rgba">RGBA</TabsTrigger>
-              </TabsList>
-              <TabsContent value="hex">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="hex" className="text-white mb-2 block">HEX Color</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="hex"
-                        value={hex}
-                        onChange={handleHexChange}
-                        className="bg-gray-700 text-white border-gray-600"
-                      />
-                      <Button onClick={() => copyToClipboard(hex)}>
-                        <Copy className="h-4 w-4" />
-                      </Button>
+          <Card className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto mb-8">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-white">Color Formats</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-5 mb-4">
+                  <TabsTrigger value="hex">HEX</TabsTrigger>
+                  <TabsTrigger value="rgb">RGB</TabsTrigger>
+                  <TabsTrigger value="hsl">HSL</TabsTrigger>
+                  <TabsTrigger value="hsv">HSV</TabsTrigger>
+                  <TabsTrigger value="rgba">RGBA</TabsTrigger>
+                </TabsList>
+                <TabsContent value="hex">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="hex" className="text-white mb-2 block">HEX Color</Label>
+                      <div className="flex space-x-2">
+                        <Input
+                          id="hex"
+                          value={hex}
+                          onChange={handleHexChange}
+                          className="bg-gray-700 text-white border-gray-600"
+                        />
+                        <Button onClick={() => copyToClipboard(hex)}>
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </TabsContent>
-              <TabsContent value="rgb">
-                <div className="space-y-4">
-                  {['r', 'g', 'b'].map((color) => (
-                    <div key={color}>
-                      <Label htmlFor={`rgb-${color}`} className="text-white mb-2 block">
-                        {color.toUpperCase()}: {rgb[color as keyof typeof rgb]}
-                      </Label>
-                      <Slider
-                        id={`rgb-${color}`}
-                        min={0}
-                        max={255}
-                        step={1}
-                        value={rgb[color as keyof typeof rgb]}
-                        onChange={(value) => handleRgbChange(color as 'r' | 'g' | 'b', value)}
-                      />
-                    </div>
-                  ))}
-                  <Button onClick={() => copyToClipboard(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)}>
-                    <Copy className="mr-2 h-4 w-4" /> Copy RGB
-                  </Button>
-                </div>
-              </TabsContent>
-              <TabsContent value="hsl">
-                <div className="space-y-4">
-                  {['h', 's', 'l'].map((color) => (
-                    <div key={color}>
-                      <Label htmlFor={`hsl-${color}`} className="text-white mb-2 block">
-                        {color.toUpperCase()}: {hsl[color as keyof typeof hsl]}
-                        {color === 'h' ? '°' : '%'}
-                      </Label>
-                      <Slider
-                        id={`hsl-${color}`}
-                        min={0}
-                        max={color === 'h' ? 360 : 100}
-                        step={1}
-                        value={hsl[color as keyof typeof hsl]}
-                        onChange={(value) => handleHslChange(color as 'h' | 's' | 'l', value)}
-                      />
-                    </div>
-                  ))}
-                  <Button onClick={() => copyToClipboard(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`)}>
-                    <Copy className="mr-2 h-4 w-4" /> Copy HSL
-                  </Button>
-                </div>
-              </TabsContent>
-              <TabsContent value="hsv">
-                <div className="space-y-4">
-                  {['h', 's', 'v'].map((color) => (
-                    <div key={color}>
-                      <Label htmlFor={`hsv-${color}`} className="text-white mb-2 block">
-                        {color.toUpperCase()}: {hsv[color as keyof typeof hsv]}
-                        {color === 'h' ? '°' : '%'}
-                      </Label>
-                      <Slider
-                        id={`hsv-${color}`}
-                        min={0}
-                        max={color === 'h' ? 360 : 100}
-                        step={1}
-                        value={hsv[color as keyof typeof hsv]}
-                        onChange={(value) => handleHsvChange(color as 'h' | 's' | 'v', value)}
-                      />
-                    </div>
-                  ))}
-                  <Button onClick={() => copyToClipboard(`hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`)}>
-                    <Copy className="mr-2 h-4 w-4" /> Copy HSV
-                  </Button>
-                </div>
-              </TabsContent>
-              <TabsContent value="rgba">
-                <div className="space-y-4">
-                  {['r', 'g', 'b', 'a'].map((color) => (
-                    <div key={color}>
-                      <Label htmlFor={`rgba-${color}`} className="text-white mb-2 block">
-                        {color.toUpperCase()}: {color === 'a' ? rgba[color as keyof typeof rgba].toFixed(2) : rgba[color as keyof typeof rgba]}
-                      </Label>
-                      <Slider
-                        id={`rgba-${color}`}
-                        min={0}
-                        max={color === 'a' ? 1 : 255}
-                        step={color === 'a' ? 0.01 : 1}
-                        value={rgba[color as keyof typeof rgba]}
-                        onChange={(value) => handleRgbaChange(color as 'r' | 'g' | 'b' | 'a', value)}
-                      />
-                    </div>
-                  ))}
-                  <Button onClick={() => copyToClipboard(`rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a.toFixed(2)})`)}>
-                    <Copy className="mr-2 h-4 w-4" /> Copy RGBA
-                  </Button>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+                </TabsContent>
+                <TabsContent value="rgb">
+                  <div className="space-y-4">
+                    {['r', 'g', 'b'].map((color) => (
+                      <div key={color}>
+                        <Label htmlFor={`rgb-${color}`} className="text-white mb-2 block">
+                          {color.toUpperCase()}: {rgb[color as keyof typeof rgb]}
+                        </Label>
+                        <Slider
+                          id={`rgb-${color}`}
+                          min={0}
+                          max={255}
+                          step={1}
+                          value={rgb[color as keyof typeof rgb]}
+                          onChange={(value) => handleRgbChange(color as 'r' | 'g' | 'b', value)}
+                        />
+                      </div>
+                    ))}
+                    <Button onClick={() => copyToClipboard(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)}>
+                      <Copy className="mr-2 h-4 w-4" /> Copy RGB
+                    </Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="hsl">
+                  <div className="space-y-4">
+                    {['h', 's', 'l'].map((color) => (
+                      <div key={color}>
+                        <Label htmlFor={`hsl-${color}`} className="text-white mb-2 block">
+                          {color.toUpperCase()}: {hsl[color as keyof typeof hsl]}
+                          {color === 'h' ? '°' : '%'}
+                        </Label>
+                        <Slider
+                          id={`hsl-${color}`}
+                          min={0}
+                          max={color === 'h' ? 360 : 100}
+                          step={1}
+                          value={hsl[color as keyof typeof hsl]}
+                          onChange={(value) => handleHslChange(color as 'h' | 's' | 'l', value)}
+                        />
+                      </div>
+                    ))}
+                    <Button onClick={() => copyToClipboard(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`)}>
+                      <Copy className="mr-2 h-4 w-4" /> Copy HSL
+                    </Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="hsv">
+                  <div className="space-y-4">
+                    {['h', 's', 'v'].map((color) => (
+                      <div key={color}>
+                        <Label htmlFor={`hsv-${color}`} className="text-white mb-2 block">
+                          {color.toUpperCase()}: {hsv[color as keyof typeof hsv]}
+                          {color === 'h' ? '°' : '%'}
+                        </Label>
+                        <Slider
+                          id={`hsv-${color}`}
+                          min={0}
+                          max={color === 'h' ? 360 : 100}
+                          step={1}
+                          value={hsv[color as keyof typeof hsv]}
+                          onChange={(value) => handleHsvChange(color as 'h' | 's' | 'v', value)}
+                        />
+                      </div>
+                    ))}
+                    <Button onClick={() => copyToClipboard(`hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`)}>
+                      <Copy className="mr-2 h-4 w-4" /> Copy HSV
+                    </Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="rgba">
+                  <div className="space-y-4">
+                    {['r', 'g', 'b', 'a'].map((color) => (
+                      <div key={color}>
+                        <Label htmlFor={`rgba-${color}`} className="text-white mb-2 block">
+                          {color.toUpperCase()}: {color === 'a' ? rgba[color as keyof typeof rgba].toFixed(2) : rgba[color as keyof typeof rgba]}
+                        </Label>
+                        <Slider
+                          id={`rgba-${color}`}
+                          min={0}
+                          max={color === 'a' ? 1 : 255}
+                          step={color === 'a' ? 0.01 : 1}
+                          value={rgba[color as keyof typeof rgba]}
+                          onChange={(value) => handleRgbaChange(color as 'r' | 'g' | 'b' | 'a', value)}
+                        />
+                      </div>
+                    ))}
+                    <Button onClick={() => copyToClipboard(`rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a.toFixed(2)})`)}>
+                      <Copy className="mr-2 h-4 w-4" /> Copy RGBA
+                    </Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">About Color Converter</h2>
-          <p className="text-gray-300 mb-4">
-            Our Color Converter is a versatile tool that allows you to easily convert colors between various formats, including HEX, RGB, HSL, HSV, and RGBA. Whether you're working on web development, graphic design, or any other project involving colors, this tool ensures accurate and fast conversions for all your needs.
-          </p>
-          
-          <h3 className="text-xl font-semibold text-white mt-6 mb-2">Key Features:</h3>
-          <ul className="list-disc list-inside text-gray-300 mb-4">
-            <li>Support for multiple color formats: HEX, RGB, HSL, HSV, and RGBA</li>
-            <li>Real-time color preview as you adjust values</li>
-            <li>Sliders for precise color value adjustments</li>
-            <li>Copy button for easy color value copying in any format</li>
-            <li>Random color generation for inspiration</li>
-            <li>Switch seamlessly between different color formats</li>
-            <li>Responsive design for optimal use on all devices</li>
-          </ul>
+          <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
+            <div  className="space-y-6">
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Info className="w-6 h-6 mr-2" />
+                  About Color Converter
+                </h2>
+                <p className="text-white">
+                  The Color Converter is a versatile tool designed for developers, designers, and color enthusiasts. It allows you to easily convert colors between various formats, including HEX, RGB, HSL, HSV, and RGBA. Whether you're working on web development, graphic design, or any other project involving colors, this tool ensures accurate and fast conversions for all your needs.
+                </p>
+              </section>
 
-          <h3 className="text-xl font-semibold text-white mb-2">How to Use Color Converter?</h3>
-          <ol className="list-decimal list-inside text-gray-300 mb-4">
-            <li>Select the desired color format tab (HEX, RGB, HSL, HSV, or RGBA).</li>
-            <li>Adjust the color values using either the input field or the interactive sliders.</li>
-            <li>The color preview will update automatically in real-time as you make changes.</li>
-            <li>Click the "Copy" buttons to copy the color value in your chosen format.</li>
-            <li>If you want some inspiration, click the "Random Color" button to generate a random color.</li>
-            <li>Easily switch between tabs to view the color in different formats.</li>
-          </ol>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <BookOpen className="w-6 h-6 mr-2" />
+                  How to Use Color Converter
+                </h2>
+                <ol className="list-decimal list-inside text-white space-y-2">
+                  <li>Select the desired color format tab (HEX, RGB, HSL, HSV, or RGBA).</li>
+                  <li>Adjust the color values using either the input field or the interactive sliders.</li>
+                  <li>The color preview will update automatically in real-time as you make changes.</li>
+                  <li>Click the "Copy" buttons to copy the color value in your chosen format.</li>
+                  <li>If you want some inspiration, click the "Random Color" button to generate a random color.</li>
+                  <li>Easily switch between tabs to view the color in different formats.</li>
+                </ol>
+              </section>
 
-          <h3 className="text-xl font-semibold text-white mb-2">Tips and Tricks:</h3>
-          <ul className="list-disc list-inside text-gray-300">
-            <li>Experiment with the sliders for fine-tuned color adjustments across formats.</li>
-            <li>Use the random color generator for creative inspiration or design exploration.</li>
-            <li>Quickly switch between formats to compare color values in different coding schemes.</li>
-            <li>Copy color values in multiple formats to ensure compatibility across various design tools.</li>
-            <li>Take advantage of real-time previews to ensure your color looks perfect in every format.</li>
-            <li>Bookmark commonly used colors for fast reference in future projects.</li>
-            <li>Try converting colors between formats to better understand how they work together.</li>
-          </ul>
-        </div>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Key Features
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Support for multiple color formats: HEX, RGB, HSL, HSV, and RGBA</li>
+                  <li>Real-time color preview as you adjust values</li>
+                  <li>Sliders for precise color value adjustments</li>
+                  <li>Copy button for easy color value copying in any format</li>
+                  <li>Random color generation for inspiration</li>
+                  <li>Switch seamlessly between different color formats</li>
+                  <li>Responsive design for optimal use on all devices</li>
+                </ul>
+              </section>
 
-      </main>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Tips and Tricks
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Experiment with the sliders for fine-tuned color adjustments across formats.</li>
+                  <li>Use the random color generator for creative inspiration or design exploration.</li>
+                  <li>Quickly switch between formats to compare color values in different coding schemes.</li>
+                  <li>Copy color values in multiple formats to ensure compatibility across various design tools.</li>
+                  <li>Take advantage of real-time previews to ensure your color looks perfect in every format.</li>
+                  <li>Try converting colors between formats to better understand how they work together.</li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
       <Footer />
+      <ToastContainer />
     </div>
   )
 }

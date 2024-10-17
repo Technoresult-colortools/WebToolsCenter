@@ -1,21 +1,16 @@
-'use client';
-
+'use client'
 import React, { useState, useRef, useCallback } from 'react';
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
-import { Label } from "@/components/ui/label"
 import 'react-image-crop/dist/ReactCrop.css';
 import { Button } from "@/components/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
-import { RotateCw, Crop as CropIcon, RefreshCw, Download, Upload } from 'lucide-react';
+import { RotateCw, Crop as CropIcon, RefreshCw, Upload, Info, BookOpen, Lightbulb, Download } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Sidebar from '@/components/sidebarTools';
 
-function centerAspectCrop(
-  mediaWidth: number,
-  mediaHeight: number,
-  aspect: number,
-) {
+function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: number) {
   return centerCrop(
     makeAspectCrop(
       {
@@ -31,60 +26,56 @@ function centerAspectCrop(
   )
 }
 
-export default function ImageCropper() {
+export default function EnhancedImageCropper() {
   const [imgSrc, setImgSrc] = useState('');
-  const [croppedImgSrc, setCroppedImgSrc] = useState('');
-  const imgRef = useRef<HTMLImageElement>(null);
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-  const [scale, setScale] = useState(1);
+  const [aspect, setAspect] = useState<number | undefined>(16 / 9);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [rotate, setRotate] = useState(0);
-  const [aspect, setAspect] = useState<number | undefined>(undefined);
+  const [scale, setScale] = useState(1);
+  const [imageFormat, setImageFormat] = useState('image/png');
 
-  function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setCrop(undefined);
       const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        setImgSrc(reader.result?.toString() || '');
-        setCroppedImgSrc('');
-      });
+      reader.addEventListener('load', () =>
+        setImgSrc(reader.result?.toString() || '')
+      );
       reader.readAsDataURL(e.target.files[0]);
     }
-  }
+  };
 
-  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+  const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     if (aspect) {
       const { width, height } = e.currentTarget;
       setCrop(centerAspectCrop(width, height, aspect));
     }
-  }
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        setImgSrc(reader.result?.toString() || '');
-        setCroppedImgSrc('');
-      });
-      reader.readAsDataURL(e.dataTransfer.files[0]);
-    }
-  };
-
-  const cropImage = useCallback(async () => {
+  const cropImage = useCallback(() => {
     if (!imgRef.current || !completedCrop) return;
 
-    const offscreen = new OffscreenCanvas(completedCrop.width, completedCrop.height);
-    const ctx = offscreen.getContext('2d');
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
     const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
+
+    // Increase the size of the canvas for better quality
+    const outputWidth = completedCrop.width * scaleX * 2;
+    const outputHeight = completedCrop.height * scaleY * 2;
+
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
+
+    ctx.save();
+    ctx.translate(outputWidth / 2, outputHeight / 2);
+    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.scale(scale, scale);
+    ctx.translate(-outputWidth / 2, -outputHeight / 2);
 
     ctx.drawImage(
       imgRef.current,
@@ -94,25 +85,51 @@ export default function ImageCropper() {
       completedCrop.height * scaleY,
       0,
       0,
-      completedCrop.width,
-      completedCrop.height,
+      outputWidth,
+      outputHeight
     );
 
-    const blob = await offscreen.convertToBlob({ type: 'image/png' });
-    const croppedImageUrl = URL.createObjectURL(blob);
-    setCroppedImgSrc(croppedImageUrl);
-    toast.success('Image cropped successfully!');
-  }, [completedCrop]);
+    ctx.restore();
 
-  const handleDownloadCrop = () => {
-    if (!croppedImgSrc) return;
-    const link = document.createElement('a');
-    link.href = croppedImgSrc;
-    link.download = 'cropped-image.png';
-    link.click();
+    const croppedImageUrl = canvas.toDataURL(imageFormat, 1.0);
+    setImgSrc(croppedImageUrl);
+    setCrop(undefined);
+    setCompletedCrop(undefined);
+    setRotate(0);
+    setScale(1);
+    setAspect(undefined); // Switch to free selection after cropping
+    toast.success('Image cropped successfully!');
+  }, [completedCrop, rotate, scale, imageFormat]);
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
   };
 
-  const handleAspectChange = useCallback((value: string) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const reader = new FileReader();
+      reader.addEventListener('load', () =>
+        setImgSrc(reader.result?.toString() || '')
+      );
+      reader.readAsDataURL(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleReset = () => {
+    setImgSrc('');
+    setCrop(undefined);
+    setCompletedCrop(undefined);
+    setRotate(0);
+    setScale(1);
+    setAspect(16 / 9);
+  };
+
+  const handleRotate = () => {
+    setRotate((prevRotate) => (prevRotate + 90) % 360);
+  };
+
+  const handleAspectChange = (value: string) => {
     if (value === 'free') {
       setAspect(undefined);
     } else {
@@ -120,179 +137,186 @@ export default function ImageCropper() {
       setAspect(width / height);
     }
     
-    if (imgRef.current) {
+    if (imgRef.current && aspect) {
       const { width, height } = imgRef.current;
-      const newAspect = value === 'free' ? undefined : aspect;
-      setCrop(newAspect ? centerAspectCrop(width, height, newAspect) : undefined);
+      setCrop(centerAspectCrop(width, height, aspect));
     }
-  }, [aspect]);
-
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const newScale = scale + (e.deltaY > 0 ? -0.1 : 0.1);
-    setScale(Math.max(0.1, Math.min(newScale, 3)));
   };
 
-  const handleReset = () => {
-    setImgSrc('');
-    setCroppedImgSrc('');
-    setCrop(undefined);
-    setCompletedCrop(undefined);
-    setScale(1);
-    setRotate(0);
-    setAspect(undefined);
+  const handleDownload = () => {
+    if (!imgSrc) return;
+
+    const link = document.createElement('a');
+    link.download = `cropped-image.${imageFormat.split('/')[1]}`;
+    link.href = imgSrc;
+    link.click();
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">Image Cropper</h1>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mb-8">
-          <div 
-            className="mb-4 border-2 border-dashed border-gray-600 rounded-lg p-4 text-center cursor-pointer"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            <input
-              type="file"
-              accept="image/*"
-              onChange={onSelectFile}
-              className="hidden"
-              id="file-upload"
-            />
-            <label htmlFor="file-upload" className="cursor-pointer">
-              <Upload className="w-12 h-12 mx-auto text-gray-400" />
-              <p className="mt-2 text-sm text-gray-400">Drag your image here, or click to browse</p>
-            </label>
+      <Toaster position="top-right" />
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                Image Cropper
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                Edit and customize your images with precision using the Enhanced Image Cropper. Perfect for social media, websites, or print, offering flexibility and professional results.
+            </p>
           </div>
 
-          {Boolean(imgSrc) && !croppedImgSrc && (
-            <div onWheel={handleWheel} className="relative flex justify-center items-center">
-              <ReactCrop
-                crop={crop}
-                onChange={(_, percentCrop) => setCrop(percentCrop)}
-                onComplete={(c) => setCompletedCrop(c)}
-                aspect={aspect}
-                className="max-h-[60vh] w-full"
-              >
-                <img
-                  ref={imgRef}
-                  alt="Crop me"
-                  src={imgSrc}
-                  style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
-                  onLoad={onImageLoad}
-                  className="max-w-full h-auto"
-                />
-              </ReactCrop>
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="w-full h-full grid grid-cols-3 grid-rows-3">
-                  {[...Array(9)].map((_, i) => (
-                    <div key={i} className="border border-white opacity-50"></div>
-                  ))}
-                </div>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto mb-8">
+            <div 
+              className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer mb-8"
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onSelectFile}
+                className="hidden"
+                id="file-upload"
+              />
+              <label htmlFor="file-upload" className="cursor-pointer">
+                <Upload className="w-12 h-12 mx-auto text-gray-400 mb-2" />
+                <p className="text-gray-400">Drag your image here, or click to browse</p>
+              </label>
+            </div>
+
+            {imgSrc ? (
+              <div className="mb-8">
+                <ReactCrop
+                  crop={crop}
+                  onChange={(_, percentCrop) => setCrop(percentCrop)}
+                  onComplete={(c) => setCompletedCrop(c)}
+                  aspect={aspect}
+                >
+                  <img
+                    ref={imgRef}
+                    alt="Crop me"
+                    src={imgSrc}
+                    style={{
+                      transform: `rotate(${rotate}deg) scale(${scale})`,
+                      maxWidth: '100%',
+                      maxHeight: '70vh',
+                    }}
+                    onLoad={onImageLoad}
+                  />
+                </ReactCrop>
+              </div>
+            ) : (
+              <div className="bg-gray-700 rounded-lg p-16 text-center mb-8">
+                <Upload className="w-16 h-16 mx-auto text-gray-400 mb-2" />
+                <p className="text-gray-400">Upload an image to start cropping</p>
+              </div>
+            )}
+
+            <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
+              <Select onValueChange={handleAspectChange} value={aspect ? `${aspect}` : 'free'}>
+                <SelectTrigger className="w-[180px] bg-gray-700 text-white border-gray-600">
+                  <SelectValue placeholder="Aspect Ratio" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
+                  <SelectItem value="free">Free Selection</SelectItem>
+                  <SelectItem value="16:9">16:9</SelectItem>
+                  <SelectItem value="4:3">4:3</SelectItem>
+                  <SelectItem value="1:1">1:1</SelectItem>
+                  <SelectItem value="2:3">2:3</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select onValueChange={setImageFormat} value={imageFormat}>
+                <SelectTrigger className="w-[180px] bg-gray-700 text-white border-gray-600">
+                  <SelectValue placeholder="Image Format" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
+                  <SelectItem value="image/png">PNG</SelectItem>
+                  <SelectItem value="image/jpeg">JPEG</SelectItem>
+                  <SelectItem value="image/webp">WebP</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <div className="flex flex-wrap gap-2">
+                <Button onClick={handleRotate} className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <RotateCw className="w-4 h-4 mr-2" />
+                  Rotate
+                </Button>
+                <Button onClick={handleReset} className="bg-red-600 hover:bg-red-700 text-white">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Reset
+                </Button>
+                <Button 
+                  onClick={cropImage}
+                  disabled={!completedCrop?.width || !completedCrop?.height}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <CropIcon className="w-4 h-4 mr-2" />
+                  Crop
+                </Button>
+                <Button 
+                  onClick={handleDownload}
+                  disabled={!imgSrc}
+                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </Button>
               </div>
             </div>
-          )}
-
-          {croppedImgSrc && (
-            <div className="flex justify-center items-center">
-              <img src={croppedImgSrc} alt="Cropped" className="max-h-[60vh] max-w-full" />
-            </div>
-          )}
-
-          <div className="mt-4 flex flex-wrap gap-2 justify-between items-center">
-            <Label htmlFor="aspect-ratio" className="text-white">Aspect Ratio:</Label>
-            <Select onValueChange={handleAspectChange} value={aspect ? `${aspect}` : 'free'}>
-              <SelectTrigger id="aspect-ratio" className="w-[140px] bg-gray-700 text-white text-sm">
-                <SelectValue placeholder="Aspect Ratio" />
-              </SelectTrigger>
-              <SelectContent className="w-[180px] bg-gray-700 text-white border-gray-600">
-                <SelectItem value="free">Free Selection</SelectItem>
-                <SelectItem value="16:9">16:9</SelectItem>
-                <SelectItem value="4:3">4:3</SelectItem>
-                <SelectItem value="1:1">1:1</SelectItem>
-                <SelectItem value="2:3">2:3</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={() => setRotate((r) => (r + 90) % 360)} className="bg-blue-600 hover:bg-blue-700 text-sm">
-                <RotateCw className="w-4 h-4 mr-2" />
-                Rotate
-              </Button>
-              <Button
-                onClick={cropImage}
-                disabled={!completedCrop?.width || !completedCrop?.height}
-                className="bg-green-600 hover:bg-green-700 text-sm"
-              >
-                <CropIcon className="w-4 h-4 mr-2" />
-                Crop
-              </Button>
-              <Button onClick={handleReset} className="bg-red-600 hover:bg-red-700 text-sm">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Reset
-              </Button>
-              <Button
-                onClick={handleDownloadCrop}
-                disabled={!croppedImgSrc}
-                className="bg-purple-600 hover:bg-purple-700 text-sm"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </Button>
-            </div>
           </div>
-        </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">About Image Cropper</h2>
-            <p className="text-white">
-              The Image Cropper is a powerful and user-friendly tool designed to help you edit and customize your images with ease. Whether you're preparing visuals for social media, adjusting photos for your website, or simply want to focus on a specific part of an image, our Image Cropper provides the flexibility and precision you need.
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Enhanced Image Cropper
+            </h2>
+            <p className="text-gray-300 mb-4">
+              The Enhanced Image Cropper is a sophisticated tool designed for both casual users and professionals. It offers a wide range of features to edit and customize your images with precision and flexibility. Whether you're preparing visuals for social media, adjusting photos for your website, or fine-tuning images for print, this tool provides the capabilities you need for perfect results every time.
             </p>
-            <p className="text-white">
-              With features like free-form selection, preset aspect ratios, image rotation, and zoom capabilities, you have complete control over your image editing process. The intuitive interface allows for quick adjustments, while the real-time preview ensures you get exactly the crop you want.
-            </p>
-            <p className="text-white">
-              Perfect for designers, marketers, social media managers, or anyone looking to enhance their visual content, the Image Cropper streamlines your workflow and helps you achieve professional-looking results in just a few clicks.
-            </p>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">How to Use Image Cropper?</h2>
-            <ol className="list-decimal list-inside text-white space-y-2">
-              <li>Upload an image by dragging and dropping it onto the designated area or clicking to browse your files.</li>
-              <li>Once the image is loaded, use your mouse to select the area you want to crop.</li>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use Enhanced Image Cropper
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Upload an image by dragging and dropping or clicking to browse.</li>
+              <li>Use your mouse to select the area you want to crop.</li>
               <li>Adjust the selection by dragging the corners or edges of the crop box.</li>
-              <li>Use the mouse scroll wheel to zoom in and out of the image for precise cropping.</li>
-              <li>Choose an aspect ratio from the dropdown menu, or keep the default "Free Selection" for custom cropping.</li>
-              <li>Click the "Rotate" button to rotate the image in 90-degree increments if needed.</li>
-              <li>When satisfied with your selection, click the "Crop" button to apply the crop.</li>
-              <li>Review the cropped image in the preview area.</li>
-              <li>Click "Download" to save your cropped image, or "Reset" to start over with a new image.</li>
+              <li>Choose an aspect ratio or use free selection for custom cropping.</li>
+              <li>Use the rotate button to adjust the image orientation if needed.</li>
+              <li>Select your desired output image format (PNG, JPEG, or WebP).</li>
+              <li>Click the "Crop" button when you're satisfied with your selection.</li>
+              <li>After cropping, you can continue to make further adjustments in free selection mode.</li>
+              <li>Use the "Download" button to save your cropped image in the chosen format.</li>
+              <li>Use the "Reset" button to start over with the original image.</li>
             </ol>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Key Features</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
-              <li>Intuitive Interface: Easy-to-use design suitable for both beginners and professionals.</li>
-              <li>Free-Form Selection: Crop your images with complete freedom, allowing for custom shapes and sizes.</li>
-              <li>Preset Aspect Ratios: Quickly select common aspect ratios for various platforms and use cases.</li>
-              <li>Image Rotation: Rotate your image in 90-degree increments for the perfect orientation.</li>
-              <li>Zoom Functionality: Zoom in for precise cropping and out for a full view of your image.</li>
-              <li>Real-Time Preview: See your crop selection instantly as you make adjustments.</li>
-              <li>Responsive Design: Works seamlessly on desktop and mobile devices.</li>
-              <li>High-Quality Output: Download your cropped images in high resolution.</li>
-              <li>Reset Option: Easily start over with a single click if you're not satisfied with your crop.</li>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Intuitive drag-and-drop interface for easy image uploading</li>
+              <li>Precise cropping with adjustable aspect ratios and free selection mode</li>
+              <li>Image rotation functionality for perfect alignment</li>
+              <li>High-quality output with enlarged cropped images</li>
+              <li>Multiple output formats: PNG, JPEG, and WebP</li>
+              <li>Ability to make multiple crops on the same image</li>
+              <li>Real-time preview of crop selection</li>
+              <li>Responsive design for seamless use on desktop and mobile devices</li>
+              <li>Simple and clean user interface for effortless navigation</li>
+              <li>Direct download option for quick saving of cropped images</li>
             </ul>
-          </section>
-        </div>
-
-      </main>
+          </div>
+        </main>
+       </div> 
       <Footer />
     </div>
   );

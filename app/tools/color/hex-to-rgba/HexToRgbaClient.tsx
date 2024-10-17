@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, BookOpen, Info, Lightbulb } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Input from "@/components/ui/Input";
 import {Button} from "@/components/ui/Button";
+import Sidebar from '@/components/sidebarTools';
 
 export default function HexToRgba() {
   const [hex, setHex] = useState<string>('');
@@ -49,107 +50,126 @@ export default function HexToRgba() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Hex to RGBA Converter</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mb-8 mx-auto">
-          <div className="mb-6">
-            <label htmlFor="hex-input" className="block text-sm font-medium text-gray-300 mb-2">
-              Hex Color Code
-            </label>
-            <Input
-              id="hex-input"
-              type="text"
-              placeholder="#000000"
-              value={hex}
-              onChange={(e) => setHex(e.target.value)}
-              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-            />
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                Hex to RGBA Converter
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                Convert Hex Color Codes to RGBA(Red, Green, Blue, Alpha).
+            </p>
           </div>
 
-          <div className="mb-6">
-            <label htmlFor="alpha-input" className="block text-sm font-medium text-gray-300 mb-2">
-              Alpha Value (0-1)
-            </label>
-            <Input
-              id="alpha-input"
-              type="number"
-              min="0"
-              max="1"
-              step="0.1"
-              value={alpha}
-              onChange={(e) => setAlpha(e.target.value)}
-              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <Button onClick={handleConvert} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Convert
-          </Button>
-
-          {error && (
-            <Alert className="mt-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          {rgbaValue && (
-            <div className="mt-6">
-              <h2 className="text-xl font-semibold text-white mb-2">Result:</h2>
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <p className="text-white" id="rgba-value">RGBA: {rgbaValue}</p>
-              </div>
-              <div
-                id="color-palette"
-                className="mt-4 w-full h-20 rounded-lg"
-                style={{ backgroundColor: rgbaValue }}
-              ></div>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mb-8 mx-auto">
+            <div className="mb-6">
+              <label htmlFor="hex-input" className="block text-sm font-medium text-gray-300 mb-2">
+                Hex Color Code
+              </label>
+              <Input
+                id="hex-input"
+                type="text"
+                placeholder="#000000"
+                value={hex}
+                onChange={(e) => setHex(e.target.value)}
+                className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+              />
             </div>
-          )}
-        </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto">
-          <section className="mb-6">
-            <h2 className="text-2xl font-bold text-white mb-4">About Hex to RGBA Converter</h2>
-            <p className="text-white">
+            <div className="mb-6">
+              <label htmlFor="alpha-input" className="block text-sm font-medium text-gray-300 mb-2">
+                Alpha Value (0-1)
+              </label>
+              <Input
+                id="alpha-input"
+                type="number"
+                min="0"
+                max="1"
+                step="0.1"
+                value={alpha}
+                onChange={(e) => setAlpha(e.target.value)}
+                className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <Button onClick={handleConvert} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Convert
+            </Button>
+
+            {error && (
+              <Alert className="mt-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {rgbaValue && (
+              <div className="mt-6">
+                <h2 className="text-xl font-semibold text-white mb-2">Result:</h2>
+                <div className="bg-gray-700 p-4 rounded-lg">
+                  <p className="text-white" id="rgba-value">RGBA: {rgbaValue}</p>
+                </div>
+                <div
+                  id="color-palette"
+                  className="mt-4 w-full h-20 rounded-lg"
+                  style={{ backgroundColor: rgbaValue }}
+                ></div>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Hex to RGBA Converter
+            </h2>
+            <p className="text-gray-300 mb-4">
               The Hex to RGBA Converter is a handy tool that enables users to transform Hex color codes into their RGBA (Red, Green, Blue, Alpha) equivalents. This converter is essential for designers and developers who require precise color specifications with transparency, making it easier to create visually appealing designs.
             </p>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-bold text-white mb-4">How to Use Hex to RGBA Converter?</h2>
-            <ol className="list-decimal list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use Hex to RGBA Converter?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Enter a valid 6-character Hex color code (with or without the # symbol).</li>
               <li>Specify an alpha value ranging from 0 (fully transparent) to 1 (fully opaque).</li>
               <li>Click the "Convert" button to view the RGBA equivalent along with a color preview.</li>
             </ol>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Key Features</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Converts Hex color codes to RGBA format quickly.</li>
               <li>Real-time color preview for immediate feedback.</li>
               <li>Easy input and user-friendly interface.</li>
               <li>Alpha value adjustment for transparency effects.</li>
               <li>Compatible with various design applications and CSS.</li>
             </ul>
-          </section>
 
-          <section>
-            <h2 className="text-2xl font-bold text-white mb-4">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips and Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Ensure your Hex color code is correctly formatted for accurate conversion.</li>
               <li>Experiment with different alpha values to see how transparency impacts your design.</li>
               <li>Utilize the RGBA format in CSS for elements that require a transparent color.</li>
               <li>Consider using the RGBA output in combination with other design tools to enhance visual effects.</li>
               <li>Keep the Hex and RGBA formats handy for various design applications and needs.</li>
             </ul>
-          </section>
-        </div>
-      </main>
+          </div>
+
+        </main>
+       </div> 
       <Footer />
     </div>
   );

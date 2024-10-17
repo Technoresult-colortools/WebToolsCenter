@@ -5,9 +5,10 @@ import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Shuffle, Download } from 'lucide-react'
+import { Shuffle, Download, Info, Palette, Sliders, FileImage } from 'lucide-react'
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Sidebar from '@/components/sidebarTools';
 
 type Point = [number, number];
 
@@ -151,175 +152,232 @@ export default function SVGBlobGenerator() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <Header />
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
-        <h1 className="text-4xl font-bold mb-8 text-center">SVG Blob Generator</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-gray-800 p-4 rounded-lg flex items-center justify-center">
-            <svg ref={svgRef} width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <clipPath id="blob-shape">
-                  <path d={svgPath} />
-                </clipPath>
-              </defs>
-              {useImageBackground ? (
-                <image href={backgroundUrl} width="400" height="400" clipPath="url(#blob-shape)" preserveAspectRatio="xMidYMid slice" />
-              ) : (
-                <path d={svgPath} fill={fillColor} />
-              )}
-            </svg>
-          </div>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="container mx-auto px-4 py-12 max-w-4xl">
+         <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                SVG Blob Generator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                Create unique, organic blob shapes with ease, perfect for enhancing your designs with customizable parameters and real-time previews.
+            </p>
+         </div>
           
-          <div className="space-y-6">
-            <div>
-              <Label htmlFor="fillColor">Blob Fill Color</Label>
-              <div className="flex items-center space-x-2 ">
-                <Input
-                  id="fillColor"
-                  type="color"
-                  value={fillColor}
-                  onChange={handleColorChange}
-                  className="w-12 h-12 p-1bg-transparent"
-                />
-                <Input
-                  type="text"
-                  value={fillColor}
-                  onChange={handleColorChange}
-                  className="flex-grow text-black"
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-gray-800 p-4 rounded-lg flex items-center justify-center">
+              <svg ref={svgRef} width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <clipPath id="blob-shape">
+                    <path d={svgPath} />
+                  </clipPath>
+                </defs>
+                {useImageBackground ? (
+                  <image href={backgroundUrl} width="400" height="400" clipPath="url(#blob-shape)" preserveAspectRatio="xMidYMid slice" />
+                ) : (
+                  <path d={svgPath} fill={fillColor} />
+                )}
+              </svg>
             </div>
             
-            <div>
-              <Label htmlFor="growth">Growth: {growth}</Label>
-              <Slider
-                id="growth"
-                min={0}
-                max={50}
-                step={1}
-                value={growth}
-                onChange={handleGrowthChange}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="edgeCount">Edge Count: {edgeCount}</Label>
-              <Slider
-                id="edgeCount"
-                min={3}
-                max={20}
-                step={1}
-                value={edgeCount}
-                onChange={handleEdgeCountChange}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="complexity">Complexity: {complexity.toFixed(2)}</Label>
-              <Slider
-                id="complexity"
-                min={0}
-                max={1}
-                step={0.01}
-                value={complexity}
-                onChange={handleComplexityChange}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="smoothness">Smoothness: {smoothness.toFixed(2)}</Label>
-              <Slider
-                id="smoothness"
-                min={0}
-                max={1}
-                step={0.01}
-                value={smoothness}
-                onChange={handleSmoothnessChange}
-              />
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="useImageBackground"
-                checked={useImageBackground}
-                onCheckedChange={setUseImageBackground}
-              />
-              <Label htmlFor="useImageBackground">Use Image Background</Label>
-            </div>
-            
-            {useImageBackground && (
+            <div className="space-y-6">
               <div>
-                <Label htmlFor="backgroundUrl">Background URL</Label>
-                <div className="flex items-center space-x-2">
+                <Label htmlFor="fillColor">Blob Fill Color</Label>
+                <div className="flex items-center space-x-2 ">
                   <Input
-                    id="backgroundUrl"
-                    type="text"
-                    value={backgroundUrl}
-                    onChange={handleBackgroundUrlChange}
-                    className="flex-grow"
+                    id="fillColor"
+                    type="color"
+                    value={fillColor}
+                    onChange={handleColorChange}
+                    className="w-12 h-12 p-1bg-transparent"
                   />
-                  <Button onClick={handleShuffleImage}>Random Image</Button>
+                  <Input
+                    type="text"
+                    value={fillColor}
+                    onChange={handleColorChange}
+                    className="flex-grow text-black"
+                  />
                 </div>
               </div>
-            )}
-            
-            <div className="flex space-x-4">
-              <Button onClick={handleShuffle} className="flex-1">
-                <Shuffle className="mr-2 h-4 w-4" /> Shuffle Blob
-              </Button>
-              <Button onClick={() => handleExport('svg')} className="flex-1">
-                <Download className="mr-2 h-4 w-4" /> Export SVG
-              </Button>
-              <Button onClick={() => handleExport('png')} className="flex-1">
-                <Download className="mr-2 h-4 w-4" /> Export PNG
-              </Button>
+              
+              <div>
+                <Label htmlFor="growth">Growth: {growth}</Label>
+                <Slider
+                  id="growth"
+                  min={0}
+                  max={50}
+                  step={1}
+                  value={growth}
+                  onChange={handleGrowthChange}
+                  
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="edgeCount">Edge Count: {edgeCount}</Label>
+                <Slider
+                  id="edgeCount"
+                  min={3}
+                  max={20}
+                  step={1}
+                  value={edgeCount}
+                  onChange={handleEdgeCountChange}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="complexity">Complexity: {complexity.toFixed(2)}</Label>
+                <Slider
+                  id="complexity"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={complexity}
+                  onChange={handleComplexityChange}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="smoothness">Smoothness: {smoothness.toFixed(2)}</Label>
+                <Slider
+                  id="smoothness"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={smoothness}
+                  onChange={handleSmoothnessChange}
+                />
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="useImageBackground"
+                  checked={useImageBackground}
+                  onCheckedChange={setUseImageBackground}
+                />
+                <Label htmlFor="useImageBackground">Use Image Background</Label>
+              </div>
+              
+              {useImageBackground && (
+                <div>
+                  <Label htmlFor="backgroundUrl">Background URL</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      id="backgroundUrl"
+                      type="text"
+                      value={backgroundUrl}
+                      onChange={handleBackgroundUrlChange}
+                      className="flex-grow"
+                    />
+                    <Button onClick={handleShuffleImage}>Random Image</Button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex flex-wrap space-x-4">
+                <Button onClick={handleShuffle} className="flex-1 min-w-[150px] flex items-center justify-center px-6 py-3 space-x-2 mb-2">
+                    <Shuffle className="h-4 w-4" />
+                    <span>Shuffle Blob</span>
+                </Button>
+                <Button onClick={() => handleExport('svg')} className="flex-1 min-w-[150px] flex items-center justify-center px-6 py-3 space-x-2 mb-2">
+                    <Download className="h-4 w-4" />
+                    <span>Export SVG</span>
+                </Button>
+                <Button onClick={() => handleExport('png')} className="flex-1 min-w-[150px] flex items-center justify-center px-6 py-3 space-x-2 mb-2">
+                    <Download className="h-4 w-4" />
+                    <span>Export PNG</span>
+                </Button>
+            </div>
+
+
             </div>
           </div>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            What is the SVG Blob Generator?
+          </h2>
+          <p className="text-gray-300 mb-4">
+            The SVG Blob Generator is a versatile and powerful tool that allows users to create customizable, organic blob shapes for various design and illustration purposes. Whether you're a designer, developer, or digital artist, this tool provides an intuitive interface to craft unique, abstract shapes that can enhance your visual projects.
+          </p>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Sliders className="w-6 h-6 mr-2" />
+            Features of SVG Blob Generator
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Adjustable parameters: growth, edge count, complexity, and smoothness</li>
+            <li>Custom fill color or image background option</li>
+            <li>Real-time preview of your blob design</li>
+            <li>Export your blob in SVG or PNG format</li>
+            <li>Randomize blob shape or background image with a single click</li>
+            <li>Responsive design for desktop and mobile use</li>
+          </ul>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Palette className="w-6 h-6 mr-2" />
+            How to Use SVG Blob Generator?
+          </h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Adjust the sliders for growth, edge count, complexity, and smoothness to shape your blob.</li>
+            <li>Use the color picker to select your blob's fill color or enter a custom hex code.</li>
+            <li>Enable "Use Image Background" to overlay a background image within the blob shape.</li>
+            <li>Click "Shuffle Blob" to randomize the blob shape or "Shuffle Image" to change the background.</li>
+            <li>Preview your blob in real-time as you make adjustments.</li>
+            <li>When satisfied with the design, click "Export SVG" or "Export PNG" to download your blob.</li>
+          </ol>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Download className="w-6 h-6 mr-2" />
+            Export Options
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>SVG (Scalable Vector Graphics): Ideal for web use and scalable designs</li>
+            <li>PNG (Portable Network Graphics): Perfect for high-resolution raster images</li>
+            <li>Custom dimensions available for PNG export</li>
+          </ul>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Shuffle className="w-6 h-6 mr-2" />
+            Randomization Features
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>"Shuffle Blob" generates a new random blob shape</li>
+            <li>"Shuffle Image" selects a new random background image (when image background is enabled)</li>
+            <li>Quick inspiration for new designs with a single click</li>
+          </ul>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <FileImage className="w-6 h-6 mr-2" />
+            Image Background Feature
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Upload your own image or use provided stock images</li>
+            <li>Image is automatically cropped and fitted within the blob shape</li>
+            <li>Combine custom shapes with images for unique visual effects</li>
+          </ul>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            Tips and Tricks
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Use higher growth settings to create more dynamic and abstract shapes.</li>
+            <li>Edge count controls the complexity of the shape – higher values create more intricate blobs.</li>
+            <li>Play with smoothness for either sharp or smooth transitions between edges.</li>
+            <li>Combine low edge count with high complexity for interesting, organic shapes.</li>
+            <li>Experiment with image backgrounds for creative masking effects.</li>
+            <li>Use the randomize features to quickly generate new ideas.</li>
+            <li>Export in SVG for scalable graphics, ideal for responsive web design.</li>
+            <li>Use PNG export for high-resolution images suitable for print or detailed digital art.</li>
+          </ul>
         </div>
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">About SVG Blob Generator</h2>
-            <p className="text-white">
-              The SVG Blob Generator tool allows you to effortlessly create customizable blob shapes for design and illustration purposes. You can adjust parameters like growth, edge count, complexity, and smoothness to craft unique, abstract shapes. Customize your blob further with fill colors or use an image background. Once your blob is ready, you can export it in SVG or PNG format for use in your projects.
-            </p>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Features of SVG Blob Generator</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
-              <li>Adjustable growth, edge count, complexity, and smoothness</li>
-              <li>Custom fill color or image background option</li>
-              <li>Real-time preview of your blob design</li>
-              <li>Export your blob in SVG or PNG format</li>
-              <li>Randomize blob shape or background image with a single click</li>
-            </ul>
-          </section>
-
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">How to Use SVG Blob Generator?</h2>
-            <ol className="list-decimal list-inside text-white space-y-2">
-              <li>Adjust the sliders for growth, edge count, complexity, and smoothness to shape your blob.</li>
-              <li>Use the color picker to select your blob’s fill color or enter a custom hex code.</li>
-              <li>Enable "Use Image Background" to overlay a background image within the blob shape.</li>
-              <li>Click "Shuffle Blob" to randomize the blob shape or "Shuffle Image" to change the background.</li>
-              <li>Preview your blob in real-time as you make adjustments.</li>
-              <li>When satisfied with the design, click "Export SVG" or "Export PNG" to download your blob.</li>
-            </ol>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
-              <li>Use higher growth settings to create more dynamic and abstract shapes.</li>
-              <li>Edge count controls the complexity of the shape – higher values create more intricate blobs.</li>
-              <li>Play with smoothness for either sharp or smooth transitions between edges.</li>
-              <li>Shuffle the blob or background image to discover new combinations quickly.</li>
-              <li>Export in SVG for scalable vector graphics or PNG for high-resolution raster images.</li>
-            </ul>
-          </section>
-        </div>
-
-      </main>
+        </main>
+       </div> 
       <Footer />
     </div>
   )

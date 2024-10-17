@@ -9,10 +9,11 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Shuffle, Copy, Upload, Download, Undo, Redo, Save, FolderOpen } from 'lucide-react';
+import { Shuffle, Copy, Upload, Download, Undo, Redo, Save, FolderOpen, Info, BookOpen, Lightbulb } from 'lucide-react';
 import Header from '@/components/Header';
 import seedrandom from 'seedrandom';
 import Footer from '@/components/Footer';
+import Sidebar from '@/components/sidebarTools';
 
 export default function ListRandomizer() {
   const [inputList, setInputList] = useState<string>('');
@@ -226,8 +227,20 @@ export default function ListRandomizer() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
       <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">List Randomizer</h1>
+        <div className="mb-12 text-center px-4">
+          <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+            List Randomizer
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+            Powerfull tool designed to shuffle and manipulate list of items.
+          </p>
+        </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -416,71 +429,77 @@ export default function ListRandomizer() {
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">About List Randomizer</h2>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            What is List Randomizer?
+          </h2>
           <p className="text-gray-300 mb-4">
-            The List Randomizer is a powerful tool designed to shuffle and manipulate lists of items. Whether you're 
-            conducting a random draw, organizing a playlist, or simply need to randomize data, this tool offers a wide 
-            range of features to meet your needs. With options for different randomization methods, custom separators, 
-            and advanced settings like weighted randomization and grouping, you can achieve precise control over your 
-            randomized output.
+            The List Randomizer is a powerful tool designed to shuffle and manipulate lists of items. Whether you're conducting a random draw, organizing a playlist, or simply need to randomize data, this tool offers a wide range of features to meet your needs. With options for different randomization methods, custom separators, and advanced settings like weighted randomization and grouping, you can achieve precise control over your randomized output.
           </p>
           <p className="text-gray-300 mb-4">
-            This tool is perfect for researchers, educators, project managers, and anyone who needs to introduce 
-            randomness or reorganize lists in their work or personal projects. The ability to save and load 
-            configurations makes it easy to replicate your randomization processes, ensuring consistency across 
-            multiple sessions.
+            This tool is perfect for researchers, educators, project managers, and anyone who needs to introduce randomness or reorganize lists in their work or personal projects. The ability to save and load configurations makes it easy to replicate your randomization processes, ensuring consistency across multiple sessions.
           </p>
 
-          <h2 className="text-2xl font-bold text-white mb-4">How to Use List Randomiser?</h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <BookOpen className="w-6 h-6 mr-2" />
+            How to Use List Randomizer?
+          </h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
             <li>Enter your list items in the input textarea or upload a text file.</li>
             <li>Choose the appropriate separator for your list items.</li>
             <li>Adjust the randomization settings according to your needs:
-              <ul className="list-disc list-inside ml-4 mt-2">
+              <ul className="list-disc list-inside ml-4">
                 <li>Set trimming, duplicate removal, and sorting options</li>
                 <li>Choose the randomization method</li>
                 <li>Adjust subset size, grouping, and other advanced options</li>
               </ul>
             </li>
-            <li>Click the "Randomize List" button to generate a randomized version of your list.</li>
+            <li>Click the <strong>Randomize List</strong> button to generate a randomized version of your list.</li>
             <li>View the randomized output in the result textarea.</li>
             <li>Use the undo/redo buttons to navigate through your randomization history.</li>
             <li>Copy the result to your clipboard or download it as a text file.</li>
             <li>Save your current configuration for future use or load a previously saved configuration.</li>
           </ol>
 
-          <h2 className="text-2xl font-bold text-white mt-4 mb-4">Key Features:</h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li><strong>Multiple input methods:</strong> Enter text directly or upload files.</li>
-            <li><strong>Flexible separators:</strong> Choose from common separators or use a custom one.</li>
-            <li><strong>Advanced randomization options:</strong> Fisher-Yates shuffle or JavaScript sort.</li>
-            <li><strong>List preprocessing:</strong> Trim items, remove duplicates, and sort before randomization.</li>
-            <li><strong>Subset selection:</strong> Choose a specific number of items from the randomized list.</li>
-            <li><strong>Weighted randomization:</strong> Prioritize items based on their original position.</li>
-            <li><strong>Grouping:</strong> Organize randomized items into groups of a specified size.</li>
-            <li><strong>Reversible output:</strong> Option to reverse the final randomized list.</li>
-            <li><strong>Reproducible results:</strong> Use a seed for consistent randomization across sessions.</li>
-            <li><strong>Undo/Redo functionality:</strong> Navigate through your randomization history.</li>
-            <li><strong>Configuration management:</strong> Save and load your randomization settings.</li>
-            <li><strong>Export options:</strong> Copy to clipboard or download as a text file.</li>
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Key Features
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Multiple input methods: Enter text directly or upload files.</li>
+            <li>Flexible separators: Choose from common separators or use a custom one.</li>
+            <li>Advanced randomization options: Fisher-Yates shuffle or JavaScript sort.</li>
+            <li>List preprocessing: Trim items, remove duplicates, and sort before randomization.</li>
+            <li>Subset selection: Choose a specific number of items from the randomized list.</li>
+            <li>Weighted randomization: Prioritize items based on their original position.</li>
+            <li>Grouping: Organize randomized items into groups of a specified size.</li>
+            <li>Reversible output: Option to reverse the final randomized list.</li>
+            <li>Reproducible results: Use a seed for consistent randomization across sessions.</li>
+            <li>Undo/Redo functionality: Navigate through your randomization history.</li>
+            <li>Configuration management: Save and load your randomization settings.</li>
+            <li>Export options: Copy to clipboard or download as a text file.</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-white mt-4 mb-4">Tips and Tricks</h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li><strong>Use seeds for consistency:</strong> When you need to reproduce the same random order, use a specific seed value.</li>
-            <li><strong>Combine features:</strong> Use sorting with weighted randomization for a semi-random order that preserves some original structure.</li>
-            <li><strong>Grouping for team assignment:</strong> Use the grouping feature to quickly divide a list of names into teams or groups.</li>
-            <li><strong>Custom separators:</strong> For complex data, use a unique custom separator to ensure accurate list item separation.</li>
-            <li><strong>Save configurations:</strong> Create and save different configurations for various randomization tasks you perform regularly.</li>
-            <li><strong>Subset for sampling:</strong> Use the subset feature to randomly select a sample from a larger population.</li>
-            <li><strong>Reverse for alternative view:</strong> After randomizing, use the reverse option to see if any interesting patterns emerge from the bottom up.</li>
-            <li><strong>Undo for comparisons:</strong> Use the undo/redo feature to quickly compare different randomization results.</li>
-            <li><strong>Weighted randomization for priority:</strong> Use this feature when you want to maintain some influence of the original order.</li>
-            <li><strong>Combine with other tools:</strong> Use the randomized output with other tools in the WebToolsCenter for more complex data processing tasks.</li>
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Tips & Tricks
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Use seeds for consistency: When you need to reproduce the same random order, use a specific seed value.</li>
+            <li>Combine features: Use sorting with weighted randomization for a semi-random order that preserves some original structure.</li>
+            <li>Grouping for team assignment: Use the grouping feature to quickly divide a list of names into teams or groups.</li>
+            <li>Custom separators: For complex data, use a unique custom separator to ensure accurate list item separation.</li>
+            <li>Save configurations: Create and save different configurations for various randomization tasks you perform regularly.</li>
+            <li>Subset for sampling: Use the subset feature to randomly select a sample from a larger population.</li>
+            <li>Reverse for alternative view: After randomizing, use the reverse option to see if any interesting patterns emerge from the bottom up.</li>
+            <li>Undo for comparisons: Use the undo/redo feature to quickly compare different randomization results.</li>
+            <li>Weighted randomization for priority: Use this feature when you want to maintain some influence of the original order.</li>
+            <li>Combine with other tools: Use the randomized output with other tools in the WebToolsCenter for more complex data processing tasks.</li>
           </ul>
         </div>
       </main>
+      </div>
       <Footer />
     </div>
   );

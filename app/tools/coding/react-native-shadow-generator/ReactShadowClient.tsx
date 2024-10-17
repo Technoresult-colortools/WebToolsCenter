@@ -7,10 +7,13 @@ import  Input  from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/Card"
-import { Smartphone, Copy, TabletSmartphone, Info } from 'lucide-react'
+import { Smartphone, Copy, TabletSmartphone, Info, Lightbulb, Settings, BookOpen } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Sidebar from '@/components/sidebarTools';
+import ToolCategories from '@/categories/page'
+import { Tooltip } from '@radix-ui/react-tooltip'
 
 export default function ShadowGenerator() {
   const [shadowColor, setShadowColor] = useState("#000000")
@@ -97,215 +100,233 @@ export default function ShadowGenerator() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">React Native Shadow Generator</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                React Native Shadow Generator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                Create and Customize shadow styles for both iOS and Android in React Native.
+            </p>
+          </div>
 
-        {/* Preview Card */}
-        <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <CardContent className="p-6">
-            <Tabs defaultValue="ios" className="w-full" onValueChange={(value) => setActiveTab(value)}>
-              <TabsList className="grid w-full grid-cols-2 mb-4">
-                <TabsTrigger value="ios">
-                  <Smartphone className="w-4 h-4 mr-2" />
-                  iOS
-                </TabsTrigger>
-                <TabsTrigger value="android">
-                  <TabletSmartphone className="w-4 h-4 mr-2" />
-                  Android
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="ios">
-                <div className="bg-gray-200 p-8 rounded-lg flex justify-center items-center">
-                  <div className="w-32 h-32 bg-white rounded-lg" style={getShadowStyle()}></div>
-                </div>
-              </TabsContent>
-              <TabsContent value="android">
-                <div className="bg-gray-200 p-8 rounded-lg flex justify-center items-center">
-                  <div className="w-32 h-32 bg-white rounded-lg" style={getShadowStyle()}></div>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-
-        {/* Shadow Properties Form */}
-        <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <CardContent className="p-6">
-            <div className="space-y-6">
-              {activeTab === "ios" ? (
-                <>
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="color-picker" className="text-white">Shadow Color</Label>
-                    <div className="flex items-center space-x-2">
-                      <Input
-                        id="color-input"
-                        value={shadowColor}
-                        onChange={(e) => setShadowColor(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                      <input
-                        id="color-picker"
-                        type="color"
-                        value={shadowColor}
-                        onChange={(e) => setShadowColor(e.target.value)}
-                        className="w-10 h-10 p-1 rounded"
-                      />
-                    </div>
+          {/* Preview Card */}
+          <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <CardContent className="p-6">
+              <Tabs defaultValue="ios" className="w-full" onValueChange={(value) => setActiveTab(value)}>
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="ios">
+                    <Smartphone className="w-4 h-4 mr-2" />
+                    iOS
+                  </TabsTrigger>
+                  <TabsTrigger value="android">
+                    <TabletSmartphone className="w-4 h-4 mr-2" />
+                    Android
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="ios">
+                  <div className="bg-gray-200 p-8 rounded-lg flex justify-center items-center">
+                    <div className="w-32 h-32 bg-white rounded-lg" style={getShadowStyle()}></div>
                   </div>
+                </TabsContent>
+                <TabsContent value="android">
+                  <div className="bg-gray-200 p-8 rounded-lg flex justify-center items-center">
+                    <div className="w-32 h-32 bg-white rounded-lg" style={getShadowStyle()}></div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
 
-                  {/* iOS Shadow Properties */}
-                  {[
-                    { id: "shadowOffsetWidth", label: "Offset Width", value: shadowOffsetWidth, min: -20, max: 20, onChange: setShadowOffsetWidth },
-                    { id: "shadowOffsetHeight", label: "Offset Height", value: shadowOffsetHeight, min: -20, max: 20, onChange: setShadowOffsetHeight },
-                    { id: "shadowOpacity", label: "Opacity", value: shadowOpacity, min: 0, max: 1, step: 0.01, onChange: setShadowOpacity },
-                    { id: "shadowRadius", label: "Blur Radius", value: shadowRadius, min: 0, max: 20, step: 0.1, onChange: setShadowRadius }
-                  ].map((slider) => (
-                    <div key={slider.id} className="space-y-2">
-                      <Label htmlFor={slider.id} className="text-white">{slider.label}: {slider.value.toFixed(2)}</Label>
+          {/* Shadow Properties Form */}
+          <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <CardContent className="p-6">
+              <div className="space-y-6">
+                {activeTab === "ios" ? (
+                  <>
+                    <div className="flex flex-col space-y-2">
+                      <Label htmlFor="color-picker" className="text-white">Shadow Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <Input
+                          id="color-input"
+                          value={shadowColor}
+                          onChange={(e) => setShadowColor(e.target.value)}
+                          className="flex-grow bg-gray-700 text-white border-gray-600"
+                        />
+                        <input
+                          id="color-picker"
+                          type="color"
+                          value={shadowColor}
+                          onChange={(e) => setShadowColor(e.target.value)}
+                          className="w-10 h-10 p-1 rounded"
+                        />
+                      </div>
+                    </div>
+
+                    {/* iOS Shadow Properties */}
+                    {[
+                      { id: "shadowOffsetWidth", label: "Offset Width", value: shadowOffsetWidth, min: -20, max: 20, onChange: setShadowOffsetWidth },
+                      { id: "shadowOffsetHeight", label: "Offset Height", value: shadowOffsetHeight, min: -20, max: 20, onChange: setShadowOffsetHeight },
+                      { id: "shadowOpacity", label: "Opacity", value: shadowOpacity, min: 0, max: 1, step: 0.01, onChange: setShadowOpacity },
+                      { id: "shadowRadius", label: "Blur Radius", value: shadowRadius, min: 0, max: 20, step: 0.1, onChange: setShadowRadius }
+                    ].map((slider) => (
+                      <div key={slider.id} className="space-y-2">
+                        <Label htmlFor={slider.id} className="text-white">{slider.label}: {slider.value.toFixed(2)}</Label>
+                        <Slider
+                          id={slider.id}
+                          min={slider.min}
+                          max={slider.max}
+                          step={slider.step || 1}
+                          value={slider.value}
+                          onChange={(value) => slider.onChange(value)}
+                          className="w-full"
+                        />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {/* Android Elevation */}
+                    <div className="space-y-2">
+                      <Label htmlFor="elevation" className="text-white">Elevation: {elevation}</Label>
                       <Slider
-                        id={slider.id}
-                        min={slider.min}
-                        max={slider.max}
-                        step={slider.step || 1}
-                        value={slider.value}
-                        onChange={(value) => slider.onChange(value)}
+                        id="elevation"
+                        min={0}
+                        max={24}
+                        step={1}
+                        value={elevation}
+                        onChange={(value) => setElevation(value)}
                         className="w-full"
                       />
+                      <p className="text-sm text-gray-400 mt-2 flex items-center">
+                        <Info className="w-4 h-4 mr-1" />
+                        Android elevation ranges from 0 to 24dp
+                      </p>
                     </div>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {/* Android Elevation */}
-                  <div className="space-y-2">
-                    <Label htmlFor="elevation" className="text-white">Elevation: {elevation}</Label>
-                    <Slider
-                      id="elevation"
-                      min={0}
-                      max={24}
-                      step={1}
-                      value={elevation}
-                      onChange={(value) => setElevation(value)}
-                      className="w-full"
-                    />
-                    <p className="text-sm text-gray-400 mt-2 flex items-center">
-                      <Info className="w-4 h-4 mr-1" />
-                      Android elevation ranges from 0 to 24dp
-                    </p>
-                  </div>
 
-                  {/* Android Shadow Color */}
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="android-color-picker" className="text-white">Shadow Color</Label>
-                    <div className="flex items-center space-x-2">
-                      <Input
-                        id="android-color-input"
-                        value={androidColor}
-                        onChange={(e) => setAndroidColor(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                      <input
-                        id="android-color-picker"
-                        type="color"
-                        value={androidColor}
-                        onChange={(e) => setAndroidColor(e.target.value)}
-                        className="w-10 h-10 p-1 rounded"
-                      />
+                    {/* Android Shadow Color */}
+                    <div className="flex flex-col space-y-2">
+                      <Label htmlFor="android-color-picker" className="text-white">Shadow Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <Input
+                          id="android-color-input"
+                          value={androidColor}
+                          onChange={(e) => setAndroidColor(e.target.value)}
+                          className="flex-grow bg-gray-700 text-white border-gray-600"
+                        />
+                        <input
+                          id="android-color-picker"
+                          type="color"
+                          value={androidColor}
+                          onChange={(e) => setAndroidColor(e.target.value)}
+                          className="w-10 h-10 p-1 rounded"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Android Background Color */}
-                  <div className="flex flex-col space-y-2">
-                    <Label htmlFor="android-bg-picker" className="text-white">Background Color</Label>
-                    <div className="flex items-center space-x-2">
-                      <Input
-                        id="android-bg-input"
-                        value={androidBackgroundColor}
-                        onChange={(e) => setAndroidBackgroundColor(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                      <input
-                        id="android-bg-picker"
-                        type="color"
-                        value={androidBackgroundColor}
-                        onChange={(e) => setAndroidBackgroundColor(e.target.value)}
-                        className="w-10 h-10 p-1 rounded"
-                      />
+                    {/* Android Background Color */}
+                    <div className="flex flex-col space-y-2">
+                      <Label htmlFor="android-bg-picker" className="text-white">Background Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <Input
+                          id="android-bg-input"
+                          value={androidBackgroundColor}
+                          onChange={(e) => setAndroidBackgroundColor(e.target.value)}
+                          className="flex-grow bg-gray-700 text-white border-gray-600"
+                        />
+                        <input
+                          id="android-bg-picker"
+                          type="color"
+                          value={androidBackgroundColor}
+                          onChange={(e) => setAndroidBackgroundColor(e.target.value)}
+                          className="w-10 h-10 p-1 rounded"
+                        />
+                      </div>
+                      <p className="text-sm text-gray-400 mt-2 flex items-center">
+                        <Info className="w-4 h-4 mr-1" />
+                        Background color is required for Android shadows to work
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-400 mt-2 flex items-center">
-                      <Info className="w-4 h-4 mr-1" />
-                      Background color is required for Android shadows to work
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-          
-        {/* Generated Code Section */}
-        <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">React Native Shadow Style</h3>
-              <pre className="bg-gray-900 p-4 rounded text-sm text-white overflow-x-auto">
-                {`import { Platform } from 'react-native';
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+            
+          {/* Generated Code Section */}
+          <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white">React Native Shadow Style</h3>
+                <pre className="bg-gray-900 p-4 rounded text-sm text-white overflow-x-auto">
+                  {`import { Platform } from 'react-native';
 
-const styles = {
-  shadowBox: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "${shadowColor}",
-        shadowOffset: {
-          width: ${shadowOffsetWidth},
-          height: ${shadowOffsetHeight}
+  const styles = {
+    shadowBox: {
+      ...Platform.select({
+        ios: {
+          shadowColor: "${shadowColor}",
+          shadowOffset: {
+            width: ${shadowOffsetWidth},
+            height: ${shadowOffsetHeight}
+          },
+          shadowOpacity: ${shadowOpacity.toFixed(2)},
+          shadowRadius: ${shadowRadius.toFixed(2)}
         },
-        shadowOpacity: ${shadowOpacity.toFixed(2)},
-        shadowRadius: ${shadowRadius.toFixed(2)}
-      },
-      android: {
-        elevation: ${elevation}
-      }
-    })
-  }
-}`}
-              </pre>
-              <Button onClick={copyToClipboard} className="w-full bg-blue-600 hover:bg-blue-700">
-                <Copy className="w-4 h-4 mr-2" />
-                Copy Code
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        android: {
+          elevation: ${elevation}
+        }
+      })
+    }
+  }`}
+                </pre>
+                <Button onClick={copyToClipboard} className="w-full bg-blue-600 hover:bg-blue-700">
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy Code
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">About React Native Shadow Generator</h2>
-            <p className="text-gray-300">
-              The <strong>React Native Shadow Generator</strong> is a tool designed to streamline the process of creating and customizing shadow styles for both iOS and Android in React Native. It provides a user-friendly interface to visualize and adjust shadow properties, ensuring that your designs look consistent across platforms.
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About React Native Shadow Generator
+            </h2>
+            <p className="text-gray-300 mb-4">
+              The React Native Shadow Generator is a tool designed to streamline the process of creating and customizing shadow styles for both iOS and Android in React Native. It provides a user-friendly interface to visualize and adjust shadow properties, ensuring that your designs look consistent across platforms.
             </p>
-          </section>
-          <section className='mb-6'>
-                <h2 className="text-xl font-semibold text-white mb-2">Platform Differences</h2>
-                <ul className="list-disc list-inside text-gray-300 space-y-1">
-                  <li>iOS uses a complete shadow API with color, offset, opacity, and radius</li>
-                  <li>Android simplifies shadows to a single elevation value (0-24dp)</li>
-                  <li>The preview may look slightly different from actual mobile rendering</li>
-                </ul>
-              </section>
 
-              <section className='mb-6'>
-                <h2 className="text-xl font-semibold text-white mb-2">Recommended Values</h2>
-                <ul className="list-disc list-inside text-gray-300 space-y-1">
-                  <li>Light shadow: iOS (radius: 2-3, opacity: 0.2) / Android (elevation: 2-3)</li>
-                  <li>Medium shadow: iOS (radius: 3-5, opacity: 0.25) / Android (elevation: 4-6)</li>
-                  <li>Strong shadow: iOS (radius: 6-8, opacity: 0.35) / Android (elevation: 8-12)</li>
-                </ul>
-              </section>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Smartphone className="w-6 h-6 mr-2" />
+              Platform Differences
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>iOS uses a complete shadow API with color, offset, opacity, and radius.</li>
+              <li>Android simplifies shadows to a single elevation value (0-24dp).</li>
+              <li>The preview may look slightly different from actual mobile rendering.</li>
+            </ul>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Key Features of React Native Shadow Generator</h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Recommended Values
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Light shadow: iOS (radius: 2-3, opacity: 0.2) / Android (elevation: 2-3).</li>
+              <li>Medium shadow: iOS (radius: 3-5, opacity: 0.25) / Android (elevation: 4-6).</li>
+              <li>Strong shadow: iOS (radius: 6-8, opacity: 0.35) / Android (elevation: 8-12).</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Settings className="w-6 h-6 mr-2" />
+              Key Features of React Native Shadow Generator
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Generate shadows for both iOS and Android platforms.</li>
               <li>Customize shadow color, offset, opacity, and radius for iOS.</li>
               <li>Adjust elevation, shadow color, and background color for Android.</li>
@@ -313,32 +334,34 @@ const styles = {
               <li>Platform-specific code generation (iOS and Android).</li>
               <li>Instantly copy the generated React Native shadow code to clipboard.</li>
             </ul>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">How to Use React Native Shadow Generator?</h2>
-            <ol className="list-decimal list-inside text-gray-300 space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use React Native Shadow Generator?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Choose the platform (iOS or Android) for which you want to generate shadows.</li>
               <li>For iOS, customize the following options:</li>
-              <ul className="list-disc list-inside text-gray-300 ml-8">
+              <ul className="list-disc list-inside ml-6">
                 <li>Set the shadow color using the color picker or input field.</li>
                 <li>Adjust the offset width and height to position the shadow.</li>
                 <li>Modify the shadow opacity for transparency control.</li>
                 <li>Set the shadow radius for blur effects.</li>
               </ul>
               <li>For Android, customize these options:</li>
-              <ul className="list-disc list-inside text-gray-300 ml-8">
+              <ul className="list-disc list-inside ml-6">
                 <li>Adjust the elevation for depth control.</li>
                 <li>Set the shadow color and background color (required for Android shadows).</li>
               </ul>
               <li>Preview the shadow on the mockup device to see real-time changes.</li>
               <li>Click "Copy Code" to copy the generated React Native shadow code to your clipboard.</li>
             </ol>
-          </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips and Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>For iOS, use lower shadow opacity for a more subtle shadow effect.</li>
               <li>On Android, always set a background color to ensure the shadow displays properly.</li>
               <li>Use the platform-specific code option to ensure consistent styling across devices.</li>
@@ -346,9 +369,10 @@ const styles = {
               <li>Test different elevation levels on Android to achieve the desired depth.</li>
               <li>Preview shadows on various devices to ensure they look good across all screen sizes.</li>
             </ul>
-          </section>
-        </div>
-      </main>
+          </div>
+
+        </main>
+       </div> 
       <Footer />
     </div>
   )

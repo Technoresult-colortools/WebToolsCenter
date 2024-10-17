@@ -7,9 +7,10 @@ import { Label } from "@/components/ui/label";
 import Checkbox from "@/components/ui/Checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
-import { Upload, Download, RefreshCw, ArrowLeftRight, } from 'lucide-react';
+import { Upload, Download, RefreshCw, ArrowLeftRight, Info, Lightbulb, BookOpen, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Sidebar from '@/components/sidebarTools';
 
 export default function ImageResizer() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
@@ -111,140 +112,154 @@ export default function ImageResizer() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Image Resizer</h1>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">Upload Image</h2>
-            <label className="flex flex-col items-center justify-center h-32 px-4 py-6 bg-gray-700 text-blue-400 rounded-lg shadow-lg tracking-wide uppercase border-2 border-blue-400 border-dashed cursor-pointer hover:bg-blue-400 hover:text-white transition duration-300">
-              <Upload size={32} />
-              <span className="mt-2 text-base leading-normal">Select an image file</span>
-              <input type="file" className="hidden" onChange={handleImageUpload} accept="image/*" />
-            </label>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                Image Resizer
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                 Quickly and easily resize your images to fit any need. Perfect for social media, web use, or any other platform requiring specific dimensions with optimal quality.
+            </p>
           </div>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4">Upload Image</h2>
+              <label className="flex flex-col items-center justify-center h-32 px-4 py-6 bg-gray-700 text-blue-400 rounded-lg shadow-lg tracking-wide uppercase border-2 border-blue-400 border-dashed cursor-pointer hover:bg-blue-400 hover:text-white transition duration-300">
+                <Upload size={32} />
+                <span className="mt-2 text-base leading-normal">Select an image file</span>
+                <input type="file" className="hidden" onChange={handleImageUpload} accept="image/*" />
+              </label>
+            </div>
 
-          {originalImage && (
-            <>
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-white mb-4">Original Image</h3>
-                <div className="relative h-64 bg-gray-700 rounded-lg overflow-hidden">
-                  <img 
-                    src={originalImage.src} 
-                    alt="Original" 
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  />
-                </div>
-                <p className="text-white mt-2">Original size: {originalImage.width} x {originalImage.height}</p>
-              </div>
-
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-white mb-4">Resize Settings</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="width" className="text-white mb-2 block">Width</Label>
-                    <div className="flex items-center">
-                      <Input
-                        id="width"
-                        type="number"
-                        value={width}
-                        onChange={handleWidthChange}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                      <span className="text-white ml-2">px</span>
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="height" className="text-white mb-2 block">Height</Label>
-                    <div className="flex items-center">
-                      <Input
-                        id="height"
-                        type="number"
-                        value={height}
-                        onChange={handleHeightChange}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                      <span className="text-white ml-2">px</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center mt-4">
-                  <Button onClick={handleSwapDimensions} className="bg-blue-600 hover:bg-blue-700 text-white mr-4">
-                    <ArrowLeftRight className="h-5 w-5 mr-2" />
-                    Swap Dimensions
-                  </Button>
-                  <Checkbox
-                    id="preserve-aspect-ratio"
-                    checked={preserveAspectRatio}
-                    onChange={handlePreserveAspectRatioChange}
-                  />
-                  <Label
-                    htmlFor="preserve-aspect-ratio"
-                    className="text-white ml-2 cursor-pointer"
-                  >
-                    Preserve aspect ratio
-                  </Label>
-                </div>
-              </div>
-
-              <div className="mb-8">
-                <Label htmlFor="format" className="text-white mb-2 block">Output Format</Label>
-                <Select value={format} onValueChange={setFormat}>
-                  <SelectTrigger id="format" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select format" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="png">PNG</SelectItem>
-                    <SelectItem value="jpeg">JPEG</SelectItem>
-                    <SelectItem value="webp">WebP</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
-                <Button onClick={handleResize} className="bg-green-600 hover:bg-green-700 text-white">
-                  Resize Image
-                </Button>
-                <Button onClick={handleDownload} disabled={!resizedImage} className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50">
-                  <Download className="h-5 w-5 mr-2" />
-                  Download Resized Image
-                </Button>
-                <Button onClick={handleReset} className="bg-red-600 hover:bg-red-700 text-white">
-                  <RefreshCw className="h-5 w-5 mr-2" />
-                  Reset
-                </Button>
-              </div>
-
-              {resizedImage && (
+            {originalImage && (
+              <>
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-white mb-4">Resized Image Preview</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Original Image</h3>
                   <div className="relative h-64 bg-gray-700 rounded-lg overflow-hidden">
                     <img 
-                      src={resizedImage} 
-                      alt="Resized" 
+                      src={originalImage.src} 
+                      alt="Original" 
                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                     />
                   </div>
-                  <p className="text-white mt-2">Resized to: {width} x {height}</p>
+                  <p className="text-white mt-2">Original size: {originalImage.width} x {originalImage.height}</p>
                 </div>
-              )}
-            </>
-          )}
 
-          <canvas ref={canvasRef} style={{ display: 'none' }} />
-        </div>
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-white mb-4">Resize Settings</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="width" className="text-white mb-2 block">Width</Label>
+                      <div className="flex items-center">
+                        <Input
+                          id="width"
+                          type="number"
+                          value={width}
+                          onChange={handleWidthChange}
+                          className="flex-grow bg-gray-700 text-white border-gray-600"
+                        />
+                        <span className="text-white ml-2">px</span>
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="height" className="text-white mb-2 block">Height</Label>
+                      <div className="flex items-center">
+                        <Input
+                          id="height"
+                          type="number"
+                          value={height}
+                          onChange={handleHeightChange}
+                          className="flex-grow bg-gray-700 text-white border-gray-600"
+                        />
+                        <span className="text-white ml-2">px</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center mt-4">
+                    <Button onClick={handleSwapDimensions} className="bg-blue-600 hover:bg-blue-700 text-white mr-4">
+                      <ArrowLeftRight className="h-5 w-5 mr-2" />
+                      Swap Dimensions
+                    </Button>
+                    <Checkbox
+                      id="preserve-aspect-ratio"
+                      checked={preserveAspectRatio}
+                      onChange={handlePreserveAspectRatioChange}
+                    />
+                    <Label
+                      htmlFor="preserve-aspect-ratio"
+                      className="text-white ml-2 cursor-pointer"
+                    >
+                      Preserve aspect ratio
+                    </Label>
+                  </div>
+                </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">About Image Resizer</h2>
-            <p className="text-white">
+                <div className="mb-8">
+                  <Label htmlFor="format" className="text-white mb-2 block">Output Format</Label>
+                  <Select value={format} onValueChange={setFormat}>
+                    <SelectTrigger id="format" className="bg-gray-700 text-white border-gray-600">
+                      <SelectValue placeholder="Select format" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-700 text-white border-gray-600">
+                      <SelectItem value="png">PNG</SelectItem>
+                      <SelectItem value="jpeg">JPEG</SelectItem>
+                      <SelectItem value="webp">WebP</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-4 mb-8">
+                  <Button onClick={handleResize} className="bg-green-600 hover:bg-green-700 text-white">
+                    Resize Image
+                  </Button>
+                  <Button onClick={handleDownload} disabled={!resizedImage} className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50">
+                    <Download className="h-5 w-5 mr-2" />
+                    Download Resized Image
+                  </Button>
+                  <Button onClick={handleReset} className="bg-red-600 hover:bg-red-700 text-white">
+                    <RefreshCw className="h-5 w-5 mr-2" />
+                    Reset
+                  </Button>
+                </div>
+
+                {resizedImage && (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold text-white mb-4">Resized Image Preview</h3>
+                    <div className="relative h-64 bg-gray-700 rounded-lg overflow-hidden">
+                      <img 
+                        src={resizedImage} 
+                        alt="Resized" 
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                    </div>
+                    <p className="text-white mt-2">Resized to: {width} x {height}</p>
+                  </div>
+                )}
+              </>
+            )}
+
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
+          </div>
+
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Image Resizer
+            </h2>
+            <p className="text-gray-300 mb-4">
               The Image Resizer tool allows you to quickly resize images to specific dimensions. You can upload your image, adjust its width and height, and choose from different output formats such as PNG, JPEG, or WebP. Whether you're looking to resize images for social media, web use, or other purposes, this tool is simple and easy to use.
             </p>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Features of Image Resizer</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Features of Image Resizer
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Upload any image format (PNG, JPEG, WebP, etc.)</li>
               <li>Adjust width and height manually</li>
               <li>Option to preserve the aspect ratio of the image</li>
@@ -254,11 +269,12 @@ export default function ImageResizer() {
               <li>Download resized image in your selected format</li>
               <li>Reset the image and resizing settings</li>
             </ul>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">How to Use Image Resizer?</h2>
-            <ol className="list-decimal list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use Image Resizer?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Click the "Select an image file" button to upload your image.</li>
               <li>Once uploaded, you'll see the original image and its dimensions.</li>
               <li>Enter the desired width and height for your resized image.</li>
@@ -270,11 +286,12 @@ export default function ImageResizer() {
               <li>Click "Download Resized Image" to save the result.</li>
               <li>Use the "Reset" button to start over or adjust settings.</li>
             </ol>
-          </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips and Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Preserving aspect ratio ensures your image doesn't look stretched or distorted.</li>
               <li>Use the "Swap Dimensions" button to quickly create portrait or landscape versions.</li>
               <li>PNG is best for images with transparency or sharp edges.</li>
@@ -284,10 +301,11 @@ export default function ImageResizer() {
               <li>The preview helps you check the quality before downloading.</li>
               <li>Remember, enlarging a small image may result in loss of quality.</li>
             </ul>
-          </section>
-        </div>
+          </div>
 
-      </main>
+
+        </main>
+       </div> 
       <Footer />
     </div>
   );

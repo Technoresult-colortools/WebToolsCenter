@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, } from 'react'
-import { FileMinus, Copy, RefreshCw, Upload, Download } from 'lucide-react'
+import { FileMinus, Copy, RefreshCw, Upload, Download, Info, BookOpen, Settings, Lightbulb } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -11,6 +11,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import toast, { Toaster } from 'react-hot-toast'
 import { minify } from 'terser'
+import Sidebar from '@/components/sidebarTools';
 
 // Constants
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB
@@ -201,169 +202,186 @@ export default function JavaScriptMinifier() {
         }}
       />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">JavaScript Minifier</h1>
-        
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mb-8">
-          <div className="space-y-6">
-            <Tabs defaultValue="minify" className="w-full">
-              <TabsList className="grid w-full grid-cols-1 mb-4">
-                <TabsTrigger value="minify">
-                  <FileMinus className="w-4 h-4 mr-2" />
-                  Minify JavaScript
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="minify">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="input-js" className="text-white mb-2 block">JavaScript to Minify</Label>
-                    <Textarea
-                      id="input-js"
-                      placeholder="Enter JavaScript to minify..."
-                      value={inputJS}
-                      onChange={(e) => setInputJS(e.target.value)}
-                      className="w-full h-40 bg-gray-700 text-white border-gray-600 rounded-md p-2"
-                    />
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                JavaScript Minifier
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                 JavaScript Minifier is a powerful tool designed to reduce the file size of your JavaScript code.
+            </p>
+          </div>
+          
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mb-8">
+            <div className="space-y-6">
+              <Tabs defaultValue="minify" className="w-full">
+                <TabsList className="grid w-full grid-cols-1 mb-4">
+                  <TabsTrigger value="minify">
+                    <FileMinus className="w-4 h-4 mr-2" />
+                    Minify JavaScript
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="minify">
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="input-js" className="text-white mb-2 block">JavaScript to Minify</Label>
+                      <Textarea
+                        id="input-js"
+                        placeholder="Enter JavaScript to minify..."
+                        value={inputJS}
+                        onChange={(e) => setInputJS(e.target.value)}
+                        className="w-full h-40 bg-gray-700 text-white border-gray-600 rounded-md p-2"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="output-js" className="text-white mb-2 block">Minified JavaScript</Label>
+                      <Textarea
+                        id="output-js"
+                        value={outputJS}
+                        readOnly
+                        className="w-full h-40 bg-gray-700 text-white border-gray-600 rounded-md p-2"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="output-js" className="text-white mb-2 block">Minified JavaScript</Label>
-                    <Textarea
-                      id="output-js"
-                      value={outputJS}
-                      readOnly
-                      className="w-full h-40 bg-gray-700 text-white border-gray-600 rounded-md p-2"
-                    />
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+                </TabsContent>
+              </Tabs>
 
-            <div className="flex flex-wrap gap-2 md:gap-4">
-              <Button 
-                onClick={handleMinify} 
-                className="flex-1 bg-blue-600 hover:bg-blue-700" 
-                disabled={isMinifying}
-              >
-                <FileMinus className="w-4 h-4 mr-2" />
-                {isMinifying ? 'Minifying...' : 'Minify'}
-              </Button>
-              <Button 
-                onClick={() => copyToClipboard(outputJS)} 
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
-              >
-                <Copy className="w-4 h-4 mr-2" />
-                Copy
-              </Button>
-              <Button 
-                onClick={handleReset} 
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Reset
-              </Button>
-              <Button 
-                onClick={handleDownload} 
-                className="flex-1 bg-blue-600 hover:bg-blue-700"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </Button>
-            </div>
-
-            {minificationStats && (
-              <div className="bg-gray-700 p-4 rounded-md text-white text-sm">
-                <h3 className="font-semibold mb-2">Minification Results:</h3>
-                <p>Original size: {minificationStats.original} bytes</p>
-                <p>Minified size: {minificationStats.minified} bytes</p>
-                <p>Saved: {minificationStats.savings} bytes ({((minificationStats.savings / minificationStats.original) * 100).toFixed(2)}%)</p>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white">Upload JavaScript File</h3>
-              <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
-                <Input
-                  id="file-upload"
-                  type="file"
-                  accept=".js"
-                  onChange={handleFileUpload}
-                  className="bg-gray-700 text-white border-gray-600 w-full md:w-auto"
-                  ref={fileInputRef}
-                />
+              <div className="flex flex-wrap gap-2 md:gap-4">
                 <Button 
-                  onClick={() => fileInputRef.current?.click()} 
-                  className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm"
+                  onClick={handleMinify} 
+                  className="flex-1 bg-blue-600 hover:bg-blue-700" 
+                  disabled={isMinifying}
                 >
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload
+                  <FileMinus className="w-4 h-4 mr-2" />
+                  {isMinifying ? 'Minifying...' : 'Minify'}
+                </Button>
+                <Button 
+                  onClick={() => copyToClipboard(outputJS)} 
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                >
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy
+                </Button>
+                <Button 
+                  onClick={handleReset} 
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Reset
+                </Button>
+                <Button 
+                  onClick={handleDownload} 
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
                 </Button>
               </div>
-              {fileName && (
-                <p className="text-sm text-gray-300">Uploaded: {fileName}</p>
+
+              {minificationStats && (
+                <div className="bg-gray-700 p-4 rounded-md text-white text-sm">
+                  <h3 className="font-semibold mb-2">Minification Results:</h3>
+                  <p>Original size: {minificationStats.original} bytes</p>
+                  <p>Minified size: {minificationStats.minified} bytes</p>
+                  <p>Saved: {minificationStats.savings} bytes ({((minificationStats.savings / minificationStats.original) * 100).toFixed(2)}%)</p>
+                </div>
               )}
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white">Upload JavaScript File</h3>
+                <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
+                  <Input
+                    id="file-upload"
+                    type="file"
+                    accept=".js"
+                    onChange={handleFileUpload}
+                    className="bg-gray-700 text-white border-gray-600 w-full md:w-auto"
+                    ref={fileInputRef}
+                  />
+                  <Button 
+                    onClick={() => fileInputRef.current?.click()} 
+                    className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload
+                  </Button>
+                </div>
+                {fileName && (
+                  <p className="text-sm text-gray-300">Uploaded: {fileName}</p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto mt-8">
-          <div className="space-y-8">
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">About JavaScript Minifier</h2>
-              <p className="text-gray-300">
-                The JavaScript Minifier is a powerful tool designed to reduce the file size of your JavaScript code. It removes unnecessary characters, such as whitespace, newlines, and comments, and applies various optimizations without changing the code's functionality. This process can significantly decrease load times for web pages, improving overall site performance and user experience.
-              </p>
-            </section>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About JavaScript Minifier
+            </h2>
+            <p className="text-gray-300 mb-4">
+              The JavaScript Minifier is a powerful tool designed to reduce the file size of your JavaScript code. It removes unnecessary characters, such as whitespace, newlines, and comments, and applies various optimizations without changing the code's functionality. This process can significantly decrease load times for web pages, improving overall site performance and user experience.
+            </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">How to Use JavaScript Minifier?</h2>
-              <ol className="list-decimal list-inside text-gray-300 space-y-2">
-                <li>Enter your JavaScript code in the input area or upload a JavaScript file (max 1MB).</li>
-                <li>Click the "Minify" button to process your JavaScript using the Terser minification library.</li>
-                <li>The minified JavaScript will appear in the output area.</li>
-                <li>View the minification results to see how much space you've saved.</li>
-                <li>Use the "Copy" button to copy the minified JavaScript to your clipboard.</li>
-                <li>Use the "Download" button to save the minified JavaScript as a file.</li>
-                <li>To minify a JavaScript file:</li>
-                <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use JavaScript Minifier?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Enter your JavaScript code in the input area or upload a JavaScript file (max 1MB).</li>
+              <li>Click the "Minify" button to process your JavaScript using the Terser minification library.</li>
+              <li>The minified JavaScript will appear in the output area.</li>
+              <li>View the minification results to see how much space you've saved.</li>
+              <li>Use the "Copy" button to copy the minified JavaScript to your clipboard.</li>
+              <li>Use the "Download" button to save the minified JavaScript as a file.</li>
+              <li>To minify a JavaScript file:
+                <ul className="list-disc list-inside ml-6 space-y-2">
                   <li>Click the "Upload" button and select a JavaScript file from your device.</li>
                   <li>The file content will be loaded into the input area.</li>
                   <li>Click "Minify" to process the uploaded file.</li>
+                  <li>Use the "Reset" button to clear all inputs and outputs.</li>
                 </ul>
-                <li>Use the "Reset" button to clear all inputs and outputs.</li>
-              </ol>
-            </section>
+              </li>
+            </ol>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">Key Features</h2>
-              <ul className="list-disc list-inside text-gray-300 space-y-2">
-                <li>Efficient JavaScript minification using the Terser library</li>
-                <li>Support for direct input and file upload</li>
-                <li>Real-time minification statistics</li>
-                <li>Copy to clipboard functionality</li>
-                <li>Download minified JavaScript as a file</li>
-                <li>File size limit of 1MB for uploads</li>
-                <li>Responsive design for use on various devices</li>
-                <li>Syntax error detection and reporting</li>
-              </ul>
-            </section>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Settings className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Efficient JavaScript minification using the Terser library.</li>
+              <li>Support for direct input and file upload.</li>
+              <li>Real-time minification statistics.</li>
+              <li>Copy to clipboard functionality.</li>
+              <li>Download minified JavaScript as a file.</li>
+              <li>File size limit of 1MB for uploads.</li>
+              <li>Responsive design for use on various devices.</li>
+              <li>Syntax error detection and reporting.</li>
+            </ul>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">Tips and Tricks</h2>
-              <ul className="list-disc list-inside text-gray-300 space-y-2">
-                <li>Always keep a backup of your original JavaScript files before minifying.</li>
-                <li>Test your minified JavaScript thoroughly to ensure it works as expected.</li>
-                <li>Use source maps for easier debugging of minified code in production.</li>
-                <li>Consider using a module bundler like Webpack or Rollup for more advanced optimizations.</li>
-                <li>Combine multiple JavaScript files into one before minifying to reduce HTTP requests.</li>
-                <li>Use JavaScript minification in conjunction with other web performance techniques like browser caching and CDN usage.</li>
-                <li>For very large JavaScript files, consider breaking them into smaller, more manageable chunks.</li>
-                <li>Regularly minify your JavaScript as part of your development workflow to maintain optimal performance.</li>
-                <li>Use version control to track changes in your original and minified JavaScript files.</li>
-              </ul>
-            </section>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips and Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Always keep a backup of your original JavaScript files before minifying.</li>
+              <li>Test your minified JavaScript thoroughly to ensure it works as expected.</li>
+              <li>Use source maps for easier debugging of minified code in production.</li>
+              <li>Consider using a module bundler like Webpack or Rollup for more advanced optimizations.</li>
+              <li>Combine multiple JavaScript files into one before minifying to reduce HTTP requests.</li>
+              <li>Use JavaScript minification in conjunction with other web performance techniques like browser caching and CDN usage.</li>
+              <li>For very large JavaScript files, consider breaking them into smaller, more manageable chunks.</li>
+              <li>Regularly minify your JavaScript as part of your development workflow to maintain optimal performance.</li>
+              <li>Use version control to track changes in your original and minified JavaScript files.</li>
+            </ul>
           </div>
+
+        </main>
         </div>
-      </main>
       <Footer />
     </div>
   )

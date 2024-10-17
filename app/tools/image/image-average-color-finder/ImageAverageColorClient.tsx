@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Upload, X, Download, Droplet, Palette } from 'lucide-react'
+import { Upload, X, Download, Droplet, Palette, Info, BookOpen, Lightbulb } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Button } from "@/components/ui/Button"
 import Slider from "@/components/ui/Slider"
 import { toast, Toaster } from 'react-hot-toast'
+import Sidebar from '@/components/sidebarTools';
 
 interface Color {
   hex: string
@@ -159,122 +160,139 @@ export default function ImageAverageColorFinder() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">Image Average Color Finder</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-8">
+        <div className="mb-12 text-center px-4">
+          <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+            Image Average Color Finder
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+            Analyze images to find their average and dominant colors effortlessly. Perfect for designers, artists, and anyone looking to create cohesive color palettes for their projects.
+          </p>
+        </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mb-8 mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">Upload an Image</h2>
-            {!imageSrc ? (
-              <label className="flex flex-col items-center justify-center h-48 md:h-96 px-4 py-6 bg-gray-700 text-blue-400 rounded-lg shadow-lg tracking-wide uppercase border-2 border-blue-400 border-dashed cursor-pointer hover:bg-blue-400 hover:text-white transition duration-300">
-                <Upload size={48} />
-                <span className="mt-2 text-base leading-normal">Select a file</span>
-                <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
-              </label>
-            ) : (
-              <div className="relative">
-                <img 
-                  src={imageSrc} 
-                  alt="Uploaded" 
-                  className="w-full h-48 md:h-96 object-contain bg-gray-700 rounded-lg"
-                />
-                <Button
-                  className="absolute top-2 right-2 text-white bg-red-500 hover:bg-red-600 rounded-full p-1"
-                  onClick={resetImage}
-                  size="sm"
-                >
-                  <X size={20} />
-                </Button>
+
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mb-8 mx-auto">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4">Upload an Image</h2>
+              {!imageSrc ? (
+                <label className="flex flex-col items-center justify-center h-48 md:h-96 px-4 py-6 bg-gray-700 text-blue-400 rounded-lg shadow-lg tracking-wide uppercase border-2 border-blue-400 border-dashed cursor-pointer hover:bg-blue-400 hover:text-white transition duration-300">
+                  <Upload size={48} />
+                  <span className="mt-2 text-base leading-normal">Select a file</span>
+                  <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+                </label>
+              ) : (
+                <div className="relative">
+                  <img 
+                    src={imageSrc} 
+                    alt="Uploaded" 
+                    className="w-full h-48 md:h-96 object-contain bg-gray-700 rounded-lg"
+                  />
+                  <Button
+                    className="absolute top-2 right-2 text-white bg-red-500 hover:bg-red-600 rounded-full p-1"
+                    onClick={resetImage}
+                    size="sm"
+                  >
+                    <X size={20} />
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {averageColor && (
+              <div className="mt-8 bg-gray-700 rounded-lg p-4 md:p-6 shadow-lg">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold text-white mb-2 md:mb-0">Color Analysis</h2>
+                  <Button
+                    onClick={downloadColorPalette}
+                    className="bg-green-500 hover:bg-green-600 text-white"
+                  >
+                    <Download size={16} className="mr-2" />
+                    Download Palette
+                  </Button>
+                </div>
+                <div className="flex flex-col md:flex-row md:items-center mb-4">
+                  <Droplet className="w-5 h-5 mr-2 text-white" />
+                  <span className="font-medium text-white mr-2">Average Color:</span>
+                  <div
+                    className="w-6 h-6 rounded mr-2"
+                    style={{ backgroundColor: averageColor.hex }}
+                  ></div>
+                  <span className="text-white">{averageColor.hex}</span>
+                </div>
+                <div>
+                  <p className="text-gray-300 text-sm">
+                    RGB: {averageColor.rgb.r}, {averageColor.rgb.g}, {averageColor.rgb.b}
+                  </p>
+                  <p className="text-gray-300 text-sm">
+                    HSL: {averageColor.hsl.h}°, {averageColor.hsl.s}%, {averageColor.hsl.l}%
+                  </p>
+                </div>
+                <div className="mt-4">
+                  <div className="flex items-center mb-2">
+                    <Palette className="w-5 h-5 inline-block mr-2 text-white" />
+                    <span className="font-medium text-white">Dominant Colors:</span>
+                  </div>
+                  <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mt-2">
+                    {dominantColors.map((color, index) => (
+                      <div key={index} className="flex flex-col items-center">
+                        <div
+                          className="w-12 h-12 rounded"
+                          style={{ backgroundColor: color.hex }}
+                        ></div>
+                        <span className="text-xs mt-1 text-white">{color.hex}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label htmlFor="sample-size" className="block text-sm font-medium text-white mb-1">
+                    Number of Dominant Colors: {sampleSize}
+                  </label>
+                  <Slider
+                    id="sample-size"
+                    min={1}
+                    max={10}
+                    step={1}
+                    value={sampleSize}
+                    onChange={(value) => setSampleSize(value)}
+                    className="w-full"
+                  />
+                </div>
               </div>
             )}
           </div>
 
-          {averageColor && (
-            <div className="mt-8 bg-gray-700 rounded-lg p-4 md:p-6 shadow-lg">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-white mb-2 md:mb-0">Color Analysis</h2>
-                <Button
-                  onClick={downloadColorPalette}
-                  className="bg-green-500 hover:bg-green-600 text-white"
-                >
-                  <Download size={16} className="mr-2" />
-                  Download Palette
-                </Button>
-              </div>
-              <div className="flex flex-col md:flex-row md:items-center mb-4">
-                <Droplet className="w-5 h-5 mr-2 text-white" />
-                <span className="font-medium text-white mr-2">Average Color:</span>
-                <div
-                  className="w-6 h-6 rounded mr-2"
-                  style={{ backgroundColor: averageColor.hex }}
-                ></div>
-                <span className="text-white">{averageColor.hex}</span>
-              </div>
-              <div>
-                <p className="text-gray-300 text-sm">
-                  RGB: {averageColor.rgb.r}, {averageColor.rgb.g}, {averageColor.rgb.b}
-                </p>
-                <p className="text-gray-300 text-sm">
-                  HSL: {averageColor.hsl.h}°, {averageColor.hsl.s}%, {averageColor.hsl.l}%
-                </p>
-              </div>
-              <div className="mt-4">
-                <div className="flex items-center mb-2">
-                  <Palette className="w-5 h-5 inline-block mr-2 text-white" />
-                  <span className="font-medium text-white">Dominant Colors:</span>
-                </div>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mt-2">
-                  {dominantColors.map((color, index) => (
-                    <div key={index} className="flex flex-col items-center">
-                      <div
-                        className="w-12 h-12 rounded"
-                        style={{ backgroundColor: color.hex }}
-                      ></div>
-                      <span className="text-xs mt-1 text-white">{color.hex}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="sample-size" className="block text-sm font-medium text-white mb-1">
-                  Number of Dominant Colors: {sampleSize}
-                </label>
-                <Slider
-                  id="sample-size"
-                  min={1}
-                  max={10}
-                  step={1}
-                  value={sampleSize}
-                  onChange={(value) => setSampleSize(value)}
-                  className="w-full"
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">About Image Average Color Finder</h2>
-            <p className="text-white">
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Image Average Color Finder
+            </h2>
+            <p className="text-gray-300 mb-4">
               The Image Average Color Finder is a powerful tool that analyzes uploaded images to determine their average color and identify dominant colors. It's an essential resource for designers, artists, and anyone working with color palettes in their projects.
-            </p>          
-          </section>
+            </p>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">How to Use Image Average Color Finder?</h2>
-            <ol className="list-decimal list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use Image Average Color Finder?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Click on the upload area or drag and drop an image file.</li>
               <li>Once uploaded, the tool will automatically calculate the average color and dominant colors.</li>
               <li>Adjust the number of dominant colors using the slider.</li>
               <li>View color information in HEX, RGB, and HSL formats.</li>
               <li>Download the color palette as an image file using the "Download Palette" button.</li>
             </ol>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Key Features</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Accurate average color calculation</li>
               <li>Identification of dominant colors</li>
               <li>Adjustable number of dominant colors (1-10)</li>
@@ -283,22 +301,24 @@ export default function ImageAverageColorFinder() {
               <li>Responsive design for various screen sizes</li>
               <li>Real-time color analysis updates</li>
             </ul>
-          </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
-              <li>Use high-quality images for more accurate color analysis</li>
-              <li>Experiment with different numbers of dominant colors to find the best palette</li>
-              <li>Compare the average color with dominant colors to understand the image's overall tone</li>
-              <li>Use the downloaded palette in design software for consistent color schemes</li>
-              <li>Analyze multiple images to create cohesive color themes for projects</li>
-              <li>Consider the HSL values for a better understanding of color properties</li>
-              <li>Use the tool to extract color palettes from inspirational images or photographs</li>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips and Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Use high-quality images for more accurate color analysis.</li>
+              <li>Experiment with different numbers of dominant colors to find the best palette.</li>
+              <li>Compare the average color with dominant colors to understand the image's overall tone.</li>
+              <li>Use the downloaded palette in design software for consistent color schemes.</li>
+              <li>Analyze multiple images to create cohesive color themes for projects.</li>
+              <li>Consider the HSL values for a better understanding of color properties.</li>
+              <li>Use the tool to extract color palettes from inspirational images or photographs.</li>
             </ul>
-          </section>
-        </div>
-      </main>
+          </div>
+
+        </main>
+       </div> 
       <Footer />
       <canvas ref={canvasRef} className="hidden"></canvas>
       <Toaster position="bottom-right" />

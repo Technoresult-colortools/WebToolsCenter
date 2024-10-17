@@ -1,9 +1,16 @@
 'use client'
 
 import React, { useState } from 'react';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Copy, Info, BookOpen, Lightbulb, AlertCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Sidebar from '@/components/sidebarTools';
+import Input from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const apiUrl = 'https://www.thecolorapi.com/id?';
 
@@ -12,6 +19,7 @@ export default function ColorNameGenerator() {
   const [colorName, setColorName] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
   const [error, setError] = useState('');
+  const [colorFormat, setColorFormat] = useState<'hex' | 'rgb' | 'hsl'>('hex');
 
   const hexToRgb = (hex: string) => {
     hex = hex.replace(/^#/, '');
@@ -76,19 +84,19 @@ export default function ColorNameGenerator() {
     setError('');
     let hex = '';
 
-    if (/^#([0-9A-F]{3}){1,2}$/i.test(colorValue)) {
+    if (colorFormat === 'hex' && /^#([0-9A-F]{3}){1,2}$/i.test(colorValue)) {
       hex = colorValue.replace('#', '');
       setBackgroundColor(hexToRgb(colorValue));
-    } else if (/^rgb$$\d{1,3},\s*\d{1,3},\s*\d{1,3}$$$/i.test(colorValue)) {
+    } else if (colorFormat === 'rgb' && /^rgb$$\s*\d{1,3},\s*\d{1,3},\s*\d{1,3}\s*$$$/i.test(colorValue)) {
       const rgbValues = colorValue.match(/\d+/g)!.map(Number);
       hex = rgbToHex(rgbValues[0], rgbValues[1], rgbValues[2]).replace('#', '');
       setBackgroundColor(colorValue);
-    } else if (/^hsl$$\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%$$$/i.test(colorValue)) {
+    } else if (colorFormat === 'hsl' && /^hsl$$\s*\d{1,3},\s*\d{1,3}%,\s*\d{1,3}%\s*$$$/i.test(colorValue)) {
       const hslValues = colorValue.match(/\d+/g)!.map(Number);
       hex = hslToHex(hslValues[0], hslValues[1], hslValues[2]).replace('#', '');
       setBackgroundColor(hslToHex(hslValues[0], hslValues[1], hslValues[2]));
     } else {
-      setError('Please enter a valid color value in HEX, RGB, or HSL format.');
+      setError(`Please enter a valid ${colorFormat.toUpperCase()} color value.`);
       return;
     }
 
@@ -96,94 +104,174 @@ export default function ColorNameGenerator() {
     setColorName(name);
   };
 
+  const handleCopyColor = (value: string) => {
+    navigator.clipboard.writeText(value);
+    toast.success(`Copied ${value} to clipboard`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  const getPlaceholder = () => {
+    switch (colorFormat) {
+      case 'hex':
+        return '#FFFFFF';
+      case 'rgb':
+        return 'rgb(255, 255, 255)';
+      case 'hsl':
+        return 'hsl(0, 100%, 100%)';
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Color Name Generator</h1>
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-white mb-4">Enter the Color Values in Hex, RGB, or HSL:</h3>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input
-                type="text"
-                value={colorValue}
-                onChange={(e) => setColorValue(e.target.value)}
-                className="flex-grow px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="#FFFFFF or rgb(255,255,255) or hsl(0,100%,100%)"
-              />
-              <button
-                onClick={handleGenerateColorName}
-                className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 flex items-center justify-center"
-              >
-                <RefreshCw size={18} className="mr-2" />
-                Generate
-              </button>
-            </div>
+      <div className='flex-grow flex'>
+         <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Color Name Generator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Discover the names of colors using HEX, RGB, or HSL values.
+            </p>
           </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          {colorName && (
-            <div className="bg-gray-700 rounded-lg p-6 shadow-inner">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-lg font-semibold text-white">Color Name:</h4>
-                <span className="text-xl font-bold text-blue-400">{colorName}</span>
+
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+            <Tabs value={colorFormat} onValueChange={(value) => setColorFormat(value as 'hex' | 'rgb' | 'hsl')}>
+              <TabsList className="grid w-full grid-cols-3 mb-4">
+                <TabsTrigger value="hex">HEX</TabsTrigger>
+                <TabsTrigger value="rgb">RGB</TabsTrigger>
+                <TabsTrigger value="hsl">HSL</TabsTrigger>
+              </TabsList>
+              <TabsContent value="hex">
+                <Input
+                  type="text"
+                  value={colorValue}
+                  onChange={(e) => setColorValue(e.target.value)}
+                  className="mb-4 w-full text-gray-600"
+                  placeholder={getPlaceholder()}
+                />
+              </TabsContent>
+              <TabsContent value="rgb">
+                <Input
+                  type="text-grey"
+                  value={colorValue}
+                  onChange={(e) => setColorValue(e.target.value)}
+                  className="mb-4 w-full text-gray-600"
+                  placeholder={getPlaceholder()}
+                />
+              </TabsContent>
+              <TabsContent value="hsl">
+                <Input
+                  type="text"
+                  value={colorValue}
+                  onChange={(e) => setColorValue(e.target.value)}
+                  className="mb-4 w-full text-gray-600"
+                  placeholder={getPlaceholder()}
+                />
+              </TabsContent>
+            </Tabs>
+
+            <Button onClick={handleGenerateColorName} className="w-full mb-4">
+              <RefreshCw className="mr-2 h-4 w-4" /> Generate Color Name
+            </Button>
+
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {colorName && (
+              <div className="bg-gray-700 rounded-lg p-6 shadow-inner">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-semibold text-white">Color Name:</h4>
+                  <span className="text-xl font-bold text-blue-400">{colorName}</span>
+                </div>
+                <div
+                  className="w-full h-24 rounded-md shadow-md mb-4"
+                  style={{ backgroundColor: backgroundColor }}
+                ></div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button onClick={() => handleCopyColor(colorValue)} variant="default" className="w-full">
+                    <Copy className="mr-2 h-4 w-4" /> Copy {colorFormat.toUpperCase()}
+                  </Button>
+                  <Button onClick={() => handleCopyColor(colorName)} variant="default" className="w-full">
+                    <Copy className="mr-2 h-4 w-4" /> Copy Name
+                  </Button>
+                </div>
               </div>
-              <div
-                className="w-full h-24 rounded-md shadow-md"
-                style={{ backgroundColor: backgroundColor }}
-              ></div>
-            </div>
-          )}
-        </div>
-        <div className="bg-gray-800 shadow-lg rounded-lg p-8 mt-4 max-w-4xl mx-auto">
-          <div className="space-y-6">
-            
-            {/* About Section */}
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-2">About Color Name Generator</h2>
-              <p className="text-white">
-                The Color Name Generator is a versatile tool that allows users to input color values in HEX, RGB, or HSL formats and obtain the corresponding color name. This tool is especially useful for designers, developers, and artists looking to identify and use specific colors in their projects.
-              </p>
-            </section>
-
-            {/* How to Use Section */}
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-2">How to Use</h2>
-              <ol className="list-decimal list-inside text-white space-y-2">
-                <li>Enter a valid color value in HEX, RGB, or HSL format in the input field.</li>
-                <li>Click the "Generate" button to retrieve the name of the color.</li>
-                <li>View the color name and the color preview displayed on the screen.</li>
-              </ol>
-            </section>
-
-            {/* Key Features Section */}
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-2">Key Features</h2>
-              <ul className="list-disc list-inside text-white space-y-2">
-                <li>Supports color inputs in HEX, RGB, and HSL formats.</li>
-                <li>Real-time color name retrieval based on the input value.</li>
-                <li>Displays color preview based on the inputted value.</li>
-                <li>Interactive interface with easy-to-use input fields.</li>
-                <li>Error handling for invalid color values.</li>
-              </ul>
-            </section>
-
-            {/* Tips and Tricks Section */}
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-              <ul className="list-disc list-inside text-white space-y-2">
-                <li>Ensure the color values are in a valid format (e.g., #FFFFFF for HEX, rgb(255, 255, 255) for RGB, and hsl(0, 100%, 100%) for HSL).</li>
-                <li>Use this tool to quickly identify color names for use in your design projects.</li>
-                <li>Experiment with different color formats to see how the same color can be represented in multiple ways.</li>
-                <li>Save color names and values for later use in web design or digital art projects.</li>
-              </ul>
-            </section>
-
+            )}
           </div>
-        </div>
 
-      </main>
+          <div className="bg-gray-800 shadow-lg rounded-lg p-8 mt-8 max-w-4xl mx-auto">
+            <div className="space-y-6">
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Info className="w-6 h-6 mr-2" />
+                  About Color Name Generator
+                </h2>
+                <p className="text-white">
+                  The Color Name Generator is a versatile tool that allows users to input color values in HEX, RGB, or HSL formats and obtain the corresponding color name. This tool is especially useful for designers, developers, and artists looking to identify and use specific colors in their projects.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <BookOpen className="w-6 h-6 mr-2" />
+                  How to Use Color Name Generator
+                </h2>
+                <ol className="list-decimal list-inside text-white space-y-2">
+                  <li>Select the color format (HEX, RGB, or HSL) using the tabs.</li>
+                  <li>Enter a valid color value in the selected format.</li>
+                  <li>Click the "Generate Color Name" button to retrieve the name of the color.</li>
+                  <li>View the color name, preview, and use the copy buttons for easy access to the values.</li>
+                </ol>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Key Features
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Support for HEX, RGB, and HSL color formats.</li>
+                  <li>Real-time color name retrieval using an external API.</li>
+                  <li>Color preview based on the input value.</li>
+                  <li>Easy-to-use copy functionality for color values and names.</li>
+                  <li>Responsive design for use on various devices.</li>
+                  <li>Error handling and user-friendly notifications.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Tips and Tricks
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Use the tabs to switch between different color formats for input.</li>
+                  <li>Experiment with slight variations in color values to discover new color names.</li>
+                  <li>Copy color names and values directly to your clipboard for use in design software or code.</li>
+                  <li>Use this tool in combination with other color tools for a comprehensive color workflow.</li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
       <Footer />
+      <ToastContainer />
     </div>
   );
 }

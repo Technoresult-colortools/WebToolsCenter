@@ -10,10 +10,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, User, Link as MessageSquare, Heart, Repeat, BarChart2, Bookmark, Share2, MoreHorizontal } from 'lucide-react';
+import { Download, User, Link as MessageSquare, Heart, Repeat, BarChart2, Bookmark, Share2, MoreHorizontal, Settings, Sliders, LockIcon, Filter, Info, BookOpen, Lightbulb } from 'lucide-react';
 import { exportComponentAsJPEG, exportComponentAsPNG } from 'react-component-export-image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Sidebar from '@/components/sidebarTools';
 
 const VerifiedBadge = () => (
   <svg viewBox="0 0 22 22" aria-label="Verified account" role="img" className="w-4 h-4 ml-1 inline-block fill-[#1d9bf0]">
@@ -201,231 +202,267 @@ export default function TweetGeneratorClient() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-6 text-center">Tweet Generator</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="mb-12 text-center px-4">
+              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                  Tweet Generator
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                  Create and visualize tweets without actually posting them on Twitter
+              </p>
+            </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Tweet Preview</h2>
-          <div className="w-full max-w-full flex justify-center">
-            <Tweet
-              ref={tweetRef}
-              theme={theme}
-              name={name}
-              username={username}
-              isVerified={isVerified}
-              avatarUrl={avatarUrl}
-              tweetText={tweetText}
-              tweetImage={tweetImage}
-              imageSize={imageSize}
-              engagementCounts={engagementCounts}
-              formatDate={formatDate}
-              formatTweetText={formatTweetText}
-              formatNumber={formatNumber}
-              className="w-full" // Ensures the tweet fits the parent container
-            />
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-2xl font-bold text-white mb-4">Tweet Preview</h2>
+            <div className="w-full max-w-full flex justify-center">
+              <Tweet
+                ref={tweetRef}
+                theme={theme}
+                name={name}
+                username={username}
+                isVerified={isVerified}
+                avatarUrl={avatarUrl}
+                tweetText={tweetText}
+                tweetImage={tweetImage}
+                imageSize={imageSize}
+                engagementCounts={engagementCounts}
+                formatDate={formatDate}
+                formatTweetText={formatTweetText}
+                formatNumber={formatNumber}
+                className="w-full" // Ensures the tweet fits the parent container
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Tweet Settings</h2>
-          <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-6">
-              <TabsTrigger value="general">General</TabsTrigger>
-              <TabsTrigger value="user">User</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
-              <TabsTrigger value="media">Media</TabsTrigger>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-2xl font-bold text-white mb-4">Tweet Settings</h2>
+            <Tabs defaultValue="general" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 gap-2 mb-4">
+              <TabsTrigger value="general" className="flex items-center justify-center">
+                <Settings className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">General</span>
+              </TabsTrigger>
+              <TabsTrigger value="user" className="flex items-center justify-center">
+                <Sliders className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">User</span>
+              </TabsTrigger>
+              <TabsTrigger value="content" className="flex items-center justify-center">
+                <LockIcon className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Content</span>
+              </TabsTrigger>
+              <TabsTrigger value="media" className="flex items-center justify-center">
+                <Filter className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Media</span>
+              </TabsTrigger>
             </TabsList>
-            <TabsContent value="general">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
-                  <Select value={theme} onValueChange={setTheme}>
-                    <SelectTrigger id="theme" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select theme" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="tweet-date" className="text-white mb-2 block">Tweet Date</Label>
-                  <Input
-                    id="tweet-date"
-                    type="date"
-                    value={tweetDate}
-                    onChange={(e) => setTweetDate(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="tweet-time" className="text-white mb-2 block">Tweet Time</Label>
-                  <Input
-                    id="tweet-time"
-                    type="time"
-                    value={tweetTime}
-                    onChange={(e) => setTweetTime(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="user">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name" className="text-white mb-2 block">Name</Label>
-                  <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="username" className="text-white mb-2 block">Username</Label>
-                  <Input
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="verified"
-                    checked={isVerified}
-                    onCheckedChange={setIsVerified}
-                  />
-                  <Label htmlFor="verified" className="text-white">Verified Account</Label>
-                </div>
-                <div>
-                  <Label htmlFor="avatar-upload" className="text-white mb-2 block">Avatar Image</Label>
-                  <Input
-                    id="avatar-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarUpload}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="content">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="tweet-text" className="text-white mb-2 block">Tweet Text (max. 280 characters)</Label>
-                  <Textarea
-                    id="tweet-text"
-                    value={tweetText}
-                    onChange={(e) => setTweetText(e.target.value)}
-                    maxLength={280}
-                    className="bg-gray-700 text-white border-gray-600"
-                    rows={4}
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="media">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="tweet-image-upload" className="text-white mb-2 block">Tweet Image</Label>
-                  <Input
-                    id="tweet-image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleTweetImageUpload}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                {tweetImage && (
+              <TabsContent value="general">
+                <div className="space-y-4">
                   <div>
-                    <Label htmlFor="image-size" className="text-white mb-2 block">Image Size</Label>
-                    <Slider
-                      id="image-size"
-                      min={10}
-                      max={100}
-                      step={1}
-                      value={imageSize}
-                      onChange={(value) => setImageSize(value)}
-                      className="w-full"
-                    />
-                    <div className="text-white mt-2">{imageSize}%</div>
+                    <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
+                    <Select value={theme} onValueChange={setTheme}>
+                      <SelectTrigger id="theme" className="bg-gray-700 text-white border-gray-600">
+                        <SelectValue placeholder="Select theme" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 text-white border-gray-600">
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                )}
-                {Object.entries(engagementCounts).map(([type, count]) => (
-                  <div key={type}>
-                    <Label htmlFor={`${type}-count`} className="text-white mb-2 block capitalize">{type} Count</Label>
+                  <div>
+                    <Label htmlFor="tweet-date" className="text-white mb-2 block">Tweet Date</Label>
                     <Input
-                      id={`${type}-count`}
-                      type="number"
-                      value={count}
-                      onChange={(e) => handleEngagementChange(type as keyof typeof engagementCounts, e.target.value)}
+                      id="tweet-date"
+                      type="date"
+                      value={tweetDate}
+                      onChange={(e) => setTweetDate(e.target.value)}
                       className="bg-gray-700 text-white border-gray-600"
                     />
                   </div>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+                  <div>
+                    <Label htmlFor="tweet-time" className="text-white mb-2 block">Tweet Time</Label>
+                    <Input
+                      id="tweet-time"
+                      type="time"
+                      value={tweetTime}
+                      onChange={(e) => setTweetTime(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="user">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="name" className="text-white mb-2 block">Name</Label>
+                    <Input
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="username" className="text-white mb-2 block">Username</Label>
+                    <Input
+                      id="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="verified"
+                      checked={isVerified}
+                      onCheckedChange={setIsVerified}
+                    />
+                    <Label htmlFor="verified" className="text-white">Verified Account</Label>
+                  </div>
+                  <div>
+                    <Label htmlFor="avatar-upload" className="text-white mb-2 block">Avatar Image</Label>
+                    <Input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="content">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="tweet-text" className="text-white mb-2 block">Tweet Text (max. 280 characters)</Label>
+                    <Textarea
+                      id="tweet-text"
+                      value={tweetText}
+                      onChange={(e) => setTweetText(e.target.value)}
+                      maxLength={280}
+                      className="bg-gray-700 text-white border-gray-600"
+                      rows={4}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="media">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="tweet-image-upload" className="text-white mb-2 block">Tweet Image</Label>
+                    <Input
+                      id="tweet-image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleTweetImageUpload}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  {tweetImage && (
+                    <div>
+                      <Label htmlFor="image-size" className="text-white mb-2 block">Image Size</Label>
+                      <Slider
+                        id="image-size"
+                        min={10}
+                        max={100}
+                        step={1}
+                        value={imageSize}
+                        onChange={(value) => setImageSize(value)}
+                        className="w-full"
+                      />
+                      <div className="text-white mt-2">{imageSize}%</div>
+                    </div>
+                  )}
+                  {Object.entries(engagementCounts).map(([type, count]) => (
+                    <div key={type}>
+                      <Label htmlFor={`${type}-count`} className="text-white mb-2 block capitalize">{type} Count</Label>
+                      <Input
+                        id={`${type}-count`}
+                        type="number"
+                        value={count}
+                        onChange={(e) => handleEngagementChange(type as keyof typeof engagementCounts, e.target.value)}
+                        className="bg-gray-700 text-white border-gray-600"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-4 mt-8">
+            <Button onClick={() => exportTweet('png')} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Download className="h-5 w-5 mr-2" />
+              Export as PNG
+            </Button>
+            <Button onClick={() => exportTweet('jpeg')} className="bg-green-600 hover:bg-green-700 text-white">
+              <Download className="h-5 w-5 mr-2" />
+              Export as JPEG
+            </Button>
+          </div>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Tweet Generator
+            </h2>
+            <p className="text-gray-300 mb-4">
+              Our Tweet Generator is a powerful tool designed to help you create and visualize tweets without actually posting them on Twitter. Whether you're a social media manager, content creator, or just someone who wants to experiment with tweet designs, this tool provides a user-friendly interface to craft the perfect tweet and export it as an image.
+            </p>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Use the settings tabs below the preview to customize your tweet.</li>
+              <li>The General tab allows you to set the theme and tweet date/time.</li>
+              <li>In the User tab, you can set your name, username, verified status, and upload an avatar.</li>
+              <li>The Content tab is where you input your tweet text, hashtags, mentions, and links.</li>
+              <li>Use the Media tab to upload a tweet image and set engagement metrics.</li>
+              <li>See how your tweet looks in real-time in the preview section at the top.</li>
+              <li>When satisfied with your tweet, click one of the "Export" buttons to save the tweet as an image.</li>
+            </ol>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Real-time preview of your tweet</li>
+              <li>Customizable user profile (name, username, avatar, verified status)</li>
+              <li>Tweet text input with character limit</li>
+              <li>Support for hashtags, mentions, and links</li>
+              <li>Image upload for both avatar and tweet content</li>
+              <li>Adjustable engagement metrics (replies, retweets, likes, views)</li>
+              <li>Date and time settings for the tweet</li>
+              <li>Light and dark theme options for preview</li>
+              <li>Export options in PNG, JPEG, and WebP formats</li>
+              <li>Mobile-responsive design for use on any device</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips & Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Use high-quality images for both your avatar and tweet image to make your content stand out.</li>
+              <li>Experiment with different combinations of hashtags and mentions to see how they affect your tweet's appearance.</li>
+              <li>Try both light and dark themes to see which one suits your content better.</li>
+              <li>Use realistic engagement numbers to make your tweet preview more authentic.</li>
+              <li>When adding a link, consider how it affects your character count and adjust your tweet text accordingly.</li>
+              <li>Use the verified status feature judiciously to match the account you're simulating.</li>
+              <li>Export your tweet in different formats to see which one provides the best quality for your needs.</li>
+              <li>Remember that this tool is for visualization purposes only – always follow Twitter's guidelines when actually posting content.</li>
+            </ul>
+          </div>
+
+        </main>
         </div>
-
-        <div className="flex flex-wrap justify-center gap-4 mt-8">
-          <Button onClick={() => exportTweet('png')} className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Download className="h-5 w-5 mr-2" />
-            Export as PNG
-          </Button>
-          <Button onClick={() => exportTweet('jpeg')} className="bg-green-600 hover:bg-green-700 text-white">
-            <Download className="h-5 w-5 mr-2" />
-            Export as JPEG
-          </Button>
-        </div>
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">About Tweet Generator</h2>
-          <p className="text-gray-300 mb-4">
-            Our Tweet Generator is a powerful tool designed to help you create and visualize tweets without actually posting them on Twitter. 
-            Whether you're a social media manager, content creator, or just someone who wants to experiment with tweet designs, this tool provides 
-            a user-friendly interface to craft the perfect tweet and export it as an image.
-          </p>
-
-          <h3 className="text-xl font-semibold text-white mt-6 mb-2">How to Use:</h3>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2">
-            <li>Use the settings tabs below the preview to customize your tweet.</li>
-            <li>The General tab allows you to set the theme and tweet date/time.</li>
-            <li>In the User tab, you can set your name, username, verified status, and upload an avatar.</li>
-            <li>The Content tab is where you input your tweet text, hashtags, mentions, and links.</li>
-            <li>Use the Media tab to upload a tweet image and set engagement metrics.</li>
-            <li>See how your tweet looks in real-time in the preview section at the top.</li>
-            <li>When satisfied with your tweet, click one of the "Export" buttons to save the tweet as an image.</li>
-          </ol>
-
-          <h3 className="text-xl font-semibold text-white mt-6 mb-2">Key Features:</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Real-time preview of your tweet</li>
-            <li>Customizable user profile (name, username, avatar, verified status)</li>
-            <li>Tweet text input with character limit</li>
-            <li>Support for hashtags, mentions, and links</li>
-            <li>Image upload for both avatar and tweet content</li>
-            <li>Adjustable engagement metrics (replies, retweets, likes, views)</li>
-            <li>Date and time settings for the tweet</li>
-            <li>Light and dark theme options for preview</li>
-            <li>Export options in PNG, JPEG, and WebP formats</li>
-            <li>Mobile-responsive design for use on any device</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-white mt-6 mb-2">Tips and Tricks:</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Use high-quality images for both your avatar and tweet image to make your content stand out.</li>
-            <li>Experiment with different combinations of hashtags and mentions to see how they affect your tweet's appearance.</li>
-            <li>Try both light and dark themes to see which one suits your content better.</li>
-            <li>Use realistic engagement numbers to make your tweet preview more authentic.</li>
-            <li>When adding a link, consider how it affects your character count and adjust your tweet text accordingly.</li>
-            <li>Use the verified status feature judiciously to match the account you're simulating.</li>
-            <li>Export your tweet in different formats to see which one provides the best quality for your needs.</li>
-            <li>Remember that this tool is for visualization purposes only – always follow Twitter's guidelines when actually posting content.</li>
-          </ul>
-        </div>
-      </main>
       <Footer />
     </div>
   );

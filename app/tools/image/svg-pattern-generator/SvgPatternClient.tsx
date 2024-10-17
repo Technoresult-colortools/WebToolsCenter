@@ -1,15 +1,17 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import Slider from "@/components/ui/Slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, RefreshCw, Copy } from 'lucide-react';
+import { Download, RefreshCw, Copy, Upload, Maximize2, X, Settings, Sliders, Palette, Image, Info, BookOpen, Lightbulb } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Sidebar from '@/components/sidebarTools';
 
 type PatternType =
   | 'circles'
@@ -20,37 +22,19 @@ type PatternType =
   | 'polkaDots'
   | 'stripes'
   | 'chevron'
-  | 'rightTriangle'
-  | 'halfCircle'
-  | 'doubleHalfCircle'
-  | 'pie'
-  | 'pacman'
-  | 'drop'
-  | 'dots'
-  | 'fungi'
-  | 'leaf'
-  | 'flower'
-  | 'ring'
-  | 'donut'
-  | 'signal'
-  | 'nestedTriangle'
-  | 'plus'
-  | 'minus'
-  | 'multiply'
-  | 'rhombus'
-  | 'mandala'
-  | 'parquet'
-  | 'layers'
-  | 'cloudLine'
-  | 'cloudSolid'
-  | 'flashSolid'
-  | 'flashLine'
-  | 'gearSolid'
-  | 'gearLine'
-  | 'paperPlaneSolid'
-  | 'paperPlaneLine'
-  | 'chatSolid'
-  | 'chatLine';
+  | 'modernCircles'
+  | 'concentricCircles'
+  | 'nestedSquares'
+  | 'triangleGrid'
+  | 'waves'
+  | 'dots3D'
+  | 'crosshatch'
+  | 'spiral'
+  | 'flowerOfLife'
+  | 'customImage';
+
+type ExportFormat = 'svg' | 'png';
+
 type ExportSize = 'facebookCover' | 'youtubeCover' | 'youtubeThumbnail' | 'ogImage' | 'instagramSquare' | 'instagramLandscape' | 'instagramPortrait' | 'instagramStory' | 'custom';
 
 const exportSizes: Record<ExportSize, { width: number; height: number }> = {
@@ -65,209 +49,173 @@ const exportSizes: Record<ExportSize, { width: number; height: number }> = {
   custom: { width: 800, height: 600 },
 };
 
-export default function SvgPatternGenerator() {
-  const [patternType, setPatternType] = useState<PatternType>('circles');
+export default function Component() {
+  const [patternType, setPatternType] = useState<PatternType>('modernCircles');
   const [patternColor, setPatternColor] = useState('#3498db');
+  const [secondaryColor, setSecondaryColor] = useState('#2980b9');
   const [backgroundColor, setBackgroundColor] = useState('#ffffff');
   const [size, setSize] = useState(20);
   const [spacing, setSpacing] = useState(5);
   const [rotation, setRotation] = useState(0);
   const [opacity, setOpacity] = useState(100);
+  const [complexity, setComplexity] = useState(50);
+  const [strokeWidth, setStrokeWidth] = useState(2);
   const [svgCode, setSvgCode] = useState('');
   const [exportSize, setExportSize] = useState<ExportSize>('facebookCover');
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('svg');
   const [customWidth, setCustomWidth] = useState(800);
   const [customHeight, setCustomHeight] = useState(600);
+  const [customImage, setCustomImage] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const img = new window.Image();
 
   const generatePattern = useCallback(() => {
     let pattern = '';
     const svgSize = size + spacing;
+    const complexityFactor = complexity / 100;
 
-    switch (patternType) {
-      case 'circles':
-        pattern = `<circle cx="${svgSize / 2}" cy="${svgSize / 2}" r="${size / 2}" fill="${patternColor}" />`;
-        break;
-      case 'squares':
-        pattern = `<rect x="0" y="0" width="${size}" height="${size}" fill="${patternColor}" />`;
-        break;
-      case 'triangles':
-        pattern = `<polygon points="0,${size} ${size / 2},0 ${size},${size}" fill="${patternColor}" />`;
-        break;
-      case 'hexagons':
-        const hexPoints = [
-          [size / 2, 0],
-          [size, size / 4],
-          [size, size * 3 / 4],
-          [size / 2, size],
-          [0, size * 3 / 4],
-          [0, size / 4],
-        ].map(([x, y]) => `${x},${y}`).join(' ');
-        pattern = `<polygon points="${hexPoints}" fill="${patternColor}" />`;
-        break;
-      case 'zigzag':
-        pattern = `<polyline points="0,0 ${size / 2},${size} ${size},0 ${size * 1.5},${size} ${size * 2},0" fill="none" stroke="${patternColor}" stroke-width="2" />`;
-        break;
-      case 'polkaDots':
-        pattern = `
-          <circle cx="${svgSize / 4}" cy="${svgSize / 4}" r="${size / 8}" fill="${patternColor}" />
-          <circle cx="${svgSize * 3 / 4}" cy="${svgSize * 3 / 4}" r="${size / 8}" fill="${patternColor}" />
-        `;
-        break;
-      case 'stripes':
-        pattern = `
-          <line x1="0" y1="0" x2="${svgSize}" y2="0" stroke="${patternColor}" stroke-width="${size / 2}" />
-          <line x1="0" y1="${svgSize}" x2="${svgSize}" y2="${svgSize}" stroke="${patternColor}" stroke-width="${size / 2}" />
-        `;
-        break;
-      case 'chevron':
-        pattern = `
-          <polyline points="0,${size} ${size / 2},0 ${size},${size}" fill="none" stroke="${patternColor}" stroke-width="2" />
-          <polyline points="0,${size * 2} ${size / 2},${size} ${size},${size * 2}" fill="none" stroke="${patternColor}" stroke-width="2" />
-        `;
-        break;
-        case 'rightTriangle':
-        pattern = `<polygon points="0,0 ${size},0 0,${size}" fill="${patternColor}" />`;
-        break;
-        case 'halfCircle':
-        pattern = `<path d="M ${size},0 A ${size/2} ${size/2} 0 1 0 ${size},${size}" fill="${patternColor}" />`;
-        break;
-        case 'pacman':
-        pattern = `<path d="M${size/2},${size/2} m-${size/2},0 a${size/2},${size/2} 0 1,0 ${size},0 L${size/2},${size/2}" fill="${patternColor}" />`;
-        break;
-        case 'drop':
-        pattern = `<path d="M${size / 2},0 C${size},${size / 2} ${size / 2},${size} 0,${size / 2} Z" fill="${patternColor}" />`;
-        break;
+    const generatePath = (type: PatternType) => {
+      switch (type) {
+        case 'modernCircles':
+          return `
+            <circle cx="${svgSize/2}" cy="${svgSize/2}" r="${size/2}" fill="${patternColor}" />
+            <circle cx="${svgSize/2}" cy="${svgSize/2}" r="${size/3}" fill="${secondaryColor}" />
+            <circle cx="${svgSize/2}" cy="${svgSize/2}" r="${size/4}" fill="${backgroundColor}" />
+          `;
+        case 'concentricCircles':
+          return Array.from({ length: Math.floor(4 * complexityFactor) })
+            .map((_, i) => {
+              const radius = (size/2) * (1 - i/(4 * complexityFactor));
+              return `<circle cx="${svgSize/2}" cy="${svgSize/2}" r="${radius}" 
+                fill="none" stroke="${i % 2 ? patternColor : secondaryColor}" 
+                stroke-width="${strokeWidth}" />`;
+            })
+            .join('');
+        case 'nestedSquares':
+          return Array.from({ length: Math.floor(3 * complexityFactor) })
+            .map((_, i) => {
+              const sizeReduction = (i * size) / (3 * complexityFactor);
+              return `<rect x="${sizeReduction/2}" y="${sizeReduction/2}" 
+                width="${size - sizeReduction}" height="${size - sizeReduction}"
+                fill="none" stroke="${i % 2 ? patternColor : secondaryColor}"
+                stroke-width="${strokeWidth}" />`;
+            })
+            .join('');
+        case 'triangleGrid':
+          return `
+            <path d="M0,0 L${size},0 L${size/2},${size*Math.sqrt(3)/2} Z" 
+              fill="${patternColor}" />
+            <path d="M0,${size*Math.sqrt(3)/2} L${size},${size*Math.sqrt(3)/2} 
+              L${size/2},0 Z" fill="${secondaryColor}" />
+          `;
+        case 'waves':
+          const wavePoints = Array.from({ length: 10 })
+            .map((_, i) => {
+              const x = (i * size) / 10;
+              const y = (size/2) + Math.sin(i * Math.PI / 5) * (size/4);
+              return `${x},${y}`;
+            })
+            .join(' ');
+          return `<polyline points="${wavePoints}" 
+            stroke="${patternColor}" fill="none" 
+            stroke-width="${strokeWidth}" />`;
+        case 'dots3D':
+          return `
+            <circle cx="${svgSize/2}" cy="${svgSize/2}" r="${size/3}"
+              fill="${patternColor}">
+              <animate attributeName="r" values="${size/3};${size/4};${size/3}"
+                dur="2s" repeatCount="indefinite" />
+            </circle>
+            <ellipse cx="${svgSize/2}" cy="${svgSize/2 + size/4}" rx="${size/3}" 
+              ry="${size/6}" fill="${secondaryColor}" opacity="0.3" />
+          `;
+        case 'crosshatch':
+          return `
+            <path d="M0,0 L${size},${size}" stroke="${patternColor}" 
+              stroke-width="${strokeWidth}" />
+            <path d="M0,${size} L${size},0" stroke="${secondaryColor}" 
+              stroke-width="${strokeWidth}" />
+          `;
+        case 'circles':
+          return `<circle cx="${svgSize / 2}" cy="${svgSize / 2}" r="${size / 2}" fill="${patternColor}" />`;
+        case 'squares':
+          return `<rect x="0" y="0" width="${size}" height="${size}" fill="${patternColor}" />`;
+        case 'triangles':
+          return `<polygon points="0,${size} ${size / 2},0 ${size},${size}" fill="${patternColor}" />`;
+        case 'hexagons':
+          const hexPoints = [
+            [size / 2, 0],
+            [size, size / 4],
+            [size, size * 3 / 4],
+            [size / 2, size],
+            [0, size * 3 / 4],
+            [0, size / 4],
+          ].map(([x, y]) => `${x},${y}`).join(' ');
+          return `<polygon points="${hexPoints}" fill="${patternColor}" />`;
+        case 'zigzag':
+          return `<polyline points="0,0 ${size / 2},${size} ${size},0 ${size * 1.5},${size} ${size * 2},0" fill="none" stroke="${patternColor}" stroke-width="${strokeWidth}" />`;
+        case 'polkaDots':
+          return `
+            <circle cx="${svgSize / 4}" cy="${svgSize / 4}" r="${size / 8}" fill="${patternColor}" />
+            <circle cx="${svgSize * 3 / 4}" cy="${svgSize * 3 / 4}" r="${size / 8}" fill="${patternColor}" />
+          `;
+        case 'stripes':
+          return `
+            <line x1="0" y1="0" x2="${svgSize}" y2="0" stroke="${patternColor}" stroke-width="${size / 2}" />
+            <line x1="0" y1="${svgSize}" x2="${svgSize}" y2="${svgSize}" stroke="${patternColor}" stroke-width="${size / 2}" />
+          `;
+        case 'chevron':
+          return `
+            <polyline points="0,${size} ${size / 2},0 ${size},${size}" fill="none" stroke="${patternColor}" stroke-width="${strokeWidth}" />
+            <polyline points="0,${size * 2} ${size / 2},${size} ${size},${size * 2}" fill="none" stroke="${patternColor}" stroke-width="${strokeWidth}" />
+          `;
+        case 'spiral':
+          const spiralPoints = Array.from({ length: 100 })
+            .map((_, i) => {
+              const angle = 0.1 * i;
+              const x = svgSize / 2 + (angle * Math.cos(angle) * size) / (2 * Math.PI);
+              const y = svgSize / 2 + (angle * Math.sin(angle) * size) / (2 * Math.PI);
+              return `${x},${y}`;
+            })
+            .join(' ');
+          return `<polyline points="${spiralPoints}" fill="none" stroke="${patternColor}" stroke-width="${strokeWidth}" />`;
+        case 'flowerOfLife':
+          const circles = [];
+          for (let i = 0; i < 6; i++) {
+            const angle = (i * Math.PI) / 3;
+            const cx = svgSize / 2 + (size / 2) * Math.cos(angle);
+            const cy = svgSize / 2 + (size / 2) * Math.sin(angle);
+            circles.push(`<circle cx="${cx}" cy="${cy}" r="${size / 2}" fill="none" stroke="${patternColor}" stroke-width="${strokeWidth}" />`);
+          }
+          return `
+            <circle cx="${svgSize / 2}" cy="${svgSize / 2}" r="${size / 2}" fill="none" stroke="${patternColor}" stroke-width="${strokeWidth}" />
+            ${circles.join('')}
+          `;
+        case 'customImage':
+          if (customImage) {
+            return `<image href="${customImage}" x="0" y="0" width="${size}" height="${size}" />`;
+          }
+          return '';
+        default:
+          return `<circle cx="${svgSize/2}" cy="${svgSize/2}" r="${size/2}" fill="${patternColor}" />`;
+      }
+    };
 
-        case 'dots':
-        pattern = `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 4}" fill="${patternColor}" />`;
-        break;
-
-        case 'fungi':
-        pattern = `<path d="M${size / 2},${size} L0,${size} Q${size / 2},0 ${size},${size} Z" fill="${patternColor}" />`;
-        break;
-
-        case 'leaf':
-        pattern = `<path d="M${size / 2},${size} Q${size},0 ${size / 2},0 T${size / 2},${size}" fill="${patternColor}" />`;
-        break;
-
-        case 'flower':
-        pattern = `<circle cx="${size / 2}" cy="${size / 4}" r="${size / 8}" fill="${patternColor}" />
-                    <circle cx="${size / 4}" cy="${size / 2}" r="${size / 8}" fill="${patternColor}" />
-                    <circle cx="${3 * size / 4}" cy="${size / 2}" r="${size / 8}" fill="${patternColor}" />
-                    <circle cx="${size / 2}" cy="${3 * size / 4}" r="${size / 8}" fill="${patternColor}" />`;
-        break;
-
-        case 'ring':
-        pattern = `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 4}" stroke="${patternColor}" stroke-width="4" fill="none" />`;
-        break;
-
-        case 'donut':
-        pattern = `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 4}" stroke="${patternColor}" stroke-width="4" fill="${backgroundColor}" />`;
-        break;
-
-        case 'signal':
-        pattern = `<path d="M${size / 2},${size} L${size / 2},0 M${size / 4},${size} L${size / 4},${size / 2} M${3 * size / 4},${size} L${3 * size / 4},${size / 4}" stroke="${patternColor}" stroke-width="4" />`;
-        break;
-
-        case 'nestedTriangle':
-        pattern = `<polygon points="0,${size},${size / 2},0,${size},${size}" fill="${patternColor}" />
-                    <polygon points="0,${size * 0.75},${size * 0.5},${size * 0.25},${size},${size * 0.75}" fill="${backgroundColor}" />`;
-        break;
-
-        case 'plus':
-        pattern = `<rect x="${size / 2 - 4}" y="0" width="8" height="${size}" fill="${patternColor}" />
-                    <rect x="0" y="${size / 2 - 4}" width="${size}" height="8" fill="${patternColor}" />`;
-        break;
-
-        case 'minus':
-        pattern = `<rect x="0" y="${size / 2 - 4}" width="${size}" height="8" fill="${patternColor}" />`;
-        break;
-
-        case 'multiply':
-        pattern = `<line x1="0" y1="0" x2="${size}" y2="${size}" stroke="${patternColor}" stroke-width="4" />
-                    <line x1="0" y1="${size}" x2="${size}" y2="0" stroke="${patternColor}" stroke-width="4" />`;
-        break;
-
-        case 'rhombus':
-        pattern = `<polygon points="${size / 2},0 ${size},${size / 2} ${size / 2},${size} 0,${size / 2}" fill="${patternColor}" />`;
-        break;
-
-        case 'mandala':
-        pattern = `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 4}" stroke="${patternColor}" stroke-width="2" fill="none" />
-                    <circle cx="${size / 2}" cy="${size / 2}" r="${size / 6}" stroke="${patternColor}" stroke-width="2" fill="none" />
-                    <circle cx="${size / 2}" cy="${size / 2}" r="${size / 8}" stroke="${patternColor}" stroke-width="2" fill="none" />`;
-        break;
-
-        case 'parquet':
-        pattern = `<rect x="0" y="0" width="${size / 2}" height="${size / 2}" fill="${patternColor}" />
-                    <rect x="${size / 2}" y="${size / 2}" width="${size / 2}" height="${size / 2}" fill="${patternColor}" />`;
-        break;
-
-        case 'layers':
-        pattern = `<path d="M0,${size / 2} L${size},${size / 2}" stroke="${patternColor}" stroke-width="4" />
-                    <path d="M0,${size / 4} L${size},${size / 4}" stroke="${patternColor}" stroke-width="4" />
-                    <path d="M0,${(3 * size) / 4} L${size},${(3 * size) / 4}" stroke="${patternColor}" stroke-width="4" />`;
-        break;
-
-        case 'cloudLine':
-        pattern = `<path d="M${size / 4},${size / 2} C${size / 8},${size / 4} ${3 * size / 4},${size / 4} ${size / 2},${size}" stroke="${patternColor}" stroke-width="4" fill="none" />`;
-        break;
-
-        case 'cloudSolid':
-        pattern = `<path d="M${size / 4},${size / 2} C${size / 8},${size / 4} ${3 * size / 4},${size / 4} ${size / 2},${size}" fill="${patternColor}" />`;
-        break;
-
-        case 'flashSolid':
-        pattern = `<polygon points="0,${size / 2} ${size / 2},${size / 4} ${size / 4},${size} ${size},${size / 2}" fill="${patternColor}" />`;
-        break;
-
-        case 'flashLine':
-        pattern = `<polygon points="0,${size / 2} ${size / 2},${size / 4} ${size / 4},${size} ${size},${size / 2}" stroke="${patternColor}" stroke-width="4" fill="none" />`;
-        break;
-
-        case 'gearSolid':
-        pattern = `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 4}" fill="${patternColor}" />
-                    <rect x="${size / 4}" y="0" width="${size / 2}" height="${size}" fill="${patternColor}" />
-                    <rect x="0" y="${size / 4}" width="${size}" height="${size / 2}" fill="${patternColor}" />`;
-        break;
-
-        case 'gearLine':
-        pattern = `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 4}" stroke="${patternColor}" stroke-width="4" fill="none" />
-                    <rect x="${size / 4}" y="0" width="${size / 2}" height="${size}" stroke="${patternColor}" stroke-width="4" fill="none" />
-                    <rect x="0" y="${size / 4}" width="${size}" height="${size / 2}" stroke="${patternColor}" stroke-width="4" fill="none" />`;
-        break;
-
-        case 'paperPlaneSolid':
-        pattern = `<polygon points="0,${size} ${size / 2},0 ${size},${size / 2} ${size / 2},${size / 4}" fill="${patternColor}" />`;
-        break;
-
-        case 'paperPlaneLine':
-        pattern = `<polygon points="0,${size} ${size / 2},0 ${size},${size / 2} ${size / 2},${size / 4}" stroke="${patternColor}" stroke-width="4" fill="none" />`;
-        break;
-
-        case 'chatSolid':
-        pattern = `<rect x="0" y="0" width="${size}" height="${size / 2}" fill="${patternColor}" />
-                    <polygon points="${size / 4},${size / 2} ${size / 2},${size / 2} ${size / 4},${size}" fill="${patternColor}" />`;
-        break;
-
-        case 'chatLine':
-        pattern = `<rect x="0" y="0" width="${size}" height="${size / 2}" stroke="${patternColor}" stroke-width="4" fill="none" />
-                    <polygon points="${size / 4},${size / 2} ${size / 2},${size / 2} ${size / 4},${size}" stroke="${patternColor}" stroke-width="4" fill="none" />`;
-        break;
-
-    
-        
-    }
+    pattern = generatePath(patternType);
 
     const { width, height } = exportSize === 'custom' 
       ? { width: customWidth, height: customHeight }
       : exportSizes[exportSize];
 
     const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"
+        style="background-color: ${backgroundColor}">
         <defs>
-          <pattern id="pattern" x="0" y="0" width="${svgSize}" height="${svgSize}" patternUnits="userSpaceOnUse">
-            <rect x="0" y="0" width="${svgSize}" height="${svgSize}" fill="${backgroundColor}" />
-            <g transform="rotate(${rotation}, ${svgSize / 2}, ${svgSize / 2})" opacity="${opacity / 100}">
+          <pattern id="pattern" x="0" y="0" width="${svgSize}" height="${svgSize}" 
+            patternUnits="userSpaceOnUse">
+            <g transform="rotate(${rotation}, ${svgSize/2}, ${svgSize/2})" 
+              opacity="${opacity/100}">
               ${pattern}
             </g>
           </pattern>
@@ -277,7 +225,8 @@ export default function SvgPatternGenerator() {
     `;
 
     setSvgCode(svg);
-  }, [patternType, patternColor, backgroundColor, size, spacing, rotation, opacity, exportSize, customWidth, customHeight]);
+  }, [patternType, patternColor, secondaryColor, backgroundColor, size, spacing,
+    rotation, opacity, complexity, strokeWidth, exportSize, customWidth, customHeight, customImage]);
 
   useEffect(() => {
     generatePattern();
@@ -285,29 +234,78 @@ export default function SvgPatternGenerator() {
 
   const handleRandomize = () => {
     const randomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-    const patternTypes: PatternType[] = ['circles', 'squares', 'triangles', 'hexagons', 'zigzag', 'polkaDots', 'stripes', 'chevron'];
+    const patternTypes: PatternType[] = ['circles', 'squares', 'triangles', 'hexagons', 'zigzag', 'polkaDots', 'stripes', 'chevron', 'modernCircles', 'concentricCircles', 'nestedSquares', 'triangleGrid', 'waves', 'dots3D', 'crosshatch', 'spiral', 'flowerOfLife'];
     
     setPatternType(patternTypes[Math.floor(Math.random() * patternTypes.length)]);
     setPatternColor(randomColor());
+    setSecondaryColor(randomColor());
     setBackgroundColor(randomColor());
     setSize(Math.floor(Math.random() * 40) + 10);
     setSpacing(Math.floor(Math.random() * 20));
     setRotation(Math.floor(Math.random() * 360));
     setOpacity(Math.floor(Math.random() * 100) + 1);
+    setComplexity(Math.floor(Math.random() * 100) + 1);
+    setStrokeWidth(Math.floor(Math.random() * 5) + 1);
   };
 
-  const handleDownload = () => {
-    const blob = new Blob([svgCode], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `pattern_${exportSize}.svg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    toast.success('SVG pattern downloaded successfully!');
+  const handleDownload = async () => {
+    const { width, height } = exportSize === 'custom' 
+      ? { width: customWidth, height: customHeight }
+      : exportSizes[exportSize];
+  
+    if (exportFormat === 'svg') {
+      const blob = new Blob([svgCode], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `pattern_${width}x${height}.svg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success('SVG pattern downloaded successfully!');
+    } else {
+      const svg = new Blob([svgCode], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(svg);
+      const img = new window.Image();  // Use the native Image constructor
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          toast.error('Unable to create canvas context');
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            toast.error('Unable to create PNG');
+            return;
+          }
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `pattern_${width}x${height}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+          toast.success('PNG pattern downloaded successfully!');
+        }, 'image/png');
+      };
+      
+      img.onerror = () => {
+        toast.error('Error loading SVG for PNG conversion');
+      };
+      
+      img.src = url;
+    }
   };
+  
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(svgCode).then(() => {
@@ -317,270 +315,459 @@ export default function SvgPatternGenerator() {
     });
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size should be less than 5MB');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setCustomImage(e.target?.result as string);
+        setPatternType('customImage');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
+  const renderCodePreview = () => (
+    <div className="bg-white rounded-lg overflow-hidden" style={{ height: '300px', width: '98.5%'}}>
+      <div dangerouslySetInnerHTML={{ __html: svgCode }} style={{ width: '100%', height: '100%' }} />
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">SVG Pattern Generator</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+         <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                Enhanced SVG Pattern Generator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                Unlock your creativity by crafting intricate vector patterns that elevate your designs, all while enjoying seamless customization and instant feedback.
+            </p>
+         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Pattern Settings</h2>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="pattern-type" className="text-white mb-2 block">Pattern Type</Label>
-                  <Select value={patternType} onValueChange={(value: PatternType) => setPatternType(value)}>
-                    <SelectTrigger id="pattern-type" className="bg-gray-700 text-white border-gray-600 ">
-                      <SelectValue placeholder="Select pattern type" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600 max-h-60 overflow-y-auto">
-                      <SelectItem value="circles">Circles</SelectItem>
-                      <SelectItem value="squares">Squares</SelectItem>
-                      <SelectItem value="triangles">Triangles</SelectItem>
-                      <SelectItem value="hexagons">Hexagons</SelectItem>
-                      <SelectItem value="zigzag">Zigzag</SelectItem>
-                      <SelectItem value="polkaDots">Polka Dots</SelectItem>
-                      <SelectItem value="stripes">Stripes</SelectItem>
-                      <SelectItem value="chevron">Chevron</SelectItem>
-                      <SelectItem value="drop">Drop</SelectItem>
-                        <SelectItem value="dots">Dots</SelectItem>
-                        <SelectItem value="fungi">Fungi</SelectItem>
-                        <SelectItem value="leaf">Leaf</SelectItem>
-                        <SelectItem value="flower">Flower</SelectItem>
-                        <SelectItem value="ring">Ring</SelectItem>
-                        <SelectItem value="donut">Donut</SelectItem>
-                        <SelectItem value="signal">Signal</SelectItem>
-                        <SelectItem value="nestedTriangle">Nested Triangle</SelectItem>
-                        <SelectItem value="plus">Plus</SelectItem>
-                        <SelectItem value="minus">Minus</SelectItem>
-                        <SelectItem value="multiply">Multiply</SelectItem>
-                        <SelectItem value="rhombus">Rhombus</SelectItem>
-                        <SelectItem value="mandala">Mandala</SelectItem>
-                        <SelectItem value="parquet">Parquet</SelectItem>
-                        <SelectItem value="layers">Layers</SelectItem>
-                        <SelectItem value="cloudLine">Cloud Line</SelectItem>
-                        <SelectItem value="cloudSolid">Cloud Solid</SelectItem>
-                        <SelectItem value="flashSolid">Flash Solid</SelectItem>
-                        <SelectItem value="flashLine">Flash Line</SelectItem>
-                        <SelectItem value="gearSolid">Gear Solid</SelectItem>
-                        <SelectItem value="gearLine">Gear Line</SelectItem>
-                        <SelectItem value="paperPlaneSolid">Paper Plane Solid</SelectItem>
-                        <SelectItem value="paperPlaneLine">Paper Plane Line</SelectItem>
-                        <SelectItem value="chatSolid">Chat Solid</SelectItem>
-                        <SelectItem value="chatLine">Chat Line</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label htmlFor="pattern-color" className="text-white mb-2 block">Pattern Color</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="pattern-color"
-                      type="color"
-                      value={patternColor}
-                      onChange={(e) => setPatternColor(e.target.value)}
-                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
-                    />
-                    <Input
-                      type="text"
-                      value={patternColor}
-                      onChange={(e) => setPatternColor(e.target.value)}
-                      className="flex-grow bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="background-color" className="text-white mb-2 block">Background Color</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="background-color"
-                      type="color"
-                      value={backgroundColor}
-                      onChange={(e) => setBackgroundColor(e.target.value)}
-                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
-                    />
-                    <Input
-                      type="text"
-                      value={backgroundColor}
-                      onChange={(e) => setBackgroundColor(e.target.value)}
-                      className="flex-grow bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="size-slider" className="text-white mb-2 block">Size: {size}px</Label>
-                  <Slider
-                    id="size-slider"
-                    min={5}
-                    max={100}
-                    step={1}
-                    value={size}
-                    onChange={(value) => setSize(value)}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="spacing-slider" className="text-white mb-2 block">Spacing: {spacing}px</Label>
-                  <Slider
-                    id="spacing-slider"
-                    min={0}
-                    max={50}
-                    step={1}
-                    value={spacing}
-                    onChange={(value) => setSpacing(value)}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="rotation-slider" className="text-white mb-2 block">Rotation: {rotation}°</Label>
-                  <Slider
-                    id="rotation-slider"
-                    min={0}
-                    max={360}
-                    step={1}
-                    value={rotation}
-                    onChange={(value) => setRotation(value)}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="opacity-slider" className="text-white mb-2 block">Opacity: {opacity}%</Label>
-                  <Slider
-                    id="opacity-slider"
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={opacity}
-                    onChange={(value) => setOpacity(value)}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="export-size" className="text-white mb-2 block">Export Size</Label>
-                  <Select value={exportSize} onValueChange={(value: ExportSize) => setExportSize(value)}>
-                    <SelectTrigger id="export-size" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select export size" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="facebookCover">Facebook Cover</SelectItem>
-                      <SelectItem value="youtubeCover">YouTube Cover</SelectItem>
-                      <SelectItem value="youtubeThumbnail">YouTube Thumbnail</SelectItem>
-                      <SelectItem value="ogImage">OG Image</SelectItem>
-                      <SelectItem value="instagramSquare">Instagram Square</SelectItem>
-                      <SelectItem value="instagramLandscape">Instagram Landscape</SelectItem>
-                      <SelectItem value="instagramPortrait">Instagram Portrait</SelectItem>
-                      <SelectItem value="instagramStory">Instagram Story</SelectItem>
-                      <SelectItem value="custom">Custom Size</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {exportSize === 'custom' && (
-                  <div className="flex space-x-2">
-                    <div>
-                      <Label htmlFor="custom-width" className="text-white mb-2 block">Width (px)</Label>
-                      <Input
-                        id="custom-width"
-                        type="number"
-                        value={customWidth}
-                        onChange={(e) => setCustomWidth(Number(e.target.value))}
-                        className="bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="custom-height" className="text-white mb-2 block">Height (px)</Label>
-                      <Input
-                        id="custom-height"
-                        type="number"
-                        value={customHeight}
-                        onChange={(e) => setCustomHeight(Number(e.target.value))}
-                        className="bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <div className="mb-8">
               <h2 className="text-2xl font-bold text-white mb-4">Pattern Preview</h2>
-              <div className="bg-white rounded-lg overflow-hidden" style={{ height: '300px' }}>
-                <div dangerouslySetInnerHTML={{ __html: svgCode }} style={{ width: '100%', height: '100%' }} />
-              </div>
+              {renderCodePreview()}
               <div className="mt-4 flex flex-wrap justify-center gap-4">
                 <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
                   <Download className="h-5 w-5 mr-2" />
-                  Download SVG
+                  Download {exportFormat.toUpperCase()}
                 </Button>
-                <Button onClick={handleCopyToClipboard} className="bg-green-600 hover:bg-green-700 text-white">
+                <Button onClick={handleCopyToClipboard} className="bg-blue-600 hover:bg-blue-700 text-white">
                   <Copy className="h-5 w-5 mr-2" />
                   Copy SVG Code
                 </Button>
-                <Button onClick={handleRandomize} className="bg-purple-600 hover:bg-purple-700 text-white">
+                <Button onClick={handleRandomize} className="bg-blue-600 hover:bg-blue-700 text-white">
                   <RefreshCw className="h-5 w-5 mr-2" />
                   Randomize
                 </Button>
+                <Button onClick={toggleFullscreen} className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Maximize2 className="h-5 w-5 mr-2" />
+                  Full Screen Preview
+                </Button>
               </div>
             </div>
+
+            <Tabs defaultValue="basic" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 gap-2 mb-4">
+                <TabsTrigger value="basic" className="flex items-center justify-center">
+                  <Settings className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Basic</span>
+                </TabsTrigger>
+                <TabsTrigger value="advanced" className="flex items-center justify-center">
+                  <Sliders className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Advanced</span>
+                </TabsTrigger>
+                <TabsTrigger value="colors" className="flex items-center justify-center">
+                  <Palette className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Colors</span>
+                </TabsTrigger>
+                <TabsTrigger value="export" className="flex items-center justify-center">
+                  <Image className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Export</span>
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="basic">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="pattern-type" className="text-white mb-2 block">Pattern Type</Label>
+                    <Select value={patternType} onValueChange={(value: PatternType) => setPatternType(value)}>
+                      <SelectTrigger id="pattern-type" className="bg-gray-700 text-white border-gray-600">
+                        <SelectValue placeholder="Select pattern type" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 text-white border-gray-600 max-h-60 overflow-y-auto">
+                        <SelectItem value="circles">Circles</SelectItem>
+                        <SelectItem value="squares">Squares</SelectItem>
+                        <SelectItem value="triangles">Triangles</SelectItem>
+                        <SelectItem value="hexagons">Hexagons</SelectItem>
+                        <SelectItem value="zigzag">Zigzag</SelectItem>
+                        <SelectItem value="polkaDots">Polka Dots</SelectItem>
+                        <SelectItem value="stripes">Stripes</SelectItem>
+                        <SelectItem value="chevron">Chevron</SelectItem>
+                        <SelectItem value="modernCircles">Modern Circles</SelectItem>
+                        <SelectItem value="concentricCircles">Concentric Circles</SelectItem>
+                        <SelectItem value="nestedSquares">Nested Squares</SelectItem>
+                        <SelectItem value="triangleGrid">Triangle Grid</SelectItem>
+                        <SelectItem value="waves">Waves</SelectItem>
+                        <SelectItem value="dots3D">3D Dots</SelectItem>
+                        <SelectItem value="crosshatch">Crosshatch</SelectItem>
+                        <SelectItem value="spiral">Spiral</SelectItem>
+                        <SelectItem value="flowerOfLife">Flower of Life</SelectItem>
+                        <SelectItem value="customImage">Custom Image</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="size-slider" className="text-white mb-2 block">Size: {size}px</Label>
+                    <Slider
+                      id="size-slider"
+                      min={5}
+                      max={100}
+                      step={1}
+                      value={size}
+                      onChange={(value) => setSize(value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="spacing-slider" className="text-white mb-2 block">Spacing: {spacing}px</Label>
+                    <Slider
+                      id="spacing-slider"
+                      min={0}
+                      max={50}
+                      step={1}
+                      value={spacing}
+                      onChange={(value) => setSpacing(value)}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="advanced">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="rotation-slider" className="text-white mb-2 block">Rotation: {rotation}°</Label>
+                    <Slider
+                      id="rotation-slider"
+                      min={0}
+                      max={360}
+                      step={1}
+                      value={rotation}
+                      onChange={(value) => setRotation(value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="opacity-slider" className="text-white mb-2 block">Opacity: {opacity}%</Label>
+                    <Slider
+                      id="opacity-slider"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={opacity}
+                      onChange={(value) => setOpacity(value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="complexity-slider" className="text-white mb-2 block">Complexity: {complexity}%</Label>
+                    <Slider
+                      id="complexity-slider"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={complexity}
+                      onChange={(value) => setComplexity(value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="stroke-width-slider" className="text-white mb-2 block">Stroke Width: {strokeWidth}px</Label>
+                    <Slider
+                      id="stroke-width-slider"
+                      min={1}
+                      max={10}
+                      step={0.5}
+                      value={strokeWidth}
+                      onChange={(value) => setStrokeWidth(value)}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="colors">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="pattern-color" className="text-white mb-2 block">Pattern Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        id="pattern-color"
+                        type="color"
+                        value={patternColor}
+                        onChange={(e) => setPatternColor(e.target.value)}
+                        className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                      />
+                      <Input
+                        type="text"
+                        value={patternColor}
+                        onChange={(e) => setPatternColor(e.target.value)}
+                        className="flex-grow bg-gray-700 text-white border-gray-600"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="secondary-color" className="text-white mb-2 block">Secondary Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        id="secondary-color"
+                        type="color"
+                        value={secondaryColor}
+                        onChange={(e) => setSecondaryColor(e.target.value)}
+                        className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                      />
+                      <Input
+                        type="text"
+                        value={secondaryColor}
+                        onChange={(e) => setSecondaryColor(e.target.value)}
+                        className="flex-grow bg-gray-700 text-white border-gray-600"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="background-color" className="text-white mb-2 block">Background Color</Label>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        id="background-color"
+                        type="color"
+                        value={backgroundColor}
+                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                      />
+                      <Input
+                        type="text"
+                        value={backgroundColor}
+                        onChange={(e) => setBackgroundColor(e.target.value)}
+                        className="flex-grow bg-gray-700 text-white border-gray-600"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="export">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="export-size" className="text-white mb-2 block">Export Size</Label>
+                    <Select value={exportSize} onValueChange={(value: ExportSize) => setExportSize(value)}>
+                      <SelectTrigger id="export-size" className="bg-gray-700 text-white border-gray-600">
+                        <SelectValue placeholder="Select export size" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 text-white border-gray-600">
+                        <SelectItem value="facebookCover">Facebook Cover</SelectItem>
+                        <SelectItem value="youtubeCover">YouTube Cover</SelectItem>
+                        <SelectItem value="youtubeThumbnail">YouTube Thumbnail</SelectItem>
+                        <SelectItem value="ogImage">OG Image</SelectItem>
+                        <SelectItem value="instagramSquare">Instagram Square</SelectItem>
+                        <SelectItem value="instagramLandscape">Instagram Landscape</SelectItem>
+                        <SelectItem value="instagramPortrait">Instagram Portrait</SelectItem>
+                        <SelectItem value="instagramStory">Instagram Story</SelectItem>
+                        <SelectItem value="custom">Custom Size</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {exportSize === 'custom' && (
+                    <div className="flex space-x-2">
+                      <div>
+                        <Label htmlFor="custom-width" className="text-white mb-2 block">Width (px)</Label>
+                        <Input
+                          id="custom-width"
+                          type="number"
+                          value={customWidth}
+                          onChange={(e) => setCustomWidth(Number(e.target.value))}
+                          className="bg-gray-700 text-white border-gray-600"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="custom-height" className="text-white mb-2 block">Height (px)</Label>
+                        <Input
+                          id="custom-height"
+                          type="number"
+                          value={customHeight}
+                          onChange={(e) => setCustomHeight(Number(e.target.value))}
+                          className="bg-gray-700 text-white border-gray-600"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <Label htmlFor="export-format" className="text-white mb-2 block">Export Format</Label>
+                    <Select value={exportFormat} onValueChange={(value: ExportFormat) => setExportFormat(value)}>
+                      <SelectTrigger id="export-format" className="bg-gray-700 text-white border-gray-600">
+                        <SelectValue placeholder="Select export format" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 text-white border-gray-600">
+                        <SelectItem value="svg">SVG</SelectItem>
+                        <SelectItem value="png">PNG</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {patternType === 'customImage' && (
+                    <div>
+                      <Label htmlFor="image-upload" className="text-white mb-2 block">Upload Image (Max 5MB)</Label>
+                      <Input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        ref={fileInputRef}
+                        className="bg-gray-700 text-white border-gray-600"
+                      />
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
-        </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">About SVG Pattern Generator</h2>
-            <p className="text-white">
-              The SVG Pattern Generator tool allows you to create fully customizable patterns for use in web design, branding, and creative projects. Choose from various pattern types, adjust colors, and fine-tune attributes like size, spacing, and opacity to create unique, scalable vector patterns. With real-time previews and easy export options, this tool is perfect for designers looking to add unique pattern elements to their work.
+          {/* Fullscreen Preview Popup */}
+          {isFullscreen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+              <div className="relative w-full max-w-4xl">
+                <Button
+                  onClick={toggleFullscreen}
+                  className="absolute top-4 right-4 bg-gray-700 hover:bg-gray-600"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+                {renderCodePreview()}
+              </div>
+            </div>
+          )}
+              
+
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              What is the SVG Pattern Generator?
+            </h2>
+            <p className="text-gray-300 mb-4">
+              The SVG Pattern Generator is a versatile and powerful tool designed for creating customizable vector patterns and textures. It enables designers, developers, and creative professionals to generate unique, scalable patterns for various applications such as web design, print materials, and digital art. With a wide range of pattern types and customization options, this tool offers endless possibilities for creating visually appealing and functional designs.
             </p>
-          </section>
 
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">Features of SVG Pattern Generator</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
-              <li>Select from different pattern types.</li>
-              <li>Customize pattern color and background color.</li>
-              <li>Modify size, spacing, rotation, and opacity with sliders.</li>
-              <li>Real-time pattern preview as you make changes.</li>
-              <li>Export in SVG format or copy the SVG code for web use.</li>
-              <li>Option to randomize pattern settings for unique designs.</li>
-              <li>Supports preset and custom export sizes for various projects.</li>
-            </ul>
-          </section>
-
-          <section className="mb-6">
-            <h2 className="text-2xl font-semibold text-white mb-2">How to Use SVG Pattern Generator</h2>
-            <ol className="list-decimal list-inside text-white space-y-2">
-              <li>Choose a pattern type from the dropdown menu.</li>
-              <li>Adjust the pattern color and background color using the color pickers.</li>
-              <li>Use the sliders to modify the size, spacing, rotation, and opacity of the pattern elements.</li>
-              <li>Select an export size from the dropdown or choose "Custom Size" to enter specific dimensions.</li>
-              <li>Preview the pattern in real-time as you make changes.</li>
-              <li>Click "Download SVG" to save the pattern as an SVG file.</li>
-              <li>Use "Copy SVG Code" to copy the SVG code to your clipboard for use in web projects.</li>
-              <li>Click "Randomize" to generate a completely random pattern.</li>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use the SVG Pattern Generator?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Select a pattern type from the dropdown menu or upload a custom image.</li>
+              <li>Adjust the pattern colors using the color pickers (primary, secondary, and background).</li>
+              <li>Use the sliders to fine-tune size, spacing, rotation, opacity, complexity, and stroke width.</li>
+              <li>Choose an export size from presets or enter custom dimensions.</li>
+              <li>Select SVG or PNG as your export format.</li>
+              <li>Preview your pattern in real-time as you make adjustments.</li>
+              <li>Use the "Full Screen Preview" for a detailed view of your pattern.</li>
+              <li>Click "Download" to save your pattern or "Copy SVG Code" to use it directly in web projects.</li>
+              <li>Experiment with the "Randomize" button to generate new pattern ideas quickly.</li>
             </ol>
-          </section>
 
-          <section>
-            <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
-              <li>Experiment with different pattern types and color combinations to create unique designs.</li>
-              <li>Adjust the spacing and size to create dense or sparse patterns.</li>
-              <li>Try different rotation angles to add variety to your patterns.</li>
-              <li>Use lower opacity values to create subtle, watermark-like patterns.</li>
-              <li>Utilize the various export sizes for different social media platforms and use cases.</li>
-              <li>For web backgrounds, consider using larger sizes and repeating patterns.</li>
-              <li>Combine multiple patterns by layering SVGs in your design software for more complex designs.</li>
-              <li>Use the custom size option for specific project requirements or to create seamless tiles.</li>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Palette className="w-6 h-6 mr-2" />
+              Available Pattern Types
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Basic Shapes: Circles, Squares, Triangles, Hexagons</li>
+              <li>Linear Patterns: Stripes, Zigzag, Chevron</li>
+              <li>Dot Patterns: Polka Dots, 3D Dots</li>
+              <li>Complex Shapes: Modern Circles, Concentric Circles, Nested Squares, Triangle Grid</li>
+              <li>Organic Patterns: Waves, Crosshatch</li>
+              <li>Advanced Designs: Spiral, Flower of Life</li>
+              <li>Custom Image: Upload your own image to create a unique pattern</li>
             </ul>
-          </section>
-        </div>
 
-      </main>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Real-time pattern preview with adjustable parameters</li>
+              <li>Full-screen preview option for detailed inspection</li>
+              <li>Customizable colors for primary pattern, secondary elements, and background</li>
+              <li>Adjustable size, spacing, rotation, opacity, complexity, and stroke width</li>
+              <li>Export as SVG or PNG in various preset sizes or custom dimensions</li>
+              <li>One-click randomize function for quick pattern generation</li>
+              <li>Copy SVG code directly to clipboard for easy integration into web projects</li>
+              <li>Custom image upload feature (max 5MB) for personalized patterns</li>
+              <li>Mobile-responsive design for on-the-go pattern creation</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Download className="w-6 h-6 mr-2" />
+              Export Options
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>SVG: Scalable Vector Graphics format for high-quality, resolution-independent graphics</li>
+              <li>PNG: Raster image format for use in various applications and platforms</li>
+              <li>Preset Sizes: Facebook Cover, YouTube Cover, YouTube Thumbnail, OG Image, Instagram Square, Instagram Landscape, Instagram Portrait, Instagram Story</li>
+              <li>Custom Size: Specify your own width and height for the exported pattern</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Copy className="w-6 h-6 mr-2" />
+              Integration Options
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Copy SVG Code: Easily integrate the generated pattern into your web projects</li>
+              <li>Download Files: Save the pattern as an SVG or PNG file for use in design software or other applications</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Maximize2 className="w-6 h-6 mr-2" />
+              Preview and Visualization
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Real-time Preview: See your pattern update instantly as you adjust parameters</li>
+              <li>Full-screen Preview: Examine your pattern in detail with an expanded view</li>
+              <li>Responsive Design: Preview how your pattern looks on different screen sizes</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Upload className="w-6 h-6 mr-2" />
+              Custom Image Upload
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Upload your own images (up to 5MB) to create unique, personalized patterns</li>
+              <li>Combine custom images with built-in pattern types for creative designs</li>
+              <li>Ideal for creating branded patterns or textures based on your own artwork</li>
+            </ul>
+          </div>
+        </main>
+       </div> 
       <Footer />
     </div>
   );

@@ -8,10 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
-import { Download, Copy, RefreshCw } from 'lucide-react'
+import { Download, Copy, RefreshCw, Info, Lightbulb, BookOpen } from 'lucide-react'
 import JsBarcode from 'jsbarcode'
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import Sidebar from '@/components/sidebarTools';
 
 const barcodeTypes = [
   'CODE128', 'EAN13', 'EAN8', 'UPC', 'CODE39',
@@ -73,8 +74,20 @@ export default function BarCodeGenerator() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
       <Toaster position="top-right" />
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
       <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Bar Code Generator</h1>
+         <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Advanced Barcode Generator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Create Customized Barcode for various purposes.
+            </p>
+          </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -198,24 +211,35 @@ export default function BarCodeGenerator() {
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">About Bar Code Generator</h2>
+        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            About Bar Code Generator
+          </h2>
           <p className="text-gray-300 mb-4">
             Our Bar Code Generator is a powerful tool designed to create customizable barcodes for various purposes. Whether you need barcodes for inventory management, product labeling, or any other application, this generator offers a wide range of options to create barcodes that meet your specific requirements.
           </p>
-          <h3 className="text-xl font-bold text-white mt-4 mb-2">Key Features:</h3>
-          <ul className="list-disc list-inside text-gray-300 mb-4">
-            <li>🔢 <strong>Multiple Barcode Types:</strong> Support for various barcode formats including CODE128, EAN13, UPC, CODE39, and more.</li>
-            <li>🎨 <strong>Customizable Appearance:</strong> Adjust width, height, colors, and font size to match your needs.</li>
-            <li>📏 <strong>Flexible Sizing:</strong> Create barcodes of different sizes to fit various applications.</li>
-            <li>🖼️ <strong>Background Color:</strong> Customize the background color to match your design requirements.</li>
-            <li>✍️ <strong>Text Display Options:</strong> Choose whether to display the barcode text or hide it.</li>
-            <li>💾 <strong>Easy Download:</strong> Download your generated barcode as a PNG image.</li>
-            <li>📋 <strong>Copy SVG:</strong> Copy the barcode as SVG for easy integration into digital designs.</li>
-            <li>🔄 <strong>Instant Regeneration:</strong> Quickly regenerate barcodes with new settings.</li>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Key Features
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>🔢 Multiple Barcode Types: Support for various barcode formats including CODE128, EAN13, UPC, CODE39, and more.</li>
+            <li>🎨 Customizable Appearance: Adjust width, height, colors, and font size to match your needs.</li>
+            <li>📏 Flexible Sizing: Create barcodes of different sizes to fit various applications.</li>
+            <li>🖼️ Background Color: Customize the background color to match your design requirements.</li>
+            <li>✍️ Text Display Options: Choose whether to display the barcode text or hide it.</li>
+            <li>💾 Easy Download: Download your generated barcode as a PNG image.</li>
+            <li>📋 Copy SVG: Copy the barcode as SVG for easy integration into digital designs.</li>
+            <li>🔄 Instant Regeneration: Quickly regenerate barcodes with new settings.</li>
           </ul>
-          <h3 className="text-xl font-bold text-white mb-2">How to Use:</h3>
-          <ol className="list-decimal list-inside text-gray-300 mb-4 space-y-2">
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <BookOpen className="w-6 h-6 mr-2" />
+            How to Use
+          </h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
             <li>Enter the data you want to encode in the "Barcode Data" field.</li>
             <li>Select the appropriate barcode type from the dropdown menu.</li>
             <li>Adjust the width, height, and font size using the sliders.</li>
@@ -226,8 +250,12 @@ export default function BarCodeGenerator() {
             <li>Use the "Copy SVG" button to copy the barcode as an SVG for digital use.</li>
             <li>Click "Regenerate" if you want to refresh the barcode with the same settings.</li>
           </ol>
-          <h3 className="text-xl font-bold text-white mb-2">Tips and Tricks:</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Tips & Tricks
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
             <li>Ensure your barcode data matches the format required by the selected barcode type.</li>
             <li>For retail applications, consider using EAN13 or UPC formats which are widely recognized.</li>
             <li>Adjust the width and height to ensure the barcode is easily scannable in your intended application.</li>
@@ -238,7 +266,10 @@ export default function BarCodeGenerator() {
             <li>Regularly update your barcode data to reflect changes in your inventory or product information.</li>
           </ul>
         </div>
+      
+
       </main>
+      </div>
       <Footer />
     </div>
   )

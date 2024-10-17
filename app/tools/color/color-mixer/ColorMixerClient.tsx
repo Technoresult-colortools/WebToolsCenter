@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Copy, Shuffle, Info, BookOpen, Lightbulb, AlertCircle, Star, RotateCcwIcon } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Input from "@/components/ui/Input";
-import {Button} from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import Slider from "@/components/ui/Slider";
-import { Copy, Shuffle } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Sidebar from '@/components/sidebarTools';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function mixColors(color1: string, color2: string, weight: number = 0.5) {
   const w1 = weight;
@@ -69,189 +72,294 @@ function hexToHsl(hex: string) {
   return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
 }
 
+function hexToCmyk(hex: string) {
+  let r = parseInt(hex.slice(1, 3), 16) / 255;
+  let g = parseInt(hex.slice(3, 5), 16) / 255;
+  let b = parseInt(hex.slice(5, 7), 16) / 255;
+
+  let k = 1 - Math.max(r, g, b);
+  let c = (1 - r - k) / (1 - k);
+  let m = (1 - g - k) / (1 - k);
+  let y = (1 - b - k) / (1 - k);
+
+  return `cmyk(${Math.round(c * 100)}%, ${Math.round(m * 100)}%, ${Math.round(y * 100)}%, ${Math.round(k * 100)}%)`;
+}
+
 export default function ColorMixer() {
-  const [color1, setColor1] = useState("#c04d4d");
-  const [color2, setColor2] = useState("#54bb92");
+  const [color1, setColor1] = useState("#4285F4");
+  const [color2, setColor2] = useState("#34A853");
   const [steps, setSteps] = useState(5);
   const [mixedColors, setMixedColors] = useState<string[]>([]);
+  const [error, setError] = useState<string>('');
+  const [blendMode, setBlendMode] = useState<'linear' | 'radial'>('linear');
 
   const handleMixColors = useCallback(() => {
+    setError('');
+    if (!/^#[0-9A-Fa-f]{6}$/.test(color1) || !/^#[0-9A-Fa-f]{6}$/.test(color2)) {
+      setError('Please enter valid hex color codes.');
+      return;
+    }
     setMixedColors(generateShades(color1, color2, steps));
   }, [color1, color2, steps]);
 
   const handleReset = () => {
-    setColor1("#c04d4d");
-    setColor2("#54bb92");
+    setColor1("#4285F4");
+    setColor2("#34A853");
     setSteps(5);
     setMixedColors([]);
+    setError('');
   };
-
 
   const handleCopyColor = (color: string) => {
     navigator.clipboard.writeText(color);
-    toast.success(`Copied ${color} to clipboard`);
+    toast.success(`Copied ${color} to clipboard`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const handleRandomColors = () => {
-    setColor1(`#${Math.floor(Math.random()*16777215).toString(16)}`);
-    setColor2(`#${Math.floor(Math.random()*16777215).toString(16)}`);
+    setColor1(`#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`);
+    setColor2(`#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`);
+  };
+
+  const handlePopularMix = () => {
+    setColor1("#4285F4"); // Google Blue
+    setColor2("#34A853"); // Google Green
   };
 
   useEffect(() => {
     handleMixColors();
-  }, [handleMixColors]);  
+  }, [handleMixColors]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Color Mixer</h1>
+      <div className='flex-grow flex'>
+        <aside className="bg-gray-800">
+          <Sidebar />
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Advanced Color Mixer
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Mix colors, generate shades, and explore different color formats.
+            </p>
+          </div>
 
-        <div className="bg-gray-800 p-8 rounded-xl shadow-lg max-w-2xl mx-auto">
-          <div className="grid grid-cols gap-6 mb-6">
-          <div className="mb-6">
-              <label htmlFor="color-picker-1" className="block text-lg font-medium text-gray-200 mb-2">
-                Start Color:
-              </label>
-              <div className="flex items-center">
-                <Input
-                  id="color-input-1"
-                  type="text"
-                  value={color1}
-                  onChange={(e) => setColor1(e.target.value)}
-                  className="flex-grow mr-2 bg-gray-700 text-white border-gray-600"
-                />
-                <input
-                  id="color-picker-1"
-                  type="color"
-                  value={color1}
-                  onChange={(e) => setColor1(e.target.value)}
-                  className="w-10 h-10 p-1 rounded"
-                />
+          <div className="bg-gray-800 p-8 rounded-xl shadow-lg max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label htmlFor="color-picker-1" className="block text-lg font-medium text-gray-200 mb-2">
+                  Start Color:
+                </label>
+                <div className="flex items-center">
+                  <Input
+                    id="color-input-1"
+                    type="text"
+                    value={color1}
+                    onChange={(e) => setColor1(e.target.value)}
+                    className="flex-grow mr-2 bg-gray-700 text-white border-gray-600"
+                  />
+                  <input
+                    id="color-picker-1"
+                    type="color"
+                    value={color1}
+                    onChange={(e) => setColor1(e.target.value)}
+                    className="w-10 h-10 p-1 rounded"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="color-picker-2" className="block text-lg font-medium text-gray-200 mb-2">
+                  End Color:
+                </label>
+                <div className="flex items-center">
+                  <Input
+                    id="color-input-2"
+                    type="text"
+                    value={color2}
+                    onChange={(e) => setColor2(e.target.value)}
+                    className="flex-grow mr-2 bg-gray-700 text-white border-gray-600"
+                  />
+                  <input
+                    id="color-picker-2"
+                    type="color"
+                    value={color2}
+                    onChange={(e) => setColor2(e.target.value)}
+                    className="w-10 h-10 p-1 rounded"
+                  />
+                </div>
               </div>
             </div>
 
             <div className="mb-6">
-              <label htmlFor="color-picker-2" className="block text-lg font-medium text-gray-200 mb-2">
-                End Color:
+              <label htmlFor="steps" className="block text-sm font-medium text-gray-300 mb-2">
+                Steps: {steps}
               </label>
-              <div className="flex items-center">
-                <Input
-                  id="color-input-2"
-                  type="text"
-                  value={color2}
-                  onChange={(e) => setColor2(e.target.value)}
-                  className="flex-grow mr-2 bg-gray-700 text-white border-gray-600"
-                />
-                <input
-                  id="color-picker-2"
-                  type="color"
-                  value={color2}
-                  onChange={(e) => setColor2(e.target.value)}
-                  className="w-10 h-10 p-1 rounded"
-                />
+              <Slider
+                id="steps"
+                min={2}
+                max={20}
+                step={1}
+                value={steps}
+                onChange={(value) => setSteps(value)}
+                className="w-full"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Blend Mode:
+              </label>
+              <div className="flex space-x-4">
+                <Button
+                  onClick={() => setBlendMode('linear')}
+                  className={`${blendMode === 'linear' ? 'bg-blue-600' : 'bg-gray-600'} hover:bg-blue-700 text-white`}
+                >
+                  Linear
+                </Button>
+                <Button
+                  onClick={() => setBlendMode('radial')}
+                  className={`${blendMode === 'radial' ? 'bg-blue-600' : 'bg-gray-600'} hover:bg-blue-700 text-white`}
+                >
+                  Radial
+                </Button>
               </div>
             </div>
-          </div>
 
-          <div className="mb-6">
-            <label htmlFor="steps" className="block text-sm font-medium text-gray-300 mb-2">
-              Steps: {steps}
-            </label>
-            <Slider
-              id="steps"
-              min={2}
-              max={10}
-              step={1}
-              value={steps}  // `steps` is a number
-              onChange={(value) => setSteps(value)}  // `value` is passed as a number
-              className="w-full"
-            />
-          </div>
-
-          <div className="flex justify-center space-x-4">
-            <Button onClick={handleReset} className="bg-gray-600 hover:bg-gray-700 text-white">
-              Reset
-            </Button>
-            <Button onClick={handleRandomColors} className="bg-green-600 hover:bg-green-700 text-white">
-              <Shuffle className="h-5 w-5 mr-2" />
-              Random Colors
-            </Button>
-          </div>
-        </div>
-
-        {mixedColors.length > 0 && (
-          <div className="bg-gray-800 shadow-lg rounded-lg p-8 mt-4 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-semibold text-white mb-4">Mixed Colors</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
-              {mixedColors.map((color, index) => (
-                <div key={index} className="bg-gray-700 shadow-md rounded-lg p-4">
-                  <div
-                    className="w-full h-20 rounded-lg mb-2 relative group"
-                    style={{ backgroundColor: color }}
-                  >
-                    <Button
-                      onClick={() => handleCopyColor(color)}
-                      className="absolute top-1 right-1 bg-white/10 hover:bg-white/20 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="space-y-1 text-sm">
-                    <p className="text-white">Hex: {color}</p>
-                    <p className="text-white">RGB: {hexToRgb(color)}</p>
-                    <p className="text-white">HSL: {hexToHsl(color)}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="flex flex-wrap justify-center space-x-4 space-y-2">
+              <Button onClick={handleReset} className="bg-gray-600 hover:bg-gray-700 text-white">
+              <RotateCcwIcon className="h-5 w-5 mr-2" />
+                Reset
+              </Button>
+              <Button onClick={handleRandomColors} className="bg-green-600 hover:bg-green-700 text-white">
+                <Shuffle className="h-5 w-5 mr-2" />
+                Random Colors
+              </Button>
+              <Button onClick={handlePopularMix} className="bg-yellow-600 hover:bg-yellow-700 text-white">
+                <Star className="h-5 w-5 mr-2" />
+                Popular Mix
+              </Button>
+              <Button onClick={handleMixColors} className="bg-blue-600 hover:bg-blue-700 text-white">
+                Mix Colors
+              </Button>
             </div>
-          </div>
-        )}
 
-          <div className="bg-gray-800 shadow-lg rounded-lg p-8 mt-4 max-w-4xl mx-auto">
+            {error && (
+              <Alert className="mt-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+
+          {mixedColors.length > 0 && (
+            <div className="bg-gray-800 shadow-lg rounded-lg p-8 mt-8 max-w-4xl mx-auto">
+              <h2 className="text-2xl font-semibold text-white mb-4">Mixed Colors</h2>
+              <div 
+                className={`w-full h-40 rounded-lg mb-6 ${blendMode === 'linear' ? 'bg-gradient-to-r' : 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))]'}`}
+                style={{
+                  backgroundImage: `${blendMode === 'linear' ? 'linear-gradient' : 'radial-gradient'}(${mixedColors.join(',')})`
+                }}
+              ></div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {mixedColors.map((color, index) => (
+                  <div key={index} className="bg-gray-700 shadow-md rounded-lg p-4">
+                    <div
+                      className="w-full h-20 rounded-lg mb-2 relative group"
+                      style={{ backgroundColor: color }}
+                    >
+                      <Button
+                        onClick={() => handleCopyColor(color)}
+                        className="absolute top-1 right-1 bg-white/10 hover:bg-white/20 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="space-y-1 text-xs">
+                      <p className="text-white">Hex: {color}</p>
+                      <p className="text-white">RGB: {hexToRgb(color)}</p>
+                      <p className="text-white">HSL: {hexToHsl(color)}</p>
+                      <p className="text-white">CMYK: {hexToCmyk(color)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="bg-gray-800 shadow-lg rounded-lg p-8 mt-8 max-w-4xl mx-auto">
             <div className="space-y-6">
               <section>
-                <h2 className="text-2xl font-semibold text-white mb-2">About Color Mixer</h2>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Info className="w-6 h-6 mr-2" />
+                  About Advanced Color Mixer
+                </h2>
                 <p className="text-white">
-                  The Color Mixer is an interactive tool designed for artists, designers, and color enthusiasts to create beautiful color blends. By mixing two different colors, users can generate a palette of intermediate shades that can be used in various design projects, from graphic design to interior decor.
+                  The Advanced Color Mixer is a powerful tool for designers, artists, and color enthusiasts. It allows you to create beautiful color blends, generate custom palettes, and explore different color formats. 
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-semibold text-white mb-2">How to Use Color Mixer?</h2>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <BookOpen className="w-6 h-6 mr-2" />
+                  How to Use Advanced Color Mixer
+                </h2>
                 <ol className="list-decimal list-inside text-white space-y-2">
-                  <li>Select a starting color and an ending color using the color picker or by entering hex values.</li>
-                  <li>Adjust the number of steps to define how many blended colors you want to generate.</li>
-                  <li>Click "Mix Colors" to view the resulting shades.</li>
-                  <li>Copy any of the generated colors to your clipboard for easy use in your projects.</li>
-                  <li>Reset the selections or generate random colors for more mixing options.</li>
+                  <li>Choose your start and end colors using the color pickers or by entering hex values.</li>
+                  <li>Adjust the number of steps to control the granularity of your color blend.</li>
+                  <li>Select between linear and radial blending modes for different effects.</li>
+                  <li>Click "Mix Colors" to generate your custom color palette.</li>
+                  <li>Explore the resulting colors in various formats (HEX, RGB, HSL, CMYK).</li>
+                  <li>Copy any color to your clipboard for easy use in your projects.</li>
+                  <li>Use the "Random Colors" or "Popular Mix" features for inspiration.</li>
                 </ol>
               </section>
 
               <section>
-                <h2 className="text-2xl font-semibold text-white mb-2">Key Features</h2>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Key Features
+                </h2>
                 <ul className="list-disc list-inside text-white space-y-2">
                   <li>Dynamic color mixing with real-time updates.</li>
-                  <li>Easy-to-use interface with color picker and hex input.</li>
-                  <li>Generate shades between two colors based on user-defined steps.</li>
-                  <li>Option to copy colors directly to the clipboard.</li>
-                  <li>Random color generation for creative inspiration.</li>
+                  <li>Linear and radial blending modes for versatile color combinations.</li>
+                  <li>Support for multiple color formats (HEX, RGB, HSL, CMYK).</li>
+                  <li>Adjustable number of steps for precise color control.</li>
+                  <li>Random color generation and popular color mix options.</li>
+                  <li>Easy color copying with toast notifications.</li>
+                  <li>Responsive design for use on various devices.</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Tips and Tricks
+                </h2>
                 <ul className="list-disc list-inside text-white space-y-2">
-                  <li>Experiment with different color combinations to discover unique blends.</li>
-                  <li>Use the color shades in web design or artwork for a cohesive look.</li>
-                  <li>Mix complementary colors for striking contrasts in your designs.</li>
+                  <li>Use complementary colors for striking contrasts in your designs.</li>
+                  <li>Experiment with different step counts to find the perfect gradient.</li>
+                  <li>Try both linear and radial blending for varied effects in your projects.</li>
+                  <li>Use the random color feature to discover unexpected color combinations.</li>
+                  <li>Start with the popular mix and adjust from there for professional-looking results.</li>
                 </ul>
               </section>
             </div>
           </div>
-
-      </main>
+        </main>
+      </div>
       <Footer />
+      <ToastContainer />
     </div>
   );
 }

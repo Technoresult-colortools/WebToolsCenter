@@ -10,12 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider  from "@/components/ui/Slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster,} from 'react-hot-toast'
-import { Download, Camera, User, MoreHorizontal, Bookmark } from 'lucide-react'
+import { Download, Camera, User, MoreHorizontal, Bookmark, Info, BookOpen, Lightbulb } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import HeartIcon from '@/components/ui/HeartIcon'
 import ShareIcon from '@/components/ui/ShareIcon'
 import CommentIcon from '@/components/ui/CommentIcon'
+import Sidebar from '@/components/sidebarTools';
 
 const VerifiedBadge = () => (
   <svg viewBox="0 0 22 22" aria-label="Verified account" role="img" className="w-4 h-4 ml-1 inline-block fill-[#1d9bf0]">
@@ -235,302 +236,326 @@ export default function InstagramPostGenerator() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-6 text-center">Instagram Post Generator</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-8">
+           <div className="mb-12 text-center px-4">
+              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                Instagram Photo Generator
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                Create an engaging and professional-looking Instagram posts.
+              </p>
+            </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Instagram Post Preview</h2>
-          <div className="flex justify-center">
-            <InstagramPost
-              ref={postRef}
-              theme={theme}
-              username={username}
-              isVerified={isVerified}
-              location={location}
-              postTime={postTime}
-              avatarUrl={avatarUrl}
-              postImageUrl={postImageUrl}
-              postText={postText}
-              imageSize={imageSize}
-              likeCount={likeCount}
-              commentCount={commentCount}
-              isLikedByViewer={isLikedByViewer}
-              isSomeoneTagged={isSomeoneTagged}
-              hasInstagramStory={hasInstagramStory}
-              areCommentsDisplayed={areCommentsDisplayed}
-              hashtags={hashtags}
-              mentions={mentions}
-              
-            />
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-2xl font-bold text-white mb-4">Instagram Post Preview</h2>
+            <div className="flex justify-center">
+              <InstagramPost
+                ref={postRef}
+                theme={theme}
+                username={username}
+                isVerified={isVerified}
+                location={location}
+                postTime={postTime}
+                avatarUrl={avatarUrl}
+                postImageUrl={postImageUrl}
+                postText={postText}
+                imageSize={imageSize}
+                likeCount={likeCount}
+                commentCount={commentCount}
+                isLikedByViewer={isLikedByViewer}
+                isSomeoneTagged={isSomeoneTagged}
+                hasInstagramStory={hasInstagramStory}
+                areCommentsDisplayed={areCommentsDisplayed}
+                hashtags={hashtags}
+                mentions={mentions}
+                
+              />
+            </div>
           </div>
+
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-2xl font-bold text-white mb-4">Instagram Post Settings</h2>
+            <Tabs defaultValue="general" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 mb-6">
+                <TabsTrigger value="general">General</TabsTrigger>
+                <TabsTrigger value="user">User</TabsTrigger>
+                <TabsTrigger value="content">Content</TabsTrigger>
+                <TabsTrigger value="engagement">Engagement</TabsTrigger>
+              </TabsList>
+              <TabsContent value="general">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
+                    <Select value={theme} onValueChange={(value: 'light' | 'dark') => setTheme(value)}>
+                      <SelectTrigger id="theme" className="bg-gray-700 text-white border-gray-600">
+                        <SelectValue placeholder="Select theme" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-gray-700 text-white border-gray-600">
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="location" className="text-white mb-2 block">Location</Label>
+                    <Input
+                      id="location"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="post-time" className="text-white mb-2 block">Post Time</Label>
+                    <Input
+                      id="post-time"
+                      value={postTime}
+                      onChange={(e) => setPostTime(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                      placeholder="e.g. 2w, 3d, 5h, 18m"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="post-image-upload" className="text-white mb-2 block">Post Image</Label>
+                    <Input
+                      id="post-image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePostImageUpload}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="image-width" className="text-white mb-2 block">Image Width: {imageSize.width}%</Label>
+                    <Slider
+                      id="image-width"
+                      min={10}
+                      max={100}
+                      step={1}
+                      value={imageSize.width}
+                      onChange={(value) => setImageSize(prev => ({ ...prev, width: value }))}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="image-height" className="text-white mb-2 block">Image Height: {imageSize.height}%</Label>
+                    <Slider
+                      id="image-height"
+                      min={10}
+                      max={100}
+                      step={1}
+                      value={imageSize.height}
+                      onChange={(value) => setImageSize(prev => ({ ...prev, height: value }))}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="user">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="username" className="text-white mb-2 block">Username</Label>
+                    <Input
+                      id="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="verified"
+                      checked={isVerified}
+                      onCheckedChange={setIsVerified}
+                    />
+                    <Label htmlFor="verified" className="text-white">Verified Account</Label>
+                  </div>
+                  <div>
+                    <Label htmlFor="avatar-upload" className="text-white mb-2 block">Avatar Image</Label>
+                    <Input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="content">
+                <div className="space-y-4">
+                <div>
+                  <Label htmlFor="post-text" className="text-white mb-2 block">
+                    Post Text
+                    <span className="text-xs text-yellow-500 ml-2">(Max 120 characters)</span>
+                  </Label>
+                  <Textarea
+                    id="post-text"
+                    value={postText}
+                    onChange={(e) => setPostText(e.target.value)}
+                    className="bg-gray-700 text-white border-gray-600"
+                    rows={4}
+                  />
+                  {postText.length > 120 && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      ...more <span onClick={() => setExpandText(!expandText)} className="text-yellow-500 cursor-pointer">({expandText ? 'hide' : 'show'})</span>
+                      {expandText && (
+                        <span className="text-gray-400">
+                          {postText.slice(120)}
+                        </span>
+                      )}
+                    </p>
+                  )}
+                </div>
+                  <div>
+                    <Label htmlFor="hashtags" className="text-white mb-2 block">Hashtags</Label>
+                    <Input
+                      id="hashtags"
+                      value={hashtags}
+                      onChange={(e) => setHashtags(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                      placeholder="travel, photography, nature"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="mentions" className="text-white mb-2 block">Mentions</Label>
+                    <Input
+                      id="mentions"
+                      value={mentions}
+                      onChange={(e) => setMentions(e.target.value)}
+                      className="bg-gray-700 text-white border-gray-600"
+                      placeholder="friend1, friend2, brand"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="engagement">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="like-count" className="text-white mb-2 block">Like Count</Label>
+                    <Input
+                      id="like-count"
+                      type="number"
+                      value={likeCount}
+                      onChange={(e) => setLikeCount(Number(e.target.value))}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="comment-count" className="text-white mb-2 block">Comment Count</Label>
+                    <Input
+                      id="comment-count"
+                      type="number"
+                      value={commentCount}
+                      onChange={(e) => setCommentCount(Number(e.target.value))}
+                      className="bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="liked-by-viewer"
+                      checked={isLikedByViewer}
+                      onCheckedChange={setIsLikedByViewer}
+                    />
+                    <Label htmlFor="liked-by-viewer" className="text-white">Liked by Viewer</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="someone-tagged"
+                      checked={isSomeoneTagged}
+                      onCheckedChange={setIsSomeoneTagged}
+                    />
+                    <Label htmlFor="someone-tagged" className="text-white">Someone Tagged</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="has-instagram-story"
+                      checked={hasInstagramStory}
+                      onCheckedChange={setHasInstagramStory}
+                    />
+                    <Label htmlFor="has-instagram-story" className="text-white">Has Instagram Story</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="comments-displayed"
+                      checked={areCommentsDisplayed}
+                      onCheckedChange={setAreCommentsDisplayed}
+                    />
+                    <Label htmlFor="comments-displayed" className="text-white">Comments Displayed</Label>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          <div className="flex justify-center mt-8">
+            <Button onClick={exportPost} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Download className="h-5 w-5 mr-2" />
+              Export Instagram Post
+            </Button>
+          </div>
+          {/* About section remains unchanged */}
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Instagram Post Generator
+            </h2>
+            <p className="text-gray-300 mb-4">
+              Our Instagram Post Generator is a powerful tool designed to help you create engaging and professional-looking Instagram posts. Whether you're a social media manager, influencer, or business owner, this tool allows you to customize every aspect of your post, from the image and caption to engagement metrics and visual style.
+            </p>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Use the preview at the top to see your Instagram post in real-time.</li>
+              <li>Adjust settings in the tabs below to customize your post.</li>
+              <li>Upload your avatar and post images using the file upload buttons.</li>
+              <li>Customize the post text, hashtags, and mentions to suit your content.</li>
+              <li>Adjust engagement metrics like likes and comments to simulate different levels of interaction.</li>
+              <li>Toggle additional features such as verified account status and liked by viewer.</li>
+              <li>Use the image resize sliders to adjust the size of your post image.</li>
+              <li>When you're satisfied with your post, click one of the export buttons to save your creation as PNG or JPEG.</li>
+            </ol>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Real-time preview of your Instagram post</li>
+              <li>Customizable user profile (username, avatar, verified status)</li>
+              <li>Post image upload and preview with resizing options</li>
+              <li>Editable post caption with support for hashtags and mentions</li>
+              <li>Adjustable engagement metrics (likes, comments)</li>
+              <li>Date and time settings</li>
+              <li>Light and dark theme options for preview</li>
+              <li>Export options in PNG and JPEG formats</li>
+              <li>Mobile-responsive design for easy use on any device</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips & Tricks
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Use high-quality images for both your avatar and post to make your content stand out.</li>
+              <li>Include relevant hashtags to increase the discoverability of your post.</li>
+              <li>Mention other accounts (like collaborators or featured brands) to boost engagement.</li>
+              <li>Adjust the likes and comments to reflect realistic engagement for your account size.</li>
+              <li>Preview your post in both light and dark themes to ensure it looks good in all settings.</li>
+              <li>Keep your captions concise and engaging to maintain viewer interest.</li>
+              <li>Use the image resize feature to focus on the most important parts of your image.</li>
+              <li>Experiment with different combinations of settings to create the perfect post for your audience.</li>
+            </ul>
+          </div>
+
+        </main>
         </div>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Instagram Post Settings</h2>
-          <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-6">
-              <TabsTrigger value="general">General</TabsTrigger>
-              <TabsTrigger value="user">User</TabsTrigger>
-              <TabsTrigger value="content">Content</TabsTrigger>
-              <TabsTrigger value="engagement">Engagement</TabsTrigger>
-            </TabsList>
-            <TabsContent value="general">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
-                  <Select value={theme} onValueChange={(value: 'light' | 'dark') => setTheme(value)}>
-                    <SelectTrigger id="theme" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select theme" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="light">Light</SelectItem>
-                      <SelectItem value="dark">Dark</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="location" className="text-white mb-2 block">Location</Label>
-                  <Input
-                    id="location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="post-time" className="text-white mb-2 block">Post Time</Label>
-                  <Input
-                    id="post-time"
-                    value={postTime}
-                    onChange={(e) => setPostTime(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                    placeholder="e.g. 2w, 3d, 5h, 18m"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="post-image-upload" className="text-white mb-2 block">Post Image</Label>
-                  <Input
-                    id="post-image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePostImageUpload}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="image-width" className="text-white mb-2 block">Image Width: {imageSize.width}%</Label>
-                  <Slider
-                    id="image-width"
-                    min={10}
-                    max={100}
-                    step={1}
-                    value={imageSize.width}
-                    onChange={(value) => setImageSize(prev => ({ ...prev, width: value }))}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="image-height" className="text-white mb-2 block">Image Height: {imageSize.height}%</Label>
-                  <Slider
-                    id="image-height"
-                    min={10}
-                    max={100}
-                    step={1}
-                    value={imageSize.height}
-                    onChange={(value) => setImageSize(prev => ({ ...prev, height: value }))}
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="user">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="username" className="text-white mb-2 block">Username</Label>
-                  <Input
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="verified"
-                    checked={isVerified}
-                    onCheckedChange={setIsVerified}
-                  />
-                  <Label htmlFor="verified" className="text-white">Verified Account</Label>
-                </div>
-                <div>
-                  <Label htmlFor="avatar-upload" className="text-white mb-2 block">Avatar Image</Label>
-                  <Input
-                    id="avatar-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarUpload}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="content">
-              <div className="space-y-4">
-              <div>
-                <Label htmlFor="post-text" className="text-white mb-2 block">
-                  Post Text
-                  <span className="text-xs text-yellow-500 ml-2">(Max 120 characters)</span>
-                </Label>
-                <Textarea
-                  id="post-text"
-                  value={postText}
-                  onChange={(e) => setPostText(e.target.value)}
-                  className="bg-gray-700 text-white border-gray-600"
-                  rows={4}
-                />
-                {postText.length > 120 && (
-                  <p className="text-xs text-gray-400 mt-1">
-                    ...more <span onClick={() => setExpandText(!expandText)} className="text-yellow-500 cursor-pointer">({expandText ? 'hide' : 'show'})</span>
-                    {expandText && (
-                      <span className="text-gray-400">
-                        {postText.slice(120)}
-                      </span>
-                    )}
-                  </p>
-                )}
-              </div>
-                <div>
-                  <Label htmlFor="hashtags" className="text-white mb-2 block">Hashtags</Label>
-                  <Input
-                    id="hashtags"
-                    value={hashtags}
-                    onChange={(e) => setHashtags(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                    placeholder="travel, photography, nature"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="mentions" className="text-white mb-2 block">Mentions</Label>
-                  <Input
-                    id="mentions"
-                    value={mentions}
-                    onChange={(e) => setMentions(e.target.value)}
-                    className="bg-gray-700 text-white border-gray-600"
-                    placeholder="friend1, friend2, brand"
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="engagement">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="like-count" className="text-white mb-2 block">Like Count</Label>
-                  <Input
-                    id="like-count"
-                    type="number"
-                    value={likeCount}
-                    onChange={(e) => setLikeCount(Number(e.target.value))}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="comment-count" className="text-white mb-2 block">Comment Count</Label>
-                  <Input
-                    id="comment-count"
-                    type="number"
-                    value={commentCount}
-                    onChange={(e) => setCommentCount(Number(e.target.value))}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="liked-by-viewer"
-                    checked={isLikedByViewer}
-                    onCheckedChange={setIsLikedByViewer}
-                  />
-                  <Label htmlFor="liked-by-viewer" className="text-white">Liked by Viewer</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="someone-tagged"
-                    checked={isSomeoneTagged}
-                    onCheckedChange={setIsSomeoneTagged}
-                  />
-                  <Label htmlFor="someone-tagged" className="text-white">Someone Tagged</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="has-instagram-story"
-                    checked={hasInstagramStory}
-                    onCheckedChange={setHasInstagramStory}
-                  />
-                  <Label htmlFor="has-instagram-story" className="text-white">Has Instagram Story</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="comments-displayed"
-                    checked={areCommentsDisplayed}
-                    onCheckedChange={setAreCommentsDisplayed}
-                  />
-                  <Label htmlFor="comments-displayed" className="text-white">Comments Displayed</Label>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-
-        <div className="flex justify-center mt-8">
-          <Button onClick={exportPost} className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Download className="h-5 w-5 mr-2" />
-            Export Instagram Post
-          </Button>
-        </div>
-        {/* About section remains unchanged */}
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-white mb-4">About Instagram Post Generator</h2>
-          <p className="text-gray-300 mb-4">
-            Our Instagram Post Generator is a powerful tool designed to help you create engaging and professional-looking Instagram posts. 
-            Whether you're a social media manager, influencer, or business owner, this tool allows you to customize every aspect of your post, 
-            from the image and caption to engagement metrics and visual style.
-          </p>
-
-          <h3 className="text-xl font-semibold text-white mt-6 mb-2">How to Use:</h3>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2">
-            <li>Use the preview at the top to see your Instagram post in real-time.</li>
-            <li>Adjust settings in the tabs below to customize your post.</li>
-            <li>Upload your avatar and post images using the file upload buttons.</li>
-            <li>Customize the post text, hashtags, and mentions to suit your content.</li>
-            <li>Adjust engagement metrics like likes and comments to simulate different levels of interaction.</li>
-            <li>Toggle additional features such as verified account status and liked by viewer.</li>
-            <li>Use the image resize sliders to adjust the size of your post image.</li>
-            <li>When you're satisfied with your post, click one of the export buttons to save your creation as PNG or JPEG.</li>
-          </ol>
-
-          <h3 className="text-xl font-semibold text-white mt-6 mb-2">Key Features:</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Real-time preview of your Instagram post</li>
-            <li>Customizable user profile (username, avatar, verified status)</li>
-            <li>Post image upload and preview with resizing options</li>
-            <li>Editable post caption with support for hashtags and mentions</li>
-            <li>Adjustable engagement metrics (likes, comments)</li>
-            <li>Date and time settings</li>
-            <li>Light and dark theme options for preview</li>
-            <li>Export options in PNG and JPEG formats</li>
-            <li>Mobile-responsive design for easy use on any device</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-white mt-6 mb-2">Tips and Tricks:</h3>
-          <ul className="list-disc list-inside text-gray-300 space-y-2">
-            <li>Use high-quality images for both your avatar and post to make your content stand out.</li>
-            <li>Include relevant hashtags to increase the discoverability of your post.</li>
-            <li>Mention other accounts (like collaborators or featured brands) to boost engagement.</li>
-            <li>Adjust the likes and comments to reflect realistic engagement for your account size.</li>
-            <li>Preview your post in both light and dark themes to ensure it looks good in all settings.</li>
-            <li>Keep your captions concise and engaging to maintain viewer interest.</li>
-            <li>Use the image resize feature to focus on the most important parts of your image.</li>
-            <li>Experiment with different combinations of settings to create the perfect post for your audience.</li>
-          </ul>
-        </div>
-      </main>
       <Footer />
     </div>
   )

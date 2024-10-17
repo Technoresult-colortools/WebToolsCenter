@@ -1,141 +1,126 @@
 'use client'
-import React from 'react'
-import { ChevronRight, TextIcon, Image, Palette, Code, Share, Zap } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { ChevronRight, Star, Command, Wrench, Zap, Sparkles } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from "@/components/ui/Button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { motion } from 'framer-motion'
 
-const toolCategories = [
-  { name: 'Text Tools', icon: <TextIcon className="w-6 h-6" />, count: 14, color: 'bg-blue-500' },
-  { name: 'Image Tools', icon: <Image className="w-6 h-6" />, count: 12, color: 'bg-green-500' },
-  { name: 'CSS Tools', icon: <Palette className="w-6 h-6" />, count: 10, color: 'bg-purple-500' },
-  { name: 'Coding Tools', icon: <Code className="w-6 h-6" />, count: 19, color: 'bg-yellow-500' },
-  { name: 'Color Tools', icon: <Palette className="w-6 h-6" />, count: 18, color: 'bg-red-500' },
-  { name: 'Social Media Tools', icon: <Share className="w-6 h-6" />, count: 6, color: 'bg-pink-500' },
-  { name: 'Miscellaneous Tools', icon: <Zap className="w-6 h-6" />, count: 5, color: 'bg-indigo-500' },
+const features = [
+  {
+    icon: <Command className="w-8 h-8 text-blue-400" />,
+    title: "All-in-One Solution",
+    description: "Access a comprehensive suite of web development tools in one place."
+  },
+  {
+    icon: <Wrench className="w-8 h-8 text-green-400" />,
+    title: "User-Friendly Interface",
+    description: "Intuitive design makes our tools accessible to everyone."
+  },
+  {
+    icon: <Zap className="w-8 h-8 text-yellow-400" />,
+    title: "Lightning Fast",
+    description: "Optimized performance for quick and efficient results."
+  }
 ]
 
-const ToolCard = ({ name, icon, count, color }: { name: string; icon: React.ReactNode; count: number; color: string }) => (
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className="transition-all duration-300"
-  >
-    <Card className="bg-gray-800 border-gray-700 hover:border-gray-600">
-      <CardHeader className={`${color} text-white rounded-t-lg`}>
-        <CardTitle className="flex items-center justify-between">
-          {name}
-          {icon}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-4">
-        <CardDescription className="text-gray-300">
-          {count} tools available
-        </CardDescription>
-      </CardContent>
-    </Card>
-  </motion.div>
-)
+export default function AboutUs() {
+  const [isVisible, setIsVisible] = useState(false)
 
-export default function About() {
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <div className="min-h-screen flex flex-col bg-gray-900">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+
+      {/* Hero Section */}
+      <section className="pt-24 pb-12 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
+        <div 
+          className={`max-w-6xl mx-auto text-center transform transition-all duration-1000 ${
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          }`}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">About WebToolsCenter</h1>
-          <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
-            WebToolsCenter is the ultimate platform for all your web development and design needs. With a collection of 
-            versatile tools, it aims to simplify complex tasks and save valuable time. Whether you're a seasoned developer 
-            or just starting out, our easy-to-use tools help you achieve your project goals efficiently. Discover our 
-            extensive suite of utilities, thoughtfully categorized for maximum convenience.
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            About Web<span className="text-blue-400">Tools</span>Center
+            <span className="inline-block ml-3">
+              <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+            </span>
+          </h1>
+          <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
+            Empowering developers and designers with powerful, easy-to-use web tools.
           </p>
-        </motion.div>
+        </div>
+      </section>
 
-        <div className="mb-12">
-          <h2 className="text-3xl font-semibold text-white mb-6 text-center">Our Tool Categories</h2>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
-          >
-            {toolCategories.map((category) => (
-              <ToolCard key={category.name} {...category} />
+      {/* Main Content */}
+      <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-white mb-8">Our Mission</h2>
+          <p className="text-lg text-gray-400 mb-8">
+            At WebToolsCenter, our mission is to simplify web development and design processes by providing a comprehensive suite of tools that cater to developers, designers, and content creators of all skill levels. We believe that powerful tools should be accessible to everyone, which is why we've created an intuitive platform that combines functionality with ease of use.
+          </p>
+          <p className="text-lg text-gray-400">
+            Whether you're a seasoned professional or just starting your journey in web development, our tools are designed to enhance your productivity, streamline your workflow, and bring your creative visions to life.
+          </p>
+        </section>
+
+        {/* Features Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-white mb-12 flex items-center justify-center">
+            <Star className="mr-3 text-yellow-400" />
+            Why Choose WebToolsCenter?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 hover:transform hover:-translate-y-2 transition-all duration-300"
+              >
+                <div className="mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-400">
+                  {feature.description}
+                </p>
+              </div>
             ))}
-          </motion.div>
-        </div>
+          </div>
+        </section>
 
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-semibold text-white mb-6">Why Choose WebToolsCenter?</h2>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
-          >
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-white">Easy to Use</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300">
-                  Our tools are built with simplicity in mind, ensuring that even beginners can navigate and use them effortlessly.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-white">Comprehensive Suite</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300">
-                  With over 80 carefully crafted tools, we offer solutions for all aspects of web development, design, and more.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-gray-800 border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-white">Always Free</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-300">
-                  We are committed to keeping our tools completely free to use, so you can focus on creating without any barriers.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+        {/* Our Story Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-white mb-8">Our Story</h2>
+          <p className="text-lg text-gray-400 mb-8">
+            WebToolsCenter was born out of a simple idea: to create a single platform where web professionals could find all the tools they need. Our founders, experienced developers themselves, recognized the need for a centralized hub of efficient, user-friendly web tools.
+          </p>
+          <p className="text-lg text-gray-400 mb-8">
+            What started as a small collection of utilities has grown into a comprehensive toolkit, constantly evolving to meet the changing needs of the web development community. Today, we're proud to offer over 80 tools across various categories, from text and image manipulation to advanced coding utilities and design helpers.
+          </p>
+          <p className="text-lg text-gray-400">
+            Our commitment to quality, usability, and innovation drives us to continually improve and expand our offerings, ensuring that WebToolsCenter remains at the forefront of web development resources.
+          </p>
+        </section>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl font-semibold text-white mb-6">Start Using Our Tools Today</h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            No matter what role you play in the digital world—developer, designer, or content creator—our tools are here to enhance 
-            your productivity and streamline your workflows. Start exploring today and see how WebToolsCenter can make a difference 
-            in your projects.
+        {/* CTA Section */}
+        <section className="text-center">
+          <h2 className="text-3xl font-bold text-white mb-8">Join Our Community</h2>
+          <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
+            Become part of the WebToolsCenter community today. Explore our tools, enhance your projects, and connect with fellow web enthusiasts.
           </p>
           <Link href="/categories" passHref>
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
-              Explore All Tools
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
+            <button className="inline-flex items-center px-8 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold hover:opacity-90 transition-opacity duration-300">
+              Explore Our Tools
+              <ChevronRight className="ml-2 w-5 h-5" />
+            </button>
           </Link>
-        </motion.div>
+        </section>
       </main>
+
       <Footer />
     </div>
   )

@@ -1,15 +1,18 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { Copy, RefreshCw, Download, Shuffle, Info, BookOpen, Lightbulb, AlertCircle } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Sidebar from '@/components/sidebarTools';
 import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import Slider from "@/components/ui/Slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Copy, RefreshCw, Download, Shuffle,} from 'lucide-react'
-import { Toaster, toast } from 'react-hot-toast'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 function generateRandomColor(): string {
   return `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`
@@ -116,6 +119,7 @@ export default function ColorPaletteGenerator() {
   const [colorCount, setColorCount] = useState(5)
   const [palette, setPalette] = useState<string[]>([])
   const [harmonyType, setHarmonyType] = useState('complementary')
+  const [previewMode, setPreviewMode] = useState('gradient')
 
   useEffect(() => {
     generatePalette()
@@ -136,7 +140,14 @@ export default function ColorPaletteGenerator() {
 
   const handleCopyColor = (color: string) => {
     navigator.clipboard.writeText(color)
-    toast.success(`Copied ${color} to clipboard`)
+    toast.success(`Copied ${color} to clipboard`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    })
   }
 
   const handleDownloadPalette = () => {
@@ -155,187 +166,245 @@ export default function ColorPaletteGenerator() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Color Palette Generator</h1>
+      <div className='flex-grow flex'>
+        <aside className="bg-gray-800">
+          <Sidebar />
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Color Palette Generator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Create harmonious color palettes for your projects with ease.
+            </p>
+          </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <div className="mb-6">
-            <label htmlFor="base-color" className="block text-lg font-medium text-gray-200 mb-2">
-              Base Color:
-            </label>
-            <div className="flex items-center">
-              <Input
-                id="base-color"
-                type="color"
-                value={baseColor}
-                onChange={(e) => setBaseColor(e.target.value)}
-                className="w-12 h-12 p-1 mr-4"
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <div className="mb-6">
+              <label htmlFor="base-color" className="block text-lg font-medium text-gray-200 mb-2">
+                Base Color:
+              </label>
+              <div className="flex items-center">
+                <Input
+                  id="base-color"
+                  type="color"
+                  value={baseColor}
+                  onChange={(e) => setBaseColor(e.target.value)}
+                  className="w-12 h-12 p-1 mr-4"
+                />
+                <Input
+                  type="text"
+                  value={baseColor}
+                  onChange={(e) => setBaseColor(e.target.value)}
+                  className="flex-grow bg-gray-700 text-white border-gray-600"
+                />
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="harmony-type" className="block text-lg font-medium text-gray-200 mb-2">
+                Harmony Type:
+              </label>
+              <Select value={harmonyType} onValueChange={setHarmonyType}>
+                <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
+                  <SelectValue placeholder="Select harmony type" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
+                  <SelectItem value="complementary">Complementary</SelectItem>
+                  <SelectItem value="analogous">Analogous</SelectItem>
+                  <SelectItem value="triadic">Triadic</SelectItem>
+                  <SelectItem value="tetradic">Tetradic</SelectItem>
+                  <SelectItem value="monochromatic">Monochromatic</SelectItem>
+                  <SelectItem value="random">Random</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="color-count" className="block text-lg font-medium text-gray-200 mb-2">
+                Number of colors: {colorCount}
+              </label>
+              <Slider
+                id="color-count"
+                min={2}
+                max={10}
+                step={1}
+                value={colorCount}
+                onChange={(value) => setColorCount(value)}
+                className="w-full"
               />
-              <Input
-                type="text"
-                value={baseColor}
-                onChange={(e) => setBaseColor(e.target.value)}
-                className="flex-grow bg-gray-700 text-white border-gray-600"
-              />
+            </div>
+
+            <Button
+              onClick={generatePalette}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              <Shuffle className="h-5 w-5 mr-2" />
+              Generate Palette
+            </Button>
+          </div>
+
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <h2 className="text-2xl font-semibold text-white mb-4">Generated Palette</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {palette.map((color, index) => (
+                <div key={index} className="bg-gray-700 shadow-md rounded-lg p-4">
+                  <div
+                    className="w-full h-20 rounded-lg mb-2 relative group"
+                    style={{ backgroundColor: color }}
+                  >
+                    <Button
+                      onClick={() => handleCopyColor(color)}
+                      className="absolute top-1 right-1 bg-white/10 hover:bg-white/20 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="space-y-1 text-sm">
+                    <p className="text-white">Hex: {color}</p>
+                    <p className="text-white">RGB: {hexToRgb(color)}</p>
+                    <p className="text-white">HSL: {hexToHsl(color)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex justify-center space-x-4">
+              <Button onClick={generatePalette} className="bg-green-600 hover:bg-green-700 text-white">
+                <RefreshCw className="h-5 w-5 mr-2" />
+                Regenerate
+              </Button>
+              <Button onClick={handleDownloadPalette} className="bg-purple-600 hover:bg-purple-700 text-white">
+                <Download className="h-5 w-5 mr-2" />
+                Download Palette
+              </Button>
             </div>
           </div>
 
-          <div className="mb-6">
-            <label htmlFor="harmony-type" className="block text-lg font-medium text-gray-200 mb-2">
-              Harmony Type:
-            </label>
-            <Select value={harmonyType} onValueChange={setHarmonyType}>
-              <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select harmony type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="complementary">Complementary</SelectItem>
-                <SelectItem value="analogous">Analogous</SelectItem>
-                <SelectItem value="triadic">Triadic</SelectItem>
-                <SelectItem value="tetradic">Tetradic</SelectItem>
-                <SelectItem value="monochromatic">Monochromatic</SelectItem>
-                <SelectItem value="random">Random</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="mb-6">
-            <label htmlFor="color-count" className="block text-lg font-medium text-gray-200 mb-2">
-              Number of colors: {colorCount}
-            </label>
-            <Slider
-              id="color-count"
-              min={2}
-              max={10}
-              step={1}
-              value={colorCount}
-              onChange={(value) => setColorCount(value)}
-              className="w-full"
-            />
-          </div>
-
-          <Button
-            onClick={generatePalette}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            <Shuffle className="h-5 w-5 mr-2" />
-            Generate Palette
-          </Button>
-        </div>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-semibold text-white mb-4">Generated Palette</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {palette.map((color, index) => (
-              <div key={index} className="bg-gray-700 shadow-md rounded-lg p-4">
-                <div
-                  className="w-full h-20 rounded-lg mb-2 relative group"
-                  style={{ backgroundColor: color }}
-                >
-                  <Button
-                    onClick={() => handleCopyColor(color)}
-                    className="absolute top-1 right-1 bg-white/10 hover:bg-white/20 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+            <h2 className="text-2xl font-semibold text-white mb-4">Preview</h2>
+            <Tabs value={previewMode} onValueChange={setPreviewMode}>
+              <TabsList className="grid w-full grid-cols-4 mb-4">
+                <TabsTrigger value="gradient">Gradient</TabsTrigger>
+                <TabsTrigger value="text">Text</TabsTrigger>
+                <TabsTrigger value="ui">UI Elements</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
+              </TabsList>
+              <TabsContent value="gradient">
+                <div className="h-40 rounded" style={{ background: `linear-gradient(to right, ${palette.join(', ')})` }}>
+                  <h3 className="text-xl font-bold text-white p-4">Gradient Background</h3>
                 </div>
-                <div className="space-y-1 text-sm">
-                  <p className="text-white">Hex: {color}</p>
-                  <p className="text-white">RGB: {hexToRgb(color)}</p>
-                  <p className="text-white">HSL: {hexToHsl(color)}</p>
+              </TabsContent>
+              <TabsContent value="text">
+                <div className="space-y-4">
+                  {palette.map((color, index) => (
+                    <p key={index} className="text-lg" style={{ color }}>
+                      This is sample text in color {color}
+                    </p>
+                  ))}
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 flex justify-center space-x-4">
-            <Button onClick={generatePalette} className="bg-green-600 hover:bg-green-700 text-white">
-              <RefreshCw className="h-5 w-5 mr-2" />
-              Regenerate
-            </Button>
-            <Button onClick={handleDownloadPalette} className="bg-purple-600 hover:bg-purple-700 text-white">
-              <Download className="h-5 w-5 mr-2" />
-              Download Palette
-            </Button>
-          </div>
-        </div>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-semibold text-white mb-4">Preview</h2>
-          <Tabs defaultValue="gradient">
-            <TabsList className="grid w-full grid-cols-3 mb-4">
-              <TabsTrigger value="gradient">Gradient</TabsTrigger>
-              <TabsTrigger value="text">Text</TabsTrigger>
-              <TabsTrigger value="ui">UI Elements</TabsTrigger>
-            </TabsList>
-            <TabsContent value="gradient">
-              <div className="h-40 rounded" style={{ background: `linear-gradient(to right, ${palette.join(', ')})` }}>
-                <h3 className="text-xl font-bold text-white p-4">Gradient Background</h3>
-              </div>
-            </TabsContent>
-            <TabsContent value="text">
-              <div className="space-y-4">
-                {palette.map((color, index) => (
-                  <p key={index} className="text-lg" style={{ color }}>
-                    This is sample text in color {color}
-                  </p>
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="ui">
-              <div className="space-y-4">
-                <div className="p-4 rounded" style={{ backgroundColor: palette[0] }}>
-                  <h3 className="text-xl font-bold" style={{ color: palette[1] }}>Header</h3>
-                  <p className="text-lg" style={{ color: palette[2] }}>This is a sample paragraph.</p>
-                  <button className="px-4 py-2 rounded mt-2" style={{ backgroundColor: palette[3], color: palette[4] }}>
-                    Button
-                  </button>
+              </TabsContent>
+              <TabsContent value="ui">
+                <div className="space-y-4">
+                  <div className="p-4 rounded" style={{ backgroundColor: palette[0] }}>
+                    <h3 className="text-xl font-bold" style={{ color: palette[1] }}>Header</h3>
+                    <p className="text-lg" style={{ color: palette[2] }}>This is a sample paragraph.</p>
+                    <button className="px-4 py-2 rounded mt-2" style={{ backgroundColor: palette[3], color: palette[4] }}>
+                      Button
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+              </TabsContent>
+              <TabsContent value="custom">
+                <div className="space-y-4">
+                  <textarea
+                    className="w-full h-40 p-2 bg-gray-700 text-white border border-gray-600 rounded"
+                    placeholder="Enter custom HTML to preview your palette..."
+                    value={`<div style="background-color: ${palette[0]}; color: ${palette[1]}; padding: 20px;">
+  <h1 style="color: ${palette[2]};">Custom Preview</h1>
+  <p>Edit this HTML to see your palette in action!</p>
+  <button style="background-color: ${palette[3]}; color: ${palette[4]}; padding: 10px;">Click me</button>
+</div>`}
+                  />
+                  <div className="border border-gray-600 rounded p-4" dangerouslySetInnerHTML={{
+                    __html: `<div style="background-color: ${palette[0]}; color: ${palette[1]}; padding: 20px;">
+                      <h1 style="color: ${palette[2]};">Custom Preview</h1>
+                      <p>Edit this HTML to see your palette in action!</p>
+                      <button style="background-color: ${palette[3]}; color: ${palette[4]}; padding: 10px;">Click me</button>
+                    </div>`
+                  }} />
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
 
-        <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
-              <h2 className="text-xl font-semibold text-white mb-2">About Color Palette Generator</h2>
-              <p className="text-white mb-2">
-                The Color Palette Generator is a powerful tool designed to help designers, artists, and developers create harmonious color schemes for their projects. It uses color theory principles to generate visually appealing palettes based on a chosen base color and harmony type.
-              </p>
+          <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
+            <div className="space-y-6">
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Info className="w-6 h-6 mr-2" />
+                  About Color Palette Generator
+                </h2>
+                <p className="text-white">
+                  The Color Palette Generator is a powerful tool designed to help designers, artists, and developers create harmonious color schemes for their projects. It uses color theory principles to generate visually appealing palettes based on a chosen base color and harmony type.
+                </p>
+              </section>
 
-              <h2 className="text-xl font-semibold text-white mb-2">How to Use</h2>
-              <ol className="text-white list-decimal list-inside mb-2 space-y-2">
-                <li>Choose a base color using the color picker or enter a hex code.</li>
-                <li>Select a harmony type from the dropdown menu.</li>
-                <li>Adjust the number of colors in your palette using the slider.</li>
-                <li>Click "Generate Palette" to create your color scheme.</li>
-                <li>Use the preview section to see how your colors work together.</li>
-                <li>Copy individual colors or download the entire palette.</li>
-              </ol>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <BookOpen className="w-6 h-6 mr-2" />
+                  How to Use Color Palette Generator
+                </h2>
+                <ol className="list-decimal list-inside text-white space-y-2">
+                  <li>Choose a base color using the color picker or enter a hex code.</li>
+                  <li>Select a harmony type from the dropdown menu.</li>
+                  <li>Adjust the number of colors in your palette using the slider.</li>
+                  <li>Click "Generate Palette" to create your color scheme.</li>
+                  <li>Use the preview section to see how your colors work together in different contexts.</li>
+                  <li>Copy individual colors or download the entire palette for use in your projects.</li>
+                </ol>
+              </section>
 
-              <h2 className="text-xl font-semibold text-white mb-2">Key Features</h2>
-              <ul className="text-white list-disc list-inside mb-2 space-y-2">
-                <li>Multiple harmony types: complementary, analogous, triadic, tetradic, monochromatic, and random.</li>
-                <li>Adjustable palette size (2-10 colors).</li>
-                <li>Real-time preview with gradient, text, and UI element examples.</li>
-                <li>Copy individual colors in Hex, RGB, and HSL formats.</li>
-                <li>Download entire palette as a text file.</li>
-                <li>Regenerate palettes while keeping the same base color and harmony type.</li>
-              </ul>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Key Features
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Multiple harmony types: complementary, analogous, triadic, tetradic, monochromatic, and random.</li>
+                  <li>Adjustable palette size (2-10 colors).</li>
+                  <li>Real-time preview with gradient, text, UI element, and custom HTML examples.</li>
+                  <li>Copy individual colors in Hex, RGB, and HSL formats.</li>
+                  <li>Download entire palette as a text file.</li>
+                  <li>Regenerate palettes while keeping the same base color and harmony type.</li>
+                  <li>Custom HTML preview for testing your palette in specific use cases.</li>
+                </ul>
+              </section>
 
-              <h2 className="text-xl font-semibold text-white mb-2">Tips & Tricks</h2>
-              <ul className="text-white list-disc list-inside space-y-2">
-                <li>Experiment with different harmony types to find the perfect combination for your project.</li>
-                <li>Use the preview section to see how your colors look in various contexts.</li>
-                <li>Try adjusting the base color slightly to fine-tune your palette.</li>
-                <li>Use monochromatic harmony for a subtle, cohesive look.</li>
-                <li>Combine colors from different palettes to create unique schemes.</li>
-                <li>Consider accessibility by checking contrast ratios for text colors.</li>
-                <li>Save multiple palettes and compare them side by side for the best results.</li>
-              </ul>
-        </div>
-      </main>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Tips and Tricks
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Experiment with different harmony types to find the perfect combination for your project.</li>
+                  <li>Use the preview section to see how your colors look in various contexts.</li>
+                  <li>Try adjusting the base color slightly to fine-tune your palette.</li>
+                  <li>Use monochromatic harmony for a subtle, cohesive look.</li>
+                  <li>Combine colors from different palettes to create unique schemes.</li>
+                  <li>Consider accessibility by checking contrast ratios for text colors.</li>
+                  <li>Use the custom HTML preview to test your palette in specific design scenarios.</li>
+                  <li>Save multiple palettes and compare them side by side for the best results.</li>
+                </ul>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
       <Footer />
+      <ToastContainer />
     </div>
   )
 }

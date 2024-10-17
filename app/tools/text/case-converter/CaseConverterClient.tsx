@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/Button";
-import { Copy, Download, Info, Lightbulb, BookOpen, RefreshCw, Undo2, Space, Slice, RefreshCcw } from 'lucide-react';
+import { Copy, Download, Info, Lightbulb, BookOpen, RefreshCw, Undo2, Space, Slice, RefreshCcw,} from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
+import Sidebar from '@/components/sidebarTools';
 
 const MAX_CHARS = 5000;
 
@@ -44,6 +45,7 @@ export default function CaseConverter() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
   const [selectedCase, setSelectedCase] = useState('lower');
+
 
   const handleConvert = () => {
     const converted = convertCase(inputText, selectedCase);
@@ -101,158 +103,168 @@ export default function CaseConverter() {
   };
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-     <Header />
-     <Toaster position="top-right" />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Case Converter</h1>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <div className="mb-6">
-            <label htmlFor="input-text" className="block text-lg font-medium text-gray-200 mb-2">
-              Input Text:
-            </label>
-            <textarea
-              id="input-text"
-              value={inputText}
-              onChange={handleInputChange}
-              className="w-full h-40 bg-gray-700 text-white border-gray-600 rounded-md p-2"
-              placeholder="Enter your text here..."
-            />
-            <p className="text-sm text-gray-400 mt-2">
-              {inputText.length}/{MAX_CHARS} characters
-            </p>
+      <Header />
+      <Toaster position="top-right" />
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+          <main className="flex-grow px-4 py-12 overflow-x-hidden">
+            <div className="max-w-4xl mx-auto">
+            <div className="mb-12 text-center px-4">
+              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                  Case Converter
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                  Transform your text into any case format instantly
+              </p>
           </div>
 
-          <div className="mb-6">
-            <label htmlFor="case-select" className="block text-lg font-medium text-gray-200 mb-2">
-              Select Case:
-            </label>
-            <select
-              id="case-select"
-              value={selectedCase}
-              onChange={(e) => setSelectedCase(e.target.value)}
-              className="w-full bg-gray-700 text-white border-gray-600 rounded-md p-2"
-            >
-              <option value="lower">lowercase</option>
-              <option value="upper">UPPERCASE</option>
-              <option value="title">Title Case</option>
-              <option value="sentence">Sentence case</option>
-              <option value="camel">camelCase</option>
-              <option value="pascal">PascalCase</option>
-              <option value="snake">snake_case</option>
-              <option value="kebab">kebab-case</option>
-              <option value="toggle">ToGgLe CaSe</option>
-            </select>
-          </div>
+              <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8">
+                <div className="mb-6">
+                  <label htmlFor="input-text" className="block text-lg font-medium text-gray-200 mb-2">
+                    Input Text:
+                  </label>
+                  <textarea
+                    id="input-text"
+                    value={inputText}
+                    onChange={handleInputChange}
+                    className="w-full h-40 bg-gray-700/50 text-white border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your text here..."
+                  />
+                  <p className="text-sm text-gray-400 mt-2">
+                    {inputText.length}/{MAX_CHARS} characters
+                  </p>
+                </div>
 
-          <div className="flex justify-center">
-            <Button
-              
-              onClick={handleConvert}
-              className="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4"
-              variant='default'
-            >
-              <RefreshCcw className="h-5 w-5 mr-2" />
-              Convert
-            </Button>
-          </div>
+                <div className="mb-6">
+                  <label htmlFor="case-select" className="block text-lg font-medium text-gray-200 mb-2">
+                    Select Case:
+                  </label>
+                  <select
+                    id="case-select"
+                    value={selectedCase}
+                    onChange={(e) => setSelectedCase(e.target.value)}
+                    className="w-full bg-gray-700/50 text-white border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="lower">lowercase</option>
+                    <option value="upper">UPPERCASE</option>
+                    <option value="title">Title Case</option>
+                    <option value="sentence">Sentence case</option>
+                    <option value="camel">camelCase</option>
+                    <option value="pascal">PascalCase</option>
+                    <option value="snake">snake_case</option>
+                    <option value="kebab">kebab-case</option>
+                    <option value="toggle">ToGgLe CaSe</option>
+                  </select>
+                </div>
 
+                <div className="flex justify-center mb-6">
+                  <Button
+                    onClick={handleConvert}
+                    className="w-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
+                  >
+                    <RefreshCcw className="h-5 w-5 mr-2" />
+                    Convert
+                  </Button>
+                </div>
 
-          <div className="mb-6">
-            <label htmlFor="output-text" className="block text-lg font-medium text-gray-200 mb-2">
-              Output Text:
-            </label>
-            <textarea
-              id="output-text"
-              value={outputText}
-              readOnly
-              className="w-full h-40 bg-gray-700 text-white border-gray-600 rounded-md p-2"
-            />
-          </div>
+                <div className="mb-6">
+                  <label htmlFor="output-text" className="block text-lg font-medium text-gray-200 mb-2">
+                    Output Text:
+                  </label>
+                  <textarea
+                    id="output-text"
+                    value={outputText}
+                    readOnly
+                    className="w-full h-40 bg-gray-700/50 text-white border border-gray-600 rounded-lg p-3"
+                  />
+                </div>
 
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
-              <Copy className="h-5 w-5 mr-2" />
-              Copy
-            </Button>
-            <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
-              <Download className="h-5 w-5 mr-2" />
-              Download
-            </Button>
-            <Button onClick={handleClear} className="bg-blue-600 hover:bg-blue-700 text-white">
-              <RefreshCw className="h-5 w-5 mr-2" />
-              Clear
-            </Button>
-            <Button onClick={handleReverse} className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Undo2 className="h-5 w-5 mr-2" />
-              Reverse
-            </Button>
-            <Button onClick={handleRemoveSpaces} className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Space className="h-5 w-5 mr-2" />
-              Remove Spaces
-            </Button>
-            <Button onClick={handleTrim} className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Slice className="h-5 w-5 mr-2" />
-              Trim
-            </Button>
-          </div>
-        </div>
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-            <Info className="w-6 h-6 mr-2" />
-            What is the Case Converter?
-          </h2>
-          <p className="text-gray-300 mb-4">
-            The Case Converter is a simple yet powerful tool that allows users to quickly convert text between various cases and perform a range of text manipulations. 
-            Whether you're a developer, writer, or anyone working with text, this tool provides an efficient way to transform your content into the desired format.
-          </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Copy className="h-5 w-5 mr-2" />
+                    Copy
+                  </Button>
+                  <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Download className="h-5 w-5 mr-2" />
+                    Download
+                  </Button>
+                  <Button onClick={handleClear} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <RefreshCw className="h-5 w-5 mr-2" />
+                    Clear
+                  </Button>
+                  <Button onClick={handleReverse} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Undo2 className="h-5 w-5 mr-2" />
+                    Reverse
+                  </Button>
+                  <Button onClick={handleRemoveSpaces} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Space className="h-5 w-5 mr-2" />
+                    Remove Spaces
+                  </Button>
+                  <Button onClick={handleTrim} className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <Slice className="h-5 w-5 mr-2" />
+                    Trim
+                  </Button>
+                </div>
+              </div>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2" />
-            How to Use the Case Converter?
-          </h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Enter or paste your text in the input area.</li>
-            <li>Select the desired case conversion from the dropdown menu.</li>
-            <li>Click the "Convert" button to transform your text.</li>
-            <li>Use additional buttons for more text manipulations.</li>
-            <li>Copy or download the converted text as needed.</li>
-          </ol>
+              <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6">
+                <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+                  <Info className="w-6 h-6 mr-2" />
+                  What is the Case Converter?
+                </h2>
+                <p className="text-gray-300 mb-4">
+                  The Case Converter is a simple yet powerful tool that allows users to quickly convert text between various cases and perform a range of text manipulations. 
+                  Whether you're a developer, writer, or anyone working with text, this tool provides an efficient way to transform your content into the desired format.
+                </p>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Available Cases
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>lowercase: all characters in lowercase</li>
-            <li>UPPERCASE: all characters in uppercase</li>
-            <li>Title Case: First Letter Of Each Word Capitalized</li>
-            <li>Sentence case: Only first letter of the sentence capitalized</li>
-            <li>camelCase: firstWordLowerCaseRestCapitalized</li>
-            <li>PascalCase: EachWordStartsWithCapitalLetter</li>
-            <li>snake_case: words_separated_by_underscores</li>
-            <li>kebab-case: words-separated-by-hyphens</li>
-            <li>ToGgLe CaSe: aLtErNaTiNg UpPeR aNd LoWeR cAsE</li>
-          </ul>
+                <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+                  <BookOpen className="w-6 h-6 mr-2" />
+                  How to Use the Case Converter?
+                </h2>
+                <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+                  <li>Enter or paste your text in the input area.</li>
+                  <li>Select the desired case conversion from the dropdown menu.</li>
+                  <li>Click the "Convert" button to transform your text.</li>
+                  <li>Use additional buttons for more text manipulations.</li>
+                  <li>Copy or download the converted text as needed.</li>
+                </ol>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Additional Features
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Reverse: Reverses the order of characters in the text.</li>
-            <li>Remove Spaces: Removes all spaces from the text.</li>
-            <li>Trim: Removes leading and trailing whitespace.</li>
-            <li>Copy: Copies the converted text to clipboard.</li>
-            <li>Download: Saves the converted text as a .txt file.</li>
-            <li>Clear: Resets both input and output fields.</li>
-          </ul>
-        </div>
+                <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Available Cases
+                </h2>
+                <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+                  <li>lowercase: all characters in lowercase</li>
+                  <li>UPPERCASE: all characters in uppercase</li>
+                  <li>Title Case: First Letter Of Each Word Capitalized</li>
+                  <li>Sentence case: Only first letter of the sentence capitalized</li>
+                  <li>camelCase: firstWordLowerCaseRestCapitalized</li>
+                  <li>PascalCase: EachWordStartsWithCapitalLetter</li>
+                  <li>snake_case: words_separated_by_underscores</li>
+                  <li>kebab-case: words-separated-by-hyphens</li>
+                  <li>ToGgLe CaSe: aLtErNaTiNg UpPeR aNd LoWeR cAsE</li>
+                </ul>
 
-
-       
-      </main>
+                <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Additional Features
+                </h2>
+                <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+                  <li>Reverse: Reverses the order of characters in the text.</li>
+                  <li>Remove Spaces: Removes all spaces from the text.</li>
+                  <li>Trim: Removes leading and trailing whitespace.</li>
+                  <li>Copy: Copies the converted text to clipboard.</li>
+                  <li>Download: Saves the converted text as a .txt file.</li>
+                  <li>Clear: Resets both input and output fields.</li>
+                </ul>
+              </div>
+            </div>
+          </main>
+         </div> 
       <Footer />
     </div>
-  );
+  )
 }

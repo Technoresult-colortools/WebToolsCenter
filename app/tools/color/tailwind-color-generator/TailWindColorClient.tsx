@@ -1,12 +1,15 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import {Search, X } from 'lucide-react'
+import { Search, X, Download, Info, BookOpen, Lightbulb } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import toast, { Toaster } from 'react-hot-toast'
+import Sidebar from '@/components/sidebarTools';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 type ColorShade = {
   shade: string
@@ -294,46 +297,73 @@ const defaultColors: ColorPalette = {
 }
 
 export default function TailwindColorGenerator() {
-    const [searchTerm, setSearchTerm] = useState('')
-    const [filteredColors, setFilteredColors] = useState<ColorPalette>(defaultColors)
-  
-    useEffect(() => {
-      const filtered = Object.entries(defaultColors).reduce((acc, [colorName, shades]) => {
-        const filteredShades = shades.filter(
-          shade => 
-            colorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            shade.shade.includes(searchTerm) ||
-            shade.hex.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        if (filteredShades.length > 0) {
-          acc[colorName] = filteredShades
-        }
-        return acc
-      }, {} as ColorPalette)
-      setFilteredColors(filtered)
-    }, [searchTerm])
-  
-    const copyToClipboard = (text: string) => {
-      navigator.clipboard.writeText(text)
-      toast.success('Copied to clipboard!')
-    }
-  
-    return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-        <Toaster 
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: '#333',
-              color: '#fff',
-            },
-          }}
-        />
-        <Header />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 text-center">
-            Tailwind CSS Color Palette
-          </h1>
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filteredColors, setFilteredColors] = useState<ColorPalette>(defaultColors)
+  const [selectedColor, setSelectedColor] = useState<string | null>(null)
+
+  useEffect(() => {
+    const filtered = Object.entries(defaultColors).reduce((acc, [colorName, shades]) => {
+      const filteredShades = shades.filter(
+        shade => 
+          colorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          shade.shade.includes(searchTerm) ||
+          shade.hex.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      if (filteredShades.length > 0) {
+        acc[colorName] = filteredShades
+      }
+      return acc
+    }, {} as ColorPalette)
+    setFilteredColors(filtered)
+  }, [searchTerm])
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    toast.success('Copied to clipboard!', {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    })
+  }
+
+  const downloadPalette = () => {
+    const paletteText = Object.entries(filteredColors)
+      .map(([colorName, shades]) => 
+        `${colorName}:\n${shades.map(shade => `  ${shade.shade}: ${shade.hex}`).join('\n')}`
+      )
+      .join('\n\n')
+    
+    const blob = new Blob([paletteText], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'tailwind_palette.txt'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    toast.success('Palette downloaded successfully!')
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+      <Header />
+      <div className='flex-grow flex'>
+        <aside className="bg-gray-800">
+          <Sidebar />
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Tailwind CSS Color Palette Generator
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Explore, search, and copy Tailwind CSS color classes and hex codes with ease.
+            </p>
+          </div>
           
           <div className="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-6xl mx-auto mb-8">
             <div className="relative w-full max-w-md mx-auto mb-8">
@@ -363,7 +393,11 @@ export default function TailwindColorGenerator() {
                   </div>
                   <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     {shades.map((shade) => (
-                      <div key={shade.shade} className="flex flex-col items-center bg-gray-800 rounded-lg p-4 transition-transform transform hover:scale-105">
+                      <div 
+                        key={shade.shade} 
+                        className="flex flex-col items-center bg-gray-800 rounded-lg p-4 transition-transform transform hover:scale-105 cursor-pointer"
+                        onClick={() => setSelectedColor(`${colorName}-${shade.shade}`)}
+                      >
                         <div
                           className="w-16 h-16 rounded-lg mb-2 border border-gray-600"
                           style={{ backgroundColor: shade.hex }}
@@ -372,14 +406,20 @@ export default function TailwindColorGenerator() {
                         <span className="text-gray-400 text-sm mb-2">{shade.hex}</span>
                         <div className="flex space-x-2">
                           <Button
-                            onClick={() => copyToClipboard(`${colorName}-${shade.shade}`)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              copyToClipboard(`${colorName}-${shade.shade}`)
+                            }}
                             className="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-xs"
                             title="Copy class name"
                           >
                             Class
                           </Button>
                           <Button
-                            onClick={() => copyToClipboard(shade.hex)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              copyToClipboard(shade.hex)
+                            }}
                             className="bg-purple-600 hover:bg-purple-700 px-2 py-1 rounded text-xs"
                             title="Copy hex code"
                           >
@@ -392,48 +432,86 @@ export default function TailwindColorGenerator() {
                 </div>
               ))}
             </div>
+
+            {selectedColor && (
+              <Alert className="mt-8">
+                <Info className="h-4 w-4" />
+                <AlertTitle>Selected Color</AlertTitle>
+                <AlertDescription>
+                  You've selected the color: <strong>{selectedColor}</strong>. 
+                  Click 'Class' to copy the Tailwind class name or 'Hex' to copy the hex code.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <div className="mt-8 flex justify-center">
+              <Button onClick={downloadPalette} className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Download className="mr-2 h-4 w-4" />
+                Download Palette
+              </Button>
+            </div>
           </div>
   
-          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
-            <h2 className="text-2xl font-bold text-white mb-4">About Tailwind Color Generator</h2>
-            <p className="text-gray-300 mb-4">
-              Our Tailwind Color Generator is a powerful tool designed to help developers and designers explore the full range of Tailwind CSS colors. 
-              With real-time search, instant class name generation, and hex code copying, this tool simplifies color selection for your web projects.
-            </p>
-            
-            <h3 className="text-xl font-semibold text-white mt-6 mb-2">Key Features:</h3>
-            <ul className="list-disc list-inside text-gray-300 mb-4">
-              <li>Instant search across all Tailwind CSS colors</li>
-              <li>Copy class names and hex codes with one click</li>
-              <li>Real-time filtering of color shades</li>
-              <li>Full range of Tailwind color palettes</li>
-              <li>Responsive design for any device</li>
-              <li>Quick and easy color palette navigation</li>
-              <li>Perfect for designers and developers</li>
-            </ul>
+          <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-4xl mx-auto mt-8">
+            <div className="space-y-6">
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Info className="w-6 h-6 mr-2" />
+                  About Tailwind Color Generator
+                </h2>
+                <p className="text-white">
+                  The Tailwind Color Generator is a powerful tool designed to help developers and designers explore and utilize the full range of Tailwind CSS colors. With features like real-time search, instant class name generation, and hex code copying, this tool simplifies color selection and integration for your web projects.
+                </p>
+              </section>
 
-            <h3 className="text-xl font-semibold text-white mb-2">How to Use Tailwind Color Generator?</h3>
-            <ol className="list-decimal list-inside text-gray-300 mb-4">
-              <li>Type a color name, hex code, or shade in the search bar to filter the available colors.</li>
-              <li>Explore the color palettes and find your desired shade.</li>
-              <li>Click on the "Class" button to copy the Tailwind class name for the color.</li>
-              <li>Click on the "Hex" button to copy the hex code of the color.</li>
-              <li>Use the colors in your Tailwind CSS projects by pasting the copied values.</li>
-            </ol>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <BookOpen className="w-6 h-6 mr-2" />
+                  How to Use Tailwind Color Generator
+                </h2>
+                <ol className="list-decimal list-inside text-white space-y-2">
+                  <li>Use the search bar to filter colors by name, shade, or hex code.</li>
+                  <li>Click on a color swatch to select it and view more details.</li>
+                  <li>Use the 'Class' button to copy the Tailwind class name (e.g., 'bg-blue-500').</li>
+                  <li>Use the 'Hex' button to copy the color's hex code.</li>
+                  <li>Download the entire palette for offline reference.</li>
+                </ol>
+              </section>
 
-            <h3 className="text-xl font-semibold text-white mb-2">Tips and Tricks:</h3>
-            <ul className="list-disc list-inside text-gray-300">
-              <li>Use the search bar to quickly find colors by name, shade, or hex code.</li>
-              <li>Copy the Tailwind class names for rapid integration into your projects.</li>
-              <li>Experiment with different shades to find the perfect balance for your design.</li>
-              <li>Use the tool on mobile devices for easy color exploration while on the go.</li>
-              <li>Bookmark frequently used colors for quick access.</li>
-              <li>Combine different shades and background colors to create unique themes.</li>
-            </ul>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Key Features
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Comprehensive Tailwind CSS color palette</li>
+                  <li>Real-time search and filtering</li>
+                  <li>One-click copying of class names and hex codes</li>
+                  <li>Color selection with detailed view</li>
+                  <li>Palette download functionality</li>
+                  <li>Responsive design for use on any device</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Tips and Tricks
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Use the search to quickly find specific colors or shades.</li>
+                  <li>Experiment with different shades to find the perfect color for your design.</li>
+                  <li>Combine Tailwind color classes for backgrounds, text, and borders to create unique designs.</li>
+                  <li>Download the palette for offline reference or to share with your team.</li>
+                  <li>Use the selected color alert to keep track of your current color choice.</li>
+                </ul>
+              </section>
+            </div>
           </div>
-
         </main>
-        <Footer />
       </div>
-    )
-  }
+      <Footer />
+      <ToastContainer />
+    </div>
+  )
+}

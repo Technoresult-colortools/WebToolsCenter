@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import Sidebar from '@/components/sidebarTools';
 import { Switch } from "@/components/ui/switch";
 import Input from "@/components/ui/Input";
 import { Toaster, toast } from 'react-hot-toast';
@@ -78,8 +79,20 @@ export default function DuplicateLineRemover() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-8 text-center">Duplicate Line Remover</h1>
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                  Duplicate Line Remover
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                  Clean up your text by removing duplicate lines
+              </p>
+          </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
           <div className="mb-6">
@@ -217,9 +230,11 @@ export default function DuplicateLineRemover() {
               <li>You can use this tool to clean up lists of email addresses, remove duplicate log entries, or consolidate any type of line-based data.</li>
           </ul>
       </div>
-
       </main>
-      <Footer />
     </div>
-  );
+    
+
+<Footer />
+</div>
+)
 }

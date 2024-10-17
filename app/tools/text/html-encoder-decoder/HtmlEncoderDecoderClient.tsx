@@ -10,6 +10,7 @@ import { Copy, RefreshCw, Wand2, Code, FileText, History, Download, Upload, Clip
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import Sidebar from '@/components/sidebarTools';
 
 interface HistoryEntry {
   input: string;
@@ -194,250 +195,263 @@ export default function HTMLEncoderDecoder() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">HTML Encoder/Decoder</h1>
-
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-2">
-              <Label htmlFor="input-text" className="text-white">Enter your text:</Label>
-              <Button variant="ghost" onClick={handlePaste} className="text-white">
-                <Clipboard className="h-4 w-4 mr-2" />
-                Paste
-              </Button>
-            </div>
-            <Textarea
-              id="input-text"
-              value={inputText}
-              onChange={handleInputChange}
-              placeholder={`Type or paste your ${mode === 'encode' ? 'plain' : 'HTML-encoded'} text here`}
-              className="w-full bg-gray-700 text-white border-gray-600 h-32"
-            />
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
+        <main className="flex-grow container mx-auto px-4 py-12">
+          <div className="mb-12 text-center px-4">
+              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+                  HTML Encoder/Decoder
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+                  Encode and Decode text in multiple formats, including HTML entities, URL encoding, and Base64.
+              </p>
           </div>
 
-          <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-            <div className="flex items-center gap-4">
-              <Button
-                variant={mode === 'encode' ? "default" : "outline"}
-                onClick={toggleMode}
-                className="py-2 px-4"
-              >
-                {mode === 'encode' ? <Code className="h-4 w-4 mr-2" /> : <FileText className="h-4 w-4 mr-2" />}
-                {mode === 'encode' ? 'Encode' : 'Decode'}
-              </Button>
-              
-              <Select
-                value={encodingFormat}
-                onValueChange={(value: 'html' | 'url' | 'base64') => setEncodingFormat(value)}
-              >
-                <SelectTrigger className="w-[180px] bg-gray-700 text-white">
-                  <SelectValue placeholder="Select format" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="html">HTML Entities</SelectItem>
-                  <SelectItem value="url">URL Encoding</SelectItem>
-                  <SelectItem value="base64">Base64</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="preserve-newlines"
-                  checked={preserveNewlines}
-                  onCheckedChange={setPreserveNewlines}
-                />
-                <Label htmlFor="preserve-newlines" className="text-white">Preserve newlines</Label>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="encode-quotes"
-                  checked={encodeQuotes}
-                  onCheckedChange={setEncodeQuotes}
-                />
-                <Label htmlFor="encode-quotes" className="text-white">Encode quotes</Label>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="encode-non-ascii"
-                  checked={encodeNonASCII}
-                  onCheckedChange={setEncodeNonASCII}
-                />
-                <Label htmlFor="encode-non-ascii" className="text-white">Encode non-ASCII</Label>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-4 mb-6">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="minify-html"
-                checked={minifyHTML}
-                onCheckedChange={setMinifyHTML}
-              />
-              <Label htmlFor="minify-html" className="text-white">Minify HTML</Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="escape-js"
-                checked={escapeJS}
-                onCheckedChange={setEscapeJS}
-              />
-              <Label htmlFor="escape-js" className="text-white">Escape for JavaScript</Label>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-            <div className="flex gap-2">
-              <Button 
-                variant="destructive" 
-                onClick={handleClear}
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
-              
-              <Button onClick={() => setShowHistory(!showHistory)}>
-                <History className="h-4 w-4 mr-2" />
-                History
-              </Button>
-            </div>
-
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => document.getElementById('file-upload')?.click()}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Upload
-                <input
-                  id="file-upload"
-                  type="file"
-                  className="hidden"
-                  accept=".txt"
-                  onChange={handleFileUpload}
-                />
-              </Button>
-              
-              <Button 
-                onClick={handleProcess}
-                className="bg-green-600 hover:bg-green-700 text-white"
-              >
-                <Wand2 className="h-4 w-4 mr-2" />
-                {mode === 'encode' ? 'Encode' : 'Decode'}
-              </Button>
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <Label htmlFor="output-text" className="text-white mb-2 block">Result:</Label>
-            <Textarea
-              id="output-text"
-              value={outputText}
-              readOnly
-              className="w-full bg-gray-700 text-white border-gray-600 h-32"
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <Button 
-              onClick={handleCopy} 
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              <Copy className="h-4 w-4 mr-2" />
-              Copy Result
-            </Button>
-            
-            <Button 
-              onClick={handleDownload}
-              variant="outline"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download Result
-            </Button>
-          </div>
-        </div>
-
-        {showHistory && (
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">History</h2>
-            <div className="space-y-4">
-              {history.map((entry, index) => (
-                <div key={index} className="bg-gray-700 p-4 rounded-lg">
-                  <div className="flex justify-between text-gray-300 mb-2">
-                    <span>{entry.mode === 'encode' ? 'Encoded' : 'Decoded'}</span>
-                    <span>{entry.timestamp.toLocaleString()}</span>
-                  </div>
-                  <div className="text-white">
-                    <div className="mb-2">
-                      <Label className="text-gray-400">Input:</Label>
-                      <div className="bg-gray-800 p-2 rounded">{entry.input}</div>
-                    </div>
-                    <div>
-                      <Label className="text-gray-400">Output:</Label>
-                      <div className="bg-gray-800 p-2 rounded">{entry.output}</div>
-                    </div>
-                  </div>
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <Label htmlFor="input-text" className="text-white">Enter your text:</Label>
+                <Button variant="ghost" onClick={handlePaste} className="text-white">
+                  <Clipboard className="h-4 w-4 mr-2" />
+                  Paste
+                </Button>
+              </div>
+              <Textarea
+                id="input-text"
+                value={inputText}
+                onChange={handleInputChange}
+                placeholder={`Type or paste your ${mode === 'encode' ? 'plain' : 'HTML-encoded'} text here`}
+                className="w-full bg-gray-700 text-white border-gray-600 h-32"
+              />
+            </div>
+
+            <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant={mode === 'encode' ? "default" : "outline"}
+                  onClick={toggleMode}
+                  className="py-2 px-4"
+                >
+                  {mode === 'encode' ? <Code className="h-4 w-4 mr-2" /> : <FileText className="h-4 w-4 mr-2" />}
+                  {mode === 'encode' ? 'Encode' : 'Decode'}
+                </Button>
+                
+                <Select
+                  value={encodingFormat}
+                  onValueChange={(value: 'html' | 'url' | 'base64') => setEncodingFormat(value)}
+                >
+                  <SelectTrigger className="w-[180px] bg-gray-700 text-white">
+                    <SelectValue placeholder="Select format" />
+                  </SelectTrigger>
+                  <SelectContent className="w-[180px] bg-gray-700 text-white">
+                    <SelectItem value="html">HTML Entities</SelectItem>
+                    <SelectItem value="url">URL Encoding</SelectItem>
+                    <SelectItem value="base64">Base64</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="preserve-newlines"
+                    checked={preserveNewlines}
+                    onCheckedChange={setPreserveNewlines}
+                  />
+                  <Label htmlFor="preserve-newlines" className="text-white">Preserve newlines</Label>
                 </div>
-              ))}
+                
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="encode-quotes"
+                    checked={encodeQuotes}
+                    onCheckedChange={setEncodeQuotes}
+                  />
+                  <Label htmlFor="encode-quotes" className="text-white">Encode quotes</Label>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="encode-non-ascii"
+                    checked={encodeNonASCII}
+                    onCheckedChange={setEncodeNonASCII}
+                  />
+                  <Label htmlFor="encode-non-ascii" className="text-white">Encode non-ASCII</Label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4 mb-6">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="minify-html"
+                  checked={minifyHTML}
+                  onCheckedChange={setMinifyHTML}
+                />
+                <Label htmlFor="minify-html" className="text-white">Minify HTML</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="escape-js"
+                  checked={escapeJS}
+                  onCheckedChange={setEscapeJS}
+                />
+                <Label htmlFor="escape-js" className="text-white">Escape for JavaScript</Label>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
+              <div className="flex gap-2">
+                <Button 
+                  variant="destructive" 
+                  onClick={handleClear}
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+                
+                <Button onClick={() => setShowHistory(!showHistory)}>
+                  <History className="h-4 w-4 mr-2" />
+                  History
+                </Button>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => document.getElementById('file-upload')?.click()}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload
+                  <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                    accept=".txt"
+                    onChange={handleFileUpload}
+                  />
+                </Button>
+                
+                <Button 
+                  onClick={handleProcess}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  {mode === 'encode' ? 'Encode' : 'Decode'}
+                </Button>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <Label htmlFor="output-text" className="text-white mb-2 block">Result:</Label>
+              <Textarea
+                id="output-text"
+                value={outputText}
+                readOnly
+                className="w-full bg-gray-700 text-white border-gray-600 h-32"
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleCopy} 
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy Result
+              </Button>
+              
+              <Button 
+                onClick={handleDownload}
+                variant="outline"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download Result
+              </Button>
             </div>
           </div>
-        )}
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-            <Info className="w-6 h-6 mr-2" />
-            About HTML Encoder/Decoder
-          </h2>
-          <p className="text-gray-300 mb-4">
-            The HTML Encoder/Decoder tool provides a robust solution for encoding and decoding text in multiple formats, including HTML entities, URL encoding, and Base64. This tool is particularly useful for developers working with web content, as it offers a range of options to handle special characters, quotes, and non-ASCII text.
-          </p>
+          {showHistory && (
+            <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+              <h2 className="text-2xl font-bold text-white mb-4">History</h2>
+              <div className="space-y-4">
+                {history.map((entry, index) => (
+                  <div key={index} className="bg-gray-700 p-4 rounded-lg">
+                    <div className="flex justify-between text-gray-300 mb-2">
+                      <span>{entry.mode === 'encode' ? 'Encoded' : 'Decoded'}</span>
+                      <span>{entry.timestamp.toLocaleString()}</span>
+                    </div>
+                    <div className="text-white">
+                      <div className="mb-2">
+                        <Label className="text-gray-400">Input:</Label>
+                        <div className="bg-gray-800 p-2 rounded">{entry.input}</div>
+                      </div>
+                      <div>
+                        <Label className="text-gray-400">Output:</Label>
+                        <div className="bg-gray-800 p-2 rounded">{entry.output}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2" />
-            Key Features
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Multi-format Support: Allows you to encode/decode text to HTML entities, URL encoding, or Base64.</li>
-            <li>Preserve Newlines: Keeps line breaks intact during encoding.</li>
-            <li>Encode Quotes: Converts single and double quotes to their HTML entity equivalents.</li>
-            <li>Encode Non-ASCII: Transforms non-ASCII characters into numeric references, ensuring compatibility with older systems.</li>
-            <li>Minify HTML: Removes unnecessary whitespace from HTML code.</li>
-            <li>Escape for JavaScript: Escapes special characters for use within JavaScript strings.</li>
-          </ul>
+          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About HTML Encoder/Decoder
+            </h2>
+            <p className="text-gray-300 mb-4">
+              The HTML Encoder/Decoder tool provides a robust solution for encoding and decoding text in multiple formats, including HTML entities, URL encoding, and Base64. This tool is particularly useful for developers working with web content, as it offers a range of options to handle special characters, quotes, and non-ASCII text.
+            </p>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Practical Features
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Clipboard support for pasting and copying text.</li>
-            <li>File uploads and download functionality for processed text.</li>
-            <li>History of recent encodings/decodings for easy reference.</li>
-          </ul>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Multi-format Support: Allows you to encode/decode text to HTML entities, URL encoding, or Base64.</li>
+              <li>Preserve Newlines: Keeps line breaks intact during encoding.</li>
+              <li>Encode Quotes: Converts single and double quotes to their HTML entity equivalents.</li>
+              <li>Encode Non-ASCII: Transforms non-ASCII characters into numeric references, ensuring compatibility with older systems.</li>
+              <li>Minify HTML: Removes unnecessary whitespace from HTML code.</li>
+              <li>Escape for JavaScript: Escapes special characters for use within JavaScript strings.</li>
+            </ul>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2" />
-            How to Use HTML Encoder/Decoder?
-          </h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Input: Enter your text into the input field. Choose between "Encode" and "Decode" mode.</li>
-            <li>Format Selection: Select between HTML entities, URL encoding, or Base64.</li>
-            <li>Processing Options: Customize options like preserving newlines, encoding quotes, minifying HTML, or escaping for JavaScript.</li>
-            <li>Actions: Click the "Process" button or let the tool auto-update as you type. You can copy the result or download it as a text file.</li>
-            <li>History: View the last 10 encodings/decodings for easy reference.</li>
-          </ol>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Practical Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Clipboard support for pasting and copying text.</li>
+              <li>File uploads and download functionality for processed text.</li>
+              <li>History of recent encodings/decodings for easy reference.</li>
+            </ul>
 
-          <p className="text-gray-300 mt-8">
-            This tool ensures smooth conversions while avoiding common encoding pitfalls, making it ideal for preparing web content, debugging code, and securing text in various formats.
-          </p>
-        </div>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use HTML Encoder/Decoder?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Input: Enter your text into the input field. Choose between "Encode" and "Decode" mode.</li>
+              <li>Format Selection: Select between HTML entities, URL encoding, or Base64.</li>
+              <li>Processing Options: Customize options like preserving newlines, encoding quotes, minifying HTML, or escaping for JavaScript.</li>
+              <li>Actions: Click the "Process" button or let the tool auto-update as you type. You can copy the result or download it as a text file.</li>
+              <li>History: View the last 10 encodings/decodings for easy reference.</li>
+            </ol>
 
-      </main>
+            <p className="text-gray-300 mt-8">
+              This tool ensures smooth conversions while avoiding common encoding pitfalls, making it ideal for preparing web content, debugging code, and securing text in various formats.
+            </p>
+          </div>
+
+        </main>
+       </div> 
       <Footer />
     </div>
   );

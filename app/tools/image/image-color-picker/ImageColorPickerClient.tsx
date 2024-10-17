@@ -1,12 +1,16 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, X, RefreshCw, } from 'lucide-react';
+import { Upload, X, RefreshCw, Info, BookOpen, Lightbulb, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast, Toaster } from 'react-hot-toast';
+import CompactShare from '@/components/CompactShare';
+import CommentsSection from '@/components/CommentsSection';
+import Sidebar from '@/components/sidebarTools';
+
 
 type ColorFormat = 'hex' | 'rgb' | 'hsl';
 
@@ -196,8 +200,20 @@ export default function ImageColorPicker() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Toaster position="top-right" />
       <Header />
+      <div className='flex-grow flex'>
+        {/* Sidebar */}
+        <aside className=" bg-gray-800">
+            <Sidebar />  
+        </aside>
       <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-6 text-center">Image Color Picker</h1>
+       <div className="mb-12 text-center px-4">
+          <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Image Color Picker
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Effortlessly extract and capture colors from any image, perfect for enhancing your design projects with precision and ease.
+          </p>
+      </div>
 
         <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mb-8 mx-auto">
           <div className="mb-6">
@@ -303,43 +319,47 @@ export default function ImageColorPicker() {
             </div>
           )}
         </div>
+    
+        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Image Color Picker
+          </h2>
+          <p className="text-gray-300 mb-4">
+              The Image Color Picker is a user-friendly tool that allows you to extract colors from any uploaded image. It provides a simple and effective way to identify and capture colors for your design projects.
+          </p>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto">
-          <section className="mb-6">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">About Image Color Picker</h2>
-            <p className="text-white">
-              The Image Color Picker is a user-friendly tool that allows you to extract colors from any uploaded image. 
-              It provides a simple and effective way to identify and capture colors for your design projects.
-            </p>
-          </section>
-
-          <section className="mb-6">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">How to Use Image Color Picker?</h2>
-            <ol className="list-decimal list-inside text-white space-y-2">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use Image Color Picker?
+          </h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Upload an image by clicking on the upload area or dragging and dropping a file.</li>
               <li>Move your cursor over the image to see a magnified view.</li>
               <li>Click on the image to select a color.</li>
               <li>View the selected color details in HEX, RGB, and HSL formats.</li>
               <li>Copy the color values to your clipboard by clicking the "Copy" button.</li>
               <li>Use the color history to quickly access previously selected colors.</li>
-            </ol>
-          </section>
+          </ol>
 
-          <section className="mb-6">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">Key Features</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
-              <li>Simple and intuitive color picker</li>
-              <li>Real-time magnifier for precise color selection</li>
-              <li>Color format switching between HEX, RGB, and HSL</li>
-              <li>Color history for quick access to previously selected colors</li>
-              <li>One-click color copying to clipboard</li>
-              <li>Responsive design for use on various devices</li>
-            </ul>
-          </section>
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Simple and intuitive color picker.</li>
+              <li>Real-time magnifier for precise color selection.</li>
+              <li>Color format switching between HEX, RGB, and HSL.</li>
+              <li>Color history for quick access to previously selected colors.</li>
+              <li>One-click color copying to clipboard.</li>
+              <li>Responsive design for use on various devices.</li>
+          </ul>
 
-          <section>
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-            <ul className="list-disc list-inside text-white space-y-2">
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Tips and Tricks
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Use the magnifier to ensure you're selecting the exact color you want.</li>
               <li>The color picker uses a small average area to provide more accurate color selection, especially in images with noise or texture.</li>
               <li>Utilize the color history to compare different colors from your image.</li>
@@ -347,10 +367,12 @@ export default function ImageColorPicker() {
               <li>When working with print designs, RGB values might be more useful.</li>
               <li>HSL format can be helpful for understanding and adjusting color properties like hue and saturation.</li>
               <li>Experiment with different parts of your image to find the perfect color for your project.</li>
-            </ul>
-          </section>
-        </div>
+          </ul>
+      </div>
+
       </main>
+      
+      </div>
       <Footer />
     </div>
   );
