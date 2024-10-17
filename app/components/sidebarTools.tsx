@@ -2,10 +2,6 @@
 
 import React, { useState } from 'react';
 import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, Sparkles, ChevronDown } from 'lucide-react'; // Replace with actual icons
-type SubCategory = {
-    name: string;
-    href: string;
-  };
   
   
 
