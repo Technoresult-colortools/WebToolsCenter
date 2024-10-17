@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Send, MessageCircle, Sparkles, Mail, PhoneCall, MapPin } from 'lucide-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
   faFacebookF, 
   faTwitter, 
@@ -11,6 +11,7 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function ContactPage() {
   const [isVisible, setIsVisible] = useState(false)
@@ -32,18 +33,46 @@ export default function ContactPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Here you would typically send the form data to your backend
-    console.log('Form submitted:', formData)
-    // Reset form after submission
-    setFormData({ name: '', email: '', message: '' })
-    alert('Thank you for your message. We will get back to you soon!')
+
+    // Preparing form data for Web3Forms
+    const formSubmission = new FormData(e.target as HTMLFormElement)
+    formSubmission.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || '')
+
+    const object = Object.fromEntries(formSubmission)
+    const json = JSON.stringify(object)
+
+    // Submitting to Web3Forms
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: json
+      })
+      const result = await response.json()
+
+      if (result.success) {
+        console.log('Form successfully submitted:', result)
+        toast.success('Thank you for your message. We will get back to you soon!')
+        setFormData({ name: '', email: '', message: '' }) // Reset form
+      } else {
+        console.error('Form submission failed:', result)
+        toast.error('Something went wrong. Please try again later.')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      toast.error('Error submitting the form. Please try again later.')
+    }
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">
       <Header />
+      <Toaster position="top-right" reverseOrder={false} />
 
       {/* Hero Section */}
       <section className="pt-24 pb-12 px-4 relative overflow-hidden">

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, Sparkles, ChevronDown } from 'lucide-react'; // Replace with actual icons
   
   
@@ -145,13 +145,29 @@ const categories = [
 
 const Sidebar: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1023); // Considering screens smaller than 768px as mobile
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const toggleCategory = (categoryName: string) => {
     setActiveCategory(activeCategory === categoryName ? null : categoryName);
   };
 
+  if (isMobile) {
+    return null; // Don't render the sidebar on mobile devices
+  }
+
   return (
-    <aside className="sticky left-0 top-16 h-screen w-0 md:w-16 lg:w-72 xl:w-80 bg-gray-900 text-white transition-all duration-300 ease-in-out flex flex-col">
+    <aside className="sticky left-0 top-16 h-screen w-16 lg:w-72 xl:w-80 bg-gray-900 text-white transition-all duration-300 ease-in-out flex flex-col">
       <div className="p-6 hidden lg:block flex-shrink-0">
         <h2 className="text-2xl font-bold mb-6 flex items-center">
           Explore Tools
