@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, Info, Lightbulb, BookOpen, RefreshCw, Layout, ImageIcon, Sliders, Type, Copy } from 'lucide-react';
+import { Download, Info, Lightbulb, BookOpen, RefreshCw, Layout, ImageIcon, Sliders, Type, } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { exportComponentAsJPEG, exportComponentAsPNG } from 'react-component-export-image';

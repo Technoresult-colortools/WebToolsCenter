@@ -7,8 +7,6 @@ import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/Button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast, Toaster } from 'react-hot-toast';
-import CompactShare from '@/components/CompactShare';
-import CommentsSection from '@/components/CommentsSection';
 import Sidebar from '@/components/sidebarTools';
 
 

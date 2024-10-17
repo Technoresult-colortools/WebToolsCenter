@@ -12,8 +12,6 @@ import { toast } from 'react-hot-toast'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Sidebar from '@/components/sidebarTools';
-import ToolCategories from '@/categories/page'
-import { Tooltip } from '@radix-ui/react-tooltip'
 
 export default function ShadowGenerator() {
   const [shadowColor, setShadowColor] = useState("#000000")

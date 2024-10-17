@@ -105,7 +105,7 @@ export default function CodeToImageConverter() {
   const [padding, setPadding] = useState(16)
   
   const codeContainerRef = useRef<HTMLDivElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+
 
   const handleExport = useCallback(async () => {
     if (codeContainerRef.current) {

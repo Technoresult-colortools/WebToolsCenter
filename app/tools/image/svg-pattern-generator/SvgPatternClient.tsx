@@ -68,7 +68,6 @@ export default function Component() {
   const [customImage, setCustomImage] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const img = new window.Image();
 
   const generatePattern = useCallback(() => {
     let pattern = '';

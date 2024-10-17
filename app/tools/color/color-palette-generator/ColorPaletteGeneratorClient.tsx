@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Copy, RefreshCw, Download, Shuffle, Info, BookOpen, Lightbulb, AlertCircle } from 'lucide-react'
+import { Copy, RefreshCw, Download, Shuffle, Info, BookOpen, Lightbulb, } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Sidebar from '@/components/sidebarTools';

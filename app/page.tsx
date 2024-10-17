@@ -16,7 +16,7 @@ import {
   faTwitter,
   faYoutube,
 } from '@fortawesome/free-brands-svg-icons'
-import { faFont, faImage, faPalette, faCode, faDroplet, faShare, faWrench, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faSwatchbook, faFillDrip, faCircleNotch, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import { faFont, faImage, faPalette, faCode, faDroplet, faShare, faWrench, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 // Types remain the same
 type Tool = {

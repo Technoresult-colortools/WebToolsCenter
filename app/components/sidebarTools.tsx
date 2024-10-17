@@ -1,18 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, Sparkles, ChevronUp, ChevronDown } from 'lucide-react'; // Replace with actual icons
+import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, Sparkles, ChevronDown } from 'lucide-react'; // Replace with actual icons
 type SubCategory = {
     name: string;
     href: string;
   };
   
-  type Category = {
-    name: string;
-    icon: React.ElementType;
-    gradient: string;
-    subCategories: SubCategory[];
-  };
   
 
 const categories = [

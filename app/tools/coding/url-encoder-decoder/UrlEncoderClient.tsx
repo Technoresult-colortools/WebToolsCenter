@@ -13,7 +13,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Sidebar from '@/components/sidebarTools';
-import ToolCategories from '@/categories/page'
 
 export default function URLEncoderDecoder() {
   const [inputText, setInputText] = useState("")

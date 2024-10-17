@@ -73,14 +73,14 @@ function hexToHsl(hex: string) {
 }
 
 function hexToCmyk(hex: string) {
-  let r = parseInt(hex.slice(1, 3), 16) / 255;
-  let g = parseInt(hex.slice(3, 5), 16) / 255;
-  let b = parseInt(hex.slice(5, 7), 16) / 255;
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
 
-  let k = 1 - Math.max(r, g, b);
-  let c = (1 - r - k) / (1 - k);
-  let m = (1 - g - k) / (1 - k);
-  let y = (1 - b - k) / (1 - k);
+  const k = 1 - Math.max(r, g, b);
+  const c = (1 - r - k) / (1 - k);
+  const m = (1 - g - k) / (1 - k);
+  const y = (1 - b - k) / (1 - k);
 
   return `cmyk(${Math.round(c * 100)}%, ${Math.round(m * 100)}%, ${Math.round(y * 100)}%, ${Math.round(k * 100)}%)`;
 }
