@@ -22,7 +22,7 @@ export default function Footer() {
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"></div>
 
       {/* Main Footer Content */}
-      <div className="max-w-[1920px] mx-auto px-4 py-16">
+      <div className="max-w-[1920px] mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand Section */}
           <div className="space-y-6">

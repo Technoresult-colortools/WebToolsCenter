@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect,} from 'react'
 import Link from 'next/link'
+import Image from 'next/image';
 import { useRouter } from 'next/navigation'
 import { Search, Menu, X, Coffee } from 'lucide-react'
 
@@ -171,11 +172,18 @@ export default function Header() {
             <div className="flex items-center justify-between gap-4">
               {/* Logo */}
               <Link href="/" className="text-2xl font-bold text-white flex items-center space-x-2">
-                <img src="/LogoWTC1.svg" alt="WebToolsCenter Logo" className="h-8 w-8" />
+                <Image
+                  src="/LogoWTC1.svg"
+                  alt="WebToolsCenter Logo"
+                  width={32} // Adjust width as needed
+                  height={32} // Adjust height as needed
+                  priority // Ensures the logo is loaded quickly, especially above the fold
+                />
                 <span>
                   Web<span className="text-blue-400">Tools</span>Center
                 </span>
               </Link>
+
 
 
               {/* Desktop Search Bar */}
@@ -219,7 +227,7 @@ export default function Header() {
                 </Link>
                 {/* Buy Me a Coffee Button */}
                 <a
-                  href="https://www.buymeacoffee.com/your-username"
+                  href="https://buymeacoffee.com/webtoolscenter"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center px-3 py-2 bg-yellow-500 text-gray-900 rounded-full font-medium hover:bg-yellow-400 transition duration-300 transform hover:scale-105"

@@ -732,7 +732,7 @@ const GoogleFontsPairFinder: React.FC = () => {
               </TabsContent>
               <TabsContent value="card">
                 <div className="bg-white text-black rounded-lg overflow-hidden">
-                  <img src="/placeholder.svg?height=200&width=400" alt="Card" className="w-full h-48 object-cover" />
+                  <img src="/Images/Typography.png?height=200&width=400" alt="Card" className="w-full h-48 object-cover" />
                   <div className="p-6">
                     <h3 style={{
                       fontFamily: `'${headingFont.family}', ${fonts.find(f => f.family === headingFont.family)?.category || 'sans-serif'}`,
