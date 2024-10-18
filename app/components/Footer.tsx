@@ -12,7 +12,7 @@ import {
   faPalette, 
   faCode, 
   faLightbulb, 
-  faEnvelope 
+  faCoffee 
 } from '@fortawesome/free-solid-svg-icons'
 
 export default function Footer() {
@@ -39,22 +39,21 @@ export default function Footer() {
             <p className="text-gray-400 leading-relaxed">
               Empowering designers and developers with cutting-edge web tools for seamless creation and innovation.
             </p>
-            {/* Newsletter Signup */}
+            {/* Buy Me a Coffee Support Option */}
             <div className="pt-4">
               <h4 className="text-sm font-semibold uppercase tracking-wider mb-3 flex items-center">
-                <FontAwesomeIcon icon={faEnvelope} className="mr-2 text-blue-400" />
-                Stay Updated
+                <FontAwesomeIcon icon={faCoffee} className="mr-2 text-yellow-400 animate-bounce" />
+                Support Our Work
               </h4>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 bg-gray-800 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400 border border-gray-700"
-                />
-                <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-r-lg transition duration-200">
-                  Subscribe
-                </button>
-              </div>
+              <a 
+                href="https://buymeacoffee.com/webtoolscenter" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold rounded-lg transition duration-300 transform hover:scale-105 hover:shadow-lg"
+              >
+                <FontAwesomeIcon icon={faCoffee} className="mr-2" />
+                Buy Me a Coffee
+              </a>
             </div>
           </div>
 
@@ -135,7 +134,7 @@ export default function Footer() {
             <div className="pt-4">
               <p className="text-sm text-gray-400">
                 Need help? Contact us at:
-                <a href="mailto:support@webtoolscenter.com" className="block text-blue-400 hover:underline mt-1">
+                <a href="mailto:technoresult@gmail.com" className="block text-blue-400 hover:underline mt-1">
                   technoresult@gmail.com
                 </a>
               </p>

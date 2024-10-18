@@ -96,16 +96,16 @@ export default function BarCodeGenerator() {
               <div className="bg-white p-4 rounded-md mb-4">
                 {svgData && <img src={svgData} alt="Generated Barcode" className="mx-auto" />}
               </div>
-              <div className="flex space-x-4">
-                <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                <Button onClick={handleDownload} className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
                   <Download className="h-5 w-5 mr-2" />
                   Download
                 </Button>
-                <Button onClick={handleCopyToClipboard} className="bg-green-600 hover:bg-green-700 text-white">
+                <Button onClick={handleCopyToClipboard} className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white">
                   <Copy className="h-5 w-5 mr-2" />
                   Copy SVG
                 </Button>
-                <Button onClick={generateBarcode} className="bg-purple-600 hover:bg-purple-700 text-white">
+                <Button onClick={generateBarcode} className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white">
                   <RefreshCw className="h-5 w-5 mr-2" />
                   Regenerate
                 </Button>

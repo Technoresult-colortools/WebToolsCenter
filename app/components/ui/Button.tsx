@@ -13,7 +13,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const variantStyles = {
       default: "bg-gradient-to-br from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600",
       destructive: "bg-gradient-to-br from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600",
-      outline: "border border-gray-300 bg-transparent hover:bg-gray-100 text-gray-700",
+      outline: "bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-700 hover:from-blue-200 hover:to-cyan-200 border border-blue-400",
       secondary: "bg-gradient-to-br from-gray-300 to-gray-400 text-gray-900 hover:from-gray-400 hover:to-gray-500",
       ghost: "bg-transparent hover:bg-gray-100 text-gray-700",
       link: "text-blue-600 underline-offset-4 hover:underline",

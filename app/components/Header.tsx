@@ -3,7 +3,7 @@
 import React, { useState, useEffect,} from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, Menu, X } from 'lucide-react'
+import { Search, Menu, X, Coffee } from 'lucide-react'
 
 
 
@@ -170,9 +170,13 @@ export default function Header() {
           <div className="px-4 py-4">
             <div className="flex items-center justify-between gap-4">
               {/* Logo */}
-              <Link href="/" className="text-2xl font-bold text-white flex-shrink-0">
-                Web<span className="text-blue-400">Tools</span>Center
+              <Link href="/" className="text-2xl font-bold text-white flex items-center space-x-2">
+                <img src="/LogoWTC1.svg" alt="WebToolsCenter Logo" className="h-8 w-8" />
+                <span>
+                  Web<span className="text-blue-400">Tools</span>Center
+                </span>
               </Link>
+
 
               {/* Desktop Search Bar */}
               <div className="hidden md:flex flex-1 max-w-xl mx-4">
@@ -202,8 +206,8 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-6">
+               {/* Desktop Navigation */}
+               <nav className="hidden md:flex items-center space-x-6">
                 <Link href="/categories" className="text-gray-300 hover:text-blue-400 transition duration-200">
                   Categories
                 </Link>
@@ -213,6 +217,16 @@ export default function Header() {
                 <Link href="/contact" className="text-gray-300 hover:text-blue-400 transition duration-200">
                   Contact
                 </Link>
+                {/* Buy Me a Coffee Button */}
+                <a
+                  href="https://www.buymeacoffee.com/your-username"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center px-3 py-2 bg-yellow-500 text-gray-900 rounded-full font-medium hover:bg-yellow-400 transition duration-300 transform hover:scale-105"
+                >
+                  <Coffee size={20} className="mr-2" />
+                  <span className="hidden lg:inline">Buy Me a Coffee</span>
+                </a>
               </nav>
 
               {/* Mobile Controls */}
@@ -224,6 +238,16 @@ export default function Header() {
                 >
                   <Search size={24} />
                 </button>
+                {/* Mobile Buy Me a Coffee Button */}
+                <a
+                  href="https://buymeacoffee.com/webtoolscenter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-yellow-500 hover:text-yellow-400 transition duration-200"
+                  aria-label="Buy Me a Coffee"
+                >
+                  <Coffee size={24} />
+                </a>
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                   className="p-2 text-gray-300 hover:text-white transition duration-200"
