@@ -50,7 +50,6 @@ const initialBodyFont: FontSettings = {
   style: 'normal',
 };
 
-
 const fontSizeOptions = [
   { value: 12, label: '12px' },
   { value: 14, label: '14px' },
@@ -72,7 +71,7 @@ const popularityOptions = [
   { value: 'top500', label: 'Top 500' },
 ];
 
-export default function GoogleFontsPairFinder() {
+const GoogleFontsPairFinder: React.FC = () => {
   const [headingFont, setHeadingFont] = useState<FontSettings>(initialHeadingFont);
   const [bodyFont, setBodyFont] = useState<FontSettings>(initialBodyFont);
   const [activeTab, setActiveTab] = useState<'profile' | 'article' | 'card'>('profile');
@@ -206,7 +205,7 @@ export default function GoogleFontsPairFinder() {
     toast.success("The CSS has been copied to your clipboard.");
   };
 
-  const FontControls = useCallback(({ isHeading }: { isHeading: boolean }) => {
+  const FontControls: React.FC<{ isHeading: boolean }> = useCallback(({ isHeading }) => {
     const font = isHeading ? headingFont : bodyFont;
     const setFont = isHeading ? setHeadingFont : setBodyFont;
     const handleShuffle = isHeading ? handleShuffleHeading : handleShuffleBody;
@@ -214,18 +213,18 @@ export default function GoogleFontsPairFinder() {
     
     return (
       <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Label htmlFor={`${isHeading ? 'heading' : 'body'}-font-family`} className="text-white">
-          {isHeading ? 'Heading' : 'Body'} Font Family
-        </Label>
-        <div className="flex space-x-2">
-          <Button onClick={handleShuffle} size="sm" className="bg-red-600 hover:bg-red-700 text-white" variant="destructive">
-            <Shuffle className="h-4 w-4 mr-2" />
-            Shuffle
-          </Button>
-          <FontDetails font={font} setFont={setFont} isHeading={isHeading} fonts={fonts} />
+        <div className="flex items-center justify-between">
+          <Label htmlFor={`${isHeading ? 'heading' : 'body'}-font-family`} className="text-white">
+            {isHeading ? 'Heading' : 'Body'} Font Family
+          </Label>
+          <div className="flex space-x-2">
+            <Button onClick={handleShuffle} size="sm" className="bg-red-600 hover:bg-red-700 text-white" variant="destructive">
+              <Shuffle className="h-4 w-4 mr-2" />
+              Shuffle
+            </Button>
+            <FontDetails font={font} setFont={setFont} isHeading={isHeading} fonts={fonts} />
+          </div>
         </div>
-      </div>
         <Select
           value={font.family}
           onValueChange={(value) => setFont({ ...font, family: value })}
@@ -308,12 +307,12 @@ export default function GoogleFontsPairFinder() {
           </Label>
           <Select
             value={font.letterSpacing.toString()}
-            onValueChange={(value) => setFont({ ...font, letterSpacing: parseFloat(value)   })}
+            onValueChange={(value) => setFont({ ...font, letterSpacing: parseFloat(value) })}
           >
             <SelectTrigger id={`${isHeading ? 'heading' : 'body'}-letter-spacing`} className="bg-gray-700 text-white border-gray-600">
               <SelectValue placeholder="Select letter spacing" />
             </SelectTrigger>
-            <SelectContent className="bg-gray-700 text-white border-gray-600">
+            <SelectContent className="bg-gray-700  text-white border-gray-600">
               {[-2, -1, -0.5, 0, 0.5, 1, 2].map((value) => (
                 <SelectItem key={value} value={value.toString()}>
                   {value.toFixed(1)}px
@@ -324,14 +323,16 @@ export default function GoogleFontsPairFinder() {
         </div>
       </div>
     );
-  }, [fonts, headingFont, bodyFont, loadingFonts, filteredHeadingFonts, filteredBodyFonts]);
+  }, [fonts, headingFont, bodyFont, loadingFonts, filteredHeadingFonts, filteredBodyFonts, handleShuffleHeading, handleShuffleBody]);
 
-  const FontDetails = React.memo(({ font, setFont, isHeading, fonts }: { 
+  FontControls.displayName = 'FontControls';
+
+  const FontDetails: React.FC<{ 
     font: FontSettings; 
     setFont: React.Dispatch<React.SetStateAction<FontSettings>>; 
     isHeading: boolean;
     fonts: Font[];
-  }) => {
+  }> = React.memo(({ font, setFont, isHeading, fonts }) => {
     const [isOpen, setIsOpen] = useState(false);
     const currentFont = fonts.find(f => f.family === font.family);
     const [previewSettings, setPreviewSettings] = useState(font);
@@ -439,7 +440,9 @@ export default function GoogleFontsPairFinder() {
     );
   });
 
-  const FontFilters = ({ isHeading }: { isHeading: boolean }) => {
+  FontDetails.displayName = 'FontDetails';
+
+  const FontFilters: React.FC<{ isHeading: boolean }> = ({ isHeading }) => {
     const categories = isHeading ? headingCategories : bodyCategories;
     const setCategories = isHeading ? setHeadingCategories : setBodyCategories;
     const popularity = isHeading ? headingPopularity : bodyPopularity;
@@ -500,7 +503,9 @@ export default function GoogleFontsPairFinder() {
     );
   };
 
-  const ShowFontsPair = () => {
+  FontFilters.displayName = 'FontFilters';
+
+  const ShowFontsPair: React.FC = () => {
     const headingWeights = fonts.find(f => f.family === headingFont.family)?.variants || [];
     const bodyWeights = fonts.find(f => f.family === bodyFont.family)?.variants || [];
 
@@ -624,6 +629,8 @@ export default function GoogleFontsPairFinder() {
     );
   };
 
+  ShowFontsPair.displayName = 'ShowFontsPair';
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
       <Header />
@@ -632,13 +639,13 @@ export default function GoogleFontsPairFinder() {
           <Sidebar />
         </aside>
         <main className="flex-grow container mx-auto px-4 py-12">
-        <div className="mb-12 text-center px-4">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                  Google Fonts Pair Finder
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                 Discover the perfect font combinations for your design projects.
-              </p>
+          <div className="mb-12 text-center px-4">
+            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
+              Google Fonts Pair Finder
+            </h1>
+            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
+              Discover the perfect font combinations for your design projects.
+            </p>
           </div>
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
@@ -843,5 +850,9 @@ export default function GoogleFontsPairFinder() {
       <Toaster position="top-right" />
       <ShowFontsPair />
     </div>
-  )
-}
+  );
+};
+
+GoogleFontsPairFinder.displayName = 'GoogleFontsPairFinder';
+
+export default GoogleFontsPairFinder;
