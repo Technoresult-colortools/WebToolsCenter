@@ -10,6 +10,7 @@ import {
   faTwitter, 
   faYoutube 
 } from '@fortawesome/free-brands-svg-icons';
+import { faHashtag } from '@fortawesome/free-solid-svg-icons';
 
 const socialMediaTools = [
   { 
@@ -46,6 +47,12 @@ const socialMediaTools = [
     name: 'YouTube Thumbnail Downloader', 
     href: '/tools/social-media/youtube-thumbnail-downloader', 
     icon: faYoutube, 
+    gradient: 'from-red-500 to-orange-500' 
+  },
+  { 
+    name: 'YouTube Keyword Tag Extractor', 
+    href: '/tools/social-media/youtube-tag-extractor', 
+    icon: faHashtag, 
     gradient: 'from-red-500 to-orange-500' 
   },
 ];

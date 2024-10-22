@@ -117,6 +117,8 @@ const allTools: Tool[] = [
     { name: 'Tweet Generator', category: 'Social Media Tools', path: '/tools/social-media/tweet-generator' },
     { name: 'Tweet to Image Converter', category: 'Social Media Tools', path: '/tools/social-media/tweet-to-image-converter' },
     { name: 'YouTube Thumbnail Downloader', category: 'Social Media Tools', path: '/tools/social-media/youtube-thumbnail-downloader' },
+    { name: 'YouTube Keyword Tag Extractor', category: 'Social Media Tools', path: '/tools/social-media/youtube-tag-extractor' },
+    
   
 ]
 
