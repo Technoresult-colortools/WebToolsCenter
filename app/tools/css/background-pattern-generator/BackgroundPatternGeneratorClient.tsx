@@ -10,9 +10,7 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Download, Info, Lightbulb, BookOpen, Maximize2, X } from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools'
+import ToolLayout from '@/components/ToolLayout'
 import shapesData from './shapes.json'
 import * as ShapeIcons from '@/components/ShapeIcons'
 
@@ -115,22 +113,12 @@ export default function EnhancedBackgroundPatternGenerator() {
   )
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        <aside className="bg-gray-800">
-          <Sidebar />
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                CSS Background Pattern Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create customizable CSS background patterns quickly and efficiently.
-            </p>
-          </div>
+    <ToolLayout
+      title="CSS Background Pattern Generator"
+      description="Create customizable CSS background patterns quickly and efficiently"
+    >
+
+        <Toaster position="top-right" />
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <Tabs defaultValue="pattern" className="space-y-4">
@@ -275,22 +263,11 @@ export default function EnhancedBackgroundPatternGenerator() {
               <h2 className="text-2xl font-bold text-white mb-4">Generated CSS</h2>
               <div className="bg-gray-700 p-4 rounded-lg">
                 <pre className="text-white whitespace-pre-wrap break-all text-sm">
-                  {`.background-pattern {
-  ${css}
-}
-
-@keyframes moveBackground {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: ${size}px ${size}px;
-  }
-}`}
+                  {`.background-pattern {${css}}@keyframes moveBackground { 0% {  background-position: 0 0;  }  100% {    background-position: ${size}px ${size}px;  }}`}
                 </pre>
               </div>
               <div className="mt-4 flex flex-wrap justify-end space-x-2 space-y-2 sm:space-y-0">
-                <Button onClick={handleReset} variant="outline" className="text-white border-white hover:bg-gray-700">
+                <Button onClick={handleReset} variant="destructive" className="text-white border-white hover:bg-gray-700">
                   <RefreshCw className="h-5 w-5 mr-2" />
                   Reset
                 </Button>
@@ -366,11 +343,8 @@ export default function EnhancedBackgroundPatternGenerator() {
               <li>Consider accessibility when choosing colors and opacity levels.</li>
             </ul>
           </div>
-        </main>
-      </div>
-      <Footer />
+      
 
-      {/* Fullscreen Preview Popup */}
       {isFullscreen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
           <div className="relative w-3/4 h-3/4 max-h-screen p-4">
@@ -384,8 +358,8 @@ export default function EnhancedBackgroundPatternGenerator() {
           </div>
         </div>
       )}
-    </div>
-  )
+    </ToolLayout>  
+  )  
 }
 
 function cssToObject(cssString: string): Record<string, string> {

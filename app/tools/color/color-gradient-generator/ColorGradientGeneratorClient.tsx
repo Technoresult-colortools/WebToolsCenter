@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Copy, Download, Plus, Minus, RotateCcw, Shuffle, Info, BookOpen, Lightbulb } from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 type GradientType = 'linear' | 'radial' | 'conic';
 type ColorStop = { color: string; position: number };
@@ -127,23 +125,12 @@ export default function GradientGeneratorPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="Color Gradient Generator"
+      description="Create custom CSS gradients with ease"
+    >
+
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                Color Gradient Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create custom CSS gradients with ease.
-            </p>
-          </div>
 
           <div className="bg-gray-800 shadow-lg rounded-lg p-6 mb-4 max-w-4xl mx-auto">
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'gradient' | 'css')}>
@@ -257,7 +244,7 @@ export default function GradientGeneratorPage() {
                 <Download className="h-4 w-4 mr-2" />
                 Download PNG
               </Button>
-              <Button onClick={resetGradient} variant="secondary" className="flex-1 bg-gray-600 hover:bg-gray-700 text-white">
+              <Button onClick={resetGradient} variant="destructive" className="flex-1 bg-gray-600 hover:bg-gray-700 text-white">
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reset
               </Button>
@@ -325,10 +312,6 @@ export default function GradientGeneratorPage() {
               <li>Explore color theory to create harmonious color combinations.</li>
             </ul>
           </div>
-
-        </main>
-      </div>
-      <Footer />
-    </div>
+  </ToolLayout>
   );
 }

@@ -8,9 +8,7 @@ import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
 import { RefreshCw, Copy, Info, BookOpen, Lightbulb} from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 type GlassShape = 'rectangle' | 'circle' | 'custom'
 
@@ -93,23 +91,12 @@ const GlassmorphismGenerator = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                CSS Glassmorphism Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create glass-like UI elements using the glassmorphism effect.
-            </p>
-          </div>
+    <ToolLayout
+      title="CSS Glassmorphism Generator"
+      description="Create glass-like UI elements using the glassmorphism effect"
+    >
+
+    <Toaster position="top-right" />
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -343,10 +330,7 @@ const GlassmorphismGenerator = () => {
             </ul>
           </div>
 
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }
 

@@ -8,9 +8,7 @@ import Checkbox from "@/components/ui/Checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
 import { Upload, Download, RefreshCw, ArrowLeftRight, Info, Lightbulb, BookOpen, } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 export default function ImageResizer() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null);
@@ -109,23 +107,13 @@ export default function ImageResizer() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                Image Resizer
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                 Quickly and easily resize your images to fit any need. Perfect for social media, web use, or any other platform requiring specific dimensions with optimal quality.
-            </p>
-          </div>
+    <ToolLayout
+      title="Image Resizer"
+      description="Quickly and easily resize your images to fit any need. Perfect for social media, web use, or any other platform requiring specific dimensions with optimal quality"
+    >
+
+    <Toaster position="top-right" />
+
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-white mb-4">Upload Image</h2>
@@ -304,9 +292,6 @@ export default function ImageResizer() {
           </div>
 
 
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   );
 }

@@ -9,9 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import Slider from "@/components/ui/Slider"
 import { Upload, Copy, RefreshCw, FileText, Download, Zap, Info, Settings, BookOpen, Lightbulb } from 'lucide-react'
 import { toast, Toaster } from 'react-hot-toast'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 export default function HTMLMinifier() {
   const [inputHTML, setInputHTML] = useState("")
@@ -155,23 +153,12 @@ export default function HTMLMinifier() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-          <main className="flex-grow container mx-auto px-4 py-8">
-            <div className="mb-12 text-center px-4">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                  HTML Minifier
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                  Compress your HTML code by removing unnecessary characters like spaces, line breaks, and comments.
-              </p>
-            </div>
+    <ToolLayout
+      title="HTML Minifier"
+      description="Compress your HTML code by removing unnecessary characters like spaces, line breaks, and comments"
+    >
+
+    <Toaster position="top-right" />
 
             <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
               <div className="space-y-8">
@@ -314,20 +301,23 @@ export default function HTMLMinifier() {
 
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-white">Upload HTML File</h3>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-4 sm:space-y-0">
                     <Input
                       ref={fileInputRef}
                       type="file"
                       accept=".html,.htm"
                       onChange={handleFileUpload}
-                      className="bg-gray-700 hover:bg-gray-600"
+                      className="bg-gray-700 hover:bg-gray-600 w-full sm:w-auto"
                     />
-                    <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 hover:bg-blue-700">
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+                    >
                       <Upload className="w-4 h-4 mr-2" />
                       Upload File
                     </Button>
                     {fileName && (
-                      <span className="text-white">{fileName}</span>
+                      <span className="text-white sm:w-auto w-full text-center">{fileName}</span>
                     )}
                   </div>
                   <p className="text-sm text-gray-400 flex items-center">
@@ -335,6 +325,7 @@ export default function HTMLMinifier() {
                     Max file size: {MAX_FILE_SIZE_MB}MB. Allowed types: HTML, TXT
                   </p>
                 </div>
+
               </div>
             </div>
 
@@ -392,9 +383,6 @@ export default function HTMLMinifier() {
             </div>
 
 
-          </main>
-         </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

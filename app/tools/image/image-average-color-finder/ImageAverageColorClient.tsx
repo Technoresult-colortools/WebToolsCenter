@@ -2,12 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { Upload, X, Download, Droplet, Palette, Info, BookOpen, Lightbulb } from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import { Button } from "@/components/ui/Button"
 import Slider from "@/components/ui/Slider"
 import { toast, Toaster } from 'react-hot-toast'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
+
 
 interface Color {
   hex: string
@@ -158,22 +157,13 @@ export default function ImageAverageColorFinder() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-12 text-center px-4">
-          <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-            Image Average Color Finder
-          </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-            Analyze images to find their average and dominant colors effortlessly. Perfect for designers, artists, and anyone looking to create cohesive color palettes for their projects.
-          </p>
-        </div>
+    <ToolLayout
+      title="Image Average Color Finder"
+      description="Analyze images to find their average and dominant colors effortlessly. Perfect for designers, artists, and anyone looking to create cohesive color palettes for their projects"
+    >
+
+    <Toaster position="top-right" />
+
 
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mb-8 mx-auto">
@@ -316,12 +306,6 @@ export default function ImageAverageColorFinder() {
               <li>Use the tool to extract color palettes from inspirational images or photographs.</li>
             </ul>
           </div>
-
-        </main>
-       </div> 
-      <Footer />
-      <canvas ref={canvasRef} className="hidden"></canvas>
-      <Toaster position="bottom-right" />
-    </div>
+  </ToolLayout>
   )
 }

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Button } from "@/components/ui/Button";
-import { Copy, Download, Info, Lightbulb, BookOpen, RefreshCw, Undo2, Space, Slice, RefreshCcw,} from 'lucide-react';
+import { Copy, Download, Info, Lightbulb, BookOpen, RefreshCw, Undo2, Space, Slice, RefreshCcw, Bug,} from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
+
+
 
 const MAX_CHARS = 5000;
 
@@ -102,27 +102,15 @@ export default function CaseConverter() {
     toast.success('Text trimmed');
   };
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
-      <Toaster position="top-right" />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-          <main className="flex-grow px-4 py-12 overflow-x-hidden">
-            <div className="max-w-4xl mx-auto">
-            <div className="mb-12 text-center px-4">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                  Case Converter
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                  Transform your text into any case format instantly
-              </p>
-          </div>
+    <ToolLayout
+      title="Case Converter"
+      description="Transform your text into any case format instantly"
+    >
+    <Toaster position="top-right" />
 
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-8">
                 <div className="mb-6">
+                  
                   <label htmlFor="input-text" className="block text-lg font-medium text-gray-200 mb-2">
                     Input Text:
                   </label>
@@ -261,10 +249,6 @@ export default function CaseConverter() {
                   <li>Clear: Resets both input and output fields.</li>
                 </ul>
               </div>
-            </div>
-          </main>
-         </div> 
-      <Footer />
-    </div>
+              </ToolLayout>
   )
 }

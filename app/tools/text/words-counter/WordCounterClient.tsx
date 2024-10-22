@@ -4,9 +4,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/Button";
 import { Toaster, toast } from 'react-hot-toast';
 import { Copy, Download, RefreshCw, Shuffle, Info, Lightbulb, BookOpen } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 const MAX_CHARS = 5000;
 
@@ -65,24 +63,11 @@ export default function WordsCounter() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="Words Counter"
+      description="Count the number of words and characters in your text"
+    >
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-          <div className="mb-12 text-center px-4">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                  Words Counter
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                  Count the number of words and characters in your text
-              </p>
-          </div>
-
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-6">
               <label htmlFor="text" className="block text-lg font-medium text-gray-300 mb-2">
@@ -180,9 +165,6 @@ export default function WordsCounter() {
             </ul>
           </div>
 
-        </main>
-       </div> 
-      <Footer />
-    </div>
+          </ToolLayout>
   );
 }

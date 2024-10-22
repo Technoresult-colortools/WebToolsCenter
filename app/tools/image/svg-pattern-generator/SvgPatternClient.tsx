@@ -9,9 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster, toast } from 'react-hot-toast';
 import { Download, RefreshCw, Copy, Upload, Maximize2, X, Settings, Sliders, Palette, Image, Info, BookOpen, Lightbulb } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 type PatternType =
   | 'circles'
@@ -342,23 +340,12 @@ export default function Component() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-         <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                Enhanced SVG Pattern Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Unlock your creativity by crafting intricate vector patterns that elevate your designs, all while enjoying seamless customization and instant feedback.
-            </p>
-         </div>
+    <ToolLayout
+      title="Enhanced SVG Pattern Generator"
+      description="Unlock your creativity by crafting intricate vector patterns that elevate your designs, all while enjoying seamless customization and instant feedback"
+    >
+
+    <Toaster position="top-right" />
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-8">
@@ -765,9 +752,6 @@ export default function Component() {
               <li>Ideal for creating branded patterns or textures based on your own artwork</li>
             </ul>
           </div>
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   );
 }

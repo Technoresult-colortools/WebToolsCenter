@@ -11,10 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
 import { Hash, Copy, RefreshCw, Upload, Download, CheckCircle2, Clipboard, Info, BookOpen, Lightbulb} from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import crypto from 'crypto-js'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 export default function SHA1Tool() {
   const [input, setInput] = useState('')
@@ -128,23 +126,12 @@ export default function SHA1Tool() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="SHA-1 Hash Generator and Verifier"
+      description="Generate and verify SHA-1 hashes for text and file content"
+    >
+
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                SHA-1 Hash Generator and Verifier
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Generate and verify SHA-1 hashes for text and file content.
-            </p>
-          </div>
           
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mb-8">
             <Tabs defaultValue="generate" className="w-full">
@@ -300,7 +287,7 @@ export default function SHA1Tool() {
 
             <div className="mt-4 space-y-4">
               <Label htmlFor="file-upload" className="text-white block">Upload File</Label>
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-2">
                 <Input
                   id="file-upload"
                   type="file"
@@ -308,15 +295,19 @@ export default function SHA1Tool() {
                   className="bg-gray-700 text-white border-gray-600 w-full md:w-auto"
                   ref={fileInputRef}
                 />
-                <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 hover:bg-blue-700">
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto"
+                >
                   <Upload className="w-4 h-4 mr-2" />
                   Choose File
                 </Button>
                 {fileName && (
-                  <span className="text-white">{fileName}</span>
+                  <span className="text-white w-full md:w-auto text-center">{fileName}</span>
                 )}
               </div>
             </div>
+
           </div>
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
@@ -375,10 +366,6 @@ export default function SHA1Tool() {
               <li>Multiple hash iterations can increase security but also increase computation time.</li>
             </ul>
           </div>
-
-        </main>
-      </div>  
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

@@ -7,10 +7,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Plus, Minus, Info, BookOpen, Lightbulb } from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 type FlexDirection = 'row' | 'row-reverse' | 'column' | 'column-reverse'
 type JustifyContent = 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
@@ -144,23 +142,12 @@ const FlexboxGenerator = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                CSS Flexbox Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create and visualize flexible layouts using CSS Flexbox Generator.
-            </p>
-          </div>
+    <ToolLayout
+      title="CSS Flexbox Generator"
+      description="Create and visualize flexible layouts using CSS Flexbox Generator"
+    >
+
+    <Toaster position="top-right" />
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-8">
@@ -452,10 +439,7 @@ const FlexboxGenerator = () => {
               <li>Support for both basic and advanced Flexbox concepts</li>
             </ul>
           </div>
-        </main>
-       </div> 
-    <Footer />
-    </div>
+  </ToolLayout>
   )
 }
 export default FlexboxGenerator

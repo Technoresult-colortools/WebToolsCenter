@@ -4,12 +4,10 @@ import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import Slider from "@/components/ui/Slider";
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
 import { Copy, RefreshCw, Download, Info, Lightbulb, BookOpen } from 'lucide-react';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 const TriangleGenerator = () => {
   const [direction, setDirection] = useState('top');
@@ -79,133 +77,124 @@ const TriangleGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="CSS Triangle Generator"
+      description="Create customizable CSS triangles without using images"
+    >
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                CSS Triangle Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create customizable CSS triangles without using images.
-            </p>
+
+      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="flex flex-col items-center justify-center">
+            <h3 className="text-xl font-bold text-white mb-4">Preview</h3>
+            <div className="border-2 border-gray-600 rounded-lg p-8 flex items-center justify-center">
+              <div
+                className="triangle"
+                style={{
+                  width: 0,
+                  height: 0,
+                  borderStyle: 'solid',
+                  borderWidth: direction === 'top' ? `0 ${size / 2}px ${size}px ${size / 2}px` :
+                              direction === 'right' ? `${size / 2}px 0 ${size / 2}px ${size}px` :
+                              direction === 'bottom' ? `${size}px ${size / 2}px 0 ${size / 2}px` :
+                              `${size / 2}px ${size}px ${size / 2}px 0`,
+                  borderColor: direction === 'top' ? `transparent transparent ${color} transparent` :
+                              direction === 'right' ? `transparent transparent transparent ${color}` :
+                              direction === 'bottom' ? `${color} transparent transparent transparent` :
+                              `transparent ${color} transparent transparent`,
+                  transform: `rotate(${rotate}deg)`,
+                }}
+              />
+            </div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex items-center justify-center">
-                <div
-                  className="triangle"
-                  style={{
-                    width: 0,
-                    height: 0,
-                    borderStyle: 'solid',
-                    borderWidth: direction === 'top' ? `0 ${size / 2}px ${size}px ${size / 2}px` :
-                                direction === 'right' ? `${size / 2}px 0 ${size / 2}px ${size}px` :
-                                direction === 'bottom' ? `${size}px ${size / 2}px 0 ${size / 2}px` :
-                                `${size / 2}px ${size}px ${size / 2}px 0`,
-                    borderColor: direction === 'top' ? `transparent transparent ${color} transparent` :
-                                direction === 'right' ? `transparent transparent transparent ${color}` :
-                                direction === 'bottom' ? `${color} transparent transparent transparent` :
-                                `transparent ${color} transparent transparent`,
-                    transform: `rotate(${rotate}deg)`,
-                  }}
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Triangle Settings</h2>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="direction" className="text-white mb-2 block">Direction</Label>
+                <Select value={direction} onValueChange={setDirection}>
+                  <SelectTrigger id="direction" className="bg-gray-700 text-white border-gray-600">
+                    <SelectValue placeholder="Select direction" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 text-white border-gray-600">
+                    <SelectItem value="top">Top</SelectItem>
+                    <SelectItem value="right">Right</SelectItem>
+                    <SelectItem value="bottom">Bottom</SelectItem>
+                    <SelectItem value="left">Left</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="color" className="text-white mb-2 block">Triangle Color</Label>
+                <div className="flex space-x-2">
+                  <Input
+                    type="color"
+                    id="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    className="w-10 h-10 p-1 bg-transparent"
+                  />
+                  <Input
+                    type="text"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    className="flex-grow bg-gray-700 text-white border-gray-600"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="size" className="text-white mb-2 block">Size: {size}px</Label>
+                <Slider
+                  id="size"
+                  min={20}
+                  max={300}
+                  step={1}
+                  value={size}
+                  onChange={(value) => setSize(value)}
                 />
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold text-white mb-4">Triangle Settings</h2>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="direction" className="text-white mb-2 block">Direction</Label>
-                    <Select value={direction} onValueChange={setDirection}>
-                      <SelectTrigger id="direction" className="bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select direction" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="top">Top</SelectItem>
-                        <SelectItem value="right">Right</SelectItem>
-                        <SelectItem value="bottom">Bottom</SelectItem>
-                        <SelectItem value="left">Left</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="color" className="text-white mb-2 block">Triangle Color</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        type="color"
-                        id="color"
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
-                        className="w-10 h-10 p-1 bg-transparent"
-                      />
-                      <Input
-                        type="text"
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="size" className="text-white mb-2 block">Size: {size}px</Label>
-                    <Slider
-                      id="size"
-                      min={20}
-                      max={300}
-                      step={1}
-                      value={size}
-                      onChange={(value) => setSize(value)}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="rotate" className="text-white mb-2 block">Rotate: {rotate}°</Label>
-                    <Slider
-                      id="rotate"
-                      min={0}
-                      max={360}
-                      step={1}
-                      value={rotate}
-                      onChange={(value) => setRotate(value)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold text-white mb-4">Generated CSS</h2>
-              <div className="bg-gray-700 p-4 rounded-lg">
-                <code className="text-white whitespace-pre-wrap break-all">
-                  {generatedCSS}
-                </code>
-              </div>
-              <div className="mt-4 flex flex-wrap justify-end space-x-2 space-y-2 sm:space-y-0">
-                <Button onClick={handleReset} variant="outline" className="text-white border-white hover:bg-gray-700">
-                  <RefreshCw className="h-5 w-5 mr-2" />
-                  Reset
-                </Button>
-                <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Copy className="h-5 w-5 mr-2" />
-                  Copy CSS
-                </Button>
-                <Button onClick={handleDownload} className="bg-green-600 hover:bg-green-700 text-white">
-                  <Download className="h-5 w-5 mr-2" />
-                  Download CSS
-                </Button>
+                <Label htmlFor="rotate" className="text-white mb-2 block">Rotate: {rotate}°</Label>
+                <Slider
+                  id="rotate"
+                  min={0}
+                  max={360}
+                  step={1}
+                  value={rotate}
+                  onChange={(value) => setRotate(value)}
+                />
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-white mb-4">Generated CSS</h2>
+          <div className="bg-gray-700 p-4 rounded-lg">
+            <code className="text-white whitespace-pre-wrap break-all">
+              {generatedCSS}
+            </code>
+          </div>
+          <div className="mt-4 flex flex-wrap justify-end space-x-2 space-y-2 sm:space-y-0">
+            <Button onClick={handleReset} variant="destructive" className="text-white border-white hover:bg-gray-700">
+              <RefreshCw className="h-5 w-5 mr-2" />
+              Reset
+            </Button>
+            <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Copy className="h-5 w-5 mr-2" />
+              Copy CSS
+            </Button>
+            <Button onClick={handleDownload} className="bg-green-600 hover:bg-green-700 text-white">
+              <Download className="h-5 w-5 mr-2" />
+              Download CSS
+            </Button>
+          </div>
+        </div>
+      </div>
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
@@ -253,10 +242,7 @@ const TriangleGenerator = () => {
               <li>User-friendly interface with intuitive controls</li>
             </ul>
           </div>
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }
 

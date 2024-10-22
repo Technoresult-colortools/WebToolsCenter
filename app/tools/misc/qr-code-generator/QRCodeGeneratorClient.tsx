@@ -11,11 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
 import { Download, FileText, Brush, Sliders, Image, Info, BookOpen, Lightbulb } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
+
 
 const QRCodeCanvas = dynamic(() => import('qrcode.react').then(mod => mod.QRCodeCanvas), { ssr: false });
 
@@ -92,23 +91,12 @@ export default function QRCodeGenerator() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="Advanced QR Code Generator"
+      description="Create Customized QR Code for various purposes"
+    >
+
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-              Advanced QR Code Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-              Create Customized QR Code for various purposes.
-            </p>
-          </div>
 
           <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <CardHeader>
@@ -488,11 +476,6 @@ export default function QRCodeGenerator() {
               <li>Consider the context where the QR code will be scanned when choosing its size and error correction level.</li>
             </ul>
           </div>
-      
-        </main>
-      </div>  
-      <Footer />
-      </div>
-    
+  </ToolLayout>  
   );
 }

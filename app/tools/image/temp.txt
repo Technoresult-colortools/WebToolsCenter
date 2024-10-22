@@ -1,0 +1,11 @@
+
+import ToolLayout from '@/components/ToolLayout'
+
+<Toaster position="top-right" />
+
+<ToolLayout
+      title="Image Color Picker"
+      description="Effortlessly extract and capture colors from any image, perfect for enhancing your design projects with precision and ease"
+    >
+
+    <Toaster position="top-right" />

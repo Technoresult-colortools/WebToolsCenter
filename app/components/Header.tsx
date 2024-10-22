@@ -8,6 +8,7 @@ import { Search, Menu, X, Coffee } from 'lucide-react'
 
 
 
+
 // Define the structure for our tools
 interface Tool {
   name: string;

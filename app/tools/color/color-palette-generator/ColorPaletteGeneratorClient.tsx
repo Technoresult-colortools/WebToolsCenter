@@ -2,9 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { Copy, RefreshCw, Download, Shuffle, Info, BookOpen, Lightbulb, } from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools';
 import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import Slider from "@/components/ui/Slider"
@@ -12,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import ToolLayout from '@/components/ToolLayout'
 
 
 function generateRandomColor(): string {
@@ -136,6 +134,7 @@ export default function ColorPaletteGenerator() {
       }
     }
     setPalette(newPalette.slice(0, colorCount))
+    toast.success('Palette Generated successfully')
   }
 
   const handleCopyColor = (color: string) => {
@@ -165,21 +164,10 @@ export default function ColorPaletteGenerator() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
-      <div className='flex-grow flex'>
-        <aside className="bg-gray-800">
-          <Sidebar />
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-              Color Palette Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-              Create harmonious color palettes for your projects with ease.
-            </p>
-          </div>
+    <ToolLayout
+      title="Color Palette Generator"
+      description="Create harmonious color palettes for your projects with ease"
+    >
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-6">
@@ -401,10 +389,8 @@ export default function ColorPaletteGenerator() {
               </section>
             </div>
           </div>
-        </main>
-      </div>
-      <Footer />
       <ToastContainer />
-    </div>
+    </ToolLayout>
+
   )
 }

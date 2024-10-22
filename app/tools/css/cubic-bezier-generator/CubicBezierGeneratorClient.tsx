@@ -8,10 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import { PlayCircle, PauseCircle, Info, BookOpen, Lightbulb, Copy, RefreshCw } from 'lucide-react'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 const presets = {
   'linear': [0, 0, 1, 1],
@@ -30,6 +28,8 @@ export default function CSSCubicBezierGenerator() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [showGrid, setShowGrid] = useState(true)
   const [showControlLines, setShowControlLines] = useState(true)
+  const [animationKey, setAnimationKey] = useState(0)
+  const ballRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -115,6 +115,30 @@ export default function CSSCubicBezierGenerator() {
     ctx.fill()
   }
 
+  // Handle animation end
+  useEffect(() => {
+    const ball = ballRef.current;
+    if (!ball) return;
+
+    const handleAnimationEnd = () => {
+      setIsPlaying(false);
+    };
+
+    ball.addEventListener('animationend', handleAnimationEnd);
+    return () => {
+      ball.removeEventListener('animationend', handleAnimationEnd);
+    };
+  }, []);
+
+  const handlePlayClick = () => {
+    if (!isPlaying) {
+      setAnimationKey(prev => prev + 1); // Force animation restart
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
+  };
+
   const cubicBezier = (t: number, p0: number, p1: number, p2: number, p3: number) => {
     const u = 1 - t
     return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3
@@ -148,25 +172,16 @@ export default function CSSCubicBezierGenerator() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        <aside className="bg-gray-800">
-          <Sidebar />
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-              CSS Cubic Bezier Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-              Create smooth, custom easing functions for your CSS animations with precision and ease
-            </p>
-          </div>
+    <ToolLayout
+      title="CSS Cubic Bezier Generator"
+      description="Create smooth, custom easing functions for your CSS animations with precision and ease"
+    >
+
+    <Toaster position="top-right" />
           
           <div className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Canvas Section */}
               <div>
                 <canvas
                   ref={canvasRef}
@@ -177,7 +192,7 @@ export default function CSSCubicBezierGenerator() {
                 <div className="text-white text-center">
                   ({points.map(p => p.toFixed(2)).join(', ')})
                 </div>
-                <div className="mt-4 flex justify-between">
+                <div className="mt-4 flex flex-col sm:flex-row justify-between gap-4">
                   <div className="flex items-center">
                     <Switch
                       id="show-grid"
@@ -196,8 +211,11 @@ export default function CSSCubicBezierGenerator() {
                   </div>
                 </div>
               </div>
-              <div>
-                <div className="mb-4">
+
+              {/* Controls Section */}
+              <div className="space-y-6">
+                {/* Presets */}
+                <div>
                   <Label htmlFor="preset" className="text-white mb-2 block">Predefined Easing Functions</Label>
                   <Select value={presetName} onValueChange={handlePresetChange}>
                     <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
@@ -211,7 +229,9 @@ export default function CSSCubicBezierGenerator() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="mb-4">
+
+                {/* Duration */}
+                <div>
                   <Label htmlFor="duration" className="text-white mb-2 block">Animation Duration: {duration}s</Label>
                   <Slider
                     id="duration"
@@ -222,64 +242,107 @@ export default function CSSCubicBezierGenerator() {
                     onChange={(value) => setDuration(value)}
                   />
                 </div>
-                {['P1', 'P2'].map((point, i) => (
-                  <div key={point} className="mb-4">
-                    <Label className="text-white mb-2 block">Coordinates of {point} ({i === 0 ? 'Green' : 'Red'} Dot)</Label>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor={`${point}X`} className="text-white mb-1 block">X{i + 1}</Label>
-                        <Slider
-                          id={`${point}X`}
-                          min={0}
-                          max={1}
-                          step={0.01}
-                          value={points[i * 2]}
-                          onChange={(value) => handlePointChange(i * 2, value)}
-                        />
-                        <Input
-                          type="number"
-                          value={points[i * 2].toFixed(2)}
-                          onChange={(e) => handlePointChange(i * 2, parseFloat(e.target.value))}
-                          className="mt-2 bg-gray-700 text-white border-gray-600"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor={`${point}Y`} className="text-white mb-1 block">Y{i + 1}</Label>
-                        <Slider
-                          id={`${point}Y`}
-                          min={-1}
-                          max={2}
-                          step={0.01}
-                          value={points[i * 2 + 1]}
-                          onChange={(value) => handlePointChange(i * 2 + 1, value)}
-                        />
-                        <Input
-                          type="number"
-                          value={points[i * 2 + 1].toFixed(2)}
-                          onChange={(e) => handlePointChange(i * 2 + 1, parseFloat(e.target.value))}
-                          className="mt-2 bg-gray-700 text-white border-gray-600"
-                        />
-                      </div>
-                    </div>
+
+                {/* Control Points - Restructured for better mobile layout */}
+                <div className="space-y-4">
+                  {/* X1 */}
+                  <div>
+                    <Label htmlFor="P1X" className="text-white mb-1 block">X1 (Green Point)</Label>
+                    <Slider
+                      id="P1X"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={points[0]}
+                      onChange={(value) => handlePointChange(0, value)}
+                    />
+                    <Input
+                      type="number"
+                      value={points[0].toFixed(2)}
+                      onChange={(e) => handlePointChange(0, parseFloat(e.target.value))}
+                      className="mt-2 bg-gray-700 text-white border-gray-600"
+                    />
                   </div>
-                ))}
+
+                  {/* Y1 */}
+                  <div>
+                    <Label htmlFor="P1Y" className="text-white mb-1 block">Y1 (Green Point)</Label>
+                    <Slider
+                      id="P1Y"
+                      min={-1}
+                      max={2}
+                      step={0.01}
+                      value={points[1]}
+                      onChange={(value) => handlePointChange(1, value)}
+                    />
+                    <Input
+                      type="number"
+                      value={points[1].toFixed(2)}
+                      onChange={(e) => handlePointChange(1, parseFloat(e.target.value))}
+                      className="mt-2 bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+
+                  {/* X2 */}
+                  <div>
+                    <Label htmlFor="P2X" className="text-white mb-1 block">X2 (Red Point)</Label>
+                    <Slider
+                      id="P2X"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={points[2]}
+                      onChange={(value) => handlePointChange(2, value)}
+                    />
+                    <Input
+                      type="number"
+                      value={points[2].toFixed(2)}
+                      onChange={(e) => handlePointChange(2, parseFloat(e.target.value))}
+                      className="mt-2 bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+
+                  {/* Y2 */}
+                  <div>
+                    <Label htmlFor="P2Y" className="text-white mb-1 block">Y2 (Red Point)</Label>
+                    <Slider
+                      id="P2Y"
+                      min={-1}
+                      max={2}
+                      step={0.01}
+                      value={points[3]}
+                      onChange={(value) => handlePointChange(3, value)}
+                    />
+                    <Input
+                      type="number"
+                      value={points[3].toFixed(2)}
+                      onChange={(e) => handlePointChange(3, parseFloat(e.target.value))}
+                      className="mt-2 bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
+            {/* Animation Preview */}
             <div className="mt-6">
               <Label className="text-white mb-2 block">Animation Preview</Label>
               <div className="flex items-center justify-between">
                 <div className="h-16 bg-gray-700 rounded-lg flex items-center justify-start p-4 relative flex-grow mr-4">
                   <div
-                    className="w-12 h-12 bg-blue-500 rounded-full absolute left-0"
+                    ref={ballRef}
+                    key={animationKey}
+                    className="w-12 h-12 bg-blue-500 rounded-full absolute left-[4%]"
                     style={{
-                      animation: `move ${duration}s cubic-bezier(${points.join(', ')}) infinite alternate`,
-                      animationPlayState: isPlaying ? 'running' : 'paused',
+                      animation: isPlaying 
+                        ? `${duration}s cubic-bezier(${points.join(', ')}) forwards moveBall` 
+                        : 'none',
+                      transform: 'translateZ(0)' // Force GPU acceleration
                     }}
                   />
                 </div>
                 <Button
-                  onClick={() => setIsPlaying(!isPlaying)}
+                  onClick={handlePlayClick}
                   className="bg-blue-500 hover:bg-blue-600 text-white"
                 >
                   {isPlaying ? (
@@ -290,12 +353,20 @@ export default function CSSCubicBezierGenerator() {
                 </Button>
               </div>
             </div>
-
+            <style jsx global>{`
+            @keyframes moveBall {
+              from {
+                left: 4%;
+              }
+              to {
+                left: calc(100% - 48px - 4%);
+              }
+            }
+          `}</style>
             <div className="mt-6">
               <Label className="text-white mb-2 block">CSS</Label>
               <div className="bg-gray-700 rounded-lg p-4 text-white font-mono text-sm">
-                <pre>{`animation-timing-function: cubic-bezier(${points.join(', ')});
-animation-duration: ${duration}s;`}</pre>
+                <pre className='overflow-x-auto'>{`animation-timing-function: cubic-bezier(${points.join(', ')});animation-duration: ${duration}s;`}</pre>
               </div>
             </div>
 
@@ -351,9 +422,6 @@ animation-duration: ${duration}s;`}</pre>
               <li>Responsive design for use on various devices, including mobile.</li>
             </ul>
           </div>
-        </main>
-      </div>
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

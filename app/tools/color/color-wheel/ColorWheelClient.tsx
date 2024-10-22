@@ -2,15 +2,13 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { Copy, Download, RefreshCw, Info, BookOpen, Lightbulb, AlertCircle } from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools';
 import Slider from "@/components/ui/Slider"
 import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import ToolLayout from '@/components/ToolLayout'
 
 const colorHarmonies = [
   { name: 'Complementary', angle: 180 },
@@ -213,22 +211,10 @@ export default function ColorWheel() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
-      <div className='flex-grow flex'>
-        <aside className="bg-gray-800">
-          <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-              Interactive Color Wheel
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-              Explore color harmonies, generate palettes, and visualize color relationships with our advanced color wheel tool.
-            </p>
-          </div>
-
+    <ToolLayout
+      title="Interactive Color Wheel"
+      description="Explore color harmonies, generate palettes, and visualize color relationships with our advanced color wheel tool"
+    >
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 mb-8 max-w-4xl mx-auto">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
@@ -472,10 +458,8 @@ export default function ColorWheel() {
               </section>
             </div>
           </div>
-        </main>
-      </div>
-      <Footer />
       <ToastContainer />
-    </div>
+    </ToolLayout>  
+
   )
 }

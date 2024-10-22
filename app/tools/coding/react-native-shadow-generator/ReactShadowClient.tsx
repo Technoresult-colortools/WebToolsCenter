@@ -8,10 +8,8 @@ import { Button } from "@/components/ui/Button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/Card"
 import { Smartphone, Copy, TabletSmartphone, Info, Lightbulb, Settings, BookOpen } from 'lucide-react'
-import { toast } from 'react-hot-toast'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
+import { Toaster, toast } from 'react-hot-toast'
 
 export default function ShadowGenerator() {
   const [shadowColor, setShadowColor] = useState("#000000")
@@ -96,22 +94,12 @@ export default function ShadowGenerator() {
   
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                React Native Shadow Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create and Customize shadow styles for both iOS and Android in React Native.
-            </p>
-          </div>
+<ToolLayout
+      title="React Native Shadow Generator"
+      description="Create and Customize shadow styles for both iOS and Android in React Native"
+    >
+
+    <Toaster position="top-right" />
 
           {/* Preview Card */}
           <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
@@ -369,9 +357,6 @@ export default function ShadowGenerator() {
             </ul>
           </div>
 
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

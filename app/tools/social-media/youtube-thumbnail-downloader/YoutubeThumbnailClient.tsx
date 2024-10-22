@@ -4,9 +4,7 @@ import { Search, Download, RefreshCw, Clipboard, Check, AlertCircle, Image as Im
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Toaster, toast } from 'react-hot-toast'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 interface ThumbnailQuality {
   url: string
@@ -110,23 +108,12 @@ export default function YouTubeThumbnailDownloader() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="YouTube Thumbnail Downloader"
+      description="Download high-quality thumbnails from any YouTube video"
+    >
+
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                YouTube Thumbnail Downloader
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Download high-quality thumbnails from any YouTube video.
-            </p>
-          </div>
           
           <div className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto mb-8">
             <form onSubmit={handleSubmit} className="mb-6">
@@ -263,11 +250,6 @@ export default function YouTubeThumbnailDownloader() {
               <li>Use the tool to download thumbnails for video previews, playlists, or social media promotions.</li>
             </ul>
           </div>
-
-
-        </main>
-        </div>
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

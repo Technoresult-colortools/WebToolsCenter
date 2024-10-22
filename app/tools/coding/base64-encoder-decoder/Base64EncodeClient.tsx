@@ -7,11 +7,10 @@ import { Button } from "@/components/ui/Button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { FileLock, FileLock2, Upload, Copy, RefreshCw, Info, BookOpen, Settings, Lightbulb } from 'lucide-react'
 import { toast, Toaster } from 'react-hot-toast'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/Card"
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
+
 
 const MAX_FILE_SIZE_MB = 5
 const ALLOWED_FILE_TYPES = ['text/plain', 'image/png', 'image/jpeg']
@@ -115,23 +114,12 @@ export default function Base64EncoderDecoder() {
   }, [inputText, activeTab])
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+   <ToolLayout
+      title="Base64 Encoder/Decoder"
+      description="Encode binary data for storage or transfer"
+    >
+
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                Base64 Encoder/Decoder
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Encode binary data for storage or transfer.
-            </p>
-          </div>
           
           <Card className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <CardContent className="space-y-8">
@@ -286,10 +274,6 @@ export default function Base64EncoderDecoder() {
               <li>Use Base64 encoding for binary data or when you need to transmit data that may contain special characters that could be misinterpreted by text-based systems.</li>
             </ul>
           </div>
-
-        </main>
-      </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

@@ -2,11 +2,10 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/Button";
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Toaster, toast } from 'react-hot-toast';
-import { Copy, Download, RefreshCw, BarChart, Info, Lightbulb, BookOpen } from 'lucide-react';
-import Sidebar from '@/components/sidebarTools';
+import { Copy, Download, RefreshCw, BarChart, Info, Lightbulb, BookOpen, Bug } from 'lucide-react';
+import ToolLayout from '@/components/ToolLayout'
+
 
 export default function CharacterFrequencyCounter() {
   const [inputText, setInputText] = useState('');
@@ -70,24 +69,12 @@ export default function CharacterFrequencyCounter() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="Character Frequency Counter"
+      description="Character Frequency Counter is a tool designed to analyze the frequency of characters and words in a given text."
+    >
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-          <Sidebar />  
-        </aside>
-        <div className="flex-grow flex">
-          <main className="flex-grow px-4 py-12 overflow-x-hidden">
-            <div className="mb-12 text-center px-4">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                Character Frequency Counter
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Character Frequency Counter is a tool designed to analyze the frequency of characters and words in a given text.
-              </p>
-            </div>
+
             <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
               <textarea
                 className="w-full h-40 bg-gray-700 text-white border-gray-600 rounded-md p-2 mb-4"
@@ -184,10 +171,7 @@ export default function CharacterFrequencyCounter() {
                 <li>Clear: Resets the input and output areas for new text analysis.</li>
               </ul>
             </div>
-          </main>
-        </div>
-      </div>
-      <Footer />
-    </div>
+            
+            </ToolLayout>
   );
 }

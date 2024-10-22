@@ -2,12 +2,11 @@
 
 import React, { useState } from 'react';
 import { AlertCircle, BookOpen, Info, Lightbulb } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Input from "@/components/ui/Input"; // Custom Input component
-import {Button} from "@/components/ui/Button"; // Custom Button component
-import Sidebar from '@/components/sidebarTools';
+import Input from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import ToolLayout from '@/components/ToolLayout';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function CmykToRgb() {
   const [cyan, setCyan] = useState<string>('');
@@ -26,6 +25,7 @@ export default function CmykToRgb() {
 
   const handleConvert = () => {
     setError('');
+    toast.dismiss(); // Clear any existing toasts
 
     // Validate CMYK values
     const c = parseFloat(cyan);
@@ -35,119 +35,112 @@ export default function CmykToRgb() {
 
     if ([c, m, y, k].some(isNaN) || [c, m, y, k].some(v => v < 0 || v > 100)) {
       setError('Please enter valid CMYK values (0-100).');
+      toast.error('Please enter valid CMYK values (0-100).');
       return;
     }
 
     // Convert CMYK to RGB
     const { r, g, b } = cmykToRgb(c, m, y, k);
     setRgbValue(`rgb(${r}, ${g}, ${b})`);
+    toast.success('Conversion successful! RGB value: ' + `rgb(${r}, ${g}, ${b})`);
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
+    <ToolLayout
+      title="CMYK to RGB Converter"
+      description="Convert CMYK Color Codes to RGB"
+    >
+      <Toaster position="top-right" />
 
-        <main className="flex-grow container mx-auto px-4 py-12">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                CMYK to RGB Converter
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Convert CMYK Color Codes to RGB.
-            </p>
+      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mb-8 mx-auto">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <label htmlFor="cyan-input" className="block text-sm font-medium text-gray-300 mb-2">
+              Cyan (0-100)
+            </label>
+            <Input
+              id="cyan-input"
+              type="number"
+              min="0"
+              max="100"
+              value={cyan}
+              onChange={(e) => setCyan(e.target.value)}
+              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
+          <div>
+            <label htmlFor="magenta-input" className="block text-sm font-medium text-gray-300 mb-2">
+              Magenta (0-100)
+            </label>
+            <Input
+              id="magenta-input"
+              type="number"
+              min="0"
+              max="100"
+              value={magenta}
+              onChange={(e) => setMagenta(e.target.value)}
+              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="yellow-input" className="block text-sm font-medium text-gray-300 mb-2">
+              Yellow (0-100)
+            </label>
+            <Input
+              id="yellow-input"
+              type="number"
+              min="0"
+              max="100"
+              value={yellow}
+              onChange={(e) => setYellow(e.target.value)}
+              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="key-input" className="block text-sm font-medium text-gray-300 mb-2">
+              Key (Black) (0-100)
+            </label>
+            <Input
+              id="key-input"
+              type="number"
+              min="0"
+              max="100"
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mb-8 mx-auto">
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div>
-                <label htmlFor="cyan-input" className="block text-sm font-medium text-gray-300 mb-2">
-                  Cyan (0-100)
-                </label>
-                <Input
-                  id="cyan-input"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={cyan}
-                  onChange={(e) => setCyan(e.target.value)}
-                  className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="magenta-input" className="block text-sm font-medium text-gray-300 mb-2">
-                  Magenta (0-100)
-                </label>
-                <Input
-                  id="magenta-input"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={magenta}
-                  onChange={(e) => setMagenta(e.target.value)}
-                  className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="yellow-input" className="block text-sm font-medium text-gray-300 mb-2">
-                  Yellow (0-100)
-                </label>
-                <Input
-                  id="yellow-input"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={yellow}
-                  onChange={(e) => setYellow(e.target.value)}
-                  className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="key-input" className="block text-sm font-medium text-gray-300 mb-2">
-                  Key (Black) (0-100)
-                </label>
-                <Input
-                  id="key-input"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={key}
-                  onChange={(e) => setKey(e.target.value)}
-                  className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
+        <Button
+          onClick={handleConvert}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Convert
+        </Button>
+
+        {error && (
+          <Alert className="mt-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {rgbValue && (
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold text-white mb-2">Result:</h2>
+            <div className="bg-gray-700 p-4 rounded-lg">
+              <p className="text-white" id="rgb-value">RGB: {rgbValue}</p>
             </div>
-
-            <Button onClick={handleConvert} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Convert
-            </Button>
-
-            {error && (
-              <Alert className="mt-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            {rgbValue && (
-              <div className="mt-6">
-                <h2 className="text-xl font-semibold text-white mb-2">Result:</h2>
-                <div className="bg-gray-700 p-4 rounded-lg">
-                  <p className="text-white" id="rgb-value">RGB: {rgbValue}</p>
-                </div>
-                <div
-                  id="color-palette"
-                  className="mt-4 w-full h-20 rounded-lg"
-                  style={{ backgroundColor: rgbValue }}
-                ></div>
-              </div>
-            )}
+            <div
+              id="color-palette"
+              className="mt-4 w-full h-20 rounded-lg"
+              style={{ backgroundColor: rgbValue }}
+            ></div>
           </div>
+        )}
+      </div>
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
@@ -189,12 +182,6 @@ export default function CmykToRgb() {
               <li>Experiment with different CMYK values to see how they translate into RGB colors.</li>
             </ul>
           </div>
-
-
-        </main>
-       </div> 
-      <Footer />
-
-    </div>
+  </ToolLayout>
   );
 }

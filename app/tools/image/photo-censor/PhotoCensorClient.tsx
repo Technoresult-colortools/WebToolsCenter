@@ -6,10 +6,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Upload, Download, RefreshCw } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Sidebar from '@/components/sidebarTools';
+import { Upload, Download, RefreshCw, Info, Lightbulb, BookOpen } from 'lucide-react';
+import ToolLayout from '@/components/ToolLayout'
 
 type CensorType = 'blur' | 'pixelate' | 'black';
 
@@ -128,24 +126,12 @@ const PhotoCensor: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-        <div className="mb-12 text-center px-4">
-          <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-              Photo Censor
-          </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-              Protect your privacy and enhance your visuals effortlessly with our intuitive Photo Censor tool, designed for seamless image editing and creative expression.
-          </p>
-      </div>
+    <ToolLayout
+      title="Photo Censor"
+      description="Protect your privacy and enhance your visuals effortlessly with our intuitive Photo Censor tool, designed for seamless image editing and creative expression"
+    >
 
+    <Toaster position="top-right" />
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 sm:p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-8">
@@ -263,59 +249,69 @@ const PhotoCensor: React.FC = () => {
 
           <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-            <section className="mb-6">
-              <h2 className="text-2xl font-semibold text-white mb-2">About Photo Censor</h2>
-              <p className="text-white">
-                The Photo Censor tool allows you to easily apply censoring to any part of an image. Whether you need to blur, pixelate, or black-out specific areas, this tool provides multiple options to protect sensitive content or add creative effects. With a user-friendly interface, you can upload images, select the censoring area, and customize the intensity for a polished result.
-              </p>
-            </section>
+          <div className="bg-gray-800 shadow-lg rounded-lg p-8 mt-8 max-w-4xl mx-auto">
+            <div className="space-y-6">
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Info className="w-6 h-6 mr-2" />
+                  About Photo Censor
+                </h2>
+                <p className="text-white">
+                  The Photo Censor tool allows you to easily apply censoring to any part of an image. Whether you need to blur, pixelate, or black-out specific areas, this tool provides multiple options to protect sensitive content or add creative effects. With a user-friendly interface, you can upload images, select the censoring area, and customize the intensity for a polished result.
+                </p>
+              </section>
 
-            <section className="mb-6">
-              <h2 className="text-2xl font-semibold text-white mb-2">Key Features of Photo Censor</h2>
-              <ul className="list-disc list-inside text-white space-y-2">
-                <li>Support for Blur, Pixelate, and Black-out censoring methods</li>
-                <li>Adjustable censoring intensity for Blur and Pixelate</li>
-                <li>Real-time preview of the censored area</li>
-                <li>Easy image upload and selection of censoring area</li>
-                <li>Option to download the censored image in high quality</li>
-                <li>Ability to reset the image and start over</li>
-              </ul>
-            </section>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Key Features of Photo Censor
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>Support for Blur, Pixelate, and Black-out censoring methods</li>
+                  <li>Adjustable censoring intensity for Blur and Pixelate</li>
+                  <li>Real-time preview of the censored area</li>
+                  <li>Easy image upload and selection of censoring area</li>
+                  <li>Option to download the censored image in high quality</li>
+                  <li>Ability to reset the image and start over</li>
+                </ul>
+              </section>
 
-            <section className="mb-6">
-              <h2 className="text-2xl font-semibold text-white mb-2">How to Use Photo Censor?</h2>
-              <ol className="list-decimal list-inside text-white space-y-2">
-                <li>Click the "Select an image file" button to upload your image.</li>
-                <li>Once uploaded, you'll see the original image displayed.</li>
-                <li>Click and drag on the image to select the area you want to censor.</li>
-                <li>Choose a censoring method: Blur, Pixelate, or Black-out.</li>
-                <li>For Blur and Pixelate, adjust the intensity using the slider.</li>
-                <li>Click "Apply Censoring" to apply the effect to the selected area.</li>
-                <li>Click "Download Censored Image" to save the result.</li>
-                <li>Use the "Reset" button to start over or adjust settings.</li>
-              </ol>
-            </section>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <BookOpen className="w-6 h-6 mr-2" />
+                  How to Use Photo Censor
+                </h2>
+                <ol className="list-decimal list-inside text-white space-y-2">
+                  <li>Click the "Select an image file" button to upload your image.</li>
+                  <li>Once uploaded, you'll see the original image displayed.</li>
+                  <li>Click and drag on the image to select the area you want to censor.</li>
+                  <li>Choose a censoring method: Blur, Pixelate, or Black-out.</li>
+                  <li>For Blur and Pixelate, adjust the intensity using the slider.</li>
+                  <li>Click "Apply Censoring" to apply the effect to the selected area.</li>
+                  <li>Click "Download Censored Image" to save the result.</li>
+                  <li>Use the "Reset" button to start over or adjust settings.</li>
+                </ol>
+              </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-white mb-2">Tips and Tricks</h2>
-              <ul className="list-disc list-inside text-white space-y-2">
-                <li>You can select multiple areas to censor by applying censoring multiple times.</li>
-                <li>Blur is best for subtle censoring, while Black-out provides complete coverage.</li>
-                <li>Pixelate can create a unique, retro effect for artistic purposes.</li>
-                <li>Use higher intensity for more dramatic censoring effects.</li>
-                <li>You can combine different censoring methods on the same image for a layered effect.</li>
-                <li>For precise selection, zoom in on your browser before selecting the area.</li>
-                <li>Respect privacy and copyright laws when censoring and sharing images.</li>
-              </ul>
-            </section>
+              <section>
+                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
+                  <Lightbulb className="w-6 h-6 mr-2" />
+                  Tips and Tricks
+                </h2>
+                <ul className="list-disc list-inside text-white space-y-2">
+                  <li>You can select multiple areas to censor by applying censoring multiple times.</li>
+                  <li>Blur is best for subtle censoring, while Black-out provides complete coverage.</li>
+                  <li>Pixelate can create a unique, retro effect for artistic purposes.</li>
+                  <li>Use higher intensity for more dramatic censoring effects.</li>
+                  <li>You can combine different censoring methods on the same image for a layered effect.</li>
+                  <li>For precise selection, zoom in on your browser before selecting the area.</li>
+                  <li>Respect privacy and copyright laws when censoring and sharing images.</li>
+                </ul>
+              </section>
+            </div>
           </div>
-        </main>
-       </div> 
-      
 
-      <Footer />
-    </div>
+  </ToolLayout>
   );
 };
 

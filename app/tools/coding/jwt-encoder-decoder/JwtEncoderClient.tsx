@@ -9,11 +9,9 @@ import Input from "@/components/ui/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Switch } from "@/components/ui/switch"
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import toast, { Toaster } from 'react-hot-toast'
 import { KJUR } from 'jsrsasign'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 type Algorithm = 'HS256' | 'HS384' | 'HS512' | 'RS256' | 'RS384' | 'RS512' | 'ES256' | 'ES384' | 'ES512'
 
@@ -182,32 +180,12 @@ export default function JWTEncoderDecoder() {
 
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: '#333',
-            color: '#fff',
-          },
-          duration: 3000
-        }}
-      />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                JWT Encoder and Decoder
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Securely encode and decode JSON Web Tokens (JWT) for authentication and data exchange.
-            </p>
-          </div>
+    <ToolLayout
+      title="JWT Encoder and Decoder"
+      description="Securely encode and decode JSON Web Tokens (JWT) for authentication and data exchange"
+    >
+
+      <Toaster position="top-right" />
           
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mb-8">
             <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'encode' | 'decode')} className="w-full">
@@ -270,11 +248,16 @@ export default function JWTEncoderDecoder() {
                   </div>
                   <Button
                     onClick={() => setShowAdditionalClaims(!showAdditionalClaims)}
-                    className="bg-gray-700 hover:bg-gray-600 text-white"
+                    className="bg-gray-700 hover:bg-gray-600 text-white w-full md:w-auto py-2 px-4 md:py-2 md:px-6 flex items-center justify-center"
                   >
-                    {showAdditionalClaims ? <ChevronUp className="mr-2" /> : <ChevronDown className="mr-2" />}
+                    {showAdditionalClaims ? (
+                      <ChevronUp className="mr-2" />
+                    ) : (
+                      <ChevronDown className="mr-2" />
+                    )}
                     Additional Claims
                   </Button>
+
                 </div>
                 {showAdditionalClaims && (
                   <div className="grid grid-cols-2 gap-4">
@@ -471,10 +454,6 @@ export default function JWTEncoderDecoder() {
               <li>To secure JWTs, use strong secret keys for signing and validate tokens on the server side.</li>
             </ul>
           </div>
-
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

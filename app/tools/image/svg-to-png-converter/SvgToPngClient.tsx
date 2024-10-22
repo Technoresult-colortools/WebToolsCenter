@@ -8,9 +8,7 @@ import { Label } from "@/components/ui/label";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
 import { Upload, Download, RefreshCw, Eye, EyeOff, AlertTriangle, Info, BookOpen, Lightbulb } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 export default function SvgToPngConverter() {
   const [svgFile, setSvgFile] = useState<File | null>(null);
@@ -143,23 +141,12 @@ export default function SvgToPngConverter() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                SVG to PNG Converter
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Effortlessly transform your scalable vector graphics into high-quality PNG images with customizable options for perfect results.
-            </p>
-        </div>
+    <ToolLayout
+      title="SVG to PNG Converter"
+      description="Effortlessly transform your scalable vector graphics into high-quality PNG images with customizable options for perfect results"
+    >
+
+    <Toaster position="top-right" />
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-8">
@@ -340,11 +327,6 @@ export default function SvgToPngConverter() {
                 <li>Some online SVGs might have CORS issues, so it's better to download and upload them directly for conversion.</li>
             </ul>
         </div>
-
-
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   );
 }

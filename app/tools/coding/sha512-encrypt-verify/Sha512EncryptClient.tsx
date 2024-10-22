@@ -8,11 +8,9 @@ import { Label } from "@/components/ui/label"
 import Input from "@/components/ui/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import toast, { Toaster } from 'react-hot-toast'
 import crypto from 'crypto'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 export default function SHA512EncryptVerify() {
   const [inputText, setInputText] = useState('')
@@ -62,31 +60,12 @@ export default function SHA512EncryptVerify() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: '#333',
-            color: '#fff',
-          },
-        }}
-      />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                SHA512 Encrypt and Verify
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Generate and verify SHA-512 hashes for text and file content.
-            </p>
-          </div>
+    <ToolLayout
+      title="SHA512 Encrypt and Verify"
+      description="Generate and verify SHA-512 hashes for text and file content"
+    >
+
+      <Toaster position="top-right" />
           
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mb-8">
             <Tabs defaultValue="encrypt" className="w-full">
@@ -240,10 +219,6 @@ export default function SHA512EncryptVerify() {
               <li>SHA512 is ideal for applications that require the highest level of security.</li>
             </ul>
           </div>
-
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>        
   )
 }

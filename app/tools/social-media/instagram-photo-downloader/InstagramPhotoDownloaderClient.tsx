@@ -10,8 +10,7 @@ import Slider from "@/components/ui/Slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster, toast } from 'react-hot-toast';
 import { BookOpen, Download, Info, Lightbulb, Search } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import ToolLayout from '@/components/ToolLayout'
 
 interface InstagramMediaItem {
     id: string;
@@ -162,16 +161,12 @@ export default function InstagramPhotoDownloader() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-            <Toaster position="top-right" />
-            <Header />
-            <div className="flex-grow flex">
-                <main className="flex-grow px-4 py-12 overflow-x-hidden">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="mb-8 text-center">
-                            <h1 className="text-4xl font-bold text-white mb-4">Instagram Photo Downloader</h1>
-                            <p className="text-gray-400">Download Photos from Instagram public photos</p>
-                        </div>
+        <ToolLayout
+      title="Instagram Photo Downloader"
+      description="Download Photos from Instagram public photos"
+    >
+
+                <Toaster position="top-right" />
                         <Tabs defaultValue="photos" className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
                             <TabsList className="grid w-full grid-cols-2 mb-6">
                                 <TabsTrigger value="photos">Photos</TabsTrigger>
@@ -377,13 +372,7 @@ export default function InstagramPhotoDownloader() {
                                 </ul>
                                 </div>
 
-                                </div>
-
-
-                   
-                </main>
-            </div>
-            <Footer />
-        </div>
+                
+    </ToolLayout>
     );
 }

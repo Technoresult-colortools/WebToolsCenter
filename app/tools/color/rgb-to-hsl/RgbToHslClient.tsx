@@ -2,12 +2,11 @@
 
 import React, { useState } from 'react';
 import { AlertCircle, BookOpen, Info, Lightbulb } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Input from "@/components/ui/Input";
-import {Button} from "@/components/ui/Button";
-import Sidebar from '@/components/sidebarTools';
+import { Button } from "@/components/ui/Button";
+import ToolLayout from '@/components/ToolLayout';
+import { Toaster, toast } from 'react-hot-toast';
 
 function rgbToHsl(r: number, g: number, b: number) {
   r /= 255;
@@ -53,120 +52,111 @@ export default function RgbToHsl() {
   const handleConvert = () => {
     setError('');
 
-  
     const r = parseInt(red);
     const g = parseInt(green);
     const b = parseInt(blue);
 
     if (isNaN(r) || r < 0 || r > 255) {
       setError('Please enter a valid Red value (0-255).');
+      toast.error('Invalid Red value. It must be between 0-255.');
       return;
     }
     if (isNaN(g) || g < 0 || g > 255) {
       setError('Please enter a valid Green value (0-255).');
+      toast.error('Invalid Green value. It must be between 0-255.');
       return;
     }
     if (isNaN(b) || b < 0 || b > 255) {
       setError('Please enter a valid Blue value (0-255).');
+      toast.error('Invalid Blue value. It must be between 0-255.');
       return;
     }
 
-
     const [h, s, l] = rgbToHsl(r, g, b);
     setHslValue(`hsl(${h}, ${s}%, ${l}%)`);
+    toast.success('RGB to HSL conversion successful!');
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-12">
-          <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                RGB to HSL Converter
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Convert RGB Color Codes to HSL.
-            </p>
-          </div>
+    <ToolLayout
+      title="RGB to HSL Converter"
+      description="Convert RGB Color Codes to HSL"
+    >
+      <Toaster position="top-right" />
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mb-8 mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <div>
-                <label htmlFor="red-input" className="block text-sm font-medium text-gray-300 mb-2">
-                  Red (0-255)
-                </label>
-                <Input
-                  id="red-input"
-                  type="number"
-                  min="0"
-                  max="255"
-                  value={red}
-                  onChange={(e) => setRed(e.target.value)}
-                  className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="green-input" className="block text-sm font-medium text-gray-300 mb-2">
-                  Green (0-255)
-                </label>
-                <Input
-                  id="green-input"
-                  type="number"
-                  min="0"
-                  max="255"
-                  value={green}
-                  onChange={(e) => setGreen(e.target.value)}
-                  className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label htmlFor="blue-input" className="block text-sm font-medium text-gray-300 mb-2">
-                  Blue (0-255)
-                </label>
-                <Input
-                  id="blue-input"
-                  type="number"
-                  min="0"
-                  max="255"
-                  value={blue}
-                  onChange={(e) => setBlue(e.target.value)}
-                  className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
+      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-2xl mb-8 mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label htmlFor="red-input" className="block text-sm font-medium text-gray-300 mb-2">
+              Red (0-255)
+            </label>
+            <Input
+              id="red-input"
+              type="number"
+              min="0"
+              max="255"
+              value={red}
+              onChange={(e) => setRed(e.target.value)}
+              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="green-input" className="block text-sm font-medium text-gray-300 mb-2">
+              Green (0-255)
+            </label>
+            <Input
+              id="green-input"
+              type="number"
+              min="0"
+              max="255"
+              value={green}
+              onChange={(e) => setGreen(e.target.value)}
+              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="blue-input" className="block text-sm font-medium text-gray-300 mb-2">
+              Blue (0-255)
+            </label>
+            <Input
+              id="blue-input"
+              type="number"
+              min="0"
+              max="255"
+              value={blue}
+              onChange={(e) => setBlue(e.target.value)}
+              className="w-full bg-gray-700 text-white border-gray-600 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <Button onClick={handleConvert} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Convert
+        </Button>
+
+        {error && (
+          <Alert className="mt-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {hslValue && (
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold text-white mb-2">Result:</h2>
+            <div className="bg-gray-700 p-4 rounded-lg">
+              <p className="text-white" id="hsl-value">HSL: {hslValue}</p>
             </div>
 
-            <Button onClick={handleConvert} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Convert
-            </Button>
-
-            {error && (
-              <Alert className="mt-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            {hslValue && (
-              <div className="mt-6">
-                <h2 className="text-xl font-semibold text-white mb-2">Result:</h2>
-                <div className="bg-gray-700 p-4 rounded-lg">
-                  <p className="text-white" id="hsl-value">HSL: {hslValue}</p>
-                </div>
-
-                <div
-                  id="color-preview"
-                  className="mt-4 w-full h-20 rounded-lg"
-                  style={{ backgroundColor: hslValue }}
-                ></div>
-              </div>
-            )}
+            <div
+              id="color-preview"
+              className="mt-4 w-full h-20 rounded-lg"
+              style={{ backgroundColor: hslValue }}
+            ></div>
           </div>
+        )}
+      </div>
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
@@ -210,11 +200,6 @@ export default function RgbToHsl() {
               <li>Use the preview section to see how the color will appear in your design.</li>
             </ul>
           </div>
-
-
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   );
 }

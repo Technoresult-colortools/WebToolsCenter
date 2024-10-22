@@ -10,9 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Download, Undo, Redo, Info, BookOpen, Lightbulb } from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 type BorderRadius = {
   topLeft: number
@@ -138,23 +136,12 @@ export default function BorderRadiusGenerator() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-        <Header />
-      <Toaster position="top-right" />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-         <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                CSS Border Radius Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create visually appealing and modern UI elements by customizing the corner radii of boxes
-            </p>
-          </div>
+    <ToolLayout
+      title="CSS Border Radius Generator"
+      description="Create visually appealing and modern UI elements by customizing the corner radii of boxes"
+    >
+
+    <Toaster position="top-right" />
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 max-w-4xl mx-auto mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -340,9 +327,6 @@ export default function BorderRadiusGenerator() {
             </ul>
           </div>
 
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster, toast } from 'react-hot-toast';
-import Sidebar from '@/components/sidebarTools';
 import { 
   Copy, RefreshCw, ArrowRight, Wand2, Info, Lightbulb, 
   BookOpen, ChartColumnBig, History, Download, Upload, Settings2, Cog, Shield
@@ -31,8 +30,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Switch } from "@/components/ui/switch";
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import ToolLayout from '@/components/ToolLayout'
 
 const lowercaseWords = new Set([
   'a', 'an', 'the', 'and', 'but', 'or', 'for', 'nor', 'on', 'at', 
@@ -177,26 +175,13 @@ export default function TitleCaseConverter() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
-      <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
-          <div className="mb-12 text-center px-4">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                  Advanced Title Case Converter
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                  Transforms your text into properly formatted titles using intelligent capitalization rules.
-              </p>
-          </div>
-
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8  md:p-8 max-w-4xl mx-auto mt-8">
+    <ToolLayout
+      title="Advanced Title Case Converter"
+      description="Transforms your text into properly formatted titles using intelligent capitalization rules"
+    >
+    
+    <Toaster position="top-right" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8  md:p-6 max-w-4xl mx-auto">
             <div className="lg:col-span-2">
               <Card className="bg-gray-800 border-gray-700">
                 <CardHeader>
@@ -445,9 +430,6 @@ export default function TitleCaseConverter() {
             </ul>
           </div>
 
-        </main>
-       </div> 
-      <Footer />
-    </div>
+          </ToolLayout>
   );
 }

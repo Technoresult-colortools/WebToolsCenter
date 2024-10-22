@@ -11,12 +11,10 @@ import Slider  from "@/components/ui/Slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster,} from 'react-hot-toast'
 import { Download, Camera, User, MoreHorizontal, Bookmark, Info, BookOpen, Lightbulb } from 'lucide-react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
 import HeartIcon from '@/components/ui/HeartIcon'
 import ShareIcon from '@/components/ui/ShareIcon'
 import CommentIcon from '@/components/ui/CommentIcon'
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
 
 const VerifiedBadge = () => (
   <svg viewBox="0 0 22 22" aria-label="Verified account" role="img" className="w-4 h-4 ml-1 inline-block fill-[#1d9bf0]">
@@ -233,23 +231,12 @@ export default function InstagramPostGenerator() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <ToolLayout
+      title="Instagram Photo Generator"
+      description="Create an engaging and professional-looking Instagram posts"
+    >
+
       <Toaster position="top-right" />
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="flex-grow container mx-auto px-4 py-8">
-           <div className="mb-12 text-center px-4">
-              <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                Instagram Photo Generator
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create an engaging and professional-looking Instagram posts.
-              </p>
-            </div>
 
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mt-8">
             <h2 className="text-2xl font-bold text-white mb-4">Instagram Post Preview</h2>
@@ -553,10 +540,6 @@ export default function InstagramPostGenerator() {
               <li>Experiment with different combinations of settings to create the perfect post for your audience.</li>
             </ul>
           </div>
-
-        </main>
-        </div>
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }

@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Shuffle, Download, Info, Palette, Sliders, FileImage } from 'lucide-react'
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import Sidebar from '@/components/sidebarTools';
+import ToolLayout from '@/components/ToolLayout'
+import { Toaster, toast } from 'react-hot-toast'
+
 
 type Point = [number, number];
 
@@ -92,11 +92,13 @@ export default function SVGBlobGenerator() {
 
   const handleShuffle = () => {
     generateBlob()
+    toast.success('New blob shape generated!')
   }
 
   const handleShuffleImage = () => {
     const randomId = Math.floor(Math.random() * 1000)
     setBackgroundUrl(`https://picsum.photos/seed/${randomId}/600/400`)
+    toast.success('New background image applied!')
   }
 
   const handleExport = (format: 'svg' | 'png') => {
@@ -124,6 +126,7 @@ export default function SVGBlobGenerator() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
+      toast.success('SVG exported successfully!')
     } else if (format === 'png') {
       if (svgRef.current) {
         const canvas = document.createElement('canvas')
@@ -142,6 +145,7 @@ export default function SVGBlobGenerator() {
             document.body.appendChild(a)
             a.click()
             document.body.removeChild(a)
+            toast.success('PNG exported successfully!')
           }
           img.src = 'data:image/svg+xml;base64,' + btoa(svgData)
         }
@@ -150,22 +154,13 @@ export default function SVGBlobGenerator() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-      <Header />
-      <div className='flex-grow flex'>
-        {/* Sidebar */}
-        <aside className=" bg-gray-800">
-            <Sidebar />  
-        </aside>
-        <main className="container mx-auto px-4 py-12 max-w-4xl">
-         <div className="mb-12 text-center px-4">
-            <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-4">
-                SVG Blob Generator
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto">
-                Create unique, organic blob shapes with ease, perfect for enhancing your designs with customizable parameters and real-time previews.
-            </p>
-         </div>
+    <ToolLayout
+      title="SVG Blob Generator"
+      description="Create unique, organic blob shapes with ease, perfect for enhancing your designs with customizable parameters and real-time previews"
+    >
+
+    <Toaster position="top-right" />
+
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-gray-800 p-4 rounded-lg flex items-center justify-center">
@@ -375,10 +370,6 @@ export default function SVGBlobGenerator() {
             <li>Use PNG export for high-resolution images suitable for print or detailed digital art.</li>
           </ul>
         </div>
-
-        </main>
-       </div> 
-      <Footer />
-    </div>
+  </ToolLayout>
   )
 }
