@@ -1,4 +1,4 @@
-import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faShare, faWrench, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
   import {
     faGlide, faInstagram, faMarkdown, faTwitter, faYoutube,
   } from '@fortawesome/free-brands-svg-icons';

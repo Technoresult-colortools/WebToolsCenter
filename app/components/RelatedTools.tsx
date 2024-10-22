@@ -27,7 +27,6 @@ export default function RelatedTools() {
     const getRelatedTools = () => {
       const pathParts = pathname.split('/').filter(Boolean)
       const category = pathParts[1]
-      const tool = pathParts[2]
 
       if (!category) {
         return allTools.sort(() => 0.5 - Math.random()).slice(0, 3)

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/Button";
 import { Toaster, toast } from 'react-hot-toast';
-import { Copy, Download, RefreshCw, BarChart, Info, Lightbulb, BookOpen, Bug } from 'lucide-react';
+import { Copy, Download, RefreshCw, BarChart, Info, Lightbulb, BookOpen, } from 'lucide-react';
 import ToolLayout from '@/components/ToolLayout'
 
 

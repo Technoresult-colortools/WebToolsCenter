@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/Button";
-import { Copy, Download, Info, Lightbulb, BookOpen, RefreshCw, Undo2, Space, Slice, RefreshCcw, Bug,} from 'lucide-react';
+import { Copy, Download, Info, Lightbulb, BookOpen, RefreshCw, Undo2, Space, Slice, RefreshCcw,} from 'lucide-react';
 import { Toaster, toast } from 'react-hot-toast';
 import ToolLayout from '@/components/ToolLayout'
 
