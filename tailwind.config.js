@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -31,6 +30,9 @@ module.exports = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
+      },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite', // Slows spin to 3 seconds per rotation
       },
     },
   },

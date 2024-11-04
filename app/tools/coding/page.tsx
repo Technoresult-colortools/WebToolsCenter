@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { ChevronRight, Sparkles, Star } from 'lucide-react';
+import { ChevronRight, CogIcon, Star } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCode, faTools, faLock, faCogs, faFileCode, faDatabase } from '@fortawesome/free-solid-svg-icons';
 
@@ -27,6 +27,7 @@ const codingTools = [
   { name: 'SHA384 Encrypt and Verifier', href: '/tools/coding/sha384-encrypt-verify', icon: faLock, description: 'Utilize SHA384 for advanced data security.', gradient: 'from-blue-500 to-purple-500' },
   { name: 'SHA512 Encrypt and Verifier', href: '/tools/coding/sha512-encrypt-verify', icon: faLock, description: 'Achieve robust security with SHA512 hashing.', gradient: 'from-orange-500 to-red-500' },
   { name: 'JWT Encoder/Decoder', href: '/tools/coding/jwt-encoder-decoder', icon: faLock, description: 'Encode and decode JSON Web Tokens for authentication.', gradient: 'from-teal-500 to-green-500' },
+  { name: 'JSON Validator and Formatter', href: '/tools/coding/json-validator', icon: faDatabase, description: 'Validate, format, and manipulate JSON with ease.', gradient: 'from-indigo-500 to-purple-500' },
   { name: 'Advance JSON Tree Viewer', href: '/tools/coding/json-tree-viewer', icon: faDatabase, description: 'Visualize and navigate complex JSON structures easily.', gradient: 'from-purple-500 to-blue-500' },
 ];
 
@@ -53,7 +54,7 @@ export default function CategoriesPage() {
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Coding <span className="text-blue-400">Tools</span> Collection
             <span className="inline-block ml-3">
-              <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+              <CogIcon className="w-10 h-10 text-blue-400 animate-spin-slow" />
             </span>
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">

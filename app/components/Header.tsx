@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect,} from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'
@@ -33,6 +33,7 @@ const allTools: Tool[] = [
   { name: 'HTML Encoder/Decoder', category: 'Text Tools', path: '/tools/text/html-encoder-decoder' },
   { name: 'Markdown to HTML Converter', category: 'Text Tools', path: '/tools/text/markdown-to-html' },
   { name: 'Word Scrambler', category: 'Text Tools', path: '/tools/text/word-scrambler' },
+  { name: 'Text to Handwriting Converter', category: 'Text Tools', path: '/tools/text/text-to-handwriting' },
 
   // Image Tools
   { name: 'Image Cropper', category: 'Image Tools', path: '/tools/image/image-cropper' },
@@ -103,6 +104,7 @@ const allTools: Tool[] = [
   { name: 'SHA512 Encrypt and Verifier', category: 'Coding Tools', path: '/tools/coding/sha512-encrypt-verify' },
   { name: 'JWT Encoder/Decoder', category: 'Coding Tools', path: '/tools/coding/jwt-encoder-decoder' },
   { name: 'Advance JSON Tree Viewer', category: 'Coding Tools', path: '/tools/coding/json-tree-viewer' },
+  { name: 'JSON Validator and Formatter', category: 'Coding Tools', path: '/tools/coding/json-validator' },
 
   //Misc Tools
   { name: 'Advance Password Generator', category: 'Miscellaneous Tools', path: '/tools/misc/advance-password-generator' },
@@ -118,6 +120,9 @@ const allTools: Tool[] = [
     { name: 'Tweet to Image Converter', category: 'Social Media Tools', path: '/tools/social-media/tweet-to-image-converter' },
     { name: 'YouTube Thumbnail Downloader', category: 'Social Media Tools', path: '/tools/social-media/youtube-thumbnail-downloader' },
     { name: 'YouTube Keyword Tag Extractor', category: 'Social Media Tools', path: '/tools/social-media/youtube-tag-extractor' },
+    { name: 'YouTube MetaData Extractor', category: 'Social Media Tools', path: '/tools/social-media/youtube-metadata-extractor' },
+    { name: 'YouTube Region Restriction Finder', category: 'Social Media Tools', path: '/tools/social-media/youtube-region-restriction-finder' },
+    
     
   
 ]
@@ -129,6 +134,8 @@ export default function Header() {
   const [searchResults, setSearchResults] = useState<Tool[]>([])
   const [, setIsMobile] = useState(false)
   const router = useRouter()
+  const inputRef = useRef<HTMLInputElement>(null)
+  const searchContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -141,6 +148,21 @@ export default function Header() {
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setSearchQuery('')
+        setSearchResults([])
+        setIsSearchOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
   }, [])
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,31 +188,29 @@ export default function Header() {
     setIsMenuOpen(false)
   }
 
-
   return (
     <header className="fixed top-0 left-0 right-0 z-[60]">
       <div className="w-full bg-gray-800 bg-opacity-90 backdrop-filter backdrop-blur-lg shadow-lg">
         <div className="max-w-[1920px] mx-auto">
           <div className="px-4 py-4">
+            
             <div className="flex items-center justify-between gap-4">
               {/* Logo */}
               <Link href="/" className="text-2xl font-bold text-white flex items-center space-x-2">
                 <Image
                   src="/LogoWTC1.svg"
                   alt="WebToolsCenter Logo"
-                  width={32} // Adjust width as needed
-                  height={32} // Adjust height as needed
-                  priority // Ensures the logo is loaded quickly, especially above the fold
+                  width={32}
+                  height={32}
+                  priority
                 />
                 <span>
                   Web<span className="text-blue-400">Tools</span>Center
                 </span>
               </Link>
 
-
-
               {/* Desktop Search Bar */}
-              <div className="hidden md:flex flex-1 max-w-xl mx-4">
+              <div className="hidden md:flex flex-1 max-w-xl mx-4" ref={searchContainerRef}>
                 <div className="relative w-full">
                   <input
                     type="text"
@@ -217,8 +237,8 @@ export default function Header() {
                 </div>
               </div>
 
-               {/* Desktop Navigation */}
-               <nav className="hidden md:flex items-center space-x-6">
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center space-x-6">
                 <Link href="/categories" className="text-gray-300 hover:text-blue-400 transition duration-200">
                   Categories
                 </Link>
@@ -228,6 +248,7 @@ export default function Header() {
                 <Link href="/contact" className="text-gray-300 hover:text-blue-400 transition duration-200">
                   Contact
                 </Link>
+             
                 {/* Buy Me a Coffee Button */}
                 <a
                   href="https://buymeacoffee.com/webtoolscenter"
@@ -290,7 +311,7 @@ export default function Header() {
       {/* Mobile Search Overlay */}
       {isSearchOpen && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-[70] md:hidden">
-          <div className="container mx-auto px-4 pt-20">
+          <div className="container mx-auto px-4 pt-20" ref={searchContainerRef}>
             <div className="bg-gray-800 rounded-lg shadow-xl">
               <div className="p-4">
                 <div className="relative flex items-center">

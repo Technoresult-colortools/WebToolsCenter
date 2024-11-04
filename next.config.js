@@ -54,6 +54,16 @@ const nextConfig = {
       },
     ];
   },
+
+  // Auth0 rewrites configuration
+  async rewrites() {
+    return [
+      {
+        source: '/api/auth/:path*',
+        destination: '/api/auth/[auth0]',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

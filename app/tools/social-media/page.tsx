@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { ChevronRight, Sparkles, Star } from 'lucide-react';
+import { ChevronRight, CogIcon, Star } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faInstagram, 
@@ -55,6 +55,18 @@ const socialMediaTools = [
     icon: faHashtag, 
     gradient: 'from-red-500 to-orange-500' 
   },
+  { 
+    name: 'YouTube Metadata Extractor', 
+    href: '/tools/social-media/youtube-metadata-extractor', 
+    icon: faHashtag, 
+    gradient: 'from-red-500 to-orange-500' 
+  },
+  { 
+    name: 'YouTube Region Restriction Finder', 
+    href: '/tools/social-media/youtube-region-restriction-finder', 
+    icon: faHashtag, 
+    gradient: 'from-red-500 to-orange-500' 
+  },
 ];
 
 export default function SocialMediaToolsPage() {
@@ -79,7 +91,7 @@ export default function SocialMediaToolsPage() {
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Social Media<span className="text-blue-400"> Tools</span>
             <span className="inline-block ml-3">
-              <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+              <CogIcon className="w-10 h-10 text-blue-400 animate-spin-slow" />
             </span>
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">

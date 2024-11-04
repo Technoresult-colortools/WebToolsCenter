@@ -1,4 +1,4 @@
-import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt, faSignature } from '@fortawesome/free-solid-svg-icons'
   import {
     faGlide, faInstagram, faMarkdown, faTwitter, faYoutube,
   } from '@fortawesome/free-brands-svg-icons';
@@ -20,6 +20,7 @@ import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImag
   { name: 'HTML Encoder/Decoder', category: 'Text', href: '/tools/text/html-encoder-decoder', icon: faCode, description: 'Encode or decode HTML entities.' },
   { name: 'Markdown to HTML Converter', category: 'Text', href: '/tools/text/markdown-to-html', icon: faMarkdown, description: 'Convert Markdown to HTML.' },
   { name: 'Word Scrambler', category: 'Text', href: '/tools/text/word-scrambler', icon: faRandom, description: 'Scramble words in text.' },
+  { name: 'Text to Handwriting Converter', category: 'Text', href: '/tools/text/text-to-handwriting', icon: faSignature, description: 'Transform your text into handwritten notes with customizable styles.' },
 
   // Image Tools
   { name: 'Image Cropper', category: 'Image', href: '/tools/image/image-cropper', icon: faCropAlt, description: 'Crop and resize images online.' },
@@ -106,5 +107,7 @@ import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImag
   { name: 'Tweet Generator', category: 'Social Media', href: '/tools/social-media/tweet-generator', icon: faTwitter, description: 'Generate tweet mockups for sharing.' },
   { name: 'Tweet to Image Converter', category: 'Social Media', href: '/tools/social-media/tweet-to-image-converter', icon: faTwitter, description: 'Convert tweets to images for social media.' },
   { name: 'YouTube Thumbnail Downloader', category: 'Social Media', href: '/tools/social-media/youtube-thumbnail-downloader', icon: faYoutube, description: 'Download thumbnails from YouTube videos.' },
-  { name: 'YouTube KeyWord Tag Extractor', category: 'Social Media', href: '/tools/social-media/youtube-tag-extractor', icon: faHashtag, description: 'Extract keyword tags from any YouTube video.' }
+  { name: 'YouTube KeyWord Tag Extractor', category: 'Social Media', href: '/tools/social-media/youtube-tag-extractor', icon: faHashtag, description: 'Extract keyword tags from any YouTube video.' },
+  { name: 'YouTube Metadata Extractor', category: 'Social Media', href: '/tools/social-media/youtube-metadata-extractor', icon: faHashtag, description: 'Extract comprehensive metadata from any YouTube video.' },
+  { name: 'YouTube Region Restriction Finder', category: 'Social Media', href: '/tools/social-media/youtube-region-restriction-finder', icon: faHashtag, description: 'Check the availability of a YouTube video across different regions.' }
   ];

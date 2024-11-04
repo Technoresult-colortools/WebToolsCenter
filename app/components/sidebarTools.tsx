@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, Sparkles, ChevronDown } from 'lucide-react'; // Replace with actual icons
+import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, Sparkles, ChevronDown, Cog } from 'lucide-react'; // Replace with actual icons
   
   
 
@@ -24,7 +24,8 @@ const categories = [
       { name: 'Duplicate Line Remover', href: '/tools/text/duplicate-line-remover' },
       { name: 'HTML Encoder/Decoder', href: '/tools/text/html-encoder-decoder' },
       { name: 'Markdown to HTML Converter', href: '/tools/text/markdown-to-html' },
-      { name: 'Word Scrambler', href: '/tools/text/word-scrambler' }
+      { name: 'Word Scrambler', href: '/tools/text/word-scrambler' },
+      { name: 'Text to Handwriting Converter', href: '/tools/text/text-to-handwriting' }
     ]
   },
   { 
@@ -113,7 +114,8 @@ const categories = [
       { name: 'SHA384 Encrypt and Verifier', href: '/tools/coding/sha384-encrypt-verify' },
       { name: 'SHA512 Encrypt and Verifier', href: '/tools/coding/sha512-encrypt-verify' },
       { name: 'JWT Encoder/Decoder', href: '/tools/coding/jwt-encoder-decoder' },
-      { name: 'Advance JSON Tree Viewer', href: '/tools/coding/json-tree-viewer' }
+      { name: 'Advance JSON Tree Viewer', href: '/tools/coding/json-tree-viewer' },
+      { name: 'JSON Validator and Formatter', href: '/tools/coding/json-validator' }
     ]
   },
   { 
@@ -138,7 +140,10 @@ const categories = [
       { name: 'Instagram Photo Downloader', href: '/tools/social-media/instagram-photo-downloader' },
       { name: 'Tweet Generator', href: '/tools/social-media/tweet-generator' },
       { name: 'Tweet to Image Converter', href: '/tools/social-media/tweet-to-image-converter' },
-      { name: 'YouTube Thumbnail Downloader', href: '/tools/social-media/youtube-thumbnail-downloader' }
+      { name: 'YouTube Thumbnail Downloader', href: '/tools/social-media/youtube-thumbnail-downloader' },
+      { name: 'YouTube KeyWord Tag Extractor',  href: '/tools/social-media/youtube-tag-extractor' },
+      { name: 'YouTube Metadata Extractor', href: '/tools/social-media/youtube-metadata-extractor' },
+      { name: 'YouTube Region Restriction Finder', href: '/tools/social-media/youtube-region-restriction-finder' }
     ]
   },
 ];
@@ -171,7 +176,7 @@ const Sidebar: React.FC = () => {
       <div className="p-6 hidden lg:block flex-shrink-0">
         <h2 className="text-2xl font-bold mb-6 flex items-center">
           Explore Tools
-          <Sparkles className="w-5 h-5 ml-2 text-yellow-400" />
+          <Cog className="w-5 h-5 ml-2 text-yellow-400 animate-spin-slow" />
         </h2>
       </div>
       <nav className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">

@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ChevronRight, FileText, Image, PenTool, Code, Palette, Share2, Wrench, Sparkles, Star } from 'lucide-react'
+import { ChevronRight, FileText, Image, PenTool, Code, Palette, Share2, Wrench, Star, CogIcon } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
@@ -79,7 +79,7 @@ export default function ToolCategories() {
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Our<span className="text-blue-400">Tool</span>Categories
             <span className="inline-block ml-3">
-              <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+              <CogIcon className="w-10 h-10 text-blue-400 animate-spin-slow" />
             </span>
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">

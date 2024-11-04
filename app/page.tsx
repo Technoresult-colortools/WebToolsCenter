@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect,} from 'react'
 import Link from 'next/link'
-import { ArrowRight, Zap, Star, Wrench, Command, Sparkles } from 'lucide-react'
+import { ArrowRight, Zap, Star, Wrench, Command, CogIcon } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ScrollToTop from '@/components/ScrollToTop';  
-import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag, faThLarge } from '@fortawesome/free-solid-svg-icons'; 
+import { faDatabase, faHashtag, faMicrochip, faPrint, faSignature, faSliders, faSun, faTag, faThLarge } from '@fortawesome/free-solid-svg-icons'; 
 import {
   IconDefinition,
   faGlide,
@@ -53,7 +53,7 @@ const allTools: Tool[] = [
   { name: 'HTML Encoder/Decoder', category: 'Text', href: '/tools/text/html-encoder-decoder', icon: faCode, description: 'Encode or decode HTML entities.' },
   { name: 'Markdown to HTML Converter', category: 'Text', href: '/tools/text/markdown-to-html', icon: faMarkdown, description: 'Convert Markdown to HTML.' },
   { name: 'Word Scrambler', category: 'Text', href: '/tools/text/word-scrambler', icon: faRandom, description: 'Scramble words in text.' },
-
+  { name: 'Text to Handwriting Converter', category: 'Text', href: '/tools/text/text-to-handwriting', icon: faSignature, description: 'Transform your text into handwritten notes with customizable styles.' },
   // Image Tools
   { name: 'Image Cropper', category: 'Image', href: '/tools/image/image-cropper', icon: faCropAlt, description: 'Crop and resize images online.' },
   { name: 'Image Filters', category: 'Image', href: '/tools/image/image-filters', icon: faImage, description: 'Apply filters to your images.' },
@@ -124,6 +124,7 @@ const allTools: Tool[] = [
   { name: 'SHA512 Encrypt and Verifier', category: 'Coding', href: '/tools/coding/sha512-encrypt-verify', icon: faLock, description: 'Encrypt and verify SHA-512 hashes.' },
   { name: 'JWT Encoder/Decoder', category: 'Coding', href: '/tools/coding/jwt-encoder-decoder', icon: faKey, description: 'Encode or decode JWT tokens.' },
   { name: 'Advance JSON Tree Viewer', category: 'Coding', href: '/tools/coding/json-tree-viewer', icon: faSitemap, description: 'View JSON data as an interactive tree.' },
+  { name: 'JSON Validator and Formatter', category: 'Coding', href: '/tools/coding/json-validator', icon: faDatabase, description: 'Validate, format, and manipulate JSON with ease.' },
 
 // Miscellaneous Tools
   { name: 'Advance Password Generator', category: 'Misc', href: '/tools/misc/advance-password-generator', icon: faLock, description: 'Generate advanced and secure passwords.' },
@@ -139,7 +140,9 @@ const allTools: Tool[] = [
   { name: 'Tweet Generator', category: 'Social Media', href: '/tools/social-media/tweet-generator', icon: faTwitter, description: 'Generate tweet mockups for sharing.' },
   { name: 'Tweet to Image Converter', category: 'Social Media', href: '/tools/social-media/tweet-to-image-converter', icon: faTwitter, description: 'Convert tweets to images for social media.' },
   { name: 'YouTube Thumbnail Downloader', category: 'Social Media', href: '/tools/social-media/youtube-thumbnail-downloader', icon: faYoutube, description: 'Download thumbnails from YouTube videos.' },
-  { name: 'YouTube KeyWord Tag Extractor', category: 'Social Media', href: '/tools/social-media/youtube-tag-extractor', icon: faHashtag, description: 'Extract keyword tags from any YouTube video.' }
+  { name: 'YouTube KeyWord Tag Extractor', category: 'Social Media', href: '/tools/social-media/youtube-tag-extractor', icon: faHashtag, description: 'Extract keyword tags from any YouTube video.' },
+  { name: 'YouTube Metadata Extractor', category: 'Social Media', href: '/tools/social-media/youtube-Metadata-extractor', icon: faHashtag, description: 'Extract comprehensive metadata from any YouTube video.' },
+  { name: 'YouTube Region Restriction Finder', category: 'Social Media', href: '/tools/social-media/youtube-region-restriction-finder', icon: faHashtag, description: 'Check the availability of a YouTube video across different regions.' }
 ];
 
 export default function HomePage() {
@@ -194,8 +197,9 @@ export default function HomePage() {
         >
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Web<span className="text-blue-400">Tools</span>Center
+            
             <span className="inline-block ml-3">
-              <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+               <CogIcon className="w-10 h-10 text-blue-400 animate-spin-slow" />
             </span>
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">

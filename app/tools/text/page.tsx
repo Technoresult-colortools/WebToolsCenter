@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { ChevronRight, Sparkles, Star } from 'lucide-react';
+import { ChevronRight, CogIcon, Star } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileAlt, faTextWidth, faListOl, faTextHeight, faSpellCheck, faTrash, faFont } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faTextWidth, faListOl, faTextHeight, faSpellCheck, faTrash, faFont, faSignature } from '@fortawesome/free-solid-svg-icons';
 
 const textTools = [
   { 
@@ -92,6 +92,12 @@ const textTools = [
     icon: faSpellCheck,
     gradient: 'from-blue-500 to-purple-500'
   },
+  { 
+    name: 'Text to Handwriting Converter', 
+    href: '/tools/text/text-to-handwriting', 
+    icon: faSignature,
+    gradient: 'from-yellow-500 to-red-500'
+  },
 ];
 
 export default function TextToolsPage() {
@@ -116,7 +122,7 @@ export default function TextToolsPage() {
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Text<span className="text-blue-400">Tools</span>Collection
             <span className="inline-block ml-3">
-              <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+              <CogIcon className="w-10 h-10 text-blue-400 animate-spin-slow" />
             </span>
           </h1>
           <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">

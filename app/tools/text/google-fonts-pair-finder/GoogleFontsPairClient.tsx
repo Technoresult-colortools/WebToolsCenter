@@ -504,39 +504,38 @@ const GoogleFontsPairFinder: React.FC = () => {
   FontFilters.displayName = 'FontFilters';
 
   const ShowFontsPair: React.FC = () => {
-    const headingWeights = fonts.find(f => f.family === headingFont.family)?.variants || [];
-    const bodyWeights = fonts.find(f => f.family === bodyFont.family)?.variants || [];
+    const headingWeights = fonts.find(f => f.family === headingFont.family)?.variants || []
+    const bodyWeights = fonts.find(f => f.family === bodyFont.family)?.variants || []
 
-    const [selectedHeadingWeights, setSelectedHeadingWeights] = useState<string[]>([headingFont.weight]);
-    const [selectedBodyWeights, setSelectedBodyWeights] = useState<string[]>([bodyFont.weight]);
-    const [embedType, setEmbedType] = useState<'link' | 'import'>('link');
+    const [selectedHeadingWeights, setSelectedHeadingWeights] = useState<string[]>([headingFont.weight])
+    const [selectedBodyWeights, setSelectedBodyWeights] = useState<string[]>([bodyFont.weight])
+    const [embedType, setEmbedType] = useState<'link' | 'import'>('link')
 
     const toggleWeight = (weight: string, isHeading: boolean) => {
       if (isHeading) {
         setSelectedHeadingWeights(prev => 
           prev.includes(weight) ? prev.filter(w => w !== weight) : [...prev, weight]
-        );
+        )
       } else {
         setSelectedBodyWeights(prev => 
           prev.includes(weight) ? prev.filter(w => w !== weight) : [...prev, weight]
-        );
+        )
       }
-    };
+    }
 
     const generateCode = () => {
-      const headingFontString = `${headingFont.family.replace(' ', '+')}:wght@${selectedHeadingWeights.join(';')}`;
-      const bodyFontString = `${bodyFont.family.replace(' ', '+')}:wght@${selectedBodyWeights.join(';')}`;
+      const headingFontString = `${headingFont.family.replace(' ', '+')}:wght@${selectedHeadingWeights.join(';')}`
+      const bodyFontString = `${bodyFont.family.replace(' ', '+')}:wght@${selectedBodyWeights.join(';')}`
       
       const linkCode = `<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=${headingFontString}&family=${bodyFontString}&display=swap" rel="stylesheet">`;
+<link href="https://fonts.googleapis.com/css2?family=${headingFontString}&family=${bodyFontString}&display=swap" rel="stylesheet">`
 
       const importCode = `<style>
 @import url('https://fonts.googleapis.com/css2?family=${headingFontString}&family=${bodyFontString}&display=swap');
-</style>`;
+</style>`
 
-      return embedType === 'link' ? linkCode : importCode;
-    };
-
+      return embedType === 'link' ? linkCode : importCode
+    }
     return (
       <Dialog open={showFontsPair} onOpenChange={setShowFontsPair}>
         <DialogContent className="bg-gray-800 text-white max-w-3xl max-h-[75vh] overflow-y-auto">
@@ -790,6 +789,7 @@ const GoogleFontsPairFinder: React.FC = () => {
                 Use Fonts in Web
               </Button>
             </div>
+            <ShowFontsPair />
           </div>
 
           {/* About section */}

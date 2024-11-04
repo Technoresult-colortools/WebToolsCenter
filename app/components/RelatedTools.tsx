@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronRight, Sparkles } from 'lucide-react'
+import { ChevronRight, Cog } from 'lucide-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { allTools } from '@/components/allTools' // Make sure this path is correct
 
@@ -57,7 +57,7 @@ export default function RelatedTools() {
       <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6 mt-8">
         <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-6 flex items-center">
           Related Tools
-          <Sparkles className="ml-2 w-6 h-6 text-yellow-400 animate-pulse" />
+          <Cog className="ml-2 w-6 h-6 text-yellow-400 animate-spin-slow" />
         </h2>
         <p className="text-gray-300">No related tools found. Please try refreshing the page.</p>
       </div>
@@ -68,7 +68,7 @@ export default function RelatedTools() {
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6 mt-8">
       <h2 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 mb-6 flex items-center">
         Related Tools
-        <Sparkles className="ml-2 w-6 h-6 text-yellow-400 animate-pulse" />
+        <Cog className="ml-2 w-6 h-6 text-yellow-400 animate-spin-slow" />
       </h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
