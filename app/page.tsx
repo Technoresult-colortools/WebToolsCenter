@@ -141,7 +141,7 @@ const allTools: Tool[] = [
   { name: 'Tweet to Image Converter', category: 'Social Media', href: '/tools/social-media/tweet-to-image-converter', icon: faTwitter, description: 'Convert tweets to images for social media.' },
   { name: 'YouTube Thumbnail Downloader', category: 'Social Media', href: '/tools/social-media/youtube-thumbnail-downloader', icon: faYoutube, description: 'Download thumbnails from YouTube videos.' },
   { name: 'YouTube KeyWord Tag Extractor', category: 'Social Media', href: '/tools/social-media/youtube-tag-extractor', icon: faHashtag, description: 'Extract keyword tags from any YouTube video.' },
-  { name: 'YouTube Metadata Extractor', category: 'Social Media', href: '/tools/social-media/youtube-Metadata-extractor', icon: faHashtag, description: 'Extract comprehensive metadata from any YouTube video.' },
+  { name: 'YouTube Metadata Extractor', category: 'Social Media', href: '/tools/social-media/youtube-metadata-extractor', icon: faHashtag, description: 'Extract comprehensive metadata from any YouTube video.' },
   { name: 'YouTube Region Restriction Finder', category: 'Social Media', href: '/tools/social-media/youtube-region-restriction-finder', icon: faHashtag, description: 'Check the availability of a YouTube video across different regions.' }
 ];
 
