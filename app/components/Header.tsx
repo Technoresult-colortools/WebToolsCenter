@@ -134,7 +134,6 @@ export default function Header() {
   const [searchResults, setSearchResults] = useState<Tool[]>([])
   const [, setIsMobile] = useState(false)
   const router = useRouter()
-  const inputRef = useRef<HTMLInputElement>(null)
   const searchContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

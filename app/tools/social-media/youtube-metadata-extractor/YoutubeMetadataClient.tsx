@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import { Search, Download, RefreshCw, Clipboard, Check, AlertCircle, Tag, Info, Lightbulb, BookOpen, Calendar, Eye, ThumbsUp, User } from 'lucide-react'
+import { Search, Download, RefreshCw, Clipboard, Check, AlertCircle, Tag, Info, Lightbulb, BookOpen, } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Toaster, toast } from 'react-hot-toast'

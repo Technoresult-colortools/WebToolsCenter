@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, Sparkles, ChevronDown, Cog } from 'lucide-react'; // Replace with actual icons
+import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, ChevronDown, Cog } from 'lucide-react'; // Replace with actual icons
   
   
 

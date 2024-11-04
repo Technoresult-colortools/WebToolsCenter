@@ -8,14 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import ToolLayout from '@/components/ToolLayout'
 import { Label } from "@/components/ui/label"
 import { Toaster, toast } from 'react-hot-toast'
-import { Download, ChevronLeft, ChevronRight, Pen, Upload, RefreshCw, Info, BookOpen, Lightbulb } from 'lucide-react'
+import { Download, ChevronLeft, ChevronRight, RefreshCw, Info, BookOpen, Lightbulb } from 'lucide-react'
 import { jsPDF } from 'jspdf'
 
 // Standard US Letter size in pixels (at 96 DPI)
 const PAGE_WIDTH = 816 // 8.5 inches
 const PAGE_HEIGHT = 1056 // 11 inches
 const MARGIN_LEFT = 72 // 0.75 inch margin
-const LINE_HEIGHT_BASE = 24 // Standard ruled line spacing
+
 
 // Handwriting font families with their URLs
 const HANDWRITING_FONTS = [
@@ -128,36 +128,6 @@ export default function TextToHandwriting() {
     }
   }, [])
 
-  const measureText = (text: string): { width: number; height: number } => {
-    if (!ctx.current) return { width: 0, height: 0 }
-    
-    const words = text.split(' ')
-    let currentLine = ''
-    let maxWidth = PAGE_WIDTH - (MARGIN_LEFT * 2)
-    let currentY = 0
-    let lines = []
-
-    words.forEach(word => {
-      const testLine = currentLine + (currentLine ? ' ' : '') + word
-      const metrics = ctx.current!.measureText(testLine)
-      
-      if (metrics.width > maxWidth && currentLine) {
-        lines.push(currentLine)
-        currentLine = word
-      } else {
-        currentLine = testLine
-      }
-    })
-    if (currentLine) {
-      lines.push(currentLine)
-    }
-
-    return {
-      width: maxWidth,
-      height: lines.length * (state.fontSize * state.lineHeight)
-    }
-  }
-
   const splitTextIntoPages = (text: string): string[] => {
     if (!ctx.current) return [text]
 
@@ -197,6 +167,7 @@ export default function TextToHandwriting() {
 
     return pages
   }
+
 
   const renderPage = () => {
     if (!ctx.current || !canvasRef.current) return
