@@ -7,7 +7,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ScrollToTop from '@/components/ScrollToTop';  
-import { faDatabase, faHashtag, faMicrochip, faPrint, faSignature, faSliders, faSun, faTag, faThLarge } from '@fortawesome/free-solid-svg-icons'; 
+import { faDatabase, faDesktop, faHashtag, faMicrochip, faPrint, faSignature, faSliders, faSun, faTag, faThLarge } from '@fortawesome/free-solid-svg-icons'; 
 import {
   IconDefinition,
   faGlide,
@@ -132,6 +132,7 @@ const allTools: Tool[] = [
   { name: 'QR Code Generator', category: 'Misc', href: '/tools/misc/qr-code-generator', icon: faQrcode, description: 'Generate custom QR codes.' },
   { name: 'BarCode Generator', category: 'Misc', href: '/tools/misc/barcode-generator', icon: faBarcode, description: 'Generate custom barcodes.' },
   { name: 'Unit Converter', category: 'Misc', href: '/tools/misc/unit-converter', icon: faExchangeAlt, description: 'Convert between different units of measurement.' },
+  { name: 'Screen Resolution Checker', category: 'Misc', href: '/tools/misc/screen-resolution-checker', icon: faDesktop, description: 'Analyze your screen properties and display capabilities.' },
 
 // Social Media Tools
   { name: 'Instagram Filters', category: 'Social Media', href: '/tools/social-media/instagram-filters', icon: faInstagram, description: 'Apply filters to Instagram images.' },
@@ -197,7 +198,6 @@ export default function HomePage() {
         >
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Web<span className="text-blue-400">Tools</span>Center
-            
             <span className="inline-block ml-3">
                <CogIcon className="w-10 h-10 text-blue-400 animate-spin-slow" />
             </span>
@@ -217,7 +217,7 @@ export default function HomePage() {
               }`}
             >
               <FontAwesomeIcon 
-                icon={faThLarge}  // Use the imported icon here
+                icon={faThLarge}
                 className="text-2xl text-white mb-2" 
               />
               <p className="text-sm font-medium text-white">
@@ -253,8 +253,8 @@ export default function HomePage() {
           .map((category, index) => {
             const categoryTools = allTools.filter(tool => 
               activeCategory === 'All' 
-                ? true  // Show all tools when 'All' is selected
-                : tool.category === category.name
+                ? tool.category === category.name
+                : tool.category === activeCategory
             )
             if (categoryTools.length === 0) return null
 
@@ -320,7 +320,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
 
       <Footer />
       <ScrollToTop />
