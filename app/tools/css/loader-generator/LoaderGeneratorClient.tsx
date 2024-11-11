@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import Image from 'next/image'
@@ -51,37 +51,39 @@ interface LoaderPreviewProps {
 }
 
 const LoaderPreview: React.FC<LoaderPreviewProps> = ({ category, type, customization }) => {
-  const [previewId] = useState(`loader-${Math.random().toString(36).substr(2, 9)}`);
-  const loaderData = getLoaderData(loaderCategories, category, type);
+  const [previewId] = useState(`loader-${Math.random().toString(36).substr(2, 9)}`)
+  const loaderData = getLoaderData(loaderCategories, category, type)
+
+  useEffect(() => {
+    if (!loaderData) return
+
+    try {
+      const styleElement = document.createElement('style')
+      const css = loaderData.css
+        .replace(/\.loader/g, `.${previewId}`)
+        .replace(/56px/g, `${customization.size}px`)
+        .replace(/#3b82f6/g, customization.primaryColor)
+        .replace(/#93c5fd/g, customization.secondaryColor)
+        .replace(/1s/g, `${customization.speed}s`)
+      
+      styleElement.textContent = css
+      document.head.appendChild(styleElement)
+      
+      return () => {
+        document.head.removeChild(styleElement)
+      }
+    } catch (error) {
+      console.error('Error applying loader styles:', error)
+    }
+  }, [previewId, category, type, customization, loaderData])
 
   if (!loaderData) {
     return (
       <div className="w-full h-full flex items-center justify-center text-red-500">
         Loader not found
       </div>
-    );
+    )
   }
-
-  useEffect(() => {
-    try {
-      const styleElement = document.createElement('style');
-      const css = loaderData.css
-        .replace(/\.loader/g, `.${previewId}`)
-        .replace(/56px/g, `${customization.size}px`)
-        .replace(/#3b82f6/g, customization.primaryColor)
-        .replace(/#93c5fd/g, customization.secondaryColor)
-        .replace(/1s/g, `${customization.speed}s`);
-      
-      styleElement.textContent = css;
-      document.head.appendChild(styleElement);
-      
-      return () => {
-        document.head.removeChild(styleElement);
-      };
-    } catch (error) {
-      console.error('Error applying loader styles:', error);
-    }
-  }, [previewId, category, type, customization, loaderData.css]);
 
   return (
     <div 
@@ -94,8 +96,8 @@ const LoaderPreview: React.FC<LoaderPreviewProps> = ({ category, type, customiza
         }} 
       />
     </div>
-  );
-};
+  )
+}
 
 
 export default function LoaderGenerator() {
@@ -142,22 +144,22 @@ export default function LoaderGenerator() {
     return customizations[loaderType] || defaultCustomization
   }
 
-  const generateLoaderCSS = (
+  const generateLoaderCSS = useCallback((
     category: string,
     type: string,
     customization: CustomizationOptions
   ): string => {
-    const loaderData = getLoaderData(loaderCategories, category, type);
+    const loaderData = getLoaderData(loaderCategories, category, type)
     if (!loaderData) {
-      return '';
+      return ''
     }
 
     try {
-      let css = loaderData.css
+      const css = loaderData.css
         .replace(/56px/g, `${customization.size}px`)
         .replace(/#3b82f6/g, customization.primaryColor)
         .replace(/#93c5fd/g, customization.secondaryColor)
-        .replace(/1s/g, `${customization.speed}s`);
+        .replace(/1s/g, `${customization.speed}s`)
 
       return `.loader-container {
         background-color: ${customization.backgroundColor};
@@ -168,12 +170,12 @@ export default function LoaderGenerator() {
         height: 100%;
       }
 
-      ${css}`;
+      ${css}`
     } catch (error) {
-      console.error('Error generating CSS:', error);
-      return '';
+      console.error('Error generating CSS:', error)
+      return ''
     }
-  };
+  }, [])
 
   const copyToClipboard = (css: string): void => {
     navigator.clipboard.writeText(css)

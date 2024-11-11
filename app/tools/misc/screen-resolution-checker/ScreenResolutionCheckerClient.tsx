@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Monitor, 
   Smartphone, 
@@ -96,7 +96,7 @@ export default function AdvancedScreenChecker() {
   const detectHDRCapability = async (): Promise<boolean> => {
     if (window.matchMedia('(dynamic-range: high)').matches) return true
     try {
-      const support = await (window.screen as any).isHDRAvailable
+      const support = await (window.screen as { isHDRAvailable?: boolean }).isHDRAvailable
       return !!support
     } catch {
       return false
@@ -186,17 +186,17 @@ export default function AdvancedScreenChecker() {
   const detectRefreshRate = async (): Promise<number> => {
     if ('getScreenDetails' in window) {
       try {
-        const screenDetails = await (window as any).getScreenDetails()
-        const rate = screenDetails.currentScreen.refreshRate
+        const screenDetails = await (window as { getScreenDetails?: () => Promise<{ currentScreen: { refreshRate: number } }> }).getScreenDetails?.()
+        const rate = screenDetails?.currentScreen.refreshRate
         if (rate && rate > 0) return Math.round(rate)
       } catch {
-        // Fallback to other methods
+      
       }
     }
     
     return new Promise(resolve => {
       let frames = 0
-      let prevTime = performance.now()
+      const prevTime = performance.now()
 
       function count(time: number) {
         frames++
@@ -214,14 +214,15 @@ export default function AdvancedScreenChecker() {
   const detectMonitorCount = async (): Promise<number> => {
     if ('getScreenDetails' in window) {
       try {
-        const screenDetails = await (window as any).getScreenDetails()
-        return screenDetails.screens.length
+        const screenDetails = await (window as { getScreenDetails?: () => Promise<{ screens: unknown[] }> }).getScreenDetails?.()
+        return screenDetails?.screens.length ?? estimateMonitorCount()
       } catch {
         return estimateMonitorCount()
       }
     }
     return estimateMonitorCount()
   }
+
 
   const estimateMonitorCount = (): number => {
     const totalWidth = window.screen.availWidth
@@ -336,6 +337,7 @@ export default function AdvancedScreenChecker() {
       document.removeEventListener('fullscreenchange', handleFullscreenChange)
     }
   }, [])
+
 
   return (
     <ToolLayout

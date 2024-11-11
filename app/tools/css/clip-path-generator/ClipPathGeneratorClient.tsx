@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import Slider from "@/components/ui/Slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw, Info, BookOpen, Lightbulb, ShapesIcon, ShrinkIcon, EyeIcon, ImageIcon, Triangle, Square, Pentagon, Hexagon, Octagon, Circle, EllipsisIcon, Diamond, ChevronsLeft, ChevronsRight, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, Plus, X, Star, MessageSquare, Heart, Shapes } from 'lucide-react'
+import { Copy, RefreshCw, Info, BookOpen, Lightbulb, ShapesIcon, ShrinkIcon, EyeIcon, ImageIcon, Triangle, Square, Pentagon, Hexagon, Octagon, Circle, EllipsisIcon, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, Plus, X, Star, MessageSquare, Heart, Shapes } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 
 
