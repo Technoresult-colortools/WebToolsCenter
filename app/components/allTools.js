@@ -1,4 +1,4 @@
-import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt, faSignature } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt, faSignature, faDesktop } from '@fortawesome/free-solid-svg-icons'
   import {
     faGlide, faInstagram, faMarkdown, faTwitter, faYoutube,
   } from '@fortawesome/free-brands-svg-icons';
@@ -99,6 +99,7 @@ import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImag
   { name: 'QR Code Generator', category: 'Misc', href: '/tools/misc/qr-code-generator', icon: faQrcode, description: 'Generate custom QR codes.' },
   { name: 'BarCode Generator', category: 'Misc', href: '/tools/misc/barcode-generator', icon: faBarcode, description: 'Generate custom barcodes.' },
   { name: 'Unit Converter', category: 'Misc', href: '/tools/misc/unit-converter', icon: faExchangeAlt, description: 'Convert between different units of measurement.' },
+  { name: 'Screen Resolution Checker', category: 'Misc', href: '/tools/misc/screen-resolution-checker', icon: faDesktop, description: 'Analyze your screen properties and display capabilities.' },
 
 // Social Media Tools
   { name: 'Instagram Filters', category: 'Social Media', href: '/tools/social-media/instagram-filters', icon: faInstagram, description: 'Apply filters to Instagram images.' },

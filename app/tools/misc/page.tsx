@@ -11,7 +11,7 @@ import {
   faQrcode,
   faBarcode,
   faWeightHanging,
-  faLink,
+  faDesktop,
 } from '@fortawesome/free-solid-svg-icons';
 
 const miscellaneousTools = [
@@ -51,11 +51,11 @@ const miscellaneousTools = [
     description: 'Convert Between Various Units.'
   },
   { 
-    name: 'URL Shortener', 
-    href: '/tools/misc/url-shortener', 
-    icon: faLink, 
+    name: 'Screen Resolution Checker', 
+    href: '/tools/misc/screen-resolution-checker', 
+    icon: faDesktop, 
     gradient: 'from-indigo-500 to-blue-500' ,
-    description: "Shortens the website's address."
+    description: "Analyze your screen properties and display capabilities."
   },
 ];
 

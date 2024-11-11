@@ -112,6 +112,7 @@ const allTools: Tool[] = [
   { name: 'QR Code Generator', category: 'Miscellaneous Tools', path: '/tools/misc/qr-code-generator' },
   { name: 'BarCode Generator', category: 'Miscellaneous Tools', path: '/tools/misc/barcode-generator' },
   { name: 'Unit Converter', category: 'Miscellaneous Tools', path: '/tools/misc/unit-converter' },
+  { name: 'Screen Resolution Checker', category: 'Miscellaneous Tools', path: '/tools/misc/screen-resolution-checker' },
   //Social-Media Tools
     { name: 'Instagram Filters', category: 'Social Media Tools', path: '/tools/social-media/instagram-filters' },
     { name: 'Instagram Post Generator', category: 'Social Media Tools', path: '/tools/social-media/instagram-post-generator' },

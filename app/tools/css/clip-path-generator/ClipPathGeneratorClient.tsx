@@ -1,21 +1,24 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Slider from "@/components/ui/Slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw, Info, BookOpen, Lightbulb, ShapesIcon, ShrinkIcon, EyeIcon, ImageIcon } from 'lucide-react'
+import { Copy, RefreshCw, Info, BookOpen, Lightbulb, ShapesIcon, ShrinkIcon, EyeIcon, ImageIcon, Triangle, Square, Pentagon, Hexagon, Octagon, Circle, EllipsisIcon, Diamond, ChevronsLeft, ChevronsRight, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, Plus, X, Star, MessageSquare, Heart, Shapes } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 
 
 type Shape = 'triangle' | 'rectangle' | 'pentagon' | 'hexagon' | 'octagon' | 'circle' | 'ellipse' | 'custom' | 
              'invertedTriangle' | 'trapezoid' | 'invertedTrapezoid' | 'parallelogram' | 'rhombus' | 'bevel' | 
-             'chevronLeft' | 'chevronRight'
+             'chevronLeft' | 'chevronRight' | 'arrowheadLeft' | 'arrowheadRight' | 'arrowLeft' | 'arrowRight' |
+             'plus' | 'cross' | 'star' | 'messageBox' | 'heart' | 'diamond';
 
 const initialShapes: Record<Shape, number[][]> = {
   triangle: [[50, 0], [100, 100], [0, 100]],
@@ -33,8 +36,18 @@ const initialShapes: Record<Shape, number[][]> = {
   rhombus: [[50, 0], [100, 50], [50, 100], [0, 50]],
   bevel: [[20, 0], [80, 0], [100, 20], [100, 80], [80, 100], [20, 100], [0, 80], [0, 20]],
   chevronLeft: [[0, 50], [50, 0], [100, 0], [50, 50], [100, 100], [50, 100]],
-  chevronRight: [[0, 0], [50, 0], [100, 50], [50, 100], [0, 100], [50, 50]]
-}
+  chevronRight: [[0, 0], [50, 0], [100, 50], [50, 100], [0, 100], [50, 50]],
+  arrowheadLeft: [[100, 0], [75, 50], [100, 100], [0, 50]], 
+  arrowheadRight: [[0, 0], [100, 50], [0, 100], [25, 50]], 
+  arrowLeft: [[0, 50], [50, 0], [50, 30], [100, 30], [100, 70], [50, 70], [50, 100]],
+  arrowRight: [[100, 50], [50, 0], [50, 30], [0, 30], [0, 70], [50, 70], [50, 100]],
+  plus: [[40, 0], [60, 0], [60, 40], [100, 40], [100, 60], [60, 60], [60, 100], [40, 100], [40, 60], [0, 60], [0, 40], [40, 40]],
+  cross: [[20, 0], [40, 0], [40, 20], [60, 20], [60, 0], [80, 0], [80, 20], [100, 20], [100, 40], [80, 40], [80, 60], [100, 60], [100, 80], [80, 80], [80, 100], [60, 100], [60, 80], [40, 80], [40, 100], [20, 100], [20, 80], [0, 80], [0, 60], [20, 60], [20, 40], [0, 40], [0, 20], [20, 20]],
+  star: [[50, 0], [61, 35], [98, 35], [68, 57], [79, 91], [50, 70], [21, 91], [32, 57], [2, 35], [39, 35]],
+  messageBox: [[0, 0], [100, 0], [100, 75], [30, 75], [10, 100], [10, 75], [0, 75]],
+  heart: [[30, 0], [50, 15], [70, 0], [90, 10], [100, 35], [80, 70], [50, 100], [20, 70], [0, 35], [10, 10]],
+  diamond: [[25, 0], [75, 0], [100, 25], [50, 100], [0, 25]]
+};
 
 export default function ClipPathGenerator() {
   const [shape, setShape] = useState<Shape>('triangle')
@@ -131,6 +144,58 @@ export default function ClipPathGenerator() {
       return newPoints
     })
   }
+
+  const ShapeIcon = ({ shape }: { shape: Shape }) => {
+    switch (shape) {
+      case 'triangle': return <Triangle className="w-4 h-4" />;
+      case 'rectangle': return <Square className="w-4 h-4" />;
+      case 'pentagon': return <Pentagon className="w-4 h-4" />;
+      case 'hexagon': return <Hexagon className="w-4 h-4" />;
+      case 'octagon': return <Octagon className="w-4 h-4" />;
+      case 'circle': return <Circle className="w-4 h-4" />;
+      case 'ellipse': return <EllipsisIcon className="w-4 h-4" />;
+      case 'invertedTriangle': return <Triangle className="w-4 h-4 transform rotate-180" />;
+      case 'trapezoid': return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+          <path d="M4 18L8 6h8l4 12H4z" />
+        </svg>
+      );
+      case 'invertedTrapezoid': return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+          <path d="M4 6l4 12h8l4-12H4z" />
+        </svg>
+      );
+      case 'parallelogram': return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+          <path d="M6 18l4-12h8l-4 12H6z" />
+        </svg>
+      );
+      case 'rhombus': return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+          <path d="M12 2l10 10-10 10L2 12 12 2z" />
+        </svg>
+      );
+      case 'bevel': return <Octagon className="w-4 h-4" />;
+      case 'chevronLeft': return <ChevronLeft className="w-4 h-4" />;
+      case 'chevronRight': return <ChevronRight className="w-4 h-4" />;
+      case 'arrowheadLeft': return <ChevronLeft className="w-4 h-4" />;
+      case 'arrowheadRight': return <ChevronRight className="w-4 h-4" />;
+      case 'arrowLeft': return <ArrowLeft className="w-4 h-4" />;
+      case 'arrowRight': return <ArrowRight className="w-4 h-4" />;
+      case 'plus': return <Plus className="w-4 h-4" />;
+      case 'cross': return <X className="w-4 h-4" />;
+      case 'star': return <Star className="w-4 h-4" />;
+      case 'messageBox': return <MessageSquare className="w-4 h-4" />;
+      case 'heart': return <Heart className="w-4 h-4" />;
+      case 'diamond': return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+          <path d="M12 2l10 10-10 10L2 12 12 2z" />
+        </svg>
+      );
+      default: return <Shapes className="w-4 h-4" />;
+    }
+  };
+
 
   const handlePointerUp = (e: React.PointerEvent) => {
     isDragging.current = false
@@ -232,32 +297,121 @@ export default function ClipPathGenerator() {
                 </TabsTrigger>
               </TabsList>
                 <TabsContent value="shape">
-                  <div>
-                    <Label htmlFor="shape" className="text-white mb-2 block">Clip Path Shape</Label>
-                    <Select value={shape} onValueChange={(value: Shape) => setShape(value)}>
-                      <SelectTrigger id="shape" className="w-40 bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select shape" />
-                      </SelectTrigger>
-                      <SelectContent className="w-40 bg-gray-700 text-white border-gray-600 max-h-40 overflow-y-auto">
-                        <SelectItem value="triangle">Triangle</SelectItem>
-                        <SelectItem value="rectangle">Rectangle</SelectItem>
-                        <SelectItem value="pentagon">Pentagon</SelectItem>
-                        <SelectItem value="hexagon">Hexagon</SelectItem>
-                        <SelectItem value="octagon">Octagon</SelectItem>
-                        <SelectItem value="circle">Circle</SelectItem>
-                        <SelectItem value="ellipse">Ellipse</SelectItem>
-                        <SelectItem value="invertedTriangle">Inverted Triangle</SelectItem>
-                        <SelectItem value="trapezoid">Trapezoid</SelectItem>
-                        <SelectItem value="invertedTrapezoid">Inverted Trapezoid</SelectItem>
-                        <SelectItem value="parallelogram">Parallelogram</SelectItem>
-                        <SelectItem value="rhombus">Rhombus</SelectItem>
-                        <SelectItem value="bevel">Bevel</SelectItem>
-                        <SelectItem value="chevronLeft">Chevron Left</SelectItem>
-                        <SelectItem value="chevronRight">Chevron Right</SelectItem>
-                        <SelectItem value="custom">Custom</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div>
+                  <Label htmlFor="shape" className="text-white mb-2 block">Clip Path Shape</Label>
+                  <Select value={shape} onValueChange={(value: Shape) => setShape(value)}>
+                    <SelectTrigger id="shape" className="w-full sm:w-64 bg-gray-700 text-white border-gray-600">
+                      <SelectValue placeholder="Select shape" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-[300px] overflow-y-auto bg-gray-700 text-white border-gray-600">
+                      <SelectGroup>
+                        <SelectLabel>Basic Shapes</SelectLabel>
+                        <SelectItem value="triangle">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="triangle" />
+                            <span className="ml-2">Triangle</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="rectangle">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="rectangle" />
+                            <span className="ml-2">Rectangle</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="circle">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="circle" />
+                            <span className="ml-2">Circle</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="ellipse">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="ellipse" />
+                            <span className="ml-2">Ellipse</span>
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Polygons</SelectLabel>
+                        <SelectItem value="pentagon">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="pentagon" />
+                            <span className="ml-2">Pentagon</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="hexagon">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="hexagon" />
+                            <span className="ml-2">Hexagon</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="octagon">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="octagon" />
+                            <span className="ml-2">Octagon</span>
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Arrows</SelectLabel>
+                        <SelectItem value="chevronLeft">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="chevronLeft" />
+                            <span className="ml-2">Chevron Left</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="chevronRight">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="chevronRight" />
+                            <span className="ml-2">Chevron Right</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="arrowLeft">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="arrowLeft" />
+                            <span className="ml-2">Arrow Left</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="arrowRight">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="arrowRight" />
+                            <span className="ml-2">Arrow Right</span>
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Special Shapes</SelectLabel>
+                        <SelectItem value="star">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="star" />
+                            <span className="ml-2">Star</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="heart">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="heart" />
+                            <span className="ml-2">Heart</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="messageBox">
+                          <div className="flex items-center">
+                            <ShapeIcon shape="messageBox" />
+                            <span className="ml-2">Message Box</span>
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Other</SelectLabel>
+                        <SelectItem value="custom">
+                          <div className="flex items-center">
+                            <Shapes className="w-4 h-4" />
+                            <span className="ml-2">Custom</span>
+                          </div>
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
                 </TabsContent>
                 <TabsContent value="size">
                   <div className="space-y-4">
@@ -351,7 +505,7 @@ export default function ClipPathGenerator() {
                 </code>
               </div>
               <div className="mt-4 flex flex-wrap justify-end space-x-2 space-y-2 sm:space-y-0">
-                <Button onClick={handleReset} variant="outline" className="text-white border-white hover:bg-gray-700">
+                <Button onClick={handleReset} variant="destructive" className="text-white border-white hover:bg-gray-700">
                   Reset
                 </Button>
                 <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
@@ -365,48 +519,76 @@ export default function ClipPathGenerator() {
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
               <Info className="w-6 h-6 mr-2" />
-              What is Clip Path Generator?
+              What is the Clip Path Generator?
             </h2>
             <p className="text-gray-300 mb-4">
-              The Clip Path Generator is a visual tool designed to help developers and designers create and customize clip-path shapes. A clip-path allows you to define a portion of an element (usually an image) that should be visible, while the rest is hidden, making it perfect for creative designs and dynamic interfaces.
+              Imagine you're a digital artist with a magical pair of scissors that can cut any shape out of an image. That's essentially what our <Link href="#how-to-use" className="text-blue-400 hover:underline">Clip Path Generator</Link> does! It's a fun and intuitive tool that lets you create custom shapes to reveal parts of an image while hiding others. Whether you're a web designer looking to add some flair to your site or a developer trying to create unique UI elements, this tool is your new best friend.
+            </p>
+            <p className="text-gray-300 mb-4">
+              With the Clip Path Generator, you can transform boring rectangles into exciting polygons, turn square profile pictures into perfect circles, or even create complex custom shapes that bring your creative vision to life. It's like having a digital exacto knife that never gets dull!
             </p>
 
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <div className="my-8">
+              <Image 
+                src="/Images/ClipPathPreview.png?height=400&width=600" 
+                alt="Screenshot of the Clip Path Generator interface showing various shape options and controls" 
+                width={600} 
+                height={400} 
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+
+            <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
               <BookOpen className="w-6 h-6 mr-2" />
-              How to Use Clip Path Generator?
+              How to Use the Clip Path Generator
             </h2>
+            <p className="text-gray-300 mb-4">
+              Using our Clip Path Generator is as easy as pie. Here's a step-by-step guide to get you started:
+            </p>
             <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Select a clip-path shape from the dropdown menu in the <strong>Shape</strong> tab.</li>
-              <li>Adjust the shape by dragging the blue dots for polygon shapes.</li>
-              <li>Use the width and height sliders in the <strong>Size</strong> tab to control the size of the inside border.</li>
-              <li>Adjust transparency using the opacity slider in the <strong>Appearance</strong> tab.</li>
-              <li>Toggle "Show Outside" to highlight the area outside the clipped shape.</li>
-              <li>Click "Hide Guides and Points" to remove guide lines and control points for a clean preview.</li>
-              <li>Change the preview image by clicking "Shuffle Image."</li>
-              <li>Upload a custom background image by enabling the "Use Custom Background" option in the <strong>Background</strong> tab.</li>
-              <li>Copy the generated CSS for the clip-path or reset everything to the default settings using the <strong>Reset</strong> option.</li>
+              <li>First, head over to the <strong>Shape</strong> tab and pick your poison. We've got a whole geometry set including:
+                <ul className="list-disc list-inside ml-6 mt-2">
+                  <li>Basic shapes: <Link href="#triangle" className="text-blue-400 hover:underline">triangle</Link>, <Link href="#rectangle" className="text-blue-400 hover:underline">rectangle</Link>, <Link href="#circle" className="text-blue-400 hover:underline">circle</Link>, and <Link href="#ellipse" className="text-blue-400 hover:underline">ellipse</Link></li>
+                  <li>Polygons: <Link href="#pentagon" className="text-blue-400 hover:underline">pentagon</Link>, <Link href="#hexagon" className="text-blue-400 hover:underline">hexagon</Link>, and <Link href="#octagon" className="text-blue-400 hover:underline">octagon</Link></li>
+                  <li>Quadrilaterals: <Link href="#trapezoid" className="text-blue-400 hover:underline">trapezoid</Link>, <Link href="#parallelogram" className="text-blue-400 hover:underline">parallelogram</Link>, and <Link href="#rhombus" className="text-blue-400 hover:underline">rhombus</Link></li>
+                  <li>Arrows: <Link href="#chevron" className="text-blue-400 hover:underline">chevron</Link> (left and right), <Link href="#arrow" className="text-blue-400 hover:underline">arrow</Link> (left and right)</li>
+                  <li>Special shapes: <Link href="#star" className="text-blue-400 hover:underline">star</Link>, <Link href="#heart" className="text-blue-400 hover:underline">heart</Link>, <Link href="#message-box" className="text-blue-400 hover:underline">message box</Link>, <Link href="#cross" className="text-blue-400 hover:underline">cross</Link>, and <Link href="#plus" className="text-blue-400 hover:underline">plus</Link></li>
+                  <li>And for the adventurous, a <Link href="#custom" className="text-blue-400 hover:underline">custom</Link> option!</li>
+                </ul>
+              </li>
+              <li>See those blue dots? They're not just for show. Grab 'em and drag 'em to sculpt your shape. It's like playing with digital play-doh!</li>
+              <li>Want to supersize or shrink your creation? The <strong>Size</strong> tab is your friend. Slide those width and height controls and watch your shape transform.</li>
+              <li>Feeling a bit transparent? Pop over to the <strong>Appearance</strong> tab and play with the opacity. It's like adjusting the volume, but for visibility!</li>
+              <li>Curious about what's outside the box? Toggle "Show Outside" and peek behind the curtain.</li>
+              <li>Need a cleaner view? Hit "Hide Guides and Points" and watch those blue dots disappear like magic.</li>
+              <li>Bored with the current image? Give "Shuffle Image" a click and watch the background change faster than a chameleon on a disco floor.</li>
+              <li>Got a specific image in mind? Head to the <strong>Background</strong> tab, enable "Use Custom Background," and upload your masterpiece.</li>
+              <li>Happy with your creation? Hit that "Copy CSS" button and paste the code into your project. It's like teleporting your design straight into your website!</li>
+              <li>Made a mess? No worries! The <strong>Reset</strong> button is like a digital eraser. One click, and you're back to square one (or triangle one, if that's your starting shape).</li>
             </ol>
 
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
               <Lightbulb className="w-6 h-6 mr-2" />
-              Features
+              Features That'll Make You Go "Wow!"
             </h2>
             <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Multiple pre-defined clip-path shapes for quick selection.</li>
-              <li>Custom shape option for advanced clipping control.</li>
-              <li>Interactive shape adjustment with draggable points, working seamlessly on both desktop and mobile devices.</li>
-              <li>Real-time width and height sliders for precise inside border resizing.</li>
-              <li>Preview of the clipped image in real-time as you make adjustments.</li>
-              <li>Opacity control to adjust the transparency of the clipped section.</li>
-              <li>Option to show or hide the area outside the clip-path for better visualization.</li>
-              <li>Toggleable guide lines and control points for precise positioning of custom shapes.</li>
-              <li>Image shuffling for quickly testing the clip-path on different images.</li>
-              <li>Custom background image upload for more personalized clipping experiences.</li>
-              <li>One-click CSS code generation for easy integration into your project.</li>
-              <li>Reset option for restoring default settings instantly.</li>
-              <li>Responsive design for use across various devices, including mobile.</li>
-              <li>Tabbed interface for easy navigation of settings and options.</li>
+              <li>A smorgasbord of pre-defined shapes: From simple circles to complex stars, we've got shapes that'll make geometry teachers proud.</li>
+              <li>Feeling artistic? Our custom shape option lets you channel your inner Picasso.</li>
+              <li>Interactive shape tweaking: Drag those points around like you're conducting a symphony of shapes.</li>
+              <li>Real-time preview: Watch your creation come to life faster than you can say "clip-path"!</li>
+              <li>Opacity control: Because sometimes, you want your images to play hide and seek.</li>
+              <li>Show/hide outside areas: It's like having X-ray vision for your designs.</li>
+              <li>Guide lines and control points: For when you need to be precise down to the pixel.</li>
+              <li>Image roulette: Keep clicking "Shuffle Image" and turn it into a game of "Guess That Picture"!</li>
+              <li>BYO Background: Upload your own images and clip them to your heart's content.</li>
+              <li>One-click code copying: Because life's too short to type out CSS by hand.</li>
+              <li>Reset button: For those "oops" moments or when you just want to start fresh.</li>
+              <li>Responsive design: Whether you're on a giant desktop or a tiny phone, our tool fits like a glove.</li>
+              <li>Tabbed interface: Navigate through options easier than changing channels on your TV.</li>
             </ul>
+            <p className="text-gray-300 mt-4">
+              So, what are you waiting for? Dive in, start clipping, and let your creativity run wild! Who knows? You might just create the next big thing in web design. And remember, in the world of Clip Path Generator, there are no mistakes, only happy little accidents!
+            </p>
           </div>
   </ToolLayout>
   )

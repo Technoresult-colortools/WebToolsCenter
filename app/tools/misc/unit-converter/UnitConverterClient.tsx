@@ -103,6 +103,68 @@ const categories: UnitCategory[] = [
       return squareMeters / squareMeterValues[to]
     },
   },
+  {
+    name: 'Time',
+    units: ['Seconds', 'Minutes', 'Hours', 'Days', 'Weeks', 'Months', 'Years'],
+    convert: (value, from, to) => {
+      const secondValues: { [key: string]: number } = {
+        Seconds: 1,
+        Minutes: 60,
+        Hours: 3600,
+        Days: 86400,
+        Weeks: 604800,
+        Months: 2629746, // Average month (30.44 days)
+        Years: 31556952, // Average year (365.24 days)
+      }
+      const seconds = value * secondValues[from]
+      return seconds / secondValues[to]
+    },
+  },
+  {
+    name: 'Speed',
+    units: ['Meters per Second', 'Kilometers per Hour', 'Miles per Hour', 'Knots'],
+    convert: (value, from, to) => {
+      const mpsValues: { [key: string]: number } = {
+        'Meters per Second': 1,
+        'Kilometers per Hour': 0.277778,
+        'Miles per Hour': 0.44704,
+        'Knots': 0.514444,
+      }
+      const mps = value * mpsValues[from]
+      return mps / mpsValues[to]
+    },
+  },
+  {
+    name: 'Data',
+    units: ['Bits', 'Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes'],
+    convert: (value, from, to) => {
+      const bitValues: { [key: string]: number } = {
+        Bits: 1,
+        Bytes: 8,
+        Kilobytes: 8 * 1024,
+        Megabytes: 8 * 1024 * 1024,
+        Gigabytes: 8 * 1024 * 1024 * 1024,
+        Terabytes: 8 * 1024 * 1024 * 1024 * 1024,
+      }
+      const bits = value * bitValues[from]
+      return bits / bitValues[to]
+    },
+  },
+  {
+    name: 'Energy',
+    units: ['Joules', 'Calories', 'Kilocalories', 'Watt-hours', 'Kilowatt-hours'],
+    convert: (value, from, to) => {
+      const jouleValues: { [key: string]: number } = {
+        Joules: 1,
+        Calories: 4.184,
+        Kilocalories: 4184,
+        'Watt-hours': 3600,
+        'Kilowatt-hours': 3600000,
+      }
+      const joules = value * jouleValues[from]
+      return joules / jouleValues[to]
+    },
+  },
 ]
 
 const UnitConverter = () => {
@@ -162,170 +224,174 @@ const UnitConverter = () => {
       title="Advanced Unit Converter"
       description="Quickly and accurately convert between various units of measurement"
     >
-
       <Toaster position="top-right" />
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-            <div className="mb-6">
-              <Label htmlFor="category">
-                <h2 className="text-xl font-semibold text-white mb-2">Category</h2>
-              </Label>
-              <Select
-                value={category.name}
-                onValueChange={(value) => {
-                  const newCategory = categories.find((c) => c.name === value)
-                  if (newCategory) {
-                    setCategory(newCategory)
-                    setFromUnit(newCategory.units[0])
-                    setToUnit(newCategory.units[1])
-                  }
-                }}
-              >
-                <SelectTrigger id="category" className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.name} value={cat.name}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+        <div className="mb-6">
+          <Label htmlFor="category">
+            <h2 className="text-xl font-semibold text-white mb-2">Category</h2>
+          </Label>
+          <Select
+            value={category.name}
+            onValueChange={(value) => {
+              const newCategory = categories.find((c) => c.name === value)
+              if (newCategory) {
+                setCategory(newCategory)
+                setFromUnit(newCategory.units[0])
+                setToUnit(newCategory.units[1])
+              }
+            }}
+          >
+            <SelectTrigger id="category" className="bg-gray-700 border-gray-600 text-white">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-700 border-gray-600 text-white">
+              {categories.map((cat) => (
+                <SelectItem key={cat.name} value={cat.name}>
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <Label htmlFor="fromUnit" className="text-gray-300 mb-2">
-                  From
-                </Label>
-                <Select value={fromUnit} onValueChange={setFromUnit}>
-                  <SelectTrigger id="fromUnit" className="bg-gray-700 border-gray-600 text-white">
-                    <SelectValue placeholder="Select unit" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                    {category.units.map((unit) => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  type="number"
-                  value={fromValue}
-                  onChange={handleFromValueChange}
-                  className="mt-2 bg-gray-700 border-gray-600 text-white"
-                  placeholder="Enter value"
-                />
-              </div>
-              <div>
-                <Label htmlFor="toUnit" className="text-gray-300 mb-2">
-                  To
-                </Label>
-                <Select value={toUnit} onValueChange={setToUnit}>
-                  <SelectTrigger id="toUnit" className="bg-gray-700 border-gray-600 text-white">
-                    <SelectValue placeholder="Select unit" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                    {category.units.map((unit) => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  type="text"
-                  value={toValue}
-                  readOnly
-                  className="mt-2 bg-gray-700 border-gray-600 text-white"
-                  placeholder="Result"
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-center space-x-4 mb-6">
-              <Button onClick={swapUnits} className="bg-blue-500 hover:bg-blue-600">
-                <ArrowLeftRight className="mr-2" size={20} />
-                Swap
-              </Button>
-              <Button onClick={copyToClipboard} className="bg-green-500 hover:bg-green-600">
-                {copied ? <Check className="mr-2" size={20} /> : <Copy className="mr-2" size={20} />}
-                {copied ? 'Copied!' : 'Copy'}
-              </Button>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-semibold text-white mb-2">Conversion History</h2>
-              <ul className="bg-gray-700 rounded-md p-4 max-h-40 overflow-y-auto">
-                {conversionHistory.map((conversion, index) => (
-                  <li key={index} className="text-gray-300 mb-1">
-                    {conversion}
-                  </li>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <Label htmlFor="fromUnit" className="text-gray-300 mb-2">
+              From
+            </Label>
+            <Select value={fromUnit} onValueChange={setFromUnit}>
+              <SelectTrigger id="fromUnit" className="bg-gray-700 border-gray-600 text-white">
+                <SelectValue placeholder="Select unit" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600 text-white">
+                {category.units.map((unit) => (
+                  <SelectItem key={unit} value={unit}>
+                    {unit}
+                  </SelectItem>
                 ))}
-              </ul>
-              <Button onClick={clearHistory} className="mt-2 bg-red-500 hover:bg-red-600">
-                <RefreshCw className="mr-2" size={20} />
-                Clear History
-              </Button>
-            </div>
+              </SelectContent>
+            </Select>
+            <Input
+              type="number"
+              value={fromValue}
+              onChange={handleFromValueChange}
+              className="mt-2 bg-gray-700 border-gray-600 text-white"
+              placeholder="Enter value"
+            />
           </div>
-
-          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-              <Info className="w-6 h-6 mr-2" />
-              About Unit Converter
-            </h2>
-            <p className="text-gray-300 mb-4">
-              Our Advanced Unit Converter is a powerful tool designed to help you quickly and accurately convert between various units of measurement. Whether you're working on a scientific project, cooking, or just need to convert units for everyday tasks, this tool has you covered.
-            </p>
-
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Lightbulb className="w-6 h-6 mr-2" />
-              Key Features
-            </h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>🔄 Multiple Categories: Convert units across length, weight, temperature, volume, and area.</li>
-              <li>⚡ Real-time Conversion: See results instantly as you type.</li>
-              <li>🔀 Unit Swapping: Easily switch between 'from' and 'to' units with one click.</li>
-              <li>📋 Copy to Clipboard: Quickly copy conversion results for use elsewhere.</li>
-              <li>📜 Conversion History: Keep track of your recent conversions.</li>
-              <li>🖥️ Responsive Design: Use on any device, from desktop to mobile.</li>
-              <li>🎨 User-friendly Interface: Clean and intuitive design for easy navigation.</li>
-            </ul>
-
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <BookOpen className="w-6 h-6 mr-2" />
-              How to Use
-            </h2>
-            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Select the category of units you want to convert (e.g., Length, Weight).</li>
-              <li>Choose the unit you're converting from in the "From" dropdown.</li>
-              <li>Enter the value you want to convert in the input field.</li>
-              <li>Select the unit you're converting to in the "To" dropdown.</li>
-              <li>The converted value will appear automatically in the result field.</li>
-              <li>Use the "Swap" button to quickly reverse the conversion.</li>
-              <li>Click "Copy" to copy the conversion result to your clipboard.</li>
-              <li>View your conversion history below the main converter.</li>
-            </ol>
-
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Lightbulb className="w-6 h-6 mr-2" />
-              Tips & Tricks
-            </h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Use the tab key to quickly navigate between input fields and dropdowns.</li>
-              <li>For temperature conversions, remember that the relationships between units are not linear.</li>
-              <li>When converting between metric and imperial units, use the length converter for accurate results.</li>
-              <li>For precise scientific calculations, always verify the number of decimal places in the result.</li>
-              <li>Use the conversion history to keep track of multiple conversions without the need for manual note-taking.</li>
-              <li>When working with very large or very small numbers, consider using scientific notation for input.</li>
-              <li>Remember that for weight conversions, "ton" refers to the metric ton (1000 kg) in this converter.</li>
-              <li>For area conversions, be mindful of the difference between square units (e.g., square meters) and non-square units (e.g., acres).</li>
-            </ul>
+          <div>
+            <Label htmlFor="toUnit" className="text-gray-300 mb-2">
+              To
+            </Label>
+            <Select value={toUnit} onValueChange={setToUnit}>
+              <SelectTrigger id="toUnit" className="bg-gray-700 border-gray-600 text-white">
+                <SelectValue placeholder="Select unit" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600 text-white">
+                {category.units.map((unit) => (
+                  <SelectItem key={unit} value={unit}>
+                    {unit}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input
+              type="text"
+              value={toValue}
+              readOnly
+              className="mt-2 bg-gray-700 border-gray-600 text-white"
+              placeholder="Result"
+            />
           </div>
-  </ToolLayout>
+        </div>
+
+        <div className="flex justify-center space-x-4 mb-6">
+          <Button onClick={swapUnits} className="bg-blue-500 hover:bg-blue-600">
+            <ArrowLeftRight className="mr-2" size={20} />
+            Swap
+          </Button>
+          <Button onClick={copyToClipboard} className="bg-green-500 hover:bg-green-600">
+            {copied ? <Check className="mr-2" size={20} /> : <Copy className="mr-2" size={20} />}
+            {copied ? 'Copied!' : 'Copy'}
+          </Button>
+        </div>
+
+        <div>
+          <h2 className="text-xl font-semibold text-white mb-2">Conversion History</h2>
+          <ul className="bg-gray-700 rounded-md p-4 max-h-40 overflow-y-auto">
+            {conversionHistory.map((conversion, index) => (
+              <li key={index} className="text-gray-300 mb-1">
+                {conversion}
+              </li>
+            ))}
+          </ul>
+          <Button onClick={clearHistory} className="mt-2 bg-red-500 hover:bg-red-600">
+            <RefreshCw className="mr-2" size={20} />
+            Clear History
+          </Button>
+        </div>
+      </div>
+
+      <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+          <Info className="w-6 h-6 mr-2" />
+          About Unit Converter
+        </h2>
+        <p className="text-gray-300 mb-4">
+          Our Advanced Unit Converter is a powerful tool designed to help you quickly and accurately convert between various units of measurement. Whether you're working on a scientific project, cooking, or just need to convert units for everyday tasks, this tool has you covered.
+        </p>
+
+        <h2  className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Key Features
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>🔄 Multiple Categories: Convert units across length, weight, temperature, volume, area, time, speed, data, and energy.</li>
+          <li>⚡ Real-time Conversion: See results instantly as you type.</li>
+          <li>🔀 Unit Swapping: Easily switch between 'from' and 'to' units with one click.</li>
+          <li>📋 Copy to Clipboard: Quickly copy conversion results for use elsewhere.</li>
+          <li>📜 Conversion History: Keep track of your recent conversions.</li>
+          <li>🖥️ Responsive Design: Use on any device, from desktop to mobile.</li>
+          <li>🎨 User-friendly Interface: Clean and intuitive design for easy navigation.</li>
+          <li>🌐 Expanded Categories: Now includes Time, Speed, Data, and Energy conversions.</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <BookOpen className="w-6 h-6 mr-2" />
+          How to Use
+        </h2>
+        <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Select the category of units you want to convert (e.g., Length, Weight).</li>
+          <li>Choose the unit you're converting from in the "From" dropdown.</li>
+          <li>Enter the value you want to convert in the input field.</li>
+          <li>Select the unit you're converting to in the "To" dropdown.</li>
+          <li>The converted value will appear automatically in the result field.</li>
+          <li>Use the "Swap" button to quickly reverse the conversion.</li>
+          <li>Click "Copy" to copy the conversion result to your clipboard.</li>
+          <li>View your conversion history below the main converter.</li>
+        </ol>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Tips & Tricks
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Use the tab key to quickly navigate between input fields and dropdowns.</li>
+          <li>For temperature conversions, remember that the relationships between units are not linear.</li>
+          <li>When converting between metric and imperial units, use the length converter for accurate results.</li>
+          <li>For precise scientific calculations, always verify the number of decimal places in the result.</li>
+          <li>Use the conversion history to keep track of multiple conversions without the need for manual note-taking.</li>
+          <li>When working with very large or very small numbers, consider using scientific notation for input.</li>
+          <li>Remember that for weight conversions, "ton" refers to the metric ton (1000 kg) in this converter.</li>
+          <li>For area conversions, be mindful of the difference between square units (e.g., square meters) and non-square units (e.g., acres).</li>
+          <li>For time conversions, be aware that months and years are based on average values and may not be exact for specific dates.</li>
+          <li>When converting speeds, remember that knots are often used in nautical and aviation contexts.</li>
+          <li>For data conversions, keep in mind the difference between bits (b) and bytes (B) - there are 8 bits in a byte.</li>
+          <li>Energy conversions can be useful for understanding power consumption or nutritional information.</li>
+        </ul>
+      </div>
+    </ToolLayout>
   )
 }
 

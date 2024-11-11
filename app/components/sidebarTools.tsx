@@ -127,7 +127,8 @@ const categories = [
       { name: 'List Randomizer', href: '/tools/misc/list-randomizer' },
       { name: 'QR Code Generator', href: '/tools/misc/qr-code-generator' },
       { name: 'BarCode Generator', href: '/tools/misc/barcode-generator' },
-      { name: 'Unit Converter', href: '/tools/misc/unit-converter' }
+      { name: 'Unit Converter', href: '/tools/misc/unit-converter' },
+      { name: 'Screen Resolution Checker', href: '/tools/misc/screen-resolution-checker' }
     ]
   },
   { 

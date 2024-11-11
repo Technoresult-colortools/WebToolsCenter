@@ -24,8 +24,8 @@ const HANDWRITING_FONTS = [
   { name: "BiteChocolate", url: "URL_TO_FONT" },
   { name: "BitterRobusta", url: "URL_TO_FONT" },
   { name: "AlwaysInMyHeart", url: "URL_TO_FONT" },
-  { name: "Lofty Goals", url: "URL_TO_FONT" },
-  { name: "Caveat Tomatoes", url: "URL_TO_FONT" },
+  { name: "Lofty Goals", url: "/fonts/LoftyGoals.ttf" },
+  { name: "Caveat Tomatoes", url: "https://fonts.googleapis.com/css2?family=Caveat&display=swap" },
   { name: "Meddon", url: "https://fonts.googleapis.com/css2?family=Meddon&display=swap" },
   { name: "Permanent Marker", url: "https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" },
   { name: "Handlee", url: "https://fonts.googleapis.com/css2?family=Handlee&display=swap" },
@@ -45,7 +45,8 @@ const PAGE_BACKGROUNDS = {
   RULED1: "/Images/Ruled1.jpg",
   GRID: "/Images/Grid.jpg",
   BLANK: "/Images/Blank.jpg",
-  OLDRUSTY: "/Images/OldRusty.jpg"
+  OLDRUSTY: "/Images/OldRusty.jpg",
+  VINTAGE: "/Images/Vintage.jpg"
 }
 
 const INK_COLORS = {
@@ -87,11 +88,11 @@ interface AppState {
 const initialState: AppState = {
   inputText: '',
   selectedFont: HANDWRITING_FONTS[0].name,
-  fontSize: 16,
+  fontSize: 26,
   lineHeight: 2,
   letterSpacing: 0,
-  horizontalOffset: 0,
-  verticalOffset: 0,
+  horizontalOffset: 65,
+  verticalOffset: 45,
   pageBackground: PAGE_BACKGROUNDS.RULED,
   inkColor: INK_COLORS.BLUE,
   penType: PEN_TYPES.BALLPOINT,
@@ -446,6 +447,7 @@ export default function TextToHandwriting() {
                   <SelectItem value={PAGE_BACKGROUNDS.GRID}>Grid</SelectItem>
                   <SelectItem value={PAGE_BACKGROUNDS.BLANK}>Blank</SelectItem>
                   <SelectItem value={PAGE_BACKGROUNDS.OLDRUSTY}>OldRusty</SelectItem>
+                  <SelectItem value={PAGE_BACKGROUNDS.VINTAGE}>Vintage</SelectItem>
                 </SelectContent>
               </Select>
             </div>
