@@ -231,10 +231,11 @@ export default function AdvancedScreenChecker() {
   }
 
   const getCurrentMonitor = (): number => {
-    const screenLeft = window.screenLeft || (window as any).screenX
-    const screenWidth = window.screen.width
-    return Math.max(1, Math.floor(screenLeft / screenWidth) + 1)
-  }
+    const screenLeft = typeof window.screenLeft !== 'undefined' ? window.screenLeft : window.screenX;
+    const screenWidth = window.screen.width;
+    return Math.max(1, Math.floor(screenLeft / screenWidth) + 1);
+  };
+  
 
   const detectColorGamut = (): string => {
     if (window.matchMedia('(color-gamut: rec2020)').matches) return 'Rec. 2020'
