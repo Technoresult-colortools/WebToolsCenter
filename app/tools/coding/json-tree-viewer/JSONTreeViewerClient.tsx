@@ -8,12 +8,28 @@ import Link from 'next/link'
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
-import { Toaster, toast } from 'react-hot-toast'
+import { Toaster, } from 'react-hot-toast'
 import { RefreshCw, Download, Info, BookOpen, Lightbulb, Code, Eye, Edit, Trash, Plus, Paintbrush } from 'lucide-react'
 import TreeView from './Treeview'
 import ToolLayout from '@/components/ToolLayout'
 
-const themes = {
+type Theme = {
+  background: string;
+  string: string;
+  number: string;
+  boolean: string;
+  null: string;
+  key: string;
+  size: string;
+  type: string;
+  group: string;
+}
+
+type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
+type JsonObject = { [key: string]: JsonValue };
+type JsonArray = JsonValue[];
+
+const themes: Record<string, Theme> = {
   'monokai': {
     background: 'bg-gray-900',
     string: 'text-green-400',
@@ -228,7 +244,7 @@ const themes = {
 
 export default function JSONViewerEditor() {
   const [jsonInput, setJsonInput] = useState<string>('')
-  const [parsedJson, setParsedJson] = useState<any>(null)
+  const [parsedJson, setParsedJson] = useState<JsonValue | null>(null)
   const [error, setError] = useState<string>('')
   const [theme, setTheme] = useState<keyof typeof themes>('monokai')
   const [iconStyle, setIconStyle] = useState<'triangle' | 'circle' | 'square' | 'arrow'>('triangle')
@@ -258,9 +274,9 @@ export default function JSONViewerEditor() {
     }
   }, [jsonInput])
 
-  const handleEdit = (path: string[], value: any) => {
+  const handleEdit = (path: string[], value: JsonValue) => {
     const newData = JSON.parse(JSON.stringify(parsedJson))
-    let current = newData
+    let current: any = newData
     for (let i = 0; i < path.length - 1; i++) {
       current = current[path[i]]
     }
@@ -268,9 +284,10 @@ export default function JSONViewerEditor() {
     setJsonInput(JSON.stringify(newData, null, 2))
   }
 
+
   const handleDelete = (path: string[]) => {
     const newData = JSON.parse(JSON.stringify(parsedJson))
-    let current = newData
+    let current: any = newData
     for (let i = 0; i < path.length - 1; i++) {
       current = current[path[i]]
     }
@@ -282,11 +299,11 @@ export default function JSONViewerEditor() {
     setJsonInput(JSON.stringify(newData, null, 2))
   }
 
-  const handleAdd = (path: string[], key: string, value: any) => {
+  const handleAdd = (path: string[], key: string, value: JsonValue) => {
     const newData = JSON.parse(JSON.stringify(parsedJson))
-    let current = newData
-    for (let i = 0; i < path.length; i++) {
-      current = current[path[i]]
+    let current: any = newData
+    for (const pathPart of path) {
+      current = current[pathPart]
     }
     if (Array.isArray(current)) {
       current.push(value)
