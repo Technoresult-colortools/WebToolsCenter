@@ -401,10 +401,9 @@ export default function LoaderGenerator() {
           </div>
         </div>
       </div>
-
       {selectedLoader && (
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[90vw] max-h-[80vh] md:w-[600px] lg:w-[800px] bg-gray-900 text-white border-gray-700 p-0 overflow-hidden rounded-xl">
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[90vw] max-h-[90vh] md:max-h-[85vh] md:w-[600px] lg:w-[800px] bg-gray-900 text-white border-gray-700 p-0 overflow-hidden rounded-xl">
             <button
               onClick={() => setDialogOpen(false)}
               className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
@@ -413,7 +412,7 @@ export default function LoaderGenerator() {
               <span className="sr-only">Close</span>
             </button>
 
-            <div className="p-6 pt-8 overflow-y-auto max-h-[calc(90vh-2rem)]">
+            <div className="p-6 pt-8 overflow-y-auto max-h-[calc(90vh-4rem)] md:max-h-[calc(85vh-4rem)]">
               <DialogHeader>
                 <DialogTitle className="text-xl font-semibold">{selectedLoader}</DialogTitle>
               </DialogHeader>
@@ -436,7 +435,7 @@ export default function LoaderGenerator() {
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="customize">
+                <TabsContent value="customize" className="h-[calc(90vh-16rem)] md:h-auto overflow-y-auto">
                   <div className="flex flex-col lg:flex-row gap-6 mt-4">
                     <div className="w-full lg:w-1/2">
                       <div className="bg-gray-800 rounded-lg p-4 h-[200px] lg:h-[300px] flex items-center justify-center">
@@ -447,7 +446,7 @@ export default function LoaderGenerator() {
                         />
                       </div>
                     </div>
-                    <div className="w-full lg:w-1/2 space-y-4">
+                    <div className="w-full lg:w-1/2 space-y-4 pb-4">
                       <div className='space-y-1'>
                         <Label className="text-white">Size</Label>
                         <Slider

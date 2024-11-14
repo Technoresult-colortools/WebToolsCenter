@@ -881,6 +881,176 @@ export const isValidCategory = (categories: LoaderCategories, category: string):
         `,
         html: '<div class="loader"></div>',
       },
+
+      'Cross Spin': {
+        css: `
+          .loader {
+            width: 56px;
+            height: 56px;
+            display: grid;
+            color: #3b82f6;
+            background: 
+              linear-gradient(currentColor 0 0) center/100% 3px,
+              linear-gradient(currentColor 0 0) center/3px 100%;
+            background-repeat: no-repeat;
+            animation: crossSpin 1s infinite;
+          }
+          .loader::before,
+          .loader::after {
+            content: "";
+            grid-area: 1/1;
+            background: repeating-conic-gradient(#0000 0 35deg,currentColor 0 90deg);
+            -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 3px),#000 0);
+            border-radius: 50%;
+          }
+          .loader::after {
+            margin:20%;
+          }
+          @keyframes crossSpin {
+            100% {transform: rotate(1turn)}
+          }
+        `,
+        html: '<div class="loader"></div>',
+      },
+      'Star Spin': {
+        css: `
+          .loader {
+            --s: 8px;
+            width: 56px;
+            height: 56px;
+            background: #3b82f6;
+            border-radius: 50%;
+            animation: starSpin 1s infinite linear;
+            clip-path: polygon(0 0,calc(50% - var(--s)) 0,50% var(--s),calc(50% + var(--s)) 0,100% 0,100% calc(50% - var(--s)),calc(100% - var(--s)) 50%,100% calc(50% + var(--s)),100% 100%,calc(50% + var(--s)) 100%, 50% calc(100% - var(--s)),calc(50% - var(--s)) 100%,0 100%,0 calc(50% + var(--s)), var(--s) 50%, 0 calc(50% - var(--s)));
+          }
+          @keyframes starSpin {
+            100% {transform: rotate(1turn)}
+          }
+        `,
+        html: '<div class="loader"></div>',
+      },
+      'Yin Yang': {
+        css: `
+          .loader {
+            --R: 30px;
+            --g1: #3b82f6 96%, #0000;
+            --g2: #93c5fd 96%, #0000;
+            width: calc(2*var(--R));
+            height: calc(2*var(--R));
+            border-radius: 50%;
+            display: grid;
+            -webkit-mask: linear-gradient(#000 0 0);
+            animation: yinYangSpin 1s infinite linear;
+          }
+          .loader::before,
+          .loader::after {
+            content: "";
+            grid-area: 1/1;
+            width: 50%;
+            background:
+              radial-gradient(farthest-side,var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
+              radial-gradient(farthest-side,var(--g1)) calc(var(--R) + 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
+              radial-gradient(farthest-side,var(--g2)) calc(var(--R) + 0.5*var(--R)   - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
+              radial-gradient(farthest-side,var(--g1)) 0 calc(-1*var(--R)),
+              radial-gradient(farthest-side,var(--g2)) calc(var(--R) - 0.5*var(--R)   - var(--R)) calc(var(--R) - 0.866*var(--R) - var(--R)),
+              radial-gradient(farthest-side,var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) - 0.5*var(--R)   - var(--R)),
+              radial-gradient(farthest-side,var(--g2)) calc(-1*var(--R))  0,
+              radial-gradient(farthest-side,var(--g1)) calc(var(--R) - 0.866*var(--R) - var(--R)) calc(var(--R) + 0.5*var(--R)   - var(--R));
+            background-size: calc(2*var(--R)) calc(2*var(--R));
+            background-repeat: no-repeat;
+          }
+          .loader::after {
+            transform: rotate(180deg);
+            transform-origin: right;
+          }
+          @keyframes yinYangSpin {
+            100% {transform: rotate(-1turn)}
+          }
+        `,
+        html: '<div class="loader"></div>',
+      },
+      'Conic Spin': {
+        css: `
+          .loader {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            padding: 1px;
+            background: conic-gradient(#0000 10%, #3b82f6) content-box;
+            -webkit-mask:
+              repeating-conic-gradient(#0000 0deg, #000 1deg 20deg, #0000 21deg 36deg),
+              radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 calc(100% - 8px));
+            -webkit-mask-composite: destination-in;
+            mask-composite: intersect;
+            animation: conicSpin 1s infinite steps(10);
+          }
+          @keyframes conicSpin {
+            to {transform: rotate(1turn)}
+          }
+        `,
+        html: '<div class="loader"></div>',
+      },
+      'Half Conic': {
+        css: `
+          .loader {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #3b82f6;
+            -webkit-mask:
+              repeating-conic-gradient(#0000 0deg, #000 1deg 70deg, #0000 71deg 90deg),
+              radial-gradient(farthest-side, #0000 calc(100% - 9px), #000 calc(100% - 8px));
+            -webkit-mask-composite: destination-in;
+            mask-composite: intersect;
+            animation: halfConic 1s infinite;
+          }
+          @keyframes halfConic {
+            to {transform: rotate(.5turn)}
+          }
+        `,
+        html: '<div class="loader"></div>',
+      },
+      'Orbit Spin': {
+        css: `
+          .loader {
+            width: 9px;
+            height: 9px;
+            position: relative;
+          }
+          .loader div {
+            position: absolute;
+            width: 50%;
+            height: 150%;
+            background: #3b82f6;
+            transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+            animation: orbitSpin 1s calc(var(--delay) * 1s) infinite ease;
+          }
+          .loader div:nth-child(1) { --delay: 0.1; --rotation: 36; --translation: 150; }
+          .loader div:nth-child(2) { --delay: 0.2; --rotation: 72; --translation: 150; }
+          .loader div:nth-child(3) { --delay: 0.3; --rotation: 108; --translation: 150; }
+          .loader div:nth-child(4) { --delay: 0.4; --rotation: 144; --translation: 150; }
+          .loader div:nth-child(5) { --delay: 0.5; --rotation: 180; --translation: 150; }
+          .loader div:nth-child(6) { --delay: 0.6; --rotation: 216; --translation: 150; }
+          .loader div:nth-child(7) { --delay: 0.7; --rotation: 252; --translation: 150; }
+          .loader div:nth-child(8) { --delay: 0.8; --rotation: 288; --translation: 150; }
+          .loader div:nth-child(9) { --delay: 0.9; --rotation: 324; --translation: 150; }
+          .loader div:nth-child(10) { --delay: 1; --rotation: 360; --translation: 150; }
+          @keyframes orbitSpin {
+            0%, 10%, 20%, 30%, 50%, 60%, 70%, 80%, 90%, 100% {
+              transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1%));
+            }
+            50% {
+              transform: rotate(calc(var(--rotation) * 1deg)) translate(0, calc(var(--translation) * 1.5%));
+            }
+          }
+        `,
+        html: `
+          <div class="loader">
+            <div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div>
+          </div>
+        `,
+      },
     
       
     },
@@ -962,34 +1132,7 @@ export const isValidCategory = (categories: LoaderCategories, category: string):
           }
         `,
         html: '<div class="loader"></div>',
-      },
-      'Rotating Dots': {
-        css: `
-          .loader {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-          }
-          .loader div {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #3b82f6;
-            animation: rotate 1s linear infinite;
-          }
-          .loader div:nth-child(2) {
-            animation-delay: 0.2s;
-          }
-          .loader div:nth-child(3) {
-            animation-delay: 0.4s;
-          }
-          @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `,
-        html: '<div class="loader"><div></div><div></div><div></div></div>',
-    },
+      },     
     'Fading Dots': {
         css: `
           .loader {
@@ -1042,6 +1185,460 @@ export const isValidCategory = (categories: LoaderCategories, category: string):
         `,
         html: '<div class="loader"><div></div><div></div><div></div></div>',
     },
+    'Sliding Dots': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 13px;
+          background: radial-gradient(circle closest-side, #3b82f6 90%, #0000) 0 0/33% 100% space;
+          clip-path: inset(0 100% 0 0);
+          animation: slidingDots 1s steps(4) infinite;
+        }
+        @keyframes slidingDots {
+          to { clip-path: inset(0 -34% 0 0) }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Sliding Bar': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 13px;
+          background: radial-gradient(circle closest-side, #3b82f6 90%, #0000) 0 0/33% 100% no-repeat;
+          animation: slidingBar 1s steps(3) infinite;
+        }
+        @keyframes slidingBar {
+          to { background-position: 150% 0 }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Triple Bounce': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 26px;
+          background: 
+            radial-gradient(circle closest-side, #3b82f6 90%, #0000) 0%   50%,
+            radial-gradient(circle closest-side, #3b82f6 90%, #0000) 50%  50%,
+            radial-gradient(circle closest-side, #3b82f6 90%, #0000) 100% 50%;
+          background-size: calc(100%/3) 13px;
+          background-repeat: no-repeat;
+          animation: tripleBounce 1s infinite linear;
+        }
+        @keyframes tripleBounce {
+          20% { background-position: 0%   0%, 50%  50%, 100%  50% }
+          40% { background-position: 0% 100%, 50%   0%, 100%  50% }
+          60% { background-position: 0%  50%, 50% 100%, 100%   0% }
+          80% { background-position: 0%  50%, 50%  50%, 100% 100% }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Squeeze': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 13px;
+          background: 
+            radial-gradient(circle closest-side at left  6px top 50%, #3b82f6 90%, #0000),
+            radial-gradient(circle closest-side                    , #3b82f6 90%, #0000),
+            radial-gradient(circle closest-side at right 6px top 50%, #3b82f6 90%, #0000);
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          animation: squeeze 1s infinite alternate;
+        }
+        @keyframes squeeze {
+          to { width: 22px; height: 26px; }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Sliding Dots 2': {
+      css: `
+        .loader {
+          width: 13px;
+          height: 13px;
+          background: #3b82f6;
+          border-radius: 50%;
+          box-shadow: 13px 0 #3b82f6, -26px 0 #3b82f6;
+          animation: slidingDots2 1s infinite linear alternate;
+        }
+        @keyframes slidingDots2 {
+          50% { box-shadow: 13px 0 #3b82f6, -13px 0 #3b82f6 }
+          100% { box-shadow: 26px 0 #3b82f6, -13px 0 #3b82f6 }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Growing Bars': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 13px;
+          background: 
+            radial-gradient(circle closest-side, #3b82f6 90%, #0000) 0%   50%,
+            radial-gradient(circle closest-side, #3b82f6 90%, #0000) 50%  50%,
+            radial-gradient(circle closest-side, #3b82f6 90%, #0000) 100% 50%;
+          background-size: calc(100%/3) 100%;
+          background-repeat: no-repeat;
+          animation: growingBars 1s infinite linear;
+        }
+        @keyframes growingBars {
+          33% { background-size: calc(100%/3) 0%  , calc(100%/3) 100%, calc(100%/3) 100% }
+          50% { background-size: calc(100%/3) 100%, calc(100%/3) 0%  , calc(100%/3) 100% }
+          66% { background-size: calc(100%/3) 100%, calc(100%/3) 100%, calc(100%/3) 0%   }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Newton Cradle': {
+      css: `
+        .loader {
+          width: 13px;
+          height: 13px;
+          position: relative;
+        }
+        .loader::before,
+        .loader::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: #3b82f6;
+        }
+        .loader::before {
+          box-shadow: -26px 0 #3b82f6;
+          animation: newtonLeft 1s infinite linear;
+        }
+        .loader::after {
+          transform: rotate(0deg) translateX(26px);
+          animation: newtonRight 1s infinite linear;
+        }
+        @keyframes newtonLeft {
+          100% { transform: translateX(26px) }
+        }
+        @keyframes newtonRight {
+          100% { transform: rotate(-180deg) translateX(26px) }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Ping Pong': {
+      css: `
+        .loader {
+          width: 13px;
+          height: 13px;
+          position: relative;
+          animation: loaderScale 2s infinite steps(2);
+        }
+        .loader::before,
+        .loader::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: #3b82f6;
+        }
+        .loader::before {
+          box-shadow: 26px 0 #3b82f6;
+          transform: translateX(-26px);
+          animation: moveLeft 1s infinite linear alternate;
+        }
+        .loader::after {
+          transform: translateX(13px) rotate(0deg) translateX(13px);
+          animation: moveRight 1s infinite linear alternate;
+        }
+        @keyframes loaderScale {
+          0% , 49.9% { transform: scale(1) }
+          50%, 100% { transform: scale(-1) }
+        }
+        @keyframes moveLeft {
+          100% { box-shadow: 52px 0 #3b82f6 }
+        }
+        @keyframes moveRight {
+          100% { transform: translateX(13px) rotate(-180deg) translateX(13px) }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Orbital': {
+      css: `
+        .loader {
+          width: 13px;
+          height: 13px;
+          position: relative;
+        }
+        .loader::before,
+        .loader::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          background: #3b82f6;
+        }
+        .loader::before {
+          box-shadow: -26px 0 #3b82f6;
+          animation: orbitalLeft 2s infinite linear;
+        }
+        .loader::after {
+          transform: rotate(0deg) translateX(26px);
+          animation: orbitalRight 2s infinite linear;
+        }
+        @keyframes orbitalLeft {
+          50% { transform: translateX(26px) }
+        }
+        @keyframes orbitalRight {
+          100% { transform: rotate(-360deg) translateX(26px) }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Triangle Path': {
+      css: `
+        .loader {
+          width: 35px;
+          height: 35px;
+          --c: radial-gradient(circle closest-side, #3b82f6 90%, #0000);
+          background: 
+            var(--c) 0    0,
+            var(--c) 0    100%,
+            var(--c) 100% 100%;
+          background-size: 13px 13px;
+          background-repeat: no-repeat;
+          animation: trianglePath 1s infinite linear;
+        }
+        @keyframes trianglePath {
+          25% { background-position: 100% 0   , 0 100%, 100% 100% }
+          50% { background-position: 100% 0   , 0 0   , 100% 100% }
+          75% { background-position: 100% 0   , 0 0   , 0    100% }
+          100% { background-position: 100% 100%, 0 0   , 0    100% }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Wave': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 30px;
+          --c: radial-gradient(farthest-side, #3b82f6 90%, #0000);
+          background: 
+            var(--c) 0    50%,
+            var(--c) 50%  50%,
+            var(--c) 100% 50%;
+          background-size: 13px 13px;
+          background-repeat: no-repeat;
+          animation: waveLoader 1s infinite linear;
+        }
+        @keyframes waveLoader {
+          33%  { background-position: 0   0  , 50% 100%, 100% 50% }
+          66%  { background-position: 50% 0  , 0   100%, 100% 50% }
+          100% { background-position: 50% 50%, 0   50% , 100% 50% }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Jumping Dots': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 30px;
+          background: 
+            radial-gradient(farthest-side at bottom, #3b82f6 90%, #0000) 0    calc(50% - 3px),
+            radial-gradient(farthest-side at top   , #3b82f6 90%, #0000) 0    calc(50% + 3px),
+            radial-gradient(farthest-side at bottom, #3b82f6 90%, #0000) 50%  calc(50% - 3px),
+            radial-gradient(farthest-side at top   , #3b82f6 90%, #0000) 50%  calc(50% + 3px),
+            radial-gradient(farthest-side at bottom, #3b82f6 90%, #0000) 100% calc(50% - 3px),
+            radial-gradient(farthest-side at top   , #3b82f6 90%, #0000) 100% calc(50% + 3px);
+          background-size: 13px 6px;
+          background-repeat: no-repeat;
+          animation: jumpingDots 1s infinite linear;
+        }
+        @keyframes jumpingDots {
+          16.67% { background-position: 0 0, 0 100%, 50% calc(50% - 3px), 50% calc(50% + 3px), 100% calc(50% - 3px), 100% calc(50% + 3px) }
+          33.33% { background-position: 0 0, 0 100%, 50% 0, 50% 100%, 100% calc(50% - 3px), 100% calc(50% + 3px) }
+          50%    { background-position: 0 0, 0 100%, 50% 0, 50% 100%, 100% 0, 100% 100% }
+          66.67% { background-position: 0 calc(50% - 3px), 0 calc(50% + 3px), 50% 0, 50% 100%, 100% 0, 100% 100% }
+          83.33% { background-position: 0 calc(50% - 3px), 0 calc(50% + 3px), 50% calc(50% - 3px), 50% calc(50% + 3px), 100% 0, 100% 100% }
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    //cont
+    'Sliding Dots3': {
+      css: `
+        .loader {
+          width: 56px;
+          height: 28px;
+          background: 
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) 0   50%/12px 12px,
+            radial-gradient(farthest-side at bottom,#3b82f6 90%,#0000) 50%  calc(50% - 3px)/12px 6px,
+            radial-gradient(farthest-side at top   ,#3b82f6 90%,#0000) 50%  calc(50% + 3px)/12px 6px,
+            radial-gradient(farthest-side at bottom,#3b82f6 90%,#0000) 100% calc(50% - 3px)/12px 6px,
+            radial-gradient(farthest-side at top   ,#3b82f6 90%,#0000) 100% calc(50% + 3px)/12px 6px;
+          background-repeat: no-repeat;
+          animation: slidingDots3 1s infinite;
+        }
+        @keyframes slidingDots3 {
+          25%  {background-position:0    50%,50% 0,50% 100%,100% 0,100% 100%}
+          50%  {background-position:100% 50%,0   0,0   100%,50%  0,50%  100%}
+          75%,
+          100% {background-position:100% 50%,0 calc(50% - 3px),0 calc(50% + 3px),50% calc(50% - 3px),50% calc(50% + 3px)}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Rotating Dots': {
+      css: `
+        .loader {
+          width: 50px;
+          height: 12px;
+          background: 
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) left,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) right;
+          background-size: 12px 12px;
+          background-repeat: no-repeat;
+          position: relative;
+          animation: rotatingDots1 1s infinite linear;
+        }
+        .loader::before {
+          content: "";
+          position: absolute;
+          background: #3b82f6;
+          border-radius: 50%;
+          inset: 0 calc(50% - 6px);
+          transform-origin: -13px 50%;
+          animation: rotatingDots2 0.5s infinite linear;
+        }
+        @keyframes rotatingDots1 { 
+          0%,49.99% {transform: scale(1)}
+          50%,100%  {transform: scale(-1)} 
+        }
+        @keyframes rotatingDots2 { 
+          80%,100% {transform: rotate(1turn)} 
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Triangular Dots': {
+      css: `
+        .loader {
+          width: 50px;
+          height: 27.6px;
+          --c: radial-gradient(farthest-side,#3b82f6 90%,#0000);
+          background: 
+            var(--c) 50%  0,
+            var(--c) 0    100%,
+            var(--c) 100% 100%;
+          background-size: 12px 12px;
+          background-repeat: no-repeat;
+          position: relative;
+          animation: triangularDots 1s infinite;
+        }
+        @keyframes triangularDots { 
+          50%,100% {background-position: 100% 100%,50% 0,0 100%} 
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Falling Dots': {
+      css: `
+        .loader {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          color: #3b82f6;
+          clip-path: inset(-25px -100px);
+          box-shadow: 19px -40px,38px -40px,57px -40px;
+          transform: translateX(-38px);
+          animation: fallingDots 1s infinite;
+        }
+        @keyframes fallingDots { 
+          16.67% {box-shadow: 19px  0px,38px -40px,57px -40px}
+          33.33% {box-shadow: 19px  0px,38px   0px,57px -40px}
+          45%,55%{box-shadow: 19px  0px,38px   0px,57px   0px}
+          66.67% {box-shadow: 19px 40px,38px   0px,57px   0px}
+          83.33% {box-shadow: 19px 40px,38px  40px,57px   0px}
+          100%   {box-shadow: 19px 40px,38px  40px,57px  40px}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Orbiting Dots': {
+      css: `
+        .loader {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #3b82f6;
+          color: #3b82f6;
+          box-shadow: -19px 0px,19px 0px;
+          animation: orbitingDots 1s infinite;
+        }
+        @keyframes orbitingDots { 
+          25%  {box-shadow: -19px -19px, 19px 19px}
+          50%  {box-shadow:   0px -19px,  0px 19px}
+          75%  {box-shadow:  19px -19px,-19px 19px}
+          100% {box-shadow:  19px   0px,-19px  0px}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Sliding Dots2': {
+      css: `
+        .loader {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          clip-path: inset(-45px);
+          color: #3b82f6;
+          box-shadow: -60px 15px,-60px 15px,-60px 15px;
+          transform: translateY(-15px);
+          animation: slidingDots2 1s infinite linear;
+        }
+        @keyframes slidingDots2 { 
+          16.67% {box-shadow:-60px 15px,-60px 15px,19px 15px}
+          33.33% {box-shadow:-60px 15px,  0px 15px,19px 15px}
+          40%,60%{box-shadow:-19px 15px,  0px 15px,19px 15px}
+          66.67% {box-shadow:-19px 15px,  0px 15px,60px 15px}
+          83.33% {box-shadow:-19px 15px, 60px 15px,60px 15px}
+          100%   {box-shadow: 60px 15px, 60px 15px,60px 15px}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    'Flipping Dots': {
+      css: `
+        .loader {
+          width: 76px;
+          height: 12px;
+          display: flex;
+        }
+        .loader:before,
+        .loader:after {
+          content: "";
+          flex: 1;
+          background:
+            radial-gradient(farthest-side         ,#3b82f6 90%,#0000) center/12px 100%,
+            radial-gradient(farthest-side at right,#3b82f6 90%,#0000) right /6px  100%;
+          background-repeat: no-repeat;
+          transform: scale(var(--s,1)) translate(0px) rotate(0);
+          animation: flippingDots 2s infinite;
+        }
+        .loader:after {
+          --s: -1;
+        }
+        @keyframes flippingDots {
+          25%      {transform: scale(var(--s,1)) translate(-10px) rotate(0);}
+          50%      {transform: scale(var(--s,1)) translate(-10px) rotate(1turn);}
+          75%,100% {transform: scale(var(--s,1)) translate(0px)   rotate(1turn);}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+
     },
   
     Bars: {
