@@ -277,46 +277,62 @@ export default function JSONViewerEditor() {
   }, [jsonInput])
 
   const handleEdit = (path: string[], value: JsonValue) => {
-    const newData = JSON.parse(JSON.stringify(parsedJson))
-    // @ts-ignore: Suppress unexpected any type warning
-    let current: any = newData
+    const newData = JSON.parse(JSON.stringify(parsedJson));
+    let current: JsonObject | JsonArray = newData;
+  
     for (let i = 0; i < path.length - 1; i++) {
-      current = current[path[i]]
+      if (typeof current === 'object' && current !== null) {
+        current = (current as JsonObject)[path[i]] as JsonObject | JsonArray;
+      } else {
+        throw new Error("Invalid path; encountered a non-object/non-array element in the path.");
+      }
     }
-    current[path[path.length - 1]] = value
-    setJsonInput(JSON.stringify(newData, null, 2))
-  }
-
-
+  
+    if (typeof current === 'object' && current !== null) {
+      (current as JsonObject)[path[path.length - 1]] = value;
+    }
+    setJsonInput(JSON.stringify(newData, null, 2));
+  };
+  
   const handleDelete = (path: string[]) => {
-    const newData = JSON.parse(JSON.stringify(parsedJson))
-    // @ts-ignore: Suppress unexpected any type warning
-    let current: any = newData
+    const newData = JSON.parse(JSON.stringify(parsedJson));
+    let current: JsonObject | JsonArray = newData;
+  
     for (let i = 0; i < path.length - 1; i++) {
-      current = current[path[i]]
+      if (typeof current === 'object' && current !== null) {
+        current = (current as JsonObject)[path[i]] as JsonObject | JsonArray;
+      } else {
+        throw new Error("Invalid path; encountered a non-object/non-array element in the path.");
+      }
     }
+  
     if (Array.isArray(current)) {
-      current.splice(parseInt(path[path.length - 1]), 1)
-    } else {
-      delete current[path[path.length - 1]]
+      current.splice(parseInt(path[path.length - 1]), 1);
+    } else if (typeof current === 'object' && current !== null) {
+      delete (current as JsonObject)[path[path.length - 1]];
     }
-    setJsonInput(JSON.stringify(newData, null, 2))
-  }
-
+    setJsonInput(JSON.stringify(newData, null, 2));
+  };
+  
   const handleAdd = (path: string[], key: string, value: JsonValue) => {
-    const newData = JSON.parse(JSON.stringify(parsedJson))
-    // @ts-ignore: Suppress unexpected any type warning
-    let current: any = newData
+    const newData = JSON.parse(JSON.stringify(parsedJson));
+    let current: JsonObject | JsonArray = newData;
+  
     for (const pathPart of path) {
-      current = current[pathPart]
+      if (typeof current === 'object' && current !== null) {
+        current = (current as JsonObject)[pathPart] as JsonObject | JsonArray;
+      } else {
+        throw new Error("Invalid path; encountered a non-object/non-array element in the path.");
+      }
     }
+  
     if (Array.isArray(current)) {
-      current.push(value)
-    } else {
-      current[key] = value
+      current.push(value);
+    } else if (typeof current === 'object' && current !== null) {
+      (current as JsonObject)[key] = value;
     }
-    setJsonInput(JSON.stringify(newData, null, 2))
-  }
+    setJsonInput(JSON.stringify(newData, null, 2));
+  };
 
   return (
     <ToolLayout
