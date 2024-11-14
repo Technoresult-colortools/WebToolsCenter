@@ -26,8 +26,10 @@ type Theme = {
 }
 
 type JsonValue = string | number | boolean | null | JsonObject | JsonArray;
-type JsonObject = { [key: string]: JsonValue };
-type JsonArray = JsonValue[];
+interface JsonObject {
+  [key: string]: JsonValue;
+}
+interface JsonArray extends Array<JsonValue> {}
 
 const themes: Record<string, Theme> = {
   'monokai': {
@@ -276,6 +278,7 @@ export default function JSONViewerEditor() {
 
   const handleEdit = (path: string[], value: JsonValue) => {
     const newData = JSON.parse(JSON.stringify(parsedJson))
+    // @ts-ignore: Suppress unexpected any type warning
     let current: any = newData
     for (let i = 0; i < path.length - 1; i++) {
       current = current[path[i]]
@@ -287,6 +290,7 @@ export default function JSONViewerEditor() {
 
   const handleDelete = (path: string[]) => {
     const newData = JSON.parse(JSON.stringify(parsedJson))
+    // @ts-ignore: Suppress unexpected any type warning
     let current: any = newData
     for (let i = 0; i < path.length - 1; i++) {
       current = current[path[i]]
@@ -301,6 +305,7 @@ export default function JSONViewerEditor() {
 
   const handleAdd = (path: string[], key: string, value: JsonValue) => {
     const newData = JSON.parse(JSON.stringify(parsedJson))
+    // @ts-ignore: Suppress unexpected any type warning
     let current: any = newData
     for (const pathPart of path) {
       current = current[pathPart]
