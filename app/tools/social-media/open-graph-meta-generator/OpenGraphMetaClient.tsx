@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Copy, RefreshCw, Share2, Globe, Newspaper, Book, User, Music, Film, Tv, Radio, PlayCircle, FileText, Info, Lightbulb, BookOpen, Eye, EyeOff } from 'lucide-react'
+import { Copy, RefreshCw, Share2, Globe, Newspaper, Book, User, Music, Film, Tv, Radio, PlayCircle, FileText, Info, Lightbulb, BookOpen, Eye} from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
