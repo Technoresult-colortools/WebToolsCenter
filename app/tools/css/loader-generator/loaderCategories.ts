@@ -1466,7 +1466,7 @@ export const isValidCategory = (categories: LoaderCategories, category: string):
       `,
       html: '<div class="loader"></div>',
     },
-    //cont
+    
     'Sliding Dots3': {
       css: `
         .loader {
@@ -1634,6 +1634,477 @@ export const isValidCategory = (categories: LoaderCategories, category: string):
           25%      {transform: scale(var(--s,1)) translate(-10px) rotate(0);}
           50%      {transform: scale(var(--s,1)) translate(-10px) rotate(1turn);}
           75%,100% {transform: scale(var(--s,1)) translate(0px)   rotate(1turn);}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Shrinking Dots': {
+      css: `
+        .loader {
+          width: 4px;
+          height: 4px;
+          color: #3b82f6;
+          border-radius: 50%;
+          box-shadow: 19px 0 0 7px, 38px 0 0 3px, 57px 0 0 0;
+          transform: translateX(-38px);
+          animation: shrinkingDots 0.5s infinite alternate linear;
+        }
+        @keyframes shrinkingDots {
+          50%  {box-shadow: 19px 0 0 3px, 38px 0 0 7px, 57px 0 0 3px}
+          100% {box-shadow: 19px 0 0 0  , 38px 0 0 3px, 57px 0 0 7px}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Orbiting Circles': {
+      css: `
+        .loader {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background:#3b82f6;
+          color: #3b82f6;
+          box-shadow: 0 0 0 3px;
+          position: relative;
+          animation: orbitingCircles0 2s infinite linear;
+        }
+        .loader:before,
+        .loader:after {
+          content: "";
+          position: absolute;
+          border-radius: 50%;
+          inset:0;
+          background:#3b82f6;
+          transform: rotate(0deg) translate(18px);
+          animation: orbitingCircles 1s infinite;
+        }
+        .loader:after {
+          animation-delay: -0.5s
+        }
+        @keyframes orbitingCircles0 {
+          100% {transform: rotate(1turn)}
+        }
+        @keyframes orbitingCircles {
+          100% {transform: rotate(1turn) translate(20px)}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Bouncing Ball': {
+      css: `
+        .loader {
+          width: 50px;
+          height: 28px;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) 50%  0,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) 100% 0;
+          background-size:12px 12px;
+          background-repeat: no-repeat;
+          position: relative;
+          animation: bouncingBall0 1.5s linear infinite;
+        }
+        .loader:before {
+          content: "";
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background:#3b82f6;
+          left:0;
+          top:0;
+          animation: 
+            bouncingBall1 1.5s linear infinite,
+            bouncingBall2 0.5s cubic-bezier(0,200,.8,200) infinite;
+        }
+        @keyframes bouncingBall0 {
+          0%,31%  {background-position: 50% 0   ,100% 0}
+          33%     {background-position: 50% 100%,100% 0}
+          43%,64% {background-position: 50% 0   ,100% 0}
+          66%     {background-position: 50% 0   ,100% 100%}
+          79%     {background-position: 50% 0   ,100% 0}
+          100%    {transform:translateX(calc(-100%/3))}
+        }
+        @keyframes bouncingBall1 {
+          100% {left:calc(100% + 7px)}
+        }
+        @keyframes bouncingBall2 {
+          100% {top:-0.1px}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Sliding Dots4': {
+      css: `
+        .loader {
+          width: 88px;
+          height: 12px;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) 25% 0,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) 75% 0;
+          background-size:12px 12px;
+          background-repeat: no-repeat;
+          position: relative;
+          animation: slidingDots0 1s linear infinite;
+        }
+        .loader:before {
+          content: "";
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background:#3b82f6;
+          inset:0;
+          margin:auto;
+          animation: slidingDots1 1s cubic-bezier(0.5,300,0.5,-300) infinite;
+        }
+        @keyframes slidingDots0 {
+          0%,24%  {background-position: 25% 0,75% 0}
+          40%     {background-position: 25% 0,85% 0}
+          50%,72% {background-position: 25% 0,75% 0}
+          90%     {background-position: 15% 0,75% 0}
+          100%    {background-position: 25% 0,75% 0}
+        }
+        @keyframes slidingDots1 {
+          100% {transform:translate(0.1px)}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Bouncing Center Dot': {
+      css: `
+        .loader {
+          width: 50px;
+          height: 12px;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) left,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) right;
+          background-size:12px 12px;
+          background-repeat: no-repeat;
+          position: relative;
+        }
+        .loader:before {
+          content: "";
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background:#3b82f6;
+          inset:0;
+          margin:auto;
+          animation: bouncingCenterDot1 1s, bouncingCenterDot2 0.5s;
+          animation-timing-function:cubic-bezier(.5,-900,.5,900);
+          animation-iteration-count:infinite;
+        }
+        @keyframes bouncingCenterDot1 {
+          100% {transform:translate(0.12px)}
+        }
+        @keyframes bouncingCenterDot2 {
+          100% {inset:-0.15px 0 0;}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Rotating Dots1': {
+      css: `
+        .loader {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          color: #3b82f6;
+          box-shadow: 
+            19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+            19px 0     0 5px, 38px 0     0 5px, 57px 0     0 5px,
+            19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px;
+          transform: translateX(-38px);
+          animation: rotatingDots 2s infinite linear;
+        }
+        @keyframes rotatingDots {
+          12.5% {box-shadow: 
+            19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 5px,
+            19px 0     0 5px, 38px 0     0 0px, 57px 0     0 5px,
+            19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 0px}
+          25%   {box-shadow: 
+            19px -19px 0 5px, 38px -19px 0 0px, 57px -19px 0 5px,
+            19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+            19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 0px}
+          50%   {box-shadow: 
+            19px -19px 0 5px, 38px -19px 0 5px, 57px -19px 0 0px,
+            19px 0     0 0px, 38px 0     0 0px, 57px 0     0 0px,
+            19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px}
+          62.5% {box-shadow: 
+            19px -19px 0 0px, 38px -19px 0 0px, 57px -19px 0 0px,
+            19px 0     0 5px, 38px 0     0 0px, 57px 0     0 0px,
+            19px 19px  0 0px, 38px 19px  0 5px, 57px 19px  0 5px}
+          75%   {box-shadow: 
+            19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+            19px 0     0 0px, 38px 0     0 0px, 57px 0     0 5px,
+            19px 19px  0 0px, 38px 19px  0 0px, 57px 19px  0 5px}
+          87.5% {box-shadow: 
+            19px -19px 0 0px, 38px -19px 0 5px, 57px -19px 0 0px,
+            19px 0     0 0px, 38px 0     0 5px, 57px 0     0 0px,
+            19px 19px  0 5px, 38px 19px  0 0px, 57px 19px  0 0px}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+
+    //cont
+    'Flipping Half-Circles': {
+      css: `
+        .loader {
+          width: 50px;
+          height: 12px;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) left,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) right;
+          background-size:12px 12px;
+          background-repeat: no-repeat;
+          position: relative;
+        }
+        .loader:before,
+        .loader:after {
+          content: "";
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background:#3b82f6;
+          clip-path: inset(0 0 50%);
+          inset:0;
+          margin:auto;
+          transform-origin: -13px 50%;
+          animation: flippingHalfCircles 0.5s infinite alternate;
+        }
+        .loader:after {
+          --s:-1;
+          transform-origin: calc(100% + 13px) 50%;
+        }
+        @keyframes flippingHalfCircles {
+          0%,40% {transform:scaleY(var(--s,1)) rotate(0)}
+          100%   {transform:scaleY(var(--s,1)) rotate(calc(var(--s,1)*-90deg))}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Expanding Dot': {
+      css: `
+        .loader {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background:#3b82f6;
+          color: #3b82f6;
+          clip-path: inset(-26px);
+          animation: expandingDot 2s infinite linear;
+        }
+        @keyframes expandingDot {
+          0%  {box-shadow:0 0 0 0   , 40px 0,-40px 0,0 40px,0 -40px}
+          10% {box-shadow:0 0 0 0   , 12px 0,-40px 0,0 40px,0 -40px}
+          20% {box-shadow:0 0 0 4px , 0px  0,-40px 0,0 40px,0 -40px}
+          30% {box-shadow:0 0 0 4px , 0px  0,-12px 0,0 40px,0 -40px}
+          40% {box-shadow:0 0 0 8px , 0px  0,  0px 0,0 40px,0 -40px}
+          50% {box-shadow:0 0 0 8px , 0px  0,  0px 0,0 12px,0 -40px}
+          60% {box-shadow:0 0 0 12px, 0px  0,  0px 0,0  0px,0 -40px}
+          70% {box-shadow:0 0 0 12px, 0px  0,  0px 0,0  0px,0 -12px}
+          80% {box-shadow:0 0 0 16px, 0px  0,  0px 0,0  0px,0  0px }
+          90%,
+          100%{box-shadow:0 0 0 0   , 40px 0,-40px 0,0 40px,0 -40px}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Bouncing Dots': {
+      css: `
+        .loader {
+          width: 31px;
+          height: 31px;
+          display: flex;
+          justify-content: space-between;
+          animation: bouncingDots0 1s infinite;
+        }
+        .loader::before,
+        .loader::after {
+          content: "";
+          width:12px;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) top,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) bottom;
+          background-size:12px 12px;
+          background-repeat: no-repeat;
+          transform-origin:50% calc(100% - 6px);
+          animation:inherit;
+          animation-name: bouncingDots1;
+        }
+        .loader::after {
+          --s:-1;
+        }
+        @keyframes bouncingDots0 {
+          100% {transform:translateY(calc(12px - 100%))}
+        }
+        @keyframes bouncingDots1 {
+          100% {transform:rotate(calc(var(--s,1)*-180deg))}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Rotating Dots2': {
+      css: `
+        .loader {
+          width: 31px;
+          height: 31px;
+          display: flex;
+          justify-content: space-between;
+        }
+        .loader::before,
+        .loader::after {
+          content: "";
+          width:12px;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) top,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) bottom;
+          background-size:12px 12px;
+          background-repeat: no-repeat;
+          transform-origin:50% calc(100% - 6px);
+          animation: rotatingDots 1s infinite;
+        }
+        .loader::after {
+          transform-origin:50% 6px;
+        }
+        @keyframes rotatingDots {
+          70%,100% {transform:rotate(-270deg)}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Sliding Dots5': {
+      css: `
+        .loader {
+          width: 50px;
+          height: 12px;
+          display: grid;
+          animation: slidingDots0 1s infinite; 
+        }
+        .loader:before,
+        .loader:after {
+          content: "";
+          grid-area: 1/1;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) left,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) right;
+          background-size: 12px 12px;
+          background-repeat: no-repeat;
+        }
+        .loader:after {
+          transform:rotate(0) translate(19px) rotate(0);
+          animation:inherit;
+          animation-name: slidingDots1; 
+        }
+        @keyframes slidingDots0 {
+          100% {transform:translate(19px)}
+        }
+        @keyframes slidingDots1 {
+          100% {transform:rotate(-.5turn) translate(19px) rotate(.5turn)}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Flipping Dots1': {
+      css: `
+        .loader {
+          width: 69px;
+          height: 12px;
+          display: grid;
+        }
+        .loader:before,
+        .loader:after {
+          content: "";
+          grid-area: 1/1;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) left,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) right;
+          background-size: 12px 12px;
+          background-repeat: no-repeat;
+          animation: flippingDots 1s infinite; 
+        }
+        .loader:after {
+          margin:0 19px;
+          animation-direction: reverse;
+        }
+        @keyframes flippingDots {
+          80%,100% {transform:rotate(.5turn)}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Rotating Pair': {
+      css: `
+        .loader {
+          width: 69px;
+          height: 12px;
+          display: flex;
+          justify-content: space-between;
+        }
+        .loader:before,
+        .loader:after {
+          content: "";
+          width:31px;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) left,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) right;
+          background-size: 12px 12px;
+          background-repeat: no-repeat;
+          transform-origin: 6px 50%;
+          transform:translate(0) rotate(0);
+          animation: rotatingPair 1s infinite linear; 
+        }
+        .loader:after {
+          --s:-1;
+          transform-origin: calc(100% - 6px) 50%;
+        }
+        @keyframes rotatingPair {
+          100% {transform:translate(calc(var(--s,1)*19px)) rotate(calc(var(--s,1)*.5turn))}
+        }
+      `,
+      html: '<div class="loader"></div>',
+    },
+    
+    'Flipping Pair': {
+      css: `
+        .loader {
+          width: 50px;
+          height: 12px;
+          display: grid;
+        }
+        .loader:before,
+        .loader:after {
+          content: "";
+          grid-area: 1/1;
+          background:
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) left,
+            radial-gradient(farthest-side,#3b82f6 90%,#0000) right;
+          background-size: 12px 12px;
+          background-repeat: no-repeat;
+          animation: flippingPair 1s infinite; 
+          transform:translate(var(--d,0)) rotate(0);
+        }
+        .loader:after {
+          --d:19px;
+          animation-delay: .5s;
+        }
+        @keyframes flippingPair {
+          50%,100% {transform:translate(var(--d,0)) rotate(.5turn)}
         }
       `,
       html: '<div class="loader"></div>',

@@ -10,64 +10,71 @@ import {
   faTwitter, 
   faYoutube 
 } from '@fortawesome/free-brands-svg-icons';
-import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faHashtag, faShare } from '@fortawesome/free-solid-svg-icons';
 
 const socialMediaTools = [
   { 
     name: 'Instagram Filters', 
     href: '/tools/social-media/instagram-filters', 
     icon: faInstagram, 
-    gradient: 'from-pink-500 to-yellow-500' 
+    gradient: 'from-pink-500 via-red-400 to-yellow-500' 
   },
   { 
     name: 'Instagram Post Generator', 
     href: '/tools/social-media/instagram-post-generator', 
     icon: faInstagram, 
-    gradient: 'from-purple-500 to-pink-500' 
+    gradient: 'from-purple-600 via-pink-500 to-red-400' 
   },
   { 
     name: 'Instagram Photo Downloader', 
     href: '/tools/social-media/instagram-photo-downloader', 
     icon: faInstagram, 
-    gradient: 'from-indigo-500 to-blue-500' 
+    gradient: 'from-indigo-500 via-blue-500 to-cyan-400' 
   },
   { 
     name: 'Tweet Generator', 
     href: '/tools/social-media/tweet-generator', 
     icon: faTwitter, 
-    gradient: 'from-blue-500 to-teal-500' 
+    gradient: 'from-blue-500 via-sky-400 to-teal-300' 
   },
   { 
     name: 'Tweet to Image Converter', 
     href: '/tools/social-media/tweet-to-image-converter', 
     icon: faTwitter, 
-    gradient: 'from-green-500 to-teal-500' 
+    gradient: 'from-teal-400 via-green-400 to-lime-300' 
   },
   { 
     name: 'YouTube Thumbnail Downloader', 
     href: '/tools/social-media/youtube-thumbnail-downloader', 
     icon: faYoutube, 
-    gradient: 'from-red-500 to-orange-500' 
+    gradient: 'from-red-500 via-rose-400 to-orange-400' 
   },
   { 
     name: 'YouTube Keyword Tag Extractor', 
     href: '/tools/social-media/youtube-tag-extractor', 
     icon: faHashtag, 
-    gradient: 'from-red-500 to-orange-500' 
+    gradient: 'from-red-500 via-orange-500 to-yellow-500' 
   },
   { 
     name: 'YouTube Metadata Extractor', 
     href: '/tools/social-media/youtube-metadata-extractor', 
     icon: faHashtag, 
-    gradient: 'from-red-500 to-orange-500' 
+    gradient: 'from-orange-600 via-yellow-500 to-amber-400' 
   },
   { 
     name: 'YouTube Region Restriction Finder', 
     href: '/tools/social-media/youtube-region-restriction-finder', 
     icon: faHashtag, 
-    gradient: 'from-red-500 to-orange-500' 
+    gradient: 'from-red-600 via-orange-500 to-yellow-400' 
+  },
+  { 
+    name: 'Open Graph Meta Generator', 
+    href: '/tools/social-media/open-graph-meta-generator', 
+    icon: faShare, 
+    gradient: 'from-cyan-500 via-blue-500 to-purple-500' 
   },
 ];
+
 
 export default function SocialMediaToolsPage() {
   const [isVisible, setIsVisible] = useState(false);

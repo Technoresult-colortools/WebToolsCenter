@@ -80,6 +80,8 @@
     "tailwind-merge": "^2.5.3",
     "tailwind-scrollbar": "^3.1.0",
     "terser": "^5.34.1",
+    "three": "^0.170.0",
+    "three-rounded-box": "^0.1.1",
     "uglify-js": "^3.19.3",
     "use-image": "^1.1.1"
   },
@@ -94,6 +96,7 @@
     "@types/react-dom": "^18",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/seedrandom": "^3.0.8",
+    "@types/three": "^0.170.0",
     "@types/uglify-js": "^3.17.5",
     "autoprefixer": "^10.4.20",
     "eslint": "^8",

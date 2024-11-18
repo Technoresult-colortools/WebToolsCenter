@@ -123,6 +123,7 @@ const allTools: Tool[] = [
     { name: 'YouTube Keyword Tag Extractor', category: 'Social Media Tools', path: '/tools/social-media/youtube-tag-extractor' },
     { name: 'YouTube MetaData Extractor', category: 'Social Media Tools', path: '/tools/social-media/youtube-metadata-extractor' },
     { name: 'YouTube Region Restriction Finder', category: 'Social Media Tools', path: '/tools/social-media/youtube-region-restriction-finder' },
+    { name: 'Open Graph Meta Generator', category: 'Social Media Tools', path: '/tools/social-media/open-graph-meta-generator' }
     
     
   

@@ -144,7 +144,8 @@ const categories = [
       { name: 'YouTube Thumbnail Downloader', href: '/tools/social-media/youtube-thumbnail-downloader' },
       { name: 'YouTube KeyWord Tag Extractor',  href: '/tools/social-media/youtube-tag-extractor' },
       { name: 'YouTube Metadata Extractor', href: '/tools/social-media/youtube-metadata-extractor' },
-      { name: 'YouTube Region Restriction Finder', href: '/tools/social-media/youtube-region-restriction-finder' }
+      { name: 'YouTube Region Restriction Finder', href: '/tools/social-media/youtube-region-restriction-finder' },
+      { name: 'Open Graph Meta Generator', href: '/tools/social-media/open-graph-meta-generator' }
     ]
   },
 ];

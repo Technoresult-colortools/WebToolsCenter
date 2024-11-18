@@ -1,4 +1,4 @@
-import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faEraser, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt, faSignature, faDesktop } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImage, faPalette, faCode, faDroplet, faEraser, faShare, faChartBar, faTextHeight, faScissors, faRandom, faCropAlt, faExpand, faEyeDropper, faShapes, faVectorSquare, faEyeSlash, faFileImage, faFileCode, faSpinner, faBrush, faBezierCurve, faGlassMartiniAlt, faDrawPolygon, faAlignJustify, faLink, faMobileAlt, faKey, faCompress, faFingerprint, faLock, faSitemap, faQrcode, faBarcode, faExchangeAlt, faSignature, faDesktop } from '@fortawesome/free-solid-svg-icons'
   import {
     faGlide, faInstagram, faMarkdown, faTwitter, faYoutube,
   } from '@fortawesome/free-brands-svg-icons';
@@ -110,5 +110,6 @@ import { faHashtag, faMicrochip, faPrint, faSliders, faSun, faTag,faFont, faImag
   { name: 'YouTube Thumbnail Downloader', category: 'Social Media', href: '/tools/social-media/youtube-thumbnail-downloader', icon: faYoutube, description: 'Download thumbnails from YouTube videos.' },
   { name: 'YouTube KeyWord Tag Extractor', category: 'Social Media', href: '/tools/social-media/youtube-tag-extractor', icon: faHashtag, description: 'Extract keyword tags from any YouTube video.' },
   { name: 'YouTube Metadata Extractor', category: 'Social Media', href: '/tools/social-media/youtube-metadata-extractor', icon: faHashtag, description: 'Extract comprehensive metadata from any YouTube video.' },
-  { name: 'YouTube Region Restriction Finder', category: 'Social Media', href: '/tools/social-media/youtube-region-restriction-finder', icon: faHashtag, description: 'Check the availability of a YouTube video across different regions.' }
+  { name: 'YouTube Region Restriction Finder', category: 'Social Media', href: '/tools/social-media/youtube-region-restriction-finder', icon: faHashtag, description: 'Check the availability of a YouTube video across different regions.' },
+  { name: 'Open Graph Meta Generator', category: 'Social Media', href: '/tools/social-media/open-graph-meta-generator', icon: faShare, description: 'Generate Open Graph meta tags for your website to control how your content appears when shared on social media.' },
   ];
