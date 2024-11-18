@@ -25,35 +25,6 @@ const CookiesPolicyPage: React.FC = () => {
     setCookieConsent(savedConsent)
   }, [])
 
-  const handleCookieAccept = () => {
-    localStorage.setItem('cookieConsent', 'accepted')
-    setCookieConsent('accepted')
-    if (window.gtag) {
-      window.gtag('consent', 'update', {
-        'analytics_storage': 'granted',
-        'personalization_storage': 'granted',
-        'functionality_storage': 'granted'
-      })
-      window.gtag('event', 'consent_update', {
-        'consent_status': 'accepted'
-      })
-    }
-  }
-
-  const handleCookieDecline = () => {
-    localStorage.setItem('cookieConsent', 'declined')
-    setCookieConsent('declined')
-    if (window.gtag) {
-      window.gtag('consent', 'update', {
-        'analytics_storage': 'denied',
-        'personalization_storage': 'denied',
-        'functionality_storage': 'denied'
-      })
-      window.gtag('event', 'consent_update', {
-        'consent_status': 'declined'
-      })
-    }
-  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">

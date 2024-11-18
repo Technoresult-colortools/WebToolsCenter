@@ -19,7 +19,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [cookieConsent, setCookieConsent] = useState<string | null>(null)
+  const [, setCookieConsent] = useState<string | null>(null)
   
   useEffect(() => {
     const savedConsent = localStorage.getItem('cookieConsent')
