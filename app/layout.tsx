@@ -1,26 +1,92 @@
-import { config } from '@fortawesome/fontawesome-svg-core';
-import '@fortawesome/fontawesome-svg-core/styles.css';
-config.autoAddCss = false;
+'use client'
 
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import Script from 'next/script';
+import { config } from '@fortawesome/fontawesome-svg-core'
+import '@fortawesome/fontawesome-svg-core/styles.css'
+config.autoAddCss = false
 
-const inter = Inter({ subsets: ['latin'] });
+import './globals.css'
+import { Inter } from 'next/font/google'
+import Script from 'next/script'
+import ClientCookieBanner from '@/components/CookieConsentBanner'
+import { useEffect, useState } from 'react'
 
-const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'WebToolsCenter - The Ultimate Free Online Tool Collection',
-  description: 'Explore WebToolsCenter for free online tools including text converters, image editors, coding utilities, color tools, and more. Simplify your tasks with a wide range of easy-to-use tools.',
-};
+const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
+  const [cookieConsent, setCookieConsent] = useState<string | null>(null)
+  
+  useEffect(() => {
+    const savedConsent = localStorage.getItem('cookieConsent')
+    setCookieConsent(savedConsent)
+    
+    if (GA_TRACKING_ID && !savedConsent) {
+      initializeBasicAnalytics()
+    }
+  }, [])
+
+  const initializeBasicAnalytics = () => {
+    // Type-safe gtag call
+    window.gtag?.('config', GA_TRACKING_ID!, {
+      'consent_mode': 'default',
+      'restricted_data_processing': true,
+      'anonymize_ip': true,
+      'client_storage': 'none',
+      'allow_google_signals': false,
+      'allow_ad_personalization_signals': false,
+      'custom_map': {
+        'dimension1': 'page_path',
+        'dimension2': 'client_id',
+        'dimension3': 'consent_status'
+      }
+    })
+  }
+
+  const handleCookieAccept = () => {
+    localStorage.setItem('cookieConsent', 'accepted')
+    setCookieConsent('accepted')
+    
+    if (GA_TRACKING_ID && window.gtag) {
+      window.gtag('consent', 'update', {
+        'analytics_storage': 'granted',
+        'personalization_storage': 'granted',
+        'functionality_storage': 'granted'
+      })
+      
+      window.gtag('set', {
+        'restricted_data_processing': false,
+        'allow_google_signals': true,
+        'allow_ad_personalization_signals': true
+      })
+      
+      window.gtag('event', 'consent_update', {
+        'consent_status': 'accepted'
+      })
+    }
+  }
+
+  const handleCookieDecline = () => {
+    localStorage.setItem('cookieConsent', 'declined')
+    setCookieConsent('declined')
+    
+    if (GA_TRACKING_ID && window.gtag) {
+      window.gtag('consent', 'update', {
+        'analytics_storage': 'denied',
+        'personalization_storage': 'denied',
+        'functionality_storage': 'denied'
+      })
+      
+      window.gtag('event', 'consent_update', {
+        'consent_status': 'declined'
+      })
+    }
+  }
+
   return (
     <html lang="en">
       <head>
@@ -38,7 +104,14 @@ export default function RootLayout({
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag('js', new Date());
-                  gtag('config', '${GA_TRACKING_ID}');
+                  
+                  gtag('config', '${GA_TRACKING_ID}', {
+                    'restricted_data_processing': true,
+                    'anonymize_ip': true,
+                    'client_storage': 'none',
+                    'allow_google_signals': false,
+                    'allow_ad_personalization_signals': false
+                  });
                 `,
               }}
             />
@@ -47,9 +120,10 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <main className="flex-grow pt-16">
-        {children}
+          {children}
         </main>
+        <ClientCookieBanner onAccept={handleCookieAccept} onDecline={handleCookieDecline} />
       </body>
     </html>
-  );
+  )
 }

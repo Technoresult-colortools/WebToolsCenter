@@ -1,15 +1,22 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Cookie } from 'lucide-react'
 
-interface CookieConsentBannerProps {
-  onAccept: () => void;
-  onDecline: () => void;
+interface ClientCookieBannerProps {
+  onAccept: () => void
+  onDecline: () => void
 }
 
-const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ onAccept, onDecline }) => {
-  const [isVisible, setIsVisible] = useState(true)
+const ClientCookieBanner: React.FC<ClientCookieBannerProps> = ({ onAccept, onDecline }) => {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    // Check if we already have a cookie consent in localStorage
+    const cookieConsent = localStorage.getItem('cookieConsent')
+    // Only show the banner if there's no existing consent
+    setIsVisible(!cookieConsent)
+  }, [])
 
   const handleAccept = () => {
     setIsVisible(false)
@@ -29,7 +36,10 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ onAccept, onD
         <div className="flex items-center space-x-4">
           <Cookie className="w-6 h-6 text-blue-400" />
           <p className="text-sm">
-            We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.
+            We use essential cookies to analyze basic site usage and improve our services. Accept all cookies to enable enhanced features and personalized content. 
+            <a href="/cookies" className="ml-1 text-blue-400 hover:underline">
+              Learn more
+            </a>
           </p>
         </div>
         <div className="flex items-center space-x-4">
@@ -37,7 +47,7 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ onAccept, onD
             onClick={handleDecline}
             className="px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors"
           >
-            Decline
+            Essential Only
           </button>
           <button
             onClick={handleAccept}
@@ -51,4 +61,4 @@ const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ onAccept, onD
   )
 }
 
-export default CookieConsentBanner
+export default ClientCookieBanner
