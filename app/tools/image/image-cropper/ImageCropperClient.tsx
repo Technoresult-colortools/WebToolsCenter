@@ -151,14 +151,6 @@ export default function EnhancedImageCropper() {
     link.click();
   };
 
-  const aspectLabelMapping = {
-    free: 'Free Selection',
-    '16:9': '16:9',
-    '4:3': '4:3',
-    '1:1': '1:1',
-    '2:3': '2:3',
-  };
-
   return (
     <ToolLayout
       title="Image Cropper"

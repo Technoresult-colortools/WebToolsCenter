@@ -155,15 +155,6 @@ export default function CaseConverter() {
     }
   }, [history, historyIndex]);
 
-  const handleRedo = useCallback(() => {
-    if (historyIndex < history.length - 1) {
-      setHistoryIndex(prev => prev + 1);
-      setOutputText(history[historyIndex + 1]);
-      toast.success('Redo successful');
-    } else {
-      toast.error('No more redo history');
-    }
-  }, [history, historyIndex]);
 
   return (
     <ToolLayout

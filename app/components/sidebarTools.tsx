@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, ChevronDown, Cog, Type, Hash, AlignLeft, AlignJustify, Eraser, FilesIcon as Fonts, FlipVertical2Icon as Flip2, BarChart2, Binary, Heading, Trash2, FileCode, Shuffle, PenTool, Crop, Sliders, Droplet, EyeIcon as Eyedropper, Paintbrush, Hexagon, Grid, Scissors, FileImage, Database, ClipboardIcon as ClipPath, Loader, PenIcon as Pattern, SplineIcon as BezierCurve, GlassWater, Zap, ContrastIcon as Gradient, Triangle, Square, Radius, Layout, PaletteIcon as ColorPicker, Pipette, HexagonIcon as HexIcon, Droplets, Rainbow, PaletteIcon, SwatchBookIcon as Swatch, Brush, Aperture, Monitor, Smartphone, Tablet, Laptop, ComputerIcon as Desktop, Server, ImageIcon, Instagram, Twitter, Youtube, Globe, Lock, List, QrCode, Barcode, Ruler, Maximize } from 'lucide-react'
+import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, ChevronDown, Cog, Type, Hash, AlignLeft, AlignJustify, Eraser, FilesIcon as Fonts, FlipVertical2Icon as Flip2, BarChart2, Binary, Heading, Trash2, FileCode, Shuffle, PenTool, Crop, Sliders, Droplet, EyeIcon as Eyedropper, Paintbrush, Hexagon, Grid, Scissors, FileImage, Database, ClipboardIcon as ClipPath, Loader, PenIcon as Pattern, SplineIcon as BezierCurve, GlassWater, Zap, ContrastIcon as Gradient, Triangle, Square, Radius, Layout, PaletteIcon as ColorPicker, Pipette, HexagonIcon as HexIcon, Droplets, Rainbow, PaletteIcon, SwatchBookIcon as Swatch, Brush, Aperture, ComputerIcon as ImageIcon, Instagram, Twitter, Youtube, Globe, Lock, List, QrCode, Barcode, Ruler, Maximize } from 'lucide-react'
   
   
 

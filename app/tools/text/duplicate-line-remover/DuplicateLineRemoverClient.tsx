@@ -42,7 +42,7 @@ export default function DuplicateLineRemover() {
   }, [inputText, caseSensitive, trimWhitespace, keepFirstOccurrence, addLineNumbers, startingLineNumber, ignoreEmptyLines, customSeparator, filterMode])
 
   const processText = (text: string) => {
-    let lines = text.split(customSeparator || '\n')
+    const lines = text.split(customSeparator || '\n')
     const seen = new Set()
     const result = []
 

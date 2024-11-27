@@ -212,9 +212,6 @@ export default function HTMLEncoderDecoder() {
     }
   }
 
-  const handleAddCustomEntity = (char: string, entity: string) => {
-    setCustomEntities(prev => ({ ...prev, [char]: entity }))
-  }
 
   return (
     <ToolLayout
