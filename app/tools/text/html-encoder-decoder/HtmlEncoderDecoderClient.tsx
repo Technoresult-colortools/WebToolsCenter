@@ -38,7 +38,7 @@ export default function HTMLEncoderDecoder() {
   const [encodingFormat, setEncodingFormat] = useState<'html' | 'url' | 'base64'>('html')
   const [minifyHTML, setMinifyHTML] = useState(false)
   const [escapeJS, setEscapeJS] = useState(false)
-  const [customEntities, setCustomEntities] = useState<Record<string, string>>({})
+  const [customEntities, ] = useState<Record<string, string>>({})
 
   useEffect(() => {
     processText(inputText)
