@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster, toast } from 'react-hot-toast';
+import Image from 'next/image'
+import Link from 'next/link'
 import { 
   Copy, RefreshCw, ArrowRight, Wand2, Info, Lightbulb, 
-  BookOpen, ChartColumnBig, History, Download, Upload, Settings2, Cog, Shield
+  BookOpen, ChartColumnBig, History, Download, Upload, Settings2, Zap, Type, Settings, FileUp, FileDown, BarChart2
 } from 'lucide-react';
 import {
   Select,
@@ -206,7 +208,7 @@ export default function TitleCaseConverter() {
                       <SelectTrigger className="bg-gray-700 text-white border-gray-600">
                         <SelectValue placeholder="Select style" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-gray-700 text-white border-gray-600">
                         <SelectItem value="standard">Standard Title Case</SelectItem>
                         <SelectItem value="all">Capitalize All Words</SelectItem>
                         <SelectItem value="first">First Word Only</SelectItem>
@@ -362,72 +364,97 @@ export default function TitleCaseConverter() {
           <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
               <Info className="w-6 h-6 mr-2" />
-              About Advanced Title Case Converter
+              What is the Advanced Title Case Converter?
             </h2>
             <p className="text-gray-300 mb-4">
-              The Advanced Title Case Converter is a sophisticated tool that transforms your text into properly formatted titles using intelligent capitalization rules. 
-              It offers multiple formatting styles, advanced customization options, and powerful features for professional content creation. 
-              Perfect for writers, editors, content creators, and anyone needing properly formatted titles for articles, books, headlines, or academic work.
+              The Advanced Title Case Converter is a sophisticated tool designed for writers, editors, content creators, and anyone needing properly formatted titles. It goes beyond basic capitalization, offering intelligent transformation of text into properly formatted titles using various capitalization rules. With its <Link href="#how-to-use" className="text-blue-400 hover:underline">user-friendly interface</Link> and advanced functionality, it's the perfect companion for creating professional-looking titles for articles, books, headlines, or academic work.
             </p>
-
             <p className="text-gray-300 mb-4">
-              Our converter goes beyond basic capitalization by offering features like format preservation, statistical analysis, conversion history tracking, and file handling capabilities. 
-              With support for different title case styles and special handling of acronyms and punctuation, it provides the flexibility needed for various style guides and formatting requirements.
+              Our converter provides flexibility with multiple formatting styles, advanced customization options, and powerful features for professional content creation. It's like having a seasoned editor right at your fingertips, ensuring your titles are consistently formatted and style-guide compliant!
             </p>
 
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <div className="my-8">
+              <Image 
+                src="/Images/TitleCasePreview.png?height=400&width=600" 
+                alt="Screenshot of the Advanced Title Case Converter interface showing input area, style options, and converted title output" 
+                width={600} 
+                height={400} 
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+
+            <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
               <BookOpen className="w-6 h-6 mr-2" />
-              How to Use
+              How to Use the Advanced Title Case Converter?
             </h2>
             <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
               <li>Enter or paste your text into the input field at the top of the page.</li>
               <li>Select your preferred title case style (Standard, Capitalize All, or First Word Only).</li>
               <li>Adjust additional settings like "Preserve Formatting" or "Respect Acronyms" as needed.</li>
-              <li>Use the "Convert" button to process your text (conversion also happens automatically as you type).</li>
+              <li>Click the "Convert" button to process your text (conversion also happens automatically as you type).</li>
               <li>View text statistics by toggling the stats panel to analyze your content.</li>
               <li>Copy the result, export it as a file, or view it in your conversion history.</li>
               <li>Use the "Clear" button to reset both input and output fields when needed.</li>
             </ol>
 
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Cog className="w-6 h-6 mr-2" />
-              Features & Options
+              <Zap className="w-6 h-6 mr-2" />
+              Key Features
             </h2>
             <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Choose from three title case styles: Standard, Capitalize All Words, or First Word Only</li>
-              <li>Preserve original text formatting with the "Preserve Formatting" option</li>
-              <li>Maintain acronyms in uppercase with "Respect Acronyms" feature</li>
-              <li>Automatic capitalization after punctuation marks</li>
-              <li>Real-time text statistics including character count, word count, and more</li>
-              <li>Import and export functionality for handling larger documents</li>
-              <li>Conversion history tracking for easy reference to previous work</li>
+              <li><strong>Multiple Title Case Styles:</strong> Choose from Standard, Capitalize All Words, or First Word Only.</li>
+              <li><strong>Format Preservation:</strong> Maintain original text formatting, including spacing and line breaks.</li>
+              <li><strong>Acronym Handling:</strong> Option to respect and maintain acronyms in uppercase.</li>
+              <li><strong>Intelligent Capitalization:</strong> Automatic capitalization after punctuation marks.</li>
+              <li><strong>Text Statistics:</strong> Real-time analysis including character count, word count, and more.</li>
+              <li><strong>File Handling:</strong> Import and export functionality for processing larger documents.</li>
+              <li><strong>Conversion History:</strong> Track and revisit previous conversions for easy reference.</li>
+              <li><strong>Customization Options:</strong> Tailor the converter to match specific style guide requirements.</li>
             </ul>
 
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
               <Lightbulb className="w-6 h-6 mr-2" />
-              Tips and Tricks
+              Advanced Options Explained
             </h2>
             <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Use "Standard" style for traditional title case rules, which keep articles and prepositions lowercase unless they're the first or last word.</li>
-              <li>Enable "Preserve Formatting" when working with pre-formatted text or special layouts to maintain spacing and line breaks.</li>
-              <li>The "Capitalize After Punctuation" feature ensures proper capitalization in titles containing multiple sentences or clauses.</li>
-              <li>Use the statistics panel to ensure your titles meet specific length requirements or style guidelines.</li>
-              <li>Take advantage of the conversion history to compare different versions of your titles or recover previous conversions.</li>
-              <li>For batch processing, use the file import feature to convert multiple titles from a text file.</li>
-              <li>Export your converted text to share with others or integrate into your documents while preserving the formatting.</li>
+              <li><Type className="w-4 h-4 inline-block mr-1" /> <strong>Standard Style:</strong> Follows common title case conventions, keeping articles and prepositions lowercase unless they're the first or last word.</li>
+              <li><Settings className="w-4 h-4 inline-block mr-1" /> <strong>Preserve Formatting:</strong> Maintains pre-existing spacing and line breaks in the input text.</li>
+              <li><Zap className="w-4 h-4 inline-block mr-1" /> <strong>Respect Acronyms:</strong> Ensures acronyms remain in all uppercase letters.</li>
+              <li><History className="w-4 h-4 inline-block mr-1" /> <strong>Conversion History:</strong> Allows comparison of different versions and recovery of previous conversions.</li>
+              <li><FileUp className="w-4 h-4 inline-block mr-1" /> <strong>File Import:</strong> Enables batch processing by converting multiple titles from a text file.</li>
+              <li><FileDown className="w-4 h-4 inline-block mr-1" /> <strong>Export Options:</strong> Save converted text while preserving formatting for easy integration into documents.</li>
+              <li><BarChart2 className="w-4 h-4 inline-block mr-1" /> <strong>Statistics Panel:</strong> Provides detailed analysis to ensure titles meet specific length requirements or style guidelines.</li>
             </ul>
 
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Shield className="w-6 h-6 mr-2" />
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Practical Applications
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li><strong>Content Creation:</strong> Quickly format titles for articles, blog posts, and social media content.</li>
+              <li><strong>Academic Writing:</strong> Ensure consistent title formatting in research papers, theses, and dissertations.</li>
+              <li><strong>Book Publishing:</strong> Format chapter titles, section headings, and book titles consistently.</li>
+              <li><strong>Journalism:</strong> Create properly formatted headlines and subheadings for news articles.</li>
+              <li><strong>SEO Optimization:</strong> Generate title tags and meta descriptions with correct capitalization.</li>
+              <li><strong>Presentation Design:</strong> Format slide titles and bullet points for professional presentations.</li>
+              <li><strong>Editing and Proofreading:</strong> Quickly standardize title formatting across large documents.</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
               Style Guide Compliance
             </h2>
             <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>The Standard style follows common title case conventions used in most professional publishing.</li>
+              <li>The Standard style aligns with common title case conventions used in most professional publishing.</li>
               <li>Customize settings to match specific style guides (AP, Chicago, MLA, etc.) requirements.</li>
               <li>Use the "First Word Only" style for sentence case formatting, popular in some academic journals.</li>
-              <li>The tool handles special cases like hyphenated words and compound expressions according to standard rules.</li>
-              <li>Remember to review your style guide's specific requirements, as conventions may vary between publications.</li>
+              <li>Special cases like hyphenated words and compound expressions are handled according to standard rules.</li>
+              <li>Always review your specific style guide, as conventions may vary between publications.</li>
             </ul>
+
+            <p className="text-gray-300 mt-4">
+              Ready to elevate your title formatting game? Start using our Advanced Title Case Converter now and experience the power of intelligent, customizable title formatting at your fingertips. Whether you're a professional writer, a student, or anyone who needs consistently formatted titles, our tool is here to make your content shine. Try it out and see how it can streamline your writing and editing process!
+            </p>
           </div>
 
           </ToolLayout>

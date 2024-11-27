@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, ChevronDown, Cog } from 'lucide-react'; // Replace with actual icons
+import { FileText, Image, Palette, SprayCan, Code, SquareKanban, FacebookIcon, ChevronDown, Cog, Type, Hash, AlignLeft, AlignJustify, Eraser, FilesIcon as Fonts, FlipVertical2Icon as Flip2, BarChart2, Binary, Heading, Trash2, FileCode, Shuffle, PenTool, Crop, Sliders, Droplet, EyeIcon as Eyedropper, Paintbrush, Hexagon, Grid, Scissors, FileImage, Database, ClipboardIcon as ClipPath, Loader, PenIcon as Pattern, SplineIcon as BezierCurve, GlassWater, Zap, ContrastIcon as Gradient, Triangle, Square, Radius, Layout, PaletteIcon as ColorPicker, Pipette, HexagonIcon as HexIcon, Droplets, Rainbow, PaletteIcon, SwatchBookIcon as Swatch, Brush, Aperture, Monitor, Smartphone, Tablet, Laptop, ComputerIcon as Desktop, Server, ImageIcon, Instagram, Twitter, Youtube, Globe, Lock, List, QrCode, Barcode, Ruler, Maximize } from 'lucide-react'
   
   
 
@@ -150,27 +150,136 @@ const categories = [
   },
 ];
 
+const toolIcons: { [key: string]: React.ElementType } = {
+  // Text Tools
+  'Case Converter': Type,
+  'Letter Counter': Hash,
+  'Lorem Ipsum Generator': AlignLeft,
+  'Words Counter': AlignJustify,
+  'Whitespace Remover': Eraser,
+  'Google Fonts Pair Finder': Fonts,
+  'Text Reverser': Flip2,
+  'Character Frequency Counter': BarChart2,
+  'Text to ASCII/Hex/Binary Converter': Binary,
+  'Title Case Converter': Heading,
+  'Duplicate Line Remover': Trash2,
+  'HTML Encoder/Decoder': FileCode,
+  'Markdown to HTML Converter': FileCode,
+  'Word Scrambler': Shuffle,
+  'Text to Handwriting Converter': PenTool,
+
+  // Image Tools
+  'Image Cropper': Crop,
+  'Image Filters': Sliders,
+  'Image Resizer': Maximize,
+  'Image Average Color Finder': Droplet,
+  'Image Color Extractor': Eyedropper,
+  'Image Color Picker': Paintbrush,
+  'SVG Blob Generator': Hexagon,
+  'SVG Pattern Generator': Grid,
+  'Photo Censor': Scissors,
+  'SVG to PNG Converter': FileImage,
+  'Image to Base64 Converter': Database,
+
+  // CSS Tools
+  'CSS Clip Path Generator': ClipPath,
+  'CSS Loader Generator': Loader,
+  'CSS Background Pattern Generator': Pattern,
+  'CSS Cubic Bezier Generator': BezierCurve,
+  'CSS Glassmorphism Generator': GlassWater,
+  'CSS Text Glitch Effect Generator': Zap,
+  'CSS Gradient Generator': Gradient,
+  'CSS Triangle Generator': Triangle,
+  'CSS Box Shadow Generator': Square,
+  'CSS Border Radius Generator': Radius,
+  'CSS FlexBox Generator': Layout,
+
+  // Color Tools
+  'Image Color Picker1': ColorPicker,
+  'Image Color Extractor1': Pipette,
+  'Hex to RGBA Converter': HexIcon,
+  'RGBA to Hex Converter': HexIcon,
+  'HSV to RGB Converter': Droplets,
+  'RGB to HSV Converter': Droplets,
+  'CMYK to RGB Converter': Rainbow,
+  'Color Mixer': PaletteIcon,
+  'Color Shades Generator': Swatch,
+  'RGB to CMYK Converter': Rainbow,
+  'HSL to RGB Converter': Brush,
+  'HSL to HEX Converter': HexIcon,
+  'HSV to Hex Converter': HexIcon,
+  'RGB to HSL Converter': Brush,
+  'Color Name Generator': Type,
+  'Color Palette Generator': PaletteIcon,
+  'Color Wheel': Aperture,
+  'Gradient Generator': Gradient,
+  'Tailwind CSS Color Palette': Swatch,
+
+  // Coding Tools
+  'Code to Image Converter': ImageIcon,
+  'URL Slug Generator': Type,
+  'React Native Shadow Generator': Square,
+  'Base64 Encoder/Decoder': Binary,
+  'HTML Encoder/Decoder1': FileCode,
+  'URL Encoder/Decoder': Globe,
+  'HTML Minifier': FileCode,
+  'CSS Minifier': FileCode,
+  'JavaScript Minifier': FileCode,
+  'HTML Formatter': FileCode,
+  'CSS Formatter': FileCode,
+  'JavaScript Formatter': FileCode,
+  'MD5 Generator and Verifier': Lock,
+  'SHA1 Encrypt and Verifier': Lock,
+  'SHA224 Encrypt and Verifier': Lock,
+  'SHA256 Encrypt and Verifier': Lock,
+  'SHA384 Encrypt and Verifier': Lock,
+  'SHA512 Encrypt and Verifier': Lock,
+  'JWT Encoder/Decoder': Lock,
+  'Advance JSON Tree Viewer': SquareKanban,
+  'JSON Validator and Formatter': FileCode,
+
+  // Miscellaneous Tools
+  'Advance Password Generator': Lock,
+  'List Randomizer': List,
+  'QR Code Generator': QrCode,
+  'BarCode Generator': Barcode,
+  'Unit Converter': Ruler,
+  'Screen Resolution Checker': Maximize,
+
+  // Social Media Tools
+  'Instagram Filters': Instagram,
+  'Instagram Post Generator': Instagram,
+  'Instagram Photo Downloader': Instagram,
+  'Tweet Generator': Twitter,
+  'Tweet to Image Converter': Twitter,
+  'YouTube Thumbnail Downloader': Youtube,
+  'YouTube KeyWord Tag Extractor': Youtube,
+  'YouTube Metadata Extractor': Youtube,
+  'YouTube Region Restriction Finder': Youtube,
+  'Open Graph Meta Generator': Globe,
+}
+
 const Sidebar: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1023); // Considering screens smaller than 768px as mobile
-    };
+      setIsMobile(window.innerWidth < 1023)
+    }
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
 
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const toggleCategory = (categoryName: string) => {
-    setActiveCategory(activeCategory === categoryName ? null : categoryName);
-  };
+    setActiveCategory(activeCategory === categoryName ? null : categoryName)
+  }
 
   if (isMobile) {
-    return null; // Don't render the sidebar on mobile devices
+    return null
   }
 
   return (
@@ -181,7 +290,22 @@ const Sidebar: React.FC = () => {
           <Cog className="w-5 h-5 ml-2 text-yellow-400 animate-spin-slow" />
         </h2>
       </div>
-      <nav className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+      <nav 
+        className="flex-grow overflow-y-auto overflow-x-hidden
+          [&::-webkit-scrollbar]:w-1.5
+          [&::-webkit-scrollbar]:h-1.5
+          [&::-webkit-scrollbar-track]:bg-transparent
+          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-[#1a1f2b]
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:border
+          [&::-webkit-scrollbar-thumb]:border-[#2a2f3b]
+          hover:[&::-webkit-scrollbar-thumb]:bg-[#2a2f3b]
+          [&::-webkit-scrollbar-corner]:bg-transparent
+          scrollbar-thin
+          scrollbar-track-transparent
+          scrollbar-thumb-[#1a1f2b]"
+      >
         <div className="px-4 pb-6 space-y-2">
           {categories.map((category) => (
             <div key={category.name} className="mb-2">
@@ -197,20 +321,28 @@ const Sidebar: React.FC = () => {
                   </div>
                   <span className="hidden lg:inline">{category.name}</span>
                 </span>
-                <ChevronDown className={`w-5 h-5 hidden lg:block transition-transform duration-300 ${activeCategory === category.name ? 'rotate-180' : ''}`} />
+                <ChevronDown 
+                  className={`w-5 h-5 hidden lg:block transition-transform duration-300 ${
+                    activeCategory === category.name ? 'rotate-180' : ''
+                  }`} 
+                />
               </button>
               {activeCategory === category.name && (
                 <ul className="mt-2 ml-11 space-y-1 hidden lg:block">
-                  {category.subCategories.map((subCategory) => (
-                    <li key={subCategory.name}>
-                      <a
-                        href={subCategory.href}
-                        className="block py-2 px-3 text-sm text-gray-400 hover:text-blue-400 hover:bg-gray-800 rounded transition-colors duration-300"
-                      >
-                        {subCategory.name}
-                      </a>
-                    </li>
-                  ))}
+                  {category.subCategories.map((subCategory) => {
+                    const ToolIcon = toolIcons[subCategory.name] || FileText
+                    return (
+                      <li key={subCategory.name}>
+                        <a
+                          href={subCategory.href}
+                          className="flex items-center py-2 px-3 text-sm text-gray-400 hover:text-blue-400 hover:bg-gray-800 rounded transition-colors duration-300"
+                        >
+                          <ToolIcon className="w-4 h-4 mr-2" />
+                          {subCategory.name}
+                        </a>
+                      </li>
+                    )
+                  })}
                 </ul>
               )}
             </div>
@@ -218,7 +350,7 @@ const Sidebar: React.FC = () => {
         </div>
       </nav>
     </aside>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar

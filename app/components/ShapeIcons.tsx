@@ -84,3 +84,36 @@ export const LeftTriangleIcon: React.FC = () => (
 export const Design2Icon: React.FC = () => (
   <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(-45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000)', backgroundSize: '4px 4px' }} />
 )
+
+// New icons for the added patterns
+export const HexagonIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'linear-gradient(60deg, #000 25%, transparent 25.5%, transparent 75%, #000 75%, #000), linear-gradient(-60deg, #000 25%, transparent 25.5%, transparent 75%, #000 75%, #000)', backgroundSize: '6px 10.39px' }} />
+)
+
+export const ZigzagIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'linear-gradient(135deg, #000 25%, transparent 25%) -2px 0, linear-gradient(225deg, #000 25%, transparent 25%) -2px 0, linear-gradient(315deg, #000 25%, transparent 25%), linear-gradient(45deg, #000 25%, transparent 25%)', backgroundSize: '4px 4px' }} />
+)
+
+export const WaveIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'radial-gradient(circle at 100% 50%, transparent 20%, #000 21%, #000 34%, transparent 35%, transparent), radial-gradient(circle at 0% 50%, transparent 20%, #000 21%, #000 34%, transparent 35%, transparent) 0 -3px', backgroundSize: '4px 6px' }} />
+)
+
+export const CubeIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'linear-gradient(30deg, #000 12%, transparent 12.5%, transparent 87%, #000 87.5%, #000), linear-gradient(150deg, #000 12%, transparent 12.5%, transparent 87%, #000 87.5%, #000), linear-gradient(30deg, #000 12%, transparent 12.5%, transparent 87%, #000 87.5%, #000), linear-gradient(150deg, #000 12%, transparent 12.5%, transparent 87%, #000 87.5%, #000), linear-gradient(60deg, #00000077 25%, transparent 25.5%, transparent 75%, #00000077 75%, #00000077), linear-gradient(60deg, #00000077 25%, transparent 25.5%, transparent 75%, #00000077 75%, #00000077)', backgroundSize: '5px 9px', backgroundPosition: '0 0, 0 0, 2.5px 4.5px, 2.5px 4.5px, 0 0, 2.5px 4.5px' }} />
+)
+
+export const ChevronIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'linear-gradient(135deg, #000 25%, transparent 25%) -2px 0, linear-gradient(225deg, #000 25%, transparent 25%) -2px 0, linear-gradient(315deg, #000 25%, transparent 25%), linear-gradient(45deg, #000 25%, transparent 25%)', backgroundSize: '4px 4px' }} />
+)
+
+export const CircleIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'radial-gradient(#000 20%, transparent 20%), radial-gradient(#000 20%, transparent 20%)', backgroundPosition: '0 0, 2.5px 2.5px', backgroundSize: '5px 5px' }} />
+)
+
+export const StarIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px), radial-gradient(#000 1px, transparent 1px)', backgroundSize: '5px 5px', backgroundPosition: '0 0, 2.5px 2.5px' }} />
+)
+
+export const WeaveIcon: React.FC = () => (
+  <div className="w-5 h-5 bg-gray-300" style={{ backgroundImage: 'linear-gradient(45deg, #000 12%, transparent 0, transparent 88%, #000 0), linear-gradient(135deg, transparent 37%, #fff 0, #fff 63%, transparent 0), linear-gradient(45deg, transparent 37%, #000 0, #000 63%, transparent 0)', backgroundSize: '5px 5px' }} />
+)

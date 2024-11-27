@@ -150,8 +150,14 @@ export default function GradientGeneratorPage() {
                     <div className="space-y-4 ">
                       <div>
                         <div className='mb-2'><Label htmlFor="gradient-type" className="text-white">Gradient Type</Label></div>   
-                        <Select onValueChange={(value: GradientType) => setGradientType(value)} value={gradientType}>
-                          <SelectTrigger id="gradient-type" className="bg-gray-700 text-white border-gray-600">
+                        <Select 
+                          onValueChange={(value: GradientType) => setGradientType(value)} 
+                          value={gradientType}
+                        >
+                          <SelectTrigger 
+                            id="gradient-type" 
+                            className="bg-gray-700 text-white border-gray-600"
+                          >
                             <SelectValue placeholder="Select gradient type" />
                           </SelectTrigger>
                           <SelectContent className="bg-gray-700 text-white border-gray-600">

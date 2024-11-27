@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/Button"
+import Image from 'next/image'
+import Link from 'next/link'
 import { toast } from 'react-hot-toast'
-import { Copy, Download, RefreshCw, BarChart2, Info, Lightbulb, BookOpen } from 'lucide-react'
+import { Copy, Download, RefreshCw, BarChart2, Info, Lightbulb, BookOpen, ZapIcon, Type } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 
 const MAX_CHARS = 5000
@@ -145,31 +147,87 @@ export default function LetterCounter() {
           What is the Letter Counter?
         </h2>
         <p className="text-gray-300 mb-4">
-          The Letter Counter is a useful tool for counting the number of letters, words, and characters in any given text. It's ideal for writers, editors, and anyone who needs to analyze text length or frequency. This tool provides a quick way to review text stats and offers features for copying or downloading the analytics for future reference.
+          The Letter Counter is a powerful text analysis tool designed for writers, editors, students, and anyone who needs to gain insights into their text composition. It goes beyond simple character counting, offering a comprehensive analysis of your text including letter frequency, word count, sentence count, and paragraph count. With its <Link href="#how-to-use" className="text-blue-400 hover:underline">user-friendly interface</Link> and advanced features, it's the perfect companion for content creation, editing, and text analysis tasks.
+        </p>
+        <p className="text-gray-300 mb-4">
+          Whether you're crafting the perfect essay, optimizing your content for readability, or conducting linguistic analysis, our Letter Counter provides you with valuable data at your fingertips. It's like having a personal text analyst right in your browser!
         </p>
 
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+        <div className="my-8">
+          <Image 
+            src="/Images/LetterCounterPreview.png?height=400&width=600" 
+            alt="Screenshot of the Letter Counter interface showing text input area, analysis results, and action buttons" 
+            width={600} 
+            height={400} 
+            className="rounded-lg shadow-lg"
+          />
+        </div>
+
+        <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
-          How to Use the Letter Counter?
+          How to Use the Letter Counter
         </h2>
+        <p className="text-gray-300 mb-4">
+          Using our Letter Counter is straightforward and efficient. Here's a step-by-step guide to get you started:
+        </p>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>Enter or paste your text in the input area.</li>
-          <li>Click the "Show Stats" button to view the letter, word, and character counts.</li>
-          <li>Use the "Clear" option to reset the input and output fields.</li>
-          <li>Click "Copy Analytics" to copy the statistics to your clipboard.</li>
-          <li>Select "Download Analytics" to save the statistics as a file.</li>
+          <li>Enter or paste your text into the input box. You can input up to 5000 characters.</li>
+          <li>As you type or paste, the tool automatically analyzes your text in real-time.</li>
+          <li>View the letter frequency chart below the input box for a visual representation of letter distribution.</li>
+          <li>Click the "Show Stats" button to see a detailed breakdown of word count, sentence count, paragraph count, and the most common letter.</li>
+          <li>Use the "Copy Analysis" button to copy the letter frequency data to your clipboard.</li>
+          <li>Click "Download Analysis" to save a comprehensive JSON file with all analysis data.</li>
+          <li>To start fresh, use the "Clear" button to reset the input and analysis.</li>
         </ol>
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <BarChart2 className="w-6 h-6 mr-2" />
+          Analysis Features
+        </h2>
+        <p className="text-gray-300 mb-4">
+          Our Letter Counter provides a range of analytical features to give you comprehensive insights into your text:
+        </p>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li><strong>Letter Frequency:</strong> See how often each letter appears in your text.</li>
+          <li><strong>Word Count:</strong> Get an accurate count of words in your text.</li>
+          <li><strong>Sentence Count:</strong> Know how many sentences are in your text.</li>
+          <li><strong>Paragraph Count:</strong> Track the number of paragraphs in your content.</li>
+          <li><strong>Most Common Letter:</strong> Identify the letter that appears most frequently.</li>
+          <li><strong>Character Count:</strong> Keep track of your total character count, including spaces.</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <Lightbulb className="w-6 h-6 mr-2" />
-          Features
+          Features That Make Us Stand Out
         </h2>
         <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>Show Stats: Displays the number of letters, words, and characters in the text.</li>
-          <li>Clear: Resets both input and output fields.</li>
-          <li>Download Analytics: Saves the analysis results as a file for later reference.</li>
-          <li>Copy Analytics: Copies the results to the clipboard for easy sharing.</li>
+          <li><ZapIcon className="w-4 h-4 inline-block mr-1" /> <strong>Real-time Analysis:</strong> See results instantly as you type or paste text</li>
+          <li><BarChart2 className="w-4 h-4 inline-block mr-1" /> <strong>Visual Letter Frequency:</strong> Easy-to-read chart of letter distribution</li>
+          <li><Copy className="w-4 h-4 inline-block mr-1" /> <strong>One-click Copying:</strong> Easily copy analysis results to clipboard</li>
+          <li><Download className="w-4 h-4 inline-block mr-1" /> <strong>Downloadable Analysis:</strong> Save comprehensive results as a JSON file</li>
+          <li><RefreshCw className="w-4 h-4 inline-block mr-1" /> <strong>Quick Reset:</strong> Clear function for easy start-over</li>
+          <li><Type className="w-4 h-4 inline-block mr-1" /> <strong>Character Limit Indicator:</strong> Stay within the 5000 character limit with ease</li>
         </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Practical Applications
+        </h2>
+        <p className="text-gray-300 mb-4">
+          The Letter Counter tool can be invaluable in various scenarios:
+        </p>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li><strong>Writing:</strong> Monitor word count for essays, articles, or social media posts</li>
+          <li><strong>Editing:</strong> Identify overused letters or words to improve variety in writing</li>
+          <li><strong>SEO:</strong> Analyze keyword density and content length for optimization</li>
+          <li><strong>Language Learning:</strong> Study letter frequency in different languages</li>
+          <li><strong>Data Analysis:</strong> Gather text statistics for research or reporting</li>
+          <li><strong>Cryptography:</strong> Analyze letter frequency for simple ciphers</li>
+        </ul>
+
+        <p className="text-gray-300 mt-4">
+          Ready to dive deep into your text? Start using our Letter Counter tool now and unlock insights that will elevate your writing, editing, and analysis tasks. Whether you're a professional writer, a student, or just curious about the composition of your text, our tool is here to provide you with accurate, instant, and comprehensive text analysis. Try it out and see the difference it can make in your work!
+        </p>
       </div>
     </ToolLayout>
   )

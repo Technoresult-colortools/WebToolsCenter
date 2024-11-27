@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/Button";
+import Image from 'next/image'
+import Link from 'next/link'
 import { Toaster, toast } from 'react-hot-toast';
-import { Copy, Download, RefreshCw, Settings, Shuffle, Info, Lightbulb, BookOpen } from 'lucide-react';
+import { Copy, Download, RefreshCw, Settings, Shuffle, Info, Lightbulb, BookOpen, ZapIcon, Type } from 'lucide-react';
 import ToolLayout from '@/components/ToolLayout'
 
 const loremIpsumWords = [
@@ -172,33 +174,87 @@ export default function LoremIpsumGenerator() {
               What is the Lorem Ipsum Generator?
             </h2>
             <p className="text-gray-300 mb-4">
-              The Lorem Ipsum Generator is a useful tool for generating placeholder text. It's ideal for designers, developers, and anyone who needs dummy text for layout design or content testing. This tool makes it simple to generate Lorem Ipsum text and offers additional features like shuffling words, copying, and downloading the text for further use.
+              The Lorem Ipsum Generator is a powerful tool designed for designers, developers, and content creators who need placeholder text for their projects. It goes beyond simple text generation, offering customizable options and additional features to make your workflow smoother. With its <Link href="#how-to-use" className="text-blue-400 hover:underline">user-friendly interface</Link> and advanced functionality, it's the perfect companion for layout design, content testing, and mockup creation.
+            </p>
+            <p className="text-gray-300 mb-4">
+              Whether you're working on a website prototype, designing a brochure, or testing a new font, our Lorem Ipsum Generator provides you with the flexibility and control you need. It's like having a personal content filler right in your browser, tailored to your specific requirements!
             </p>
 
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <div className="my-8">
+              <Image 
+                src="/Images/LoremIpsumPreview.png?height=400&width=600" 
+                alt="Screenshot of the Lorem Ipsum Generator interface showing text generation options and generated Lorem Ipsum text" 
+                width={600} 
+                height={400} 
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+
+            <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
               <BookOpen className="w-6 h-6 mr-2" />
-              How to Use the Lorem Ipsum Generator?
+              How to Use the Lorem Ipsum Generator
             </h2>
+            <p className="text-gray-300 mb-4">
+              Using our Lorem Ipsum Generator is straightforward and efficient. Here's a step-by-step guide to get you started:
+            </p>
             <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Enter the number of paragraphs, sentences, or words you need.</li>
-              <li>Click the "Generate" button to create Lorem Ipsum text.</li>
-              <li>Use the "Shuffle Words" button to rearrange the text randomly.</li>
-              <li>Click "Copy" to copy the generated text to your clipboard.</li>
-              <li>Select "Download" to save the generated text as a .txt file.</li>
-              <li>Click "Clear" to reset the input fields and output area.</li>
+              <li>Set the number of paragraphs you want to generate using the "Number of Paragraphs" input.</li>
+              <li>Adjust the "Words per Paragraph" to control the length of each paragraph.</li>
+              <li>Choose whether to start with the classic "Lorem ipsum" phrase by toggling the checkbox.</li>
+              <li>Decide if you want to include HTML paragraph tags in the output.</li>
+              <li>Click the "Generate" button to create your Lorem Ipsum text.</li>
+              <li>Use the "Copy" button to copy the generated text to your clipboard.</li>
+              <li>Click "Download" to save the text as a .txt file for offline use.</li>
+              <li>Use "Shuffle Words" to randomize the word order for more variety.</li>
+              <li>Click "Clear" to reset the generator and start over.</li>
             </ol>
 
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Settings className="w-6 h-6 mr-2" />
+              Customization Options
+            </h2>
+            <p className="text-gray-300 mb-4">
+              Our Lorem Ipsum Generator offers several customization options to tailor the output to your needs:
+            </p>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li><strong>Number of Paragraphs:</strong> Control the overall length of your Lorem Ipsum text.</li>
+              <li><strong>Words per Paragraph:</strong> Adjust the density of each paragraph.</li>
+              <li><strong>Start with "Lorem ipsum":</strong> Choose whether to begin with the classic Lorem Ipsum opening.</li>
+              <li><strong>Include HTML Tags:</strong> Wrap each paragraph in {'<p>'} tags for easy integration into HTML documents.</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
               <Lightbulb className="w-6 h-6 mr-2" />
-              Features
+              Features That Make Us Stand Out
             </h2>
             <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Generate: Creates placeholder Lorem Ipsum text based on your input specifications.</li>
-              <li>Shuffle Words: Randomly rearranges the words in the generated text.</li>
-              <li>Clear: Resets both input and output fields to their initial state.</li>
-              <li>Copy: Copies the generated text to the clipboard for easy use.</li>
-              <li>Download: Saves the generated text as a .txt file for offline use.</li>
+              <li><ZapIcon className="w-4 h-4 inline-block mr-1" /> <strong>Instant Generation:</strong> Create Lorem Ipsum text with a single click</li>
+              <li><Shuffle className="w-4 h-4 inline-block mr-1" /> <strong>Word Shuffling:</strong> Randomize word order for unique outputs</li>
+              <li><Copy className="w-4 h-4 inline-block mr-1" /> <strong>One-Click Copying:</strong> Easily copy generated text to clipboard</li>
+              <li><Download className="w-4 h-4 inline-block mr-1" /> <strong>Download Option:</strong> Save your Lorem Ipsum text as a file</li>
+              <li><RefreshCw className="w-4 h-4 inline-block mr-1" /> <strong>Quick Reset:</strong> Clear function for easy start-over</li>
+              <li><Type className="w-4 h-4 inline-block mr-1" /> <strong>HTML Tag Integration:</strong> Option to include HTML paragraph tags</li>
             </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Practical Applications
+            </h2>
+            <p className="text-gray-300 mb-4">
+              The Lorem Ipsum Generator is a versatile tool with numerous applications:
+            </p>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li><strong>Web Design:</strong> Fill in layouts and templates with realistic-looking content</li>
+              <li><strong>Graphic Design:</strong> Create mockups for brochures, posters, and other visual materials</li>
+              <li><strong>UI/UX Design:</strong> Test user interfaces with various content lengths</li>
+              <li><strong>Content Planning:</strong> Visualize content distribution in your layouts</li>
+              <li><strong>Typography:</strong> Test different fonts and text styles with consistent content</li>
+              <li><strong>Responsive Design:</strong> Check how your design adapts to different amounts of text</li>
+            </ul>
+
+            <p className="text-gray-300 mt-4">
+              Ready to streamline your design process? Start using our Lorem Ipsum Generator now and experience the convenience of customizable placeholder text at your fingertips. Whether you're a seasoned designer or just starting out, our tool is here to make your content creation and layout design tasks easier and more efficient. Give it a try and see how it can enhance your workflow!
+            </p>
           </div>
           </ToolLayout>  
   );
