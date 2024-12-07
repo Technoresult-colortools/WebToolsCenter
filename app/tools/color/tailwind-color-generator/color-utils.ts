@@ -45,7 +45,8 @@ function hexToRgb(hex: string): [number, number, number] {
   
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h = 0, s, l = (max + min) / 2;  // Initialize `h` to 0
+    let h = 0, s
+    const l = (max + min) / 2;  // Initialize `h` to 0
   
     if (max === min) {
       s = 0;

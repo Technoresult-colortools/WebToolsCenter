@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Copy, RefreshCw, Download, Shuffle, Info, BookOpen, Lightbulb, Palette, Eye, Code, ImageIcon, Grid, Check } from 'lucide-react'
+import { Copy, RefreshCw, Download, Shuffle, Info, BookOpen, Lightbulb, Palette, Eye, Code, ImageIcon, Check } from 'lucide-react'
 import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
@@ -33,13 +33,14 @@ const ColorUtils = {
   },
 
   hexToHsl: (hex: string): string => {
-    let r = parseInt(hex.slice(1, 3), 16) / 255
-    let g = parseInt(hex.slice(3, 5), 16) / 255
-    let b = parseInt(hex.slice(5, 7), 16) / 255
+    const r = parseInt(hex.slice(1, 3), 16) / 255
+    const g = parseInt(hex.slice(3, 5), 16) / 255
+    const b = parseInt(hex.slice(5, 7), 16) / 255
   
     const max = Math.max(r, g, b)
     const min = Math.min(r, g, b)
-    let h = 0, s = 0, l = (max + min) / 2
+    let h = 0, s = 0
+    const l = (max + min) / 2
   
     if (max !== min) {
       const d = max - min

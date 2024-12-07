@@ -34,7 +34,8 @@ const colorConversions = {
   rgbToHsv: (r: number, g: number, b: number): [number, number, number] => {
     r /= 255; g /= 255; b /= 255
     const max = Math.max(r, g, b), min = Math.min(r, g, b)
-    let h = 0, s = max === 0 ? 0 : (max - min) / max, v = max
+    let h = 0
+    const s = max === 0 ? 0 : (max - min) / max, v = max
     if (max !== min) {
       const d = max - min
       switch (max) {
@@ -49,7 +50,8 @@ const colorConversions = {
   rgbToHsl: (r: number, g: number, b: number): [number, number, number] => {
     r /= 255; g /= 255; b /= 255;
     const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h = 0, s = 0, l = (max + min) / 2;
+    let h = 0, s = 0 
+    const l = (max + min) / 2;
   
     if (max !== min) {
       const d = max - min;
@@ -69,7 +71,7 @@ const colorConversions = {
     let c = 1 - (r / 255)
     let m = 1 - (g / 255)
     let y = 1 - (b / 255)
-    let k = Math.min(c, Math.min(m, y))
+    const k = Math.min(c, Math.min(m, y))
     c = (c - k) / (1 - k)
     m = (m - k) / (1 - k)
     y = (y - k) / (1 - k)

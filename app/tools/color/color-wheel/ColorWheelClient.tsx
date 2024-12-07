@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
-import { Copy, Download, Move, Info, Sliders, Palette, Eye, BookOpen, Lightbulb } from 'lucide-react'
+import { Copy, Download,  Info,  Palette,  BookOpen, Lightbulb } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import Slider from "@/components/ui/Slider"
 import { toast, Toaster } from 'react-hot-toast'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/Card"
+import { Card, CardContent, CardHeader, CardTitle} from "@/components/ui/Card"
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
 
@@ -55,7 +55,8 @@ function hexToHSL(hex: string): { h: number, s: number, l: number } {
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
   
-  let h = 0, s = 0, l = (max + min) / 2
+  let h = 0, s = 0
+  const l = (max + min) / 2
 
   if (max !== min) {
     const d = max - min

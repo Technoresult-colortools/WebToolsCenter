@@ -10,7 +10,7 @@ import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw, Download, Info, Lightbulb, BookOpen, Maximize2, X, Palette, PaletteIcon as ColorPalette, Shuffle, Layers } from 'lucide-react'
+import { Copy, RefreshCw, Download, Info, Lightbulb, BookOpen, Maximize2, X, Palette, PaletteIcon as Shuffle } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 import shapesData from './shapes.json'
 import * as ShapeIcons from '@/components/ShapeIcons'
@@ -65,27 +65,33 @@ export default function BackgroundPatternGenerator() {
   }, [patternType, color1, color2, color3, color4, size, opacity, animate, animationSpeed, rotationAngle, blendMode, layers])
 
   const generateCSS = () => {
-    let generatedCSS = ''
+    let generatedCSS = '';
     for (let i = 0; i < layers; i++) {
-      let layerCSS = (shapesData as any)[patternType].css
+      // Safely access the pattern type's CSS
+      const patternCSS = shapesData[patternType]?.css || '';
+  
+      let layerCSS = patternCSS
         .replace(/#47d3ff/g, i % 2 === 0 ? color1 : color3)
         .replace(/#474bff/g, i % 2 === 0 ? color2 : color4)
         .replace(/32px/g, `${size}px`)
         .replace(/64px/g, `${size * 2}px`)
-        .replace(/3em/g, `${size}px`)
-      
+        .replace(/3em/g, `${size}px`);
+  
+      // Add additional properties
       layerCSS += `
         opacity: ${opacity};
-        transform: rotate(${rotationAngle + (i * 45)}deg);
+        transform: rotate(${rotationAngle + i * 45}deg);
         mix-blend-mode: ${blendMode};
-      `
-
+      `;
+  
+      // Add animation if needed
       if (animate) {
         layerCSS += `
           animation: moveBackground${i} ${animationSpeed}s linear infinite;
-        `
+        `;
       }
-
+  
+      // Append the generated layer CSS to the result
       generatedCSS += `
         &::before {
           content: '';
@@ -97,11 +103,13 @@ export default function BackgroundPatternGenerator() {
           z-index: ${i};
           ${layerCSS}
         }
-      `
+      `;
     }
-    setCSS(generatedCSS)
-  }
-
+  
+    // Set the generated CSS
+    setCSS(generatedCSS);
+  };
+  
   const handleCopy = () => {
     const fullCSS = `.background-pattern {
   position: relative;
@@ -263,7 +271,9 @@ ${Array.from({ length: layers }, (_, i) => `
                           <SelectValue placeholder="Select pattern type" />
                         </SelectTrigger>
                         <SelectContent className="bg-gray-700 text-white border-gray-600 h-48 overflow-y-auto">
-                          {Object.entries(shapesData).map(([value, data]: [string, any]) => (
+                          
+                          {Object.entries(shapesData).map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          ([value, data]: [string, any]) => (
                             <SelectItem key={value} value={value}>
                               <div className="flex items-center">
                                 {React.createElement(ShapeIcons[data.icon as keyof typeof ShapeIcons])}

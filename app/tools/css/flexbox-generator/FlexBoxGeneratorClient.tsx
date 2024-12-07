@@ -233,7 +233,8 @@ export default function FlexboxGenerator() {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    <Select value={setting.value} onValueChange={(value: any) => setting.setter(value)}>
+                    <Select value={setting.value} onValueChange={// eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (value: any) => setting.setter(value)}>
                       <SelectTrigger id={setting.label} className="bg-gray-700 text-white border-gray-600">
                         <SelectValue placeholder={`Select ${setting.label.toLowerCase()}`} />
                       </SelectTrigger>

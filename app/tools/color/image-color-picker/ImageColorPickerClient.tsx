@@ -51,7 +51,7 @@ export default function ImageColorPicker() {
 
       setIsImageEyeDropperActive(true)
 
-      // @ts-ignore - EyeDropper API might not be in TypeScript definitions
+      // @ts-expect-error - EyeDropper API might not be in TypeScript definitions
       const eyeDropper = new EyeDropper()
       const result = await eyeDropper.open()
       

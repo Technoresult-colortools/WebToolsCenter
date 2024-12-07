@@ -1,6 +1,6 @@
 import React from 'react'
 import { LucideProps } from 'lucide-react'
-import { CheckSquare, Diamond, Grid, Circle, Plus, AlignJustify, AlignLeft, ArrowDownRight, AlignVerticalJustifyCenter, AlignHorizontalJustifyCenter, Hash, Hexagon, Waves, Box, ChevronRight, Star, Triangle, Octagon, Asterisk } from 'lucide-react'
+import { CheckSquare, Diamond, Grid, Circle, Plus, AlignJustify, AlignLeft, ArrowDownRight, AlignVerticalJustifyCenter, AlignHorizontalJustifyCenter, Hash, Hexagon, Waves, Box, ChevronRight, Star, Triangle} from 'lucide-react'
 
 export const CheckIcon = (props: LucideProps) => <CheckSquare {...props} />
 export const DiamondIcon = (props: LucideProps) => <Diamond {...props} />
