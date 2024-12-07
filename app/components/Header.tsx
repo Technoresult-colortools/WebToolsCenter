@@ -82,6 +82,7 @@ const allTools: Tool[] = [
   { name: 'Color Wheel', category: 'Color Tools', path: '/tools/color/color-wheel' },
   { name: 'Gradient Generator', category: 'Color Tools', path: '/tools/color/color-gradient-generator' },
   { name: 'Tailwind CSS Color Palette', category: 'Color Tools', path: '/tools/color/tailwind-color-generator' },
+  { name: 'Color Converter', category: 'Color Tools', path: '/tools/color/color-converter'},
   
   //Coding Tools
   { name: 'Code to Image Converter', category: 'Coding Tools', path: '/tools/coding/code-to-image-converter' },

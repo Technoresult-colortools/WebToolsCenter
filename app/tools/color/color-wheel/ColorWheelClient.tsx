@@ -1,24 +1,26 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
-import { Copy, Download, RefreshCw, Info, BookOpen, Lightbulb, AlertCircle } from 'lucide-react'
-import Slider from "@/components/ui/Slider"
-import Input from "@/components/ui/Input"
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
+import { Copy, Download, Move, Info, Sliders, Palette, Eye, BookOpen, Lightbulb } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import Slider from "@/components/ui/Slider"
+import { toast, Toaster } from 'react-hot-toast'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/Card"
 import ToolLayout from '@/components/ToolLayout'
+import Image from 'next/image'
 
+// Color Harmonies Configuration
 const colorHarmonies = [
-  { name: 'Complementary', angle: 180 },
-  { name: 'Analogous', angle: 30 },
-  { name: 'Triadic', angle: 120 },
-  { name: 'Split-Complementary', angle: 150 },
-  { name: 'Square', angle: 90 },
-  { name: 'Tetradic', angle: 60 },
+  { name: 'Complementary', angles: [180] },
+  { name: 'Analogous', angles: [30, -30] },
+  { name: 'Triadic', angles: [120, 240] },
+  { name: 'Split-Complementary', angles: [150, 210] },
+  { name: 'Square', angles: [90, 180, 270] },
+  { name: 'Tetradic', angles: [60, 180, 240] },
+  { name: 'Monochromatic', angles: [0], saturationSteps: [25, 50, 75] }
 ]
 
+// Utility Functions
 function hslToHex(h: number, s: number, l: number): string {
   l /= 100
   const a = s * Math.min(l, 1 - l) / 100
@@ -30,436 +32,454 @@ function hslToHex(h: number, s: number, l: number): string {
   return `#${f(0)}${f(8)}${f(4)}`
 }
 
-function hexToHsl(hex: string): [number, number, number] {
-  const r = parseInt(hex.slice(1, 3), 16) / 255
-  const g = parseInt(hex.slice(3, 5), 16) / 255
-  const b = parseInt(hex.slice(5, 7), 16) / 255
+function hexToRGB(hex: string): { r: number, g: number, b: number } {
+  hex = hex.replace(/^#/, '')
+  
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('')
+  }
+
+  return {
+    r: parseInt(hex.slice(0, 2), 16),
+    g: parseInt(hex.slice(2, 4), 16),
+    b: parseInt(hex.slice(4, 6), 16)
+  }
+}
+
+function hexToHSL(hex: string): { h: number, s: number, l: number } {
+  hex = hex.replace(/^#/, '')
+  const r = parseInt(hex.slice(0, 2), 16) / 255
+  const g = parseInt(hex.slice(2, 4), 16) / 255
+  const b = parseInt(hex.slice(4, 6), 16) / 255
 
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
-  let h = 0, s = 0
-  const l = (max + min) / 2
+  
+  let h = 0, s = 0, l = (max + min) / 2
 
   if (max !== min) {
     const d = max - min
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    
     switch (max) {
       case r: h = (g - b) / d + (g < b ? 6 : 0); break
       case g: h = (b - r) / d + 2; break
       case b: h = (r - g) / d + 4; break
     }
-    h /= 6
+    h *= 60
   }
 
-  return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)]
+  return {
+    h: h < 0 ? h + 360 : h,
+    s: s * 100,
+    l: l * 100
+  }
 }
 
-function generateHarmony(baseColor: string, harmony: { name: string; angle: number }): string[] {
-  const [h, s, l] = hexToHsl(baseColor)
-  const colors = [baseColor]
-
-  switch (harmony.name) {
-    case 'Complementary':
-      colors.push(hslToHex((h + 180) % 360, s, l))
-      break
-    case 'Analogous':
-      colors.push(hslToHex((h + 30) % 360, s, l))
-      colors.push(hslToHex((h - 30 + 360) % 360, s, l))
-      break
-    case 'Triadic':
-      colors.push(hslToHex((h + 120) % 360, s, l))
-      colors.push(hslToHex((h + 240) % 360, s, l))
-      break
-    case 'Split-Complementary':
-      colors.push(hslToHex((h + 150) % 360, s, l))
-      colors.push(hslToHex((h + 210) % 360, s, l))
-      break
-    case 'Square':
-      colors.push(hslToHex((h + 90) % 360, s, l))
-      colors.push(hslToHex((h + 180) % 360, s, l))
-      colors.push(hslToHex((h + 270) % 360, s, l))
-      break
-    case 'Tetradic':
-      colors.push(hslToHex((h + 60) % 360, s, l))
-      colors.push(hslToHex((h + 180) % 360, s, l))
-      colors.push(hslToHex((h + 240) % 360, s, l))
-      break
+function getColorFromPosition(x: number, y: number, width: number, height: number): { hue: number, saturation: number } {
+  const centerX = width / 2
+  const centerY = height / 2
+  const dx = x - centerX
+  const dy = y - centerY
+  
+  let angle = Math.atan2(dy, dx) * (180 / Math.PI)
+  if (angle < 0) angle += 360
+  
+  const maxRadius = Math.min(width, height) / 2
+  const distance = Math.sqrt(dx * dx + dy * dy)
+  const saturation = Math.min(distance / maxRadius * 100, 100)
+  
+  return {
+    hue: angle,
+    saturation: saturation
   }
+}
 
-  return colors
+function getContrastColor(hexColor: string): string {
+  const { r, g, b } = hexToRGB(hexColor)
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+  return luminance > 0.5 ? '#000000' : '#ffffff'
 }
 
 export default function ColorWheel() {
-  const [baseColor, setBaseColor] = useState('#693EFE')
+  // State Management
   const [selectedHarmony, setSelectedHarmony] = useState(colorHarmonies[0])
-  const [harmonyColors, setHarmonyColors] = useState<string[]>([])
-  const [hue, setHue] = useState(0)
-  const [saturation, setSaturation] = useState(100)
+  const [baseColor, setBaseColor] = useState('#ff0000')
+  const [customColor, setCustomColor] = useState('#ff0000')
+  const [isDragging, setIsDragging] = useState(false)
+  const [selectedDot, setSelectedDot] = useState(0)
   const [lightness, setLightness] = useState(50)
-  const [error, setError] = useState<string>('')
   const wheelRef = useRef<HTMLDivElement>(null)
-  const isDragging = useRef(false)
 
-  useEffect(() => {
-    setHarmonyColors(generateHarmony(baseColor, selectedHarmony))
-  }, [baseColor, selectedHarmony])
+  // Memoized color calculations
+  const { h: hue, s: saturation } = useMemo(() => hexToHSL(baseColor), [baseColor])
 
-  useEffect(() => {
-    setBaseColor(hslToHex(hue, saturation, lightness))
-  }, [hue, saturation, lightness])
-
-  const handleColorSelection = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-    if (wheelRef.current) {
-      const rect = wheelRef.current.getBoundingClientRect()
-      const centerX = rect.width / 2
-      const centerY = rect.height / 2
-
-      let clientX, clientY
-      if ('touches' in e) {
-        clientX = e.touches[0].clientX
-        clientY = e.touches[0].clientY
-      } else {
-        clientX = e.clientX
-        clientY = e.clientY
-      }
-
-      const x = clientX - rect.left - centerX
-      const y = clientY - rect.top - centerY
-
-      const angle = Math.atan2(y, x)
-      const distance = Math.sqrt(x * x + y * y)
-      const radius = rect.width / 2
-
-      const newHue = ((angle + Math.PI) / (2 * Math.PI)) * 360
-      const newSaturation = Math.min((distance / radius) * 100, 100)
-
-      setHue(newHue)
-      setSaturation(newSaturation)
-    }
-  }
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    isDragging.current = true
-    handleColorSelection(e)
-  }
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging.current) {
-      handleColorSelection(e)
-    }
-  }
-
-  const handleMouseUp = () => {
-    isDragging.current = false
-  }
-
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    handleColorSelection(e)
-  }
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    handleColorSelection(e)
-  }
-
-  const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = e.target.value
-    if (/^#[0-9A-F]{6}$/i.test(newColor)) {
-      setBaseColor(newColor)
-      const [h, s, l] = hexToHsl(newColor)
-      setHue(h)
-      setSaturation(s)
-      setLightness(l)
-      setError('')
+  const harmonyColors = useMemo(() => {
+    if (selectedHarmony.name === 'Monochromatic') {
+      return [
+        hslToHex(hue, saturation, lightness),
+        ...selectedHarmony.saturationSteps!.map(step => hslToHex(hue, step, lightness))
+      ]
     } else {
-      setError('Please enter a valid hex color code.')
+      return [
+        hslToHex(hue, saturation, lightness),
+        ...selectedHarmony.angles.map(angle => 
+          hslToHex((hue + angle + 360) % 360, saturation, lightness)
+        )
+      ]
     }
+  }, [selectedHarmony, hue, saturation, lightness])
+
+  // Event Handlers
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!wheelRef.current) return
+
+    const rect = wheelRef.current.getBoundingClientRect()
+    const { hue: newHue, saturation: newSaturation } = getColorFromPosition(
+      e.clientX - rect.left,
+      e.clientY - rect.top,
+      rect.width,
+      rect.height
+    )
+    
+    const newColor = hslToHex(newHue, newSaturation, lightness)
+    setBaseColor(newColor)
+    setCustomColor(newColor)
+    setIsDragging(true)
+    setSelectedDot(0)
+  }, [lightness])
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isDragging && wheelRef.current) {
+      const rect = wheelRef.current.getBoundingClientRect()
+      const { hue: newHue, saturation: newSaturation } = getColorFromPosition(
+        e.clientX - rect.left,
+        e.clientY - rect.top,
+        rect.width,
+        rect.height
+      )
+      
+      const newColor = hslToHex(newHue, newSaturation, lightness)
+      setBaseColor(newColor)
+      setCustomColor(newColor)
+    }
+  }, [isDragging, lightness])
+
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    if (!wheelRef.current) return
+    const touch = e.touches[0]
+    const rect = wheelRef.current.getBoundingClientRect()
+    const { hue: newHue, saturation: newSaturation } = getColorFromPosition(
+      touch.clientX - rect.left,
+      touch.clientY - rect.top,
+      rect.width,
+      rect.height
+    )
+    
+    const newColor = hslToHex(newHue, newSaturation, lightness)
+    setBaseColor(newColor)
+    setCustomColor(newColor)
+    setIsDragging(true)
+    setSelectedDot(0)
+  }, [lightness])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    if (isDragging && wheelRef.current) {
+      const touch = e.touches[0]
+      const rect = wheelRef.current.getBoundingClientRect()
+      const { hue: newHue, saturation: newSaturation } = getColorFromPosition(
+        touch.clientX - rect.left,
+        touch.clientY - rect.top,
+        rect.width,
+        rect.height
+      )
+      
+      const newColor = hslToHex(newHue, newSaturation, lightness)
+      setBaseColor(newColor)
+      setCustomColor(newColor)
+    }
+  }, [isDragging, lightness])
+
+  // Mouse and Touch Event Listeners
+  useEffect(() => {
+    const handleMouseMoveWrapper = (e: MouseEvent) => handleMouseMove(e)
+    const handleMouseUp = () => setIsDragging(false)
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMoveWrapper)
+      window.addEventListener('mouseup', handleMouseUp)
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMoveWrapper)
+        window.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDragging, handleMouseMove])
+
+  // Event Handlers
+  const handleDotClick = (index: number) => {
+    setBaseColor(harmonyColors[index])
+    setCustomColor(harmonyColors[index])
+    setSelectedDot(index)
   }
 
   const handleCopyColor = (color: string) => {
     navigator.clipboard.writeText(color)
-    toast.success(`Copied ${color} to clipboard`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    })
+    toast.success(`Copied ${color} to clipboard`)
   }
 
   const handleDownloadPalette = () => {
-    const paletteText = harmonyColors.join('\n')
-    const blob = new Blob([paletteText], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'color_harmony_palette.txt'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-    toast.success('Palette downloaded successfully')
-  }
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-  const generateRandomColor = () => {
-    const randomHue = Math.floor(Math.random() * 360)
-    const randomSaturation = Math.floor(Math.random() * 101)
-    const randomLightness = Math.floor(Math.random() * 101)
-    setHue(randomHue)
-    setSaturation(randomSaturation)
-    setLightness(randomLightness)
+    canvas.width = harmonyColors.length * 200
+    canvas.height = 200
+
+    harmonyColors.forEach((color, index) => {
+      ctx.fillStyle = color
+      ctx.fillRect(index * 200, 0, 200, 200)
+    })
+
+    const link = document.createElement('a')
+    link.download = 'color-palette.png'
+    link.href = canvas.toDataURL()
+    link.click()
   }
 
   return (
     <ToolLayout
-      title="Interactive Color Wheel"
-      description="Explore color harmonies, generate palettes, and visualize color relationships with our advanced color wheel tool"
+      title="Color Wheel"
+      description="Explore color theory and generate harmonious palettes with our advanced color wheel tool"
     >
-          <div className="bg-gray-800 rounded-xl shadow-lg p-8 mb-8 max-w-4xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="flex-1">
-                <h2 className="text-xl font-semibold text-white mb-4">Color Wheel</h2>
-                <div 
-                  ref={wheelRef}
-                  className="relative w-64 h-64 md:w-96 md:h-96 mx-auto cursor-crosshair"
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseUp}
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleMouseUp}
+      <Toaster position="top-right" />
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Color Wheel Section */}
+          <Card className="bg-gray-800 rounded-2xl shadow-2xl">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+                Interactive Color Wheel
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-6">
+              {/* Custom Color Input */}
+              <div className="flex items-center space-x-4 mb-4">
+                <label className="text-sm font-medium text-gray-300">
+                  Custom Color:
+                </label>
+                <input 
+                  type="color" 
+                  value={customColor}
+                  onChange={(e) => {
+                    const newColor = e.target.value
+                    setCustomColor(newColor)
+                    setBaseColor(newColor)
+                  }}
+                  className="w-16 h-10 bg-transparent cursor-pointer"
+                />
+              </div>
+
+              {/* Color Wheel */}
+              <div 
+                ref={wheelRef}
+                className="relative w-full aspect-square max-w-[500px] mx-auto touch-none select-none"
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={() => setIsDragging(false)}
+              >
+                {/* Color Wheel Visualization */}
+                <div className="absolute inset-0 rounded-full overflow-hidden">
+                  <div
+                    className="w-full h-full"
+                    style={{
+                      background: `
+                        radial-gradient(
+                          circle at center, 
+                          transparent 0%, 
+                          rgba(0,0,0,0.2) 80%, 
+                          rgba(0,0,0,0.4) 100%
+                        ),
+                        conic-gradient(
+                          from 90deg,
+                          hsl(0, 100%, ${lightness}%),
+                          hsl(60, 100%, ${lightness}%),
+                          hsl(120, 100%, ${lightness}%),
+                          hsl(180, 100%, ${lightness}%),
+                          hsl(240, 100%, ${lightness}%),
+                          hsl(300, 100%, ${lightness}%),
+                          hsl(360, 100%, ${lightness}%)
+                        )`
+                    }}
+                  />
+                </div>
+                
+                {/* Color Dots */}
+                {harmonyColors.map((color, index) => {
+                  const { h, s } = hexToHSL(color)
+                  const dotAngle = (h) * (Math.PI / 180)
+                  const dotRadius = (s / 100) * (Math.min(wheelRef.current?.offsetWidth || 0, wheelRef.current?.offsetHeight || 0) / 2 - 20)
+                  const x = Math.cos(dotAngle) * dotRadius + (wheelRef.current?.offsetWidth || 0) / 2
+                  const y = Math.sin(dotAngle) * dotRadius + (wheelRef.current?.offsetHeight || 0) / 2
+
+                  return (
+                    <div
+                      key={index}
+                      className={`absolute transform -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/50 shadow-lg transition-all duration-200 cursor-pointer 
+                        ${index === selectedDot ? 'w-10 h-10 z-20 scale-110' : 'w-7 h-7 z-10'}`}
+                      style={{
+                        backgroundColor: color,
+                        left: `${x}px`,
+                        top: `${y}px`,
+                      }}
+                      onClick={() => handleDotClick(index)}
+                    />
+                  )
+                })}
+              </div>
+
+              {/* Lightness Slider */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">Lightness:</label>
+                <Slider
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={lightness}
+                  onChange={(value) => setLightness(value)}
+                  className="w-full"
+                />
+              </div>
+
+              {/* Color Harmony Selector */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">Color Harmony:</label>
+                <select
+                  value={selectedHarmony.name}
+                  onChange={(e) => setSelectedHarmony(colorHarmonies.find(h => h.name === e.target.value) || colorHarmonies[0])}
+                  className="w-full p-2 rounded bg-gray-700 text-white"
                 >
-                  <div className="absolute inset-0 rounded-full overflow-hidden">
-                    <div
-                      className="w-full h-full"
-                      style={{
-                        background: `conic-gradient(
-                          hsl(0, 100%, 50%),
-                          hsl(60, 100%, 50%),
-                          hsl(120, 100%, 50%),
-                          hsl(180, 100%, 50%),
-                          hsl(240, 100%, 50%),
-                          hsl(300, 100%, 50%),
-                          hsl(360, 100%, 50%)
-                        )`,
-                      }}
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background: 'radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)',
-                      }}
-                    />
-                  </div>
-                  {harmonyColors.map((color, index) => {
-                    const [h, s] = hexToHsl(color)
-                    const angle = (h * Math.PI) / 180
-                    const distance = (s / 100) * 48
-                    const x = Math.cos(angle) * distance + 50
-                    const y = Math.sin(angle) * distance + 50
-                    return (
-                      <div
-                        key={index}
-                        className={`absolute w-6 h-6 rounded-full border-2 transform -translate-x-1/2 -translate-y-1/2 ${index === 0 ? 'cursor-move' : ''}`}
-                        style={{
-                          backgroundColor: color,
-                          borderColor: index === 0 ? 'white' : 'rgba(255,255,255,0.5)',
-                          top: `${y}%`,
-                          left: `${x}%`,
-                          zIndex: index === 0 ? 10 : 1,
-                        }}
-                      />
-                    )
-                  })}
-                </div>
+                  {colorHarmonies.map((harmony) => (
+                    <option key={harmony.name} value={harmony.name}>
+                      {harmony.name}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="flex-1">
-                <h2 className="text-xl font-semibold text-white mb-4">Color Controls</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="hue-slider" className="block text-sm font-medium text-gray-300 mb-1">
-                      Hue: {Math.round(hue)}°
-                    </label>
-                    <Slider
-                      id="hue-slider"
-                      min={0}
-                      max={360}
-                      step={1}
-                      value={hue}
-                      onChange={(value) => setHue(value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="saturation-slider" className="block text-sm font-medium text-gray-300 mb-1">
-                      Saturation: {Math.round(saturation)}%
-                    </label>
-                    <Slider
-                      
-                      id="saturation-slider"
-                      min={0}
-                      max={100}
-                      step={1}
-                      value={saturation}
-                      onChange={(value) => setSaturation(value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lightness-slider" className="block text-sm font-medium text-gray-300 mb-1">
-                      Lightness: {Math.round(lightness)}%
-                    </label>
-                    <Slider
-                      id="lightness-slider"
-                      min={0}
-                      max={100}
-                      step={1}
-                      value={lightness}
-                      onChange={(value) => setLightness(value)}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="hex-input" className="block text-sm font-medium text-gray-300 mb-1">
-                      Hex Color
-                    </label>
-                    <div className="flex items-center">
-                      <div 
-                        className="w-10 h-10 rounded-l-md border-r border-gray-600"
-                        style={{ backgroundColor: baseColor }}
-                      />
-                      <Input
-                        id="hex-input"
-                        type="text"
-                        value={baseColor}
-                        onChange={handleHexChange}
-                        className="rounded-l-none bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
-                  </div>
-                  <Button onClick={generateRandomColor} className="w-full">
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Random Color
-                  </Button>
-                </div>
-              </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            {error && (
-              <Alert variant="destructive" className="mt-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold text-white mb-4">Color Harmony</h2>
-              <div className="flex flex-wrap gap-4 mb-4">
-                {colorHarmonies.map((harmony) => (
+          {/* Color Palette Section */}
+          <Card className="bg-gray-800 rounded-2xl shadow-2xl">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+                Color Palette
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-6">
+              {harmonyColors.map((color, index) => (
+                <div key={index} className="flex items-center justify-between p-4 rounded-lg" style={{ backgroundColor: color }}>
+                  <span className="font-medium" style={{ color: getContrastColor(color) }}>
+                    {color.toUpperCase()}
+                  </span>
                   <Button
-                    key={harmony.name}
-                    onClick={() => setSelectedHarmony(harmony)}
-                    variant={selectedHarmony.name === harmony.name ? "default" : "secondary"}
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => handleCopyColor(color)}
                   >
-                    {harmony.name}
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy
                   </Button>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-4">
-                {harmonyColors.map((color, index) => (
-                  <div key={index} className="flex-1 min-w-[100px]">
-                    <div
-                      className="w-full h-20 rounded-lg mb-2 relative group"
-                      style={{ backgroundColor: color }}
-                    >
-                      <Button
-                        onClick={() => handleCopyColor(color)}
-                        className="absolute top-1 right-1 bg-white/10 hover:bg-white/20 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                        size="sm"
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <p className="text-white text-center">{color}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-center">
-              <Button onClick={handleDownloadPalette} className="bg-purple-600 hover:bg-purple-700 text-white">
-                <Download className="h-5 w-5 mr-2" />
+                </div>
+              ))}
+              <Button onClick={handleDownloadPalette} className="w-full">
+                <Download className="w-4 h-4 mr-2" />
                 Download Palette
               </Button>
-            </div>
-          </div>
-
-          <div className="bg-gray-800 shadow-lg rounded-lg p-8 max-w-4xl mx-auto">
-            <div className="space-y-6">
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
-                  <Info className="w-6 h-6 mr-2" />
-                  About Interactive Color Wheel
-                </h2>
-                <p className="text-white">
-                  The Interactive Color Wheel is a powerful tool for designers, artists, and color enthusiasts. It provides a visual representation of color theory, allowing users to explore color relationships, generate harmonious palettes, and understand color interactions in real-time.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
-                  <BookOpen className="w-6 h-6 mr-2" />
-                  How to Use Interactive Color Wheel
-                </h2>
-                <ol className="list-decimal list-inside text-white space-y-2">
-                  <li>Click and drag on the color wheel to select your base color.</li>
-                  <li>Use the sliders to fine-tune the hue, saturation, and lightness of your color.</li>
-                  <li>Enter a specific hex code if you have a color in mind.</li>
-                  <li>Choose a color harmony to see complementary colors based on color theory.</li>
-                  <li>Click on individual color swatches to copy their hex codes.</li>
-                  <li>Use the "Random Color" button to generate inspiration.</li>
-                  <li>Download your created color palette for use in your projects.</li>
-                </ol>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
-                  <Lightbulb className="w-6 h-6 mr-2" />
-                  Key Features
-                </h2>
-                <ul className="list-disc list-inside text-white space-y-2">
-                  <li>Interactive color wheel with smooth color selection</li>
-                  <li>Real-time updates of color harmonies</li>
-                  <li>Multiple color harmony options (Complementary, Analogous, Triadic, etc.)</li>
-                  <li>Precise control over hue, saturation, and lightness</li>
-                  <li>Hex code input and display</li>
-                  <li>Random color generation</li>
-                  <li>One-click color copying</li>
-                  <li>Palette download functionality</li>
-                  <li>Responsive design for use on various devices</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-semibold text-white mb-2 flex items-center">
-                  <Lightbulb className="w-6 h-6 mr-2" />
-                  Tips and Tricks
-                </h2>
-                <ul className="list-disc list-inside text-white space-y-2">
-                  <li>Use analogous colors for a harmonious, cohesive look in your designs.</li>
-                  <li>Experiment with different color harmonies to find unique color combinations.</li>
-                  <li>Adjust the lightness to create variations of the same hue for depth in your palette.</li>
-                  <li>Use the complementary harmony for strong contrast and eye-catching designs.</li>
-                  <li>Try the split-complementary harmony for a balanced yet vibrant color scheme.</li>
-                  <li>Use the random color generator for inspiration when you're stuck.</li>
-                  <li>Save multiple palettes to compare and refine your color choices.</li>
-                  <li>Consider color accessibility by checking contrast ratios for text readability.</li>
-                  <li>Use the tetradic harmony sparingly, as it can be overwhelming if not balanced properly.</li>
-                </ul>
-              </section>
-            </div>
-          </div>
-      <ToastContainer />
-    </ToolLayout>  
-
+            </CardContent>
+          </Card>
+        </div>
+        <AboutColorWheel />
+      </div>
+    </ToolLayout>
   )
 }
+
+function AboutColorWheel() {
+  return (
+    <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+          <Info className="w-6 h-6 mr-2" />
+          About Color Wheel Generator
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-300 mb-4">
+          The Color Wheel Generator is an advanced tool designed for designers, developers, and color enthusiasts. It allows you to explore color harmonies, generate color palettes, and visualize color relationships with ease and precision. Whether you're working on web design, graphic design, or any project involving color theory, this tool provides an intuitive interface to experiment with and perfect your color choices.
+        </p>
+        <p className="text-gray-300 mb-4">
+          With features like an interactive color wheel, real-time harmony updates, and support for various color harmonies, the Enhanced Color Wheel Generator offers both versatility and accuracy in color exploration and selection. It's perfect for creating harmonious color schemes, exploring color relationships, or simply finding inspiration for your next project.
+        </p>
+
+        <div className="my-8">
+          <Image
+            src="/Images/ColorWheelPreview.png?height=400&width=600"
+            alt="Screenshot of the Enhanced Color Wheel Generator interface showing the interactive wheel and harmony colors"
+            width={600}
+            height={400}
+            className="rounded-lg shadow-lg"
+          />
+        </div>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <BookOpen className="w-6 h-6 mr-2" />
+          How to Use Color Wheel Generator?
+        </h2>
+        <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Interact with the color wheel by clicking or dragging to select your base color.</li>
+          <li>Use the custom color input to manually enter a specific color.</li>
+          <li>Adjust the lightness slider to modify the brightness of the colors.</li>
+          <li>Select a color harmony from the available options to generate complementary colors.</li>
+          <li>Click on the generated harmony colors to set them as the new base color.</li>
+          <li>Use the copy button to easily copy color values to your clipboard.</li>
+          <li>Download the generated color palette as an image for later use.</li>
+        </ol>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Key Features
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Interactive color wheel for intuitive color selection</li>
+          <li>Support for various color harmonies (Complementary, Analogous, Triadic, etc.)</li>
+          <li>Real-time updates of harmony colors as you interact with the wheel</li>
+          <li>Custom color input for precise color selection</li>
+          <li>Lightness adjustment slider for fine-tuning colors</li>
+          <li>Easy-to-use copy functionality for color values</li>
+          <li>Option to download the generated color palette as an image</li>
+          <li>Responsive design for seamless use on various devices</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Palette className="w-6 h-6 mr-2" />
+          Tips and Tricks
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Experiment with different color harmonies to find the perfect combination for your project.</li>
+          <li>Use the lightness slider to create variations of your chosen color scheme.</li>
+          <li>Click on harmony colors to explore new color combinations based on that selection.</li>
+          <li>Utilize the custom color input to match specific brand colors or existing design elements.</li>
+          <li>Download your color palettes to build a library of harmonious color schemes for future projects.</li>
+          <li>Pay attention to the contrast between colors when selecting combinations for text and backgrounds.</li>
+          <li>Use the monochromatic harmony to create subtle, sophisticated color schemes.</li>
+        </ul>
+
+        <p className="text-gray-300 mt-6">
+          The Color Wheel Generator is more than just a tool—it's a gateway to understanding and mastering color theory. Whether you're a professional designer working on complex projects or an enthusiast exploring the world of color, our tool provides the insights and functionality you need to create stunning, harmonious color palettes. Start exploring and creating beautiful color combinations today!
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
+

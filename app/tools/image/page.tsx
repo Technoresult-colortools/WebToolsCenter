@@ -98,7 +98,7 @@ const imageTools = [
     description: 'Convert images to Base64 format for embedding.', 
     gradient: 'from-blue-500 to-indigo-500' 
   },
-  { 
+  {
     name: 'Image Caption Generator', 
     href: '/tools/image/image-caption-generator', 
     icon: faCommentDots, 

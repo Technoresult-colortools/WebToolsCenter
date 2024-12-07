@@ -43,6 +43,7 @@ const categories = [
       { name: 'SVG Pattern Generator', href: '/tools/image/svg-pattern-generator' },
       { name: 'Photo Censor', href: '/tools/image/photo-censor' },
       { name: 'SVG to PNG Converter', href: '/tools/image/svg-to-png-converter' },
+      { name: 'PNG to SVG Converter', href: '/tools/image/png-to-svg-converter' },
       { name: 'Image to Base64 Converter', href: '/tools/image/image-to-base64-converter' }
     ]
   },
@@ -87,7 +88,8 @@ const categories = [
       { name: 'Color Palette Generator', href: '/tools/color/color-palette-generator' },
       { name: 'Color Wheel', href: '/tools/color/color-wheel' },
       { name: 'Gradient Generator', href: '/tools/color/color-gradient-generator' },
-      { name: 'Tailwind CSS Color Palette', href: '/tools/color/tailwind-color-generator' }
+      { name: 'Tailwind CSS Color Palette', href: '/tools/color/tailwind-color-generator' },
+      { name: 'Color Converter', href: '/tools/color/color-converter' }
     ]
   },
   { 
@@ -179,6 +181,7 @@ const toolIcons: { [key: string]: React.ElementType } = {
   'SVG Pattern Generator': Grid,
   'Photo Censor': Scissors,
   'SVG to PNG Converter': FileImage,
+  'PNG to SVG Converter': ImageIcon,
   'Image to Base64 Converter': Database,
 
   // CSS Tools

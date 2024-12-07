@@ -54,6 +54,7 @@
     "jsbarcode": "^3.11.6",
     "jsonwebtoken": "^9.0.2",
     "jsrsasign": "^11.1.0",
+    "jszip": "^3.10.1",
     "konva": "^9.3.15",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",

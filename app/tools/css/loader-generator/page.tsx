@@ -20,7 +20,7 @@ export const metadata: Metadata = {
       follow: true,
     },
     alternates: {
-      canonical: 'https://webtoolscenter.com/tools/css-loader-generator',
+      canonical: 'https://webtoolscenter.com/tools/loader-generator',
     }
   };  
   

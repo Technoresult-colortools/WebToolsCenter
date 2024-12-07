@@ -8,8 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
-import { PlayCircle, PauseCircle, Info, BookOpen, Lightbulb, Copy, RefreshCw } from 'lucide-react'
+import { PlayCircle, PauseCircle, Info, BookOpen, Lightbulb, Copy, RefreshCw, Upload } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
+import { Card, CardContent, CardHeader, CardTitle, } from "@/components/ui/Card"
+import NextImage from 'next/image'
 
 const presets = {
   'linear': [0, 0, 1, 1],
@@ -29,7 +31,8 @@ export default function CSSCubicBezierGenerator() {
   const [showGrid, setShowGrid] = useState(true)
   const [showControlLines, setShowControlLines] = useState(true)
   const [animationKey, setAnimationKey] = useState(0)
-  const ballRef = useRef<HTMLDivElement>(null)
+  const [animeImage, setAnimeImage] = useState('/Images/victini.png?height=48&width=48')
+  const animatedElementRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -117,16 +120,16 @@ export default function CSSCubicBezierGenerator() {
 
   // Handle animation end
   useEffect(() => {
-    const ball = ballRef.current;
-    if (!ball) return;
+    const element = animatedElementRef.current;
+    if (!element) return;
 
     const handleAnimationEnd = () => {
       setIsPlaying(false);
     };
 
-    ball.addEventListener('animationend', handleAnimationEnd);
+    element.addEventListener('animationend', handleAnimationEnd);
     return () => {
-      ball.removeEventListener('animationend', handleAnimationEnd);
+      element.removeEventListener('animationend', handleAnimationEnd);
     };
   }, []);
 
@@ -171,176 +174,142 @@ export default function CSSCubicBezierGenerator() {
     toast.success("The curve has been reset to default values.");
   }
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setAnimeImage(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   return (
     <ToolLayout
       title="CSS Cubic Bezier Generator"
       description="Create smooth, custom easing functions for your CSS animations with precision and ease"
     >
-
-    <Toaster position="top-right" />
+      <Toaster position="top-right" />
           
-          <div className="bg-gray-800 rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
+      <Card className="bg-gray-800 shadow-lg p-6 max-w-4xl mx-auto mb-8">
+        <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Canvas Section */}
-              <div>
-                <canvas
-                  ref={canvasRef}
-                  width={400}
-                  height={400}
-                  className="w-full h-64 bg-gray-700 rounded-lg mb-4"
-                />
-                <div className="text-white text-center">
-                  ({points.map(p => p.toFixed(2)).join(', ')})
-                </div>
-                <div className="mt-4 flex flex-col sm:flex-row justify-between gap-4">
-                  <div className="flex items-center">
-                    <Switch
-                      id="show-grid"
-                      checked={showGrid}
-                      onCheckedChange={setShowGrid}
-                    />
-                    <Label htmlFor="show-grid" className="ml-2 text-white">Show Grid</Label>
-                  </div>
-                  <div className="flex items-center">
-                    <Switch
-                      id="show-control-lines"
-                      checked={showControlLines}
-                      onCheckedChange={setShowControlLines}
-                    />
-                    <Label htmlFor="show-control-lines" className="ml-2 text-white">Show Control Lines</Label>
-                  </div>
-                </div>
+            {/* Canvas Section */}
+            <div>
+              <canvas
+                ref={canvasRef}
+                width={400}
+                height={400}
+                className="w-full h-64 bg-gray-700 rounded-lg mb-4"
+              />
+              <div className="text-white text-center">
+                ({points.map(p => p.toFixed(2)).join(', ')})
               </div>
-
-              {/* Controls Section */}
-              <div className="space-y-6">
-                {/* Presets */}
-                <div>
-                  <Label htmlFor="preset" className="text-white mb-2 block">Predefined Easing Functions</Label>
-                  <Select value={presetName} onValueChange={handlePresetChange}>
-                    <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select a preset" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="custom">Custom</SelectItem>
-                      {Object.keys(presets).map((preset) => (
-                        <SelectItem key={preset} value={preset}>{preset}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Duration */}
-                <div>
-                  <Label htmlFor="duration" className="text-white mb-2 block">Animation Duration: {duration}s</Label>
-                  <Slider
-                    id="duration"
-                    min={0.1}
-                    max={5}
-                    step={0.1}
-                    value={duration}
-                    onChange={(value) => setDuration(value)}
+              <div className="mt-4 flex flex-col sm:flex-row justify-between gap-4">
+                <div className="flex items-center">
+                  <Switch
+                    id="show-grid"
+                    checked={showGrid}
+                    onCheckedChange={setShowGrid}
                   />
+                  <Label htmlFor="show-grid" className="ml-2 text-white">Show Grid</Label>
                 </div>
-
-                {/* Control Points - Restructured for better mobile layout */}
-                <div className="space-y-4">
-                  {/* X1 */}
-                  <div>
-                    <Label htmlFor="P1X" className="text-white mb-1 block">X1 (Green Point)</Label>
-                    <Slider
-                      id="P1X"
-                      min={0}
-                      max={1}
-                      step={0.01}
-                      value={points[0]}
-                      onChange={(value) => handlePointChange(0, value)}
-                    />
-                    <Input
-                      type="number"
-                      value={points[0].toFixed(2)}
-                      onChange={(e) => handlePointChange(0, parseFloat(e.target.value))}
-                      className="mt-2 bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-
-                  {/* Y1 */}
-                  <div>
-                    <Label htmlFor="P1Y" className="text-white mb-1 block">Y1 (Green Point)</Label>
-                    <Slider
-                      id="P1Y"
-                      min={-1}
-                      max={2}
-                      step={0.01}
-                      value={points[1]}
-                      onChange={(value) => handlePointChange(1, value)}
-                    />
-                    <Input
-                      type="number"
-                      value={points[1].toFixed(2)}
-                      onChange={(e) => handlePointChange(1, parseFloat(e.target.value))}
-                      className="mt-2 bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-
-                  {/* X2 */}
-                  <div>
-                    <Label htmlFor="P2X" className="text-white mb-1 block">X2 (Red Point)</Label>
-                    <Slider
-                      id="P2X"
-                      min={0}
-                      max={1}
-                      step={0.01}
-                      value={points[2]}
-                      onChange={(value) => handlePointChange(2, value)}
-                    />
-                    <Input
-                      type="number"
-                      value={points[2].toFixed(2)}
-                      onChange={(e) => handlePointChange(2, parseFloat(e.target.value))}
-                      className="mt-2 bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-
-                  {/* Y2 */}
-                  <div>
-                    <Label htmlFor="P2Y" className="text-white mb-1 block">Y2 (Red Point)</Label>
-                    <Slider
-                      id="P2Y"
-                      min={-1}
-                      max={2}
-                      step={0.01}
-                      value={points[3]}
-                      onChange={(value) => handlePointChange(3, value)}
-                    />
-                    <Input
-                      type="number"
-                      value={points[3].toFixed(2)}
-                      onChange={(e) => handlePointChange(3, parseFloat(e.target.value))}
-                      className="mt-2 bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
+                <div className="flex items-center">
+                  <Switch
+                    id="show-control-lines"
+                    checked={showControlLines}
+                    onCheckedChange={setShowControlLines}
+                  />
+                  <Label htmlFor="show-control-lines" className="ml-2 text-white">Show Control Lines</Label>
                 </div>
               </div>
             </div>
 
-            {/* Animation Preview */}
-            <div className="mt-6">
-              <Label className="text-white mb-2 block">Animation Preview</Label>
-              <div className="flex items-center justify-between">
-                <div className="h-16 bg-gray-700 rounded-lg flex items-center justify-start p-4 relative flex-grow mr-4">
-                  <div
-                    ref={ballRef}
-                    key={animationKey}
-                    className="w-12 h-12 bg-blue-500 rounded-full absolute left-[4%]"
-                    style={{
-                      animation: isPlaying 
-                        ? `${duration}s cubic-bezier(${points.join(', ')}) forwards moveBall` 
-                        : 'none',
-                      transform: 'translateZ(0)' // Force GPU acceleration
-                    }}
+            {/* Controls Section */}
+            <div className="space-y-6">
+              {/* Presets */}
+              <div>
+                <Label htmlFor="preset" className="text-white mb-2 block">Predefined Easing Functions</Label>
+                <Select value={presetName} onValueChange={handlePresetChange}>
+                  <SelectTrigger id="preset" className="w-full bg-gray-700 text-white border-gray-600">
+                    <SelectValue placeholder="Select a preset" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 text-white border-gray-600">
+                    <SelectItem value="custom">Custom</SelectItem>
+                    {Object.keys(presets).map((preset) => (
+                      <SelectItem key={preset} value={preset}>{preset}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Duration */}
+              <div>
+                <Label htmlFor="duration" className="text-white mb-2 block">Animation Duration: {duration}s</Label>
+                <Slider
+                  id="duration"
+                  min={0.1}
+                  max={5}
+                  step={0.1}
+                  value={duration}
+                  onChange={(value) => setDuration(value)}
+                />
+              </div>
+
+              {/* Control Points */}
+              <div className="space-y-4">
+                {['X1', 'Y1', 'X2', 'Y2'].map((label, index) => (
+                  <div key={label}>
+                    <Label htmlFor={`P${index + 1}`} className="text-white mb-1 block">
+                      {label} ({index % 2 === 0 ? 'Green' : 'Red'} Point)
+                    </Label>
+                    <Slider
+                      id={`P${index + 1}`}
+                      min={index % 2 === 0 ? 0 : -1}
+                      max={index % 2 === 0 ? 1 : 2}
+                      step={0.01}
+                      value={points[index]}
+                      onChange={(value) => handlePointChange(index, value)}
+                    />
+                    <Input
+                      type="number"
+                      value={points[index].toFixed(2)}
+                      onChange={(e) => handlePointChange(index, parseFloat(e.target.value))}
+                      className="mt-2 bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Animation Preview */}
+          <div className="mt-6">
+            <Label className="text-white mb-2 block">Animation Preview</Label>
+            <div className="flex items-center justify-between">
+              <div className="h-16 bg-gray-700 rounded-lg flex items-center justify-start p-4 relative flex-grow mr-4">
+                <div
+                  ref={animatedElementRef}
+                  key={animationKey}
+                  className="w-12 h-12 absolute left-[4%]"
+                  style={{
+                    animation: isPlaying 
+                      ? `${duration}s cubic-bezier(${points.join(', ')}) forwards moveBall` 
+                      : 'none',
+                    transform: 'translateZ(0)' // Force GPU acceleration
+                  }}
+                >
+                  <NextImage 
+                    src={animeImage} 
+                    alt="Animated element" 
+                    width={48} 
+                    height={48}
+                    className="rounded-full"
                   />
                 </div>
+              </div>
+              <div className="flex space-x-2">
                 <Button
                   onClick={handlePlayClick}
                   className="bg-blue-500 hover:bg-blue-600 text-white"
@@ -351,9 +320,22 @@ export default function CSSCubicBezierGenerator() {
                     <PlayCircle className="w-6 h-6" />
                   )}
                 </Button>
+                <label htmlFor="image-upload" className="cursor-pointer">
+                  <div className="bg-blue-500 hover:bg-blue-600 text-white rounded-md flex items-center justify-center w-10 h-10">
+                    <Upload className="w-6 h-6" />
+                  </div>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </label>
               </div>
             </div>
-            <style jsx global>{`
+          </div>
+          <style jsx global>{`
             @keyframes moveBall {
               from {
                 left: 4%;
@@ -363,65 +345,106 @@ export default function CSSCubicBezierGenerator() {
               }
             }
           `}</style>
-            <div className="mt-6">
-              <Label className="text-white mb-2 block">CSS</Label>
-              <div className="bg-gray-700 rounded-lg p-4 text-white font-mono text-sm">
-                <pre className='overflow-x-auto'>{`animation-timing-function: cubic-bezier(${points.join(', ')});animation-duration: ${duration}s;`}</pre>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-between">
-              <Button onClick={resetCurve} className="bg-red-500 hover:bg-red-600 text-white">
-                <RefreshCw className="w-5 h-5 mr-2" />
-                Reset
-              </Button>
-              <Button onClick={copyCSS} className="bg-blue-500 hover:bg-blue-600 text-white">
-                <Copy className="w-5 h-5 mr-2" />
-                Copy CSS
-              </Button>
+          <div className="mt-6">
+            <Label className="text-white mb-2 block">CSS</Label>
+            <div className="bg-gray-700 rounded-lg p-4 text-white font-mono text-sm">
+              <pre className='overflow-x-auto'>{`animation-timing-function: cubic-bezier(${points.join(', ')});
+animation-duration: ${duration}s;`}</pre>
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-4  md:p-8 max-w-4xl mx-auto mt-8">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-              <Info className="w-6 h-6 mr-2" />
-              What is the CSS Cubic Bezier Generator?
-            </h2>
-            <p className="text-gray-300 mb-4">
-              The CSS Cubic Bezier Generator is a powerful tool that allows developers and designers to create custom easing functions for CSS animations. By manipulating control points on a bezier curve, you can fine-tune the acceleration and deceleration of your animations, resulting in more natural and appealing motion.
-            </p>
-
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <BookOpen className="w-6 h-6 mr-2" />
-              How to Use the CSS Cubic Bezier Generator
-            </h2>
-            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Choose a preset easing function or start with a custom curve.</li>
-              <li>Adjust the control points using the sliders or input precise values.</li>
-              <li>Set the animation duration to see how it affects the motion.</li>
-              <li>Use the toggles to show/hide the grid and control lines for better visualization.</li>
-              <li>Preview the animation using the play/pause button.</li>
-              <li>Copy the generated CSS code for use in your projects.</li>
-              <li>Use the Reset button to start over with default settings.</li>
-            </ol>
-
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Lightbulb className="w-6 h-6 mr-2" />
-              Key Features
-            </h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Interactive bezier curve editor with real-time preview.</li>
-              <li>Predefined easing function presets for quick selection.</li>
-              <li>Precise control over curve shape with adjustable control points.</li>
-              <li>Visual representation of the easing function on a graph.</li>
-              <li>Customizable animation duration.</li>
-              <li>Toggle grid and control lines for better visualization.</li>
-              <li>Animation preview with play/pause functionality.</li>
-              <li>Generated CSS code with one-click copy to clipboard.</li>
-              <li>Reset option to quickly return to default settings.</li>
-              <li>Responsive design for use on various devices, including mobile.</li>
-            </ul>
+          <div className="mt-6 flex justify-between">
+            <Button onClick={resetCurve} variant="destructive" className="bg-red-500 hover:bg-red-600 text-white">
+              <RefreshCw className="w-5 h-5 mr-2" />
+              Reset
+            </Button>
+            <Button onClick={copyCSS} className="bg-blue-500 hover:bg-blue-600 text-white">
+              <Copy className="w-5 h-5 mr-2" />
+              Copy CSS
+            </Button>
           </div>
-  </ToolLayout>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gray-800 shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+        <CardHeader>
+          <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            What is CSS Cubic Bezier Generator?
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-300 mb-4">
+            The CSS Cubic Bezier Generator is a powerful and intuitive tool designed for web developers and designers to create custom easing functions for CSS animations. By manipulating control points on a bezier curve, you can fine-tune the acceleration and deceleration of your animations, resulting in more natural and appealing motion.
+          </p>
+          <p className="text-gray-300 mb-4">
+            This tool goes beyond basic presets, allowing you to visualize, customize, and preview complex easing functions. Whether you're a seasoned developer looking to perfect your animations or a beginner exploring the world of CSS transitions, our Enhanced CSS Cubic Bezier Generator provides the flexibility and precision you need to bring your ideas to life.
+          </p>
+
+          <div className="my-8">
+            <NextImage 
+              src="/Images/CubicBezierPreview.png?height=400&width=600" 
+              alt="Screenshot of the Enhanced CSS Cubic Bezier Generator interface showing the curve editor and animation preview" 
+              width={600} 
+              height={400}
+              className="rounded-lg shadow-lg" 
+            />
+          </div>
+
+          <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <BookOpen className="w-6 h-6 mr-2" />
+            How to Use CSS Cubic Bezier Generator?
+          </h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Start by selecting a preset easing function or create a custom curve from scratch.</li>
+            <li>Adjust the control points using the sliders or input precise values for fine-tuning.</li>
+            <li>Modify the animation duration to see how it affects the overall motion.</li>
+            <li>Toggle the grid and control lines for better visualization of the curve.</li>
+            <li>Use the animation preview to see your easing function in action.</li>
+            <li>Upload a custom image to replace the default animated element for a more personalized preview.</li>
+            <li>Copy the generated CSS code for use in your projects.</li>
+            <li>Experiment with different curves and settings to achieve the perfect animation.</li>
+            <li>Use the Reset button to start over with default settings if needed.</li>
+          </ol>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Key Features
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Interactive bezier curve editor with real-time visual feedback.</li>
+            <li>Comprehensive set of predefined easing function presets.</li>
+            <li>Precise control over curve shape with adjustable control points.</li>
+            <li>Visual representation of the easing function on a customizable graph.</li>
+            <li>Flexible animation duration settings.</li>
+            <li>Toggleable grid and control lines for enhanced curve visualization.</li>
+            <li>Live animation preview with play/pause functionality.</li>
+            <li>Custom image upload feature for personalized animation previews.</li>
+            <li>Generated CSS code with one-click copy to clipboard.</li>
+            <li>Reset option for quick return to default settings.</li>
+            <li>Responsive design for seamless use across various devices and screen sizes.</li>
+          </ul>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            Applications and Use Cases
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li><strong>Web Animations:</strong> Create smooth, natural-looking transitions for elements on your website.</li>
+            <li><strong>User Interface Design:</strong> Enhance the feel of interactive elements like buttons, menus, and modals.</li>
+            <li><strong>Game Development:</strong> Design custom easing functions for game object movements and transitions.</li>
+            <li><strong>Data Visualization:</strong> Add engaging animations to charts, graphs, and other data representations.</li>
+            <li><strong>Mobile App Development:</strong> Improve the user experience in hybrid mobile apps with custom CSS animations.</li>
+            <li><strong>E-learning Platforms:</strong> Create attention-grabbing animations for educational content and interactive lessons.</li>
+            <li><strong>Portfolio Websites:</strong> Showcase your design skills with unique, eye-catching animations.</li>
+            <li><strong>Marketing and Advertising:</strong> Develop engaging animated banners and promotional content.</li>
+          </ul>
+
+          <p className="text-gray-300 mt-6">
+            The CSS Cubic Bezier Generator empowers you to create sophisticated, custom easing functions that can dramatically improve the visual appeal and user experience of your web projects. By providing an intuitive interface for manipulating bezier curves, along with real-time previews and easy CSS generation, this tool bridges the gap between complex mathematical concepts and practical, beautiful web animations. Whether you're aiming for subtle, natural movements or bold, eye-catching effects, the Enhanced CSS Cubic Bezier Generator gives you the control and flexibility you need to bring your creative vision to life.
+          </p>
+        </CardContent>
+      </Card>
+    </ToolLayout>
   )
 }

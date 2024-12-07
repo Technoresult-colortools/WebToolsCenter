@@ -7,213 +7,15 @@ import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
-import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw, Info, BookOpen, Lightbulb } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast, Toaster } from 'react-hot-toast'
+import { Copy, RefreshCw, Info, BookOpen, Lightbulb, Download, Palette, Eye, EyeOff, Maximize2, X, Sliders, } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import Image from 'next/image'
+import { glitchEffects, GlitchEffect } from './glitcheffects';
 
 
-type GlitchEffect = 'rgb-split' | 'color' | 'noise' | 'transformation' | 'custom' | 'glitch-clip' | 'distortion'
-
-const patternStyles: Record<GlitchEffect, (text: string, color1: string, color2: string, intensity: number, speed: number) => string> = {
-  'rgb-split': (text, color1, color2, intensity, speed) => `
-.glitch {
-  position: relative;
-  animation: glitch-skew ${speed * 2}s infinite linear alternate-reverse;
-}
-.glitch::before,
-.glitch::after {
-  content: '${text}';
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  opacity: 0.8;
-}
-.glitch::before {
-  color: ${color1};
-  animation: glitch-effect ${speed}s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-}
-.glitch::after {
-  color: ${color2};
-  animation: glitch-effect ${speed * 1.1}s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both infinite;
-}
-@keyframes glitch-effect {
-  0% {
-    transform: translate(0);
-  }
-  20% {
-    transform: translate(-${intensity * 0.5}px, ${intensity * 0.5}px);
-  }
-  40% {
-    transform: translate(-${intensity}px, -${intensity * 0.5}px);
-  }
-  60% {
-    transform: translate(${intensity * 0.5}px, ${intensity}px);
-  }
-  80% {
-    transform: translate(${intensity}px, -${intensity * 0.5}px);
-  }
-  100% {
-    transform: translate(0);
-  }
-}
-@keyframes glitch-skew {
-  0% {
-    transform: skew(0deg);
-  }
-  20% {
-    transform: skew(${intensity * 0.2}deg);
-  }
-  40% {
-    transform: skew(-${intensity * 0.1}deg);
-  }
-  60% {
-    transform: skew(${intensity * 0.3}deg);
-  }
-  80% {
-    transform: skew(-${intensity * 0.2}deg);
-  }
-  100% {
-    transform: skew(0deg);
-  }
-}
-  `,
-  'color': (text, color1, color2, intensity, speed) => `
-.glitch {
-  animation: glitch-color ${speed}s infinite linear alternate-reverse;
-}
-@keyframes glitch-color {
-  0% { text-shadow: ${intensity * 0.2}px ${intensity * 0.2}px ${color1}, -${intensity * 0.2}px -${intensity * 0.2}px ${color2}; }
-  25% { text-shadow: -${intensity * 0.2}px ${intensity * 0.2}px ${color2}, ${intensity * 0.2}px -${intensity * 0.2}px ${color1}; }
-  50% { text-shadow: ${intensity * 0.2}px -${intensity * 0.2}px ${color1}, -${intensity * 0.2}px ${intensity * 0.2}px ${color2}; }
-  75% { text-shadow: -${intensity * 0.2}px -${intensity * 0.2}px ${color2}, ${intensity * 0.2}px ${intensity * 0.2}px ${color1}; }
-  100% { text-shadow: ${intensity * 0.2}px ${intensity * 0.2}px ${color1}, -${intensity * 0.2}px -${intensity * 0.2}px ${color2}; }
-}
-  `,
-  'noise': (text, color1, color2, intensity, speed) => `
-.glitch {
-  position: relative;
-}
-.glitch::before {
-  content: '${text}';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAABN0lEQVRoQ+2Y0Q6DIAxF6f//tBONMWZsA7pxN+ni8oC9pz1tYQr5Jn/lJjwsImWlvYjA7IjIIgJzAKa3iIAJwNRFpNZ6vgBwBmMuFb0bMzNaa8Xzr4GIyLGUcnwCxxhzqbV+9RBHEZELgKOUcuz7ftRa39cLEJHDGHOWUr4rpRwRsYvIEhFr7dlaey6lvMKfMeZsrX2dxVNrfRtjfDzfIgITXERABGAKIgIiAFMQERABmIKIgAjAFEQERABXcPgcubPWvkII9+0Td9OtR3rnXI/ILiKcc9Zae1prz2gfHZHRgqPnvXNuFBH9JGOMuYwx5+jZnUVGN/eej0YEZrCIwATX7+4wDZiCiIAIwBREBEQApiAiIAIwBREBEYApiAiIAExBREAEYAoiAiIAUxAREAGYwg9EvUE3nEfJPwAAAABJRU5ErkJggg==');
-  opacity: ${intensity * 0.05};
-  animation: glitch-noise ${speed}s infinite;
-}
-@keyframes glitch-noise {
-  0% { transform: translate(0); }
-  20% { transform: translate(-${intensity}px, ${intensity}px); }
-  40% { transform: translate(-${intensity}px, -${intensity}px); }
-  60% { transform: translate(${intensity}px, ${intensity}px); }
-  80% { transform: translate(${intensity}px, -${intensity}px); }
-  100% { transform: translate(0); }
-}
-  `,
-  'transformation': (text, color1, color2, intensity, speed) => `
-.glitch {
-  animation: glitch-transform ${speed}s infinite;
-}
-@keyframes glitch-transform {
-  0% { transform: translate(0); }
-  20% { transform: translate(-${intensity}px, ${intensity}px); }
-  40% { transform: skew(${intensity}deg); }
-  60% { transform: scale(1.${intensity}); }
-  80% { transform: rotate(${intensity}deg); }
-  100% { transform: translate(0); }
-}
-  `,
-  'glitch-clip': (text, color1, color2, intensity, speed) => `
-.glitch {
-  position: relative;
-}
-.glitch::before,
-.glitch::after {
-  content: '${text}';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  clip: rect(0, 0, 0, 0);
-}
-.glitch::before {
-  left: ${intensity * 0.2}px;
-  text-shadow: -1px 0 ${color1};
-  animation: glitch-clip-1 ${speed}s infinite linear alternate-reverse;
-}
-.glitch::after {
-  left: -${intensity * 0.2}px;
-  text-shadow: 1px 0 ${color2};
-  animation: glitch-clip-2 ${speed * 1.5}s infinite linear alternate-reverse;
-}
-@keyframes glitch-clip-1 {
-  0% { clip: rect(${intensity * 5}px, 9999px, ${intensity * 10}px, 0); }
-  20% { clip: rect(${intensity * 15}px, 9999px, ${intensity * 20}px, 0); }
-  40% { clip: rect(${intensity * 25}px, 9999px, ${intensity * 30}px, 0); }
-  60% { clip: rect(${intensity * 35}px, 9999px, ${intensity * 40}px, 0); }
-  80% { clip: rect(${intensity * 45}px, 9999px, ${intensity * 50}px, 0); }
-  100% { clip: rect(${intensity * 55}px, 9999px, ${intensity * 60}px, 0); }
-}
-@keyframes glitch-clip-2 {
-  0% { clip: rect(${intensity * 10}px, 9999px, ${intensity * 15}px, 0); }
-  20% { clip: rect(${intensity * 20}px, 9999px, ${intensity * 25}px, 0); }
-  40% { clip: rect(${intensity * 30}px, 9999px, ${intensity * 35}px, 0); }
-  60% { clip: rect(${intensity * 40}px, 9999px, ${intensity * 45}px, 0); }
-  80% { clip: rect(${intensity * 50}px, 9999px, ${intensity * 55}px, 0); }
-  100% { clip: rect(${intensity * 60}px, 9999px, ${intensity * 65}px, 0); }
-}
-  `,
-  'distortion': (text, color1, color2, intensity, speed) => `
-.glitch {
-  position: relative;
-  animation: glitch-distort ${speed * 2}s infinite;
-}
-.glitch::before,
-.glitch::after {
-  content: '${text}';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.8;
-}
-.glitch::before {
-  color: ${color1};
-  animation: glitch-distort ${speed}s infinite;
-  clip-path: polygon(0 ${intensity * 2}%, 100% 0%, 100% ${100 - intensity * 2}%, 0% 100%);
-}
-.glitch::after {
-  color: ${color2};
-  animation: glitch-distort ${speed * 1.5}s infinite reverse;
-  clip-path: polygon(0 ${intensity}%, 100% ${intensity * 2}%, 100% ${100 - intensity}%, 0% ${100 - intensity * 2}%);
-}
-@keyframes glitch-distort {
-  0% {
-    transform: translate(0);
-  }
-  25% {
-    transform: translate(${intensity * 0.5}px, -${intensity * 0.5}px) skew(${intensity * 0.2}deg);
-  }
-  50% {
-    transform: translate(-${intensity * 0.5}px, ${intensity * 0.5}px) skew(-${intensity * 0.2}deg);
-  }
-  75% {
-    transform: translate(${intensity * 0.5}px, ${intensity * 0.5}px) skew(${intensity * 0.2}deg);
-  }
-  100% {
-    transform: translate(0);
-  }
-}
-  `,
-  'custom': () => '',
-}
 
 export default function TextGlitchEffectGenerator() {
   const [text, setText] = useState('WebTools')
@@ -228,6 +30,9 @@ export default function TextGlitchEffectGenerator() {
   const [showScanLines, setShowScanLines] = useState(true)
   const [customCSS, setCustomCSS] = useState('')
   const [generatedCSS, setGeneratedCSS] = useState('')
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [fontWeight, setFontWeight] = useState(700)
+  const [letterSpacing, setLetterSpacing] = useState(3)
 
   const generateCSS = () => {
     let css = `
@@ -244,13 +49,13 @@ export default function TextGlitchEffectGenerator() {
 .glitch {
   position: relative;
   font-size: ${fontSize}px;
-  font-weight: bold;
+  font-weight: ${fontWeight};
   color: ${textColor};
-  letter-spacing: 3px;
+  letter-spacing: ${letterSpacing}px;
   z-index: 1;
 }
 
-${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity, animationSpeed)}
+${glitchEffects[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity, animationSpeed)}
 `
 
     if (showScanLines) {
@@ -291,7 +96,7 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
     return () => {
       document.head.removeChild(styleTag)
     }
-  }, [text, fontSize, backgroundColor, textColor, glitchColor1, glitchColor2, glitchEffect, glitchIntensity, animationSpeed, showScanLines, customCSS])
+  }, [text, fontSize, backgroundColor, textColor, glitchColor1, glitchColor2, glitchEffect, glitchIntensity, animationSpeed, showScanLines, customCSS, fontWeight, letterSpacing])
 
   const handleCopy = () => {
     const html = `
@@ -306,6 +111,39 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
     toast.success('HTML & CSS copied to clipboard!')
   }
 
+  const handleDownload = () => {
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glitch Text Effect</title>
+  <style>
+${generatedCSS}
+  </style>
+</head>
+<body>
+  <div class="glitch-wrapper">
+    <div class="glitch" data-text="${text}">${text}</div>
+    ${showScanLines ? '<div class="scan-lines"></div>' : ''}
+  </div>
+</body>
+</html>
+`.trim()
+
+    const blob = new Blob([html], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'glitch-text-effect.html'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    toast.success('HTML file downloaded!')
+  }
+
   const handleReset = () => {
     setText('WebTools')
     setFontSize(94)
@@ -318,43 +156,90 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
     setAnimationSpeed(0.5)
     setShowScanLines(true)
     setCustomCSS('')
+    setFontWeight(700)
+    setLetterSpacing(3)
     toast.success('Settings reset to default!')
   }
+
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen)
+  }
+
+  const renderGlitchPreview = () => (
+    <div
+      className="glitch-wrapper"
+      style={{
+        backgroundColor,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <div 
+        className="glitch"
+        data-text={text}
+        style={{ 
+          fontSize: `${fontSize}px`,
+          fontWeight: fontWeight,
+          color: textColor,
+          letterSpacing: `${letterSpacing}px`,
+        }}
+      >
+        {text}
+      </div>
+      {showScanLines && <div className="scan-lines"></div>}
+    </div>
+  )
 
   return (
     <ToolLayout
       title="CSS Text Glitch Effect Generator"
-      description="Create eye-catching, glitchy text effects using CSS"
+      description="Create eye-catching, customizable glitchy text effects using CSS with advanced options and features"
     >
-
-    <Toaster position="top-right" />
-
-          <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-4">Glitch Effect Preview</h2>
-              <div 
-                className="relative bg-gray-900 rounded-lg overflow-hidden"
-                style={{ width: '100%', height: '300px' }}
-              >
-                <div className="glitch-wrapper" style={{ backgroundColor }}>
-                  <div 
-                    className="glitch"
-                    data-text={text}
-                    style={{ 
-                      fontSize: `${fontSize}px`,
-                      color: textColor,
-                    }}
+      <Toaster position="top-right" />
+      
+      <Card className="bg-gray-800 shadow-lg p-6 max-w-4xl mx-auto mb-8">
+        <CardContent>
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-4">Preview</h2>
+              <div className="relative">
+                <div className="w-full h-64 rounded-lg overflow-hidden">
+                  {renderGlitchPreview()}
+                </div>
+                <div className="absolute bottom-2 right-2 flex space-x-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => setShowScanLines(!showScanLines)}
                   >
-                    {text}
-                  </div>
-                  {showScanLines && <div className="scan-lines"></div>}
+                    {showScanLines ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={toggleFullscreen}
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">Text Settings</h2>
+            <Tabs defaultValue="text">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="text">
+                  <Sliders className="h-4 w-4 mr-2" />
+                  Text Settings
+                </TabsTrigger>
+                <TabsTrigger value="glitch">
+                  <Palette className="h-4 w-4 mr-2" />
+                  Glitch Settings
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="text">
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="text" className="text-white mb-2 block">Text</Label>
@@ -375,6 +260,30 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
                       step={1}
                       value={fontSize}
                       onChange={(value) => setFontSize(value)}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="fontWeight" className="text-white mb-2 block">Font Weight: {fontWeight}</Label>
+                    <Slider
+                      id="fontWeight"
+                      min={100}
+                      max={900}
+                      step={100}
+                      value={fontWeight}
+                      onChange={(value) => setFontWeight(value)}
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="letterSpacing" className="text-white mb-2 block">Letter Spacing: {letterSpacing}px</Label>
+                    <Slider
+                      id="letterSpacing"
+                      min={0}
+                      max={10}
+                      step={0.5}
+                      value={letterSpacing}
+                      onChange={(value) => setLetterSpacing(value)}
                     />
                   </div>
 
@@ -416,10 +325,8 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">Glitch Settings</h2>
+              </TabsContent>
+              <TabsContent value="glitch">
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="glitchEffect" className="text-white mb-2 block">Glitch Effect</Label>
@@ -434,6 +341,8 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
                         <SelectItem value="transformation">Transformation</SelectItem>
                         <SelectItem value="glitch-clip">Glitch Clip</SelectItem>
                         <SelectItem value="distortion">Distortion</SelectItem>
+                        <SelectItem value="pixelate">Pixelate</SelectItem>
+                        <SelectItem value="wave">Wave</SelectItem>
                         <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
                     </Select>
@@ -523,23 +432,24 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
                     </div>
                   )}
                 </div>
-              </div>
-            </div>
+              </TabsContent>
+            </Tabs>
 
             <div className="mt-8">
               <h2 className="text-2xl font-bold text-white mb-4">Generated HTML & CSS</h2>
-              <div className="bg-gray-700 p-4 rounded-lg">
+              <div className="bg-gray-700 p-4 rounded-lg max-h-60 overflow-auto">
                 <code className="text-white whitespace-pre-wrap break-all">
-                  {`<div class="glitch-wrapper">
-    <div class="glitch" data-text="${text}">${text}</div>
-    ${showScanLines ? '<div class="scan-lines"></div>' : ''}
-  </div>
+                  {`
+      <div class="glitch-wrapper">
+        <div class="glitch" data-text="${text}">${text}</div>
+        ${showScanLines ? '<div class="scan-lines"></div>' : ''}
+      </div>
 
-  <style>
-  ${generatedCSS}
-  </style>`}
+      <style>
+      ${generatedCSS}
+      </style>`}
                 </code>
-              </div>
+        </div>
               <div className="mt-4 flex justify-end space-x-2">
                 <Button onClick={handleReset} variant="destructive" className="text-white border-white hover:bg-gray-700">
                   <RefreshCw className="h-5 w-5 mr-2" />
@@ -549,54 +459,119 @@ ${patternStyles[glitchEffect](text, glitchColor1, glitchColor2, glitchIntensity,
                   <Copy className="h-5 w-5 mr-2" />
                   Copy HTML & CSS
                 </Button>
+                <Button onClick={handleDownload} className="bg-green-600 hover:bg-green-700 text-white">
+                  <Download className="h-5 w-5 mr-2" />
+                  Download HTML
+                </Button>
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-              <Info className="w-6 h-6 mr-2" />
-              What is the CSS Text Glitch Effect Generator?
-            </h2>
-            <p className="text-gray-300 mb-4">
-              The CSS Text Glitch Effect Generator is a powerful tool for creating eye-catching, glitchy text effects using CSS. It offers customizable options for various glitch styles, colors, intensities, and animation speeds, making it easy to design modern, dynamic text effects. The tool provides real-time previews and generates HTML and CSS code that you can copy with a single click.
-            </p>
-
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <BookOpen className="w-6 h-6 mr-2" />
-              How to Use the CSS Text Glitch Effect Generator?
-            </h2>
-            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Enter the text you want to apply the glitch effect to.</li>
-              <li>Choose a glitch effect type from the dropdown menu (RGB Split, Color, Noise, Transformation, Glitch Clip, Distortion, or Custom).</li>
-              <li>Adjust the font size, text color, and background color to your liking.</li>
-              <li>Customize the glitch colors using the color pickers or by entering hex values.</li>
-              <li>Use the sliders to adjust the glitch intensity and animation speed.</li>
-              <li>Toggle the "Show Scan Lines" option to add or remove the scan line effect.</li>
-              <li>For advanced users, select the "Custom" glitch effect to enter your own CSS.</li>
-              <li>Preview your glitch effect in real-time in the preview area.</li>
-              <li>Copy the generated HTML and CSS code to use in your project.</li>
-              <li>Use the "Reset" button to return to default settings if needed.</li>
-            </ol>
-
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Lightbulb className="w-6 h-6 mr-2" />
-              Key Features
-            </h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Multiple pre-defined glitch effects (RGB Split, Color, Noise, Transformation, Glitch Clip, Distortion)</li>
-              <li>Custom text input with real-time preview</li>
-              <li>Adjustable font size, text color, and background color</li>
-              <li>Customizable glitch colors with color pickers and hex input</li>
-              <li>Glitch intensity and animation speed controls</li>
-              <li>Optional scan lines effect</li>
-              <li>Custom CSS input for advanced users</li>
-              <li>Real-time preview of the glitch effect</li>
-              <li>Generated HTML and CSS code with one-click copy functionality</li>
-              <li>Reset option to quickly return to default settings</li>
-              <li>Responsive design for use on various devices</li>
-            </ul>
+      {/* Fullscreen Preview Modal */}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          <div className="relative w-3/4 h-3/4 max-h-screen p-4">
+            <Button
+              onClick={toggleFullscreen}
+              className="absolute top-4 right-4 z-10 bg-gray-700 hover:bg-gray-600"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            <div className="w-full h-full overflow-hidden rounded-lg">
+              {renderGlitchPreview()}
+            </div>
           </div>
-  </ToolLayout>
+        </div>
+      )}
+
+      <Card className="bg-gray-800 shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+        <CardHeader>
+          <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            What is CSS Text Glitch Effect Generator?
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-300 mb-4">
+            The CSS Text Glitch Effect Generator is a powerful tool for creating eye-catching, glitchy text effects using CSS. It offers a wide range of customizable options for various glitch styles, colors, intensities, and animation speeds, making it easy to design modern, dynamic text effects for web projects, digital art, or any creative endeavor requiring a unique visual impact.
+          </p>
+          <p className="text-gray-300 mb-4">
+            This tool provides real-time previews and generates HTML and CSS code that you can easily copy or download for use in your projects. Whether you're a web developer, designer, or digital artist, this generator offers an intuitive interface to experiment with different glitch effects and fine-tune them to your exact specifications.
+          </p>
+
+          <div className="my-8">
+              <Image 
+                src="/Images/CSSTextGlitchPreview.png?height=400&width=600" 
+                alt="Screenshot of the CSS Text Glitch Effect Generator is a powerful tool for creating eye-catching, glitchy text effects using CSS." 
+                width={600} 
+                height={400} 
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <BookOpen className="w-6 h-6 mr-2" />
+            How to Use CSS Text Glitch Effect Generator?
+          </h2>
+          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Enter the text you want to apply the glitch effect to in the "Text" input field.</li>
+            <li>Adjust the font size, weight, and letter spacing using the respective sliders.</li>
+            <li>Choose text and background colors using the color pickers or by entering hex values.</li>
+            <li>Select a glitch effect type from the dropdown menu (RGB Split, Color, Noise, Transformation, Glitch Clip, Distortion, Pixelate, Wave, or Custom).</li>
+            <li>Customize the glitch colors using the color pickers for Glitch Color #1 and #2.</li>
+            <li>Use the sliders to adjust the glitch intensity and animation speed.</li>
+            <li>Toggle the "Show Scan Lines" option to add or remove the scan line effect.</li>
+            <li>For advanced users, select the "Custom" glitch effect to enter your own CSS.</li>
+            <li>Preview your glitch effect in real-time in the preview area.</li>
+            <li>Use the fullscreen button to view your effect in a larger format.</li>
+            <li>Copy the generated HTML and CSS code or download the complete HTML file for use in your project.</li>
+            <li>Use the "Reset" button to return to default settings if needed.</li>
+          </ol>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Lightbulb className="w-6 h-6 mr-2" />
+            Key Features
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li>Multiple pre-defined glitch effects (RGB Split, Color, Noise, Transformation, Glitch Clip, Distortion, Pixelate, Wave)</li>
+            <li>Custom text input with real-time preview</li>
+            <li>Adjustable font size, weight, and letter spacing</li>
+            <li>Customizable text color, background color, and glitch colors</li>
+            <li>Glitch intensity and animation speed controls</li>
+            <li>Optional scan lines effect</li>
+            <li>Custom CSS input for advanced users</li>
+            <li>Real-time preview of the glitch effect with fullscreen option</li>
+            <li>Generated HTML and CSS code with one-click copy functionality</li>
+            <li>Option to download a complete HTML file with the glitch effect</li>
+            <li>Reset option to quickly return to default settings</li>
+            <li>Responsive design for use on various devices</li>
+            <li>Tabbed interface for easy navigation between text and glitch settings</li>
+          </ul>
+
+          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+            <Info className="w-6 h-6 mr-2" />
+            Applications and Use Cases
+          </h2>
+          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+            <li><strong>Web Design:</strong> Create attention-grabbing headers, titles, or call-to-action text for websites.</li>
+            <li><strong>Digital Art:</strong> Incorporate glitch effects into digital illustrations or artwork.</li>
+            <li><strong>Video Games:</strong> Design title screens, menu text, or in-game UI elements with a glitchy aesthetic.</li>
+            <li><strong>Motion Graphics:</strong> Use as a starting point for animated text in video productions.</li>
+            <li><strong>Social Media:</strong> Create eye-catching graphics for social media posts or profile images.</li>
+            <li><strong>Advertising:</strong> Design unique and memorable text effects for digital advertisements.</li>
+            <li><strong>Cyberpunk or Sci-Fi Themed Projects:</strong> Perfect for projects requiring a futuristic or dystopian look.</li>
+            <li><strong>Music Industry:</strong> Design album covers, concert posters, or music video graphics.</li>
+            <li><strong>Error Pages:</strong> Create visually interesting 404 or error pages for websites.</li>
+            <li><strong>Educational Tools:</strong> Teach concepts of CSS animations and effects in a hands-on, interactive way.</li>
+          </ul>
+
+          <p className="text-gray-300 mt-6">
+            The CSS Text Glitch Effect Generator empowers creators to produce sophisticated, modern text effects that can dramatically improve the visual appeal of various digital projects. By providing an intuitive interface for customizing complex glitch effects, along with real-time previews and easy code generation, this tool bridges the gap between advanced design concepts and practical implementation. Whether you're aiming for subtle, elegant touches or bold, eye-catching elements, the Enhanced CSS Text Glitch Effect Generator gives you the control and flexibility you need to bring your creative vision to life.
+          </p>
+        </CardContent>
+      </Card>
+    </ToolLayout>
   )
 }

@@ -8,7 +8,11 @@ import type { ConversionRequest, PotraceOptions } from 'conversion-types'
 declare module 'potrace' {
   export function posterize(
     file: Buffer | string,
-    options: PotraceOptions,
+    options: PotraceOptions & {
+      colormode?: string;
+      colorFirst?: boolean;
+      colorMax?: number;
+    },
     callback: (err: Error | null, svg: string) => void
   ): void;
 }
@@ -62,10 +66,16 @@ export async function POST(request: NextRequest) {
 
     let svg: string
     if (body.options?.color === 'color') {
-      // Use potrace.posterize for color conversion
-      svg = await posterize(processedBuffer, potraceOptions)
+      const colorPotraceOptions: PotraceOptions & Record<string, unknown> = {
+        ...potraceOptions,
+        // These will be added without TypeScript errors
+        colormode: 'color',
+        colorFirst: true,
+        colorMax: body.options?.threshold ?? 32, // Use threshold as a proxy for color reduction
+      }
+
+      svg = await posterize(processedBuffer, colorPotraceOptions)
     } else {
-      // Use regular trace for black and white
       svg = await trace(processedBuffer, potraceOptions)
     }
 
