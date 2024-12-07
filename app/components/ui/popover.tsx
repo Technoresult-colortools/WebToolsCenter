@@ -1,30 +1,13 @@
-'use client'
-
-import React, { useState, useRef, useEffect, ReactNode } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
 interface PopoverProps {
-  children: ReactNode
+  trigger: React.ReactNode
+  content: React.ReactNode
   placement?: 'top' | 'bottom' | 'left' | 'right'
 }
 
-interface PopoverTriggerProps {
-  children: ReactNode
-}
-
-interface PopoverContentProps {
-  children: ReactNode
-}
-
-const PopoverContext = React.createContext<{
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  triggerRef: React.RefObject<HTMLDivElement>
-  contentRef: React.RefObject<HTMLDivElement>
-  placement: 'top' | 'bottom' | 'left' | 'right'
-} | null>(null)
-
-export function Popover({ children, placement = 'bottom' }: PopoverProps) {
+export function Popover({ trigger, content, placement = 'bottom' }: PopoverProps) {
   const [isOpen, setIsOpen] = useState(false)
   const triggerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -42,34 +25,6 @@ export function Popover({ children, placement = 'bottom' }: PopoverProps) {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
-
-  return (
-    <PopoverContext.Provider value={{ isOpen, setIsOpen, triggerRef, contentRef, placement }}>
-      {children}
-    </PopoverContext.Provider>
-  )
-}
-
-export function PopoverTrigger({ children }: PopoverTriggerProps) {
-  const context = React.useContext(PopoverContext)
-  if (!context) {
-    throw new Error('PopoverTrigger must be used within a Popover')
-  }
-  const { setIsOpen, triggerRef } = context
-
-  return (
-    <div ref={triggerRef} onClick={() => setIsOpen(prev => !prev)}>
-      {children}
-    </div>
-  )
-}
-
-export function PopoverContent({ children }: PopoverContentProps) {
-  const context = React.useContext(PopoverContext)
-  if (!context) {
-    throw new Error('PopoverContent must be used within a Popover')
-  }
-  const { isOpen, contentRef, triggerRef, placement } = context
 
   useEffect(() => {
     if (isOpen && triggerRef.current && contentRef.current) {
@@ -101,18 +56,23 @@ export function PopoverContent({ children }: PopoverContentProps) {
       contentRef.current.style.top = `${top}px`
       contentRef.current.style.left = `${left}px`
     }
-  }, [isOpen, placement, triggerRef, contentRef])
+  }, [isOpen, placement])
 
-  if (!isOpen) return null
-
-  return createPortal(
-    <div
-      ref={contentRef}
-      className="fixed z-50 bg-white dark:bg-gray-800 rounded-md shadow-lg p-4"
-      style={{ minWidth: '200px' }}
-    >
-      {children}
-    </div>,
-    document.body
+  return (
+    <>
+      <div ref={triggerRef} onClick={() => setIsOpen(!isOpen)}>
+        {trigger}
+      </div>
+      {isOpen && createPortal(
+        <div
+          ref={contentRef}
+          className="fixed z-50 bg-white dark:bg-gray-800 rounded-md shadow-lg p-4"
+          style={{ minWidth: '200px' }}
+        >
+          {content}
+        </div>,
+        document.body
+      )}
+    </>
   )
 }
