@@ -20,14 +20,9 @@ export default function ImageColorPicker() {
   const [isImageEyeDropperActive, setIsImageEyeDropperActive] = useState(false)
   const [dominantColors, setDominantColors] = useState<string[]>([])
 
-  const imageContainerRef = useRef<HTMLDivElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    if (imageSrc) {
-      extractDominantColors()
-    }
-  }, [imageSrc])
+  const imageContainerRef = useRef<HTMLDivElement>(null)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -42,62 +37,23 @@ export default function ImageColorPicker() {
     }
   }
 
-  const handleImageEyeDropper = async () => {
-    try {
-      if (!imageSrc) {
-        toast.error('Please upload an image first')
-        return
+  useEffect(() => {
+    if (imageSrc && imageRef.current && canvasRef.current) {
+      const img = new Image()
+      img.src = imageSrc
+      img.onload = () => {
+        const canvas = canvasRef.current!
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        extractDominantColors()
       }
-
-      setIsImageEyeDropperActive(true)
-
-      // @ts-expect-error - EyeDropper API might not be in TypeScript definitions
-      const eyeDropper = new EyeDropper()
-      const result = await eyeDropper.open()
-      
-      setSelectedColor(result.sRGBHex)
-      setShowColorDetails(true)
-      setColorHistory(prev => [result.sRGBHex, ...prev.slice(0, 9)])
-      toast.success('Color picked successfully!')
-    } catch (error) {
-      toast.error('Failed to pick color')
-    } finally {
-      setIsImageEyeDropperActive(false)
     }
-  }
+  }, [imageSrc])
 
-  const extractDominantColors = () => {
-    if (!imageSrc || !canvasRef.current) return
-
-    const img = new Image()
-    img.crossOrigin = "anonymous"
-    img.src = imageSrc
-    img.onload = () => {
-      const canvas = canvasRef.current!
-      const ctx = canvas.getContext('2d')!
-      canvas.width = img.width
-      canvas.height = img.height
-      ctx.drawImage(img, 0, 0, img.width, img.height)
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-      const pixels = imageData.data
-      const colorCounts: {[key: string]: number} = {}
-
-      for (let i = 0; i < pixels.length; i += 4) {
-        const r = pixels[i]
-        const g = pixels[i + 1]
-        const b = pixels[i + 2]
-        const rgb = `rgb(${r},${g},${b})`
-        colorCounts[rgb] = (colorCounts[rgb] || 0) + 1
-      }
-
-      const sortedColors = Object.entries(colorCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5)
-        .map(([color]) => color)
-
-      setDominantColors(sortedColors)
-    }
+  const rgbToHex = (r: number, g: number, b: number) => {
+    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')
   }
 
   const hexToRgb = (hex: string) => {
@@ -110,16 +66,14 @@ export default function ImageColorPicker() {
   }
 
   const rgbToHsl = (r: number, g: number, b: number) => {
-    r /= 255
-    g /= 255
-    b /= 255
-    const max = Math.max(r, g, b)
-    const min = Math.min(r, g, b)
-    let h = 0
-    let s = 0
+    r /= 255; g /= 255; b /= 255
+    const max = Math.max(r, g, b), min = Math.min(r, g, b)
+    let h, s
     const l = (max + min) / 2
 
-    if (max !== min) {
+    if (max === min) {
+      h = s = 0
+    } else {
       const d = max - min
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
       switch (max) {
@@ -127,14 +81,27 @@ export default function ImageColorPicker() {
         case g: h = (b - r) / d + 2; break
         case b: h = (r - g) / d + 4; break
       }
-      h /= 6
+      h! /= 6
     }
 
     return {
-      h: Math.round(h * 360),
+      h: Math.round(h! * 360),
       s: Math.round(s * 100),
       l: Math.round(l * 100)
     }
+  }
+
+  const resetSelection = () => {
+    setSelectedColor(null)
+    setShowColorDetails(false)
+  }
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success('Copied to clipboard!')
+    }).catch(() => {
+      toast.error('Failed to copy')
+    })
   }
 
   const getColorString = (color: string | null) => {
@@ -142,7 +109,6 @@ export default function ImageColorPicker() {
     const rgb = hexToRgb(color)
     if (!rgb) return ''
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
-    
     switch (colorFormat) {
       case 'hex':
         return color
@@ -152,6 +118,93 @@ export default function ImageColorPicker() {
         return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
     }
   }
+
+  const handleImageEyeDropper = async () => {
+    try {
+      if (!imageSrc) {
+        toast.error('Please upload an image first')
+        return
+      }
+
+      setIsImageEyeDropperActive(true)
+
+      if ('EyeDropper' in window) {
+        // @ts-expect-error - EyeDropper API might not be in TypeScript definitions
+        const eyeDropper = new EyeDropper()
+        const result = await eyeDropper.open()
+        
+        setSelectedColor(result.sRGBHex)
+        setShowColorDetails(true)
+        setColorHistory(prev => [result.sRGBHex, ...prev.slice(0, 9)])
+        toast.success('Color picked successfully!')
+      } else {
+        toast((t) => (
+          <span>
+            Color picker not supported on this device. Tap the image to select a color.
+            <button onClick={() => toast.dismiss(t.id)}>Dismiss</button>
+          </span>
+        ), { icon: 'ℹ️', style: { background: '#3b82f6', color: '#fff' } })
+        
+        const handleImageClick = (e: MouseEvent) => {
+          const rect = imageContainerRef.current!.getBoundingClientRect()
+          const x = e.clientX - rect.left
+          const y = e.clientY - rect.top
+          
+          const canvas = canvasRef.current!
+          const ctx = canvas.getContext('2d')!
+          const imageData = ctx.getImageData(x, y, 1, 1)
+          const [r, g, b] = imageData.data
+          
+          const hex = rgbToHex(r, g, b)
+          setSelectedColor(hex)
+          setShowColorDetails(true)
+          setColorHistory(prev => [hex, ...prev.slice(0, 9)])
+          toast.success('Color picked successfully!')
+          
+          imageContainerRef.current!.removeEventListener('click', handleImageClick)
+        }
+        
+        imageContainerRef.current!.addEventListener('click', handleImageClick)
+      }
+    } catch (error) {
+      toast.error('Failed to pick color')
+    } finally {
+      setIsImageEyeDropperActive(false)
+    }
+  }
+
+  const extractDominantColors = () => {
+    if (!imageSrc || !canvasRef.current) return
+
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')!
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const pixels = imageData.data
+    const colorCounts: {[key: string]: number} = {}
+
+    for (let i = 0; i < pixels.length; i += 4) {
+      const r = pixels[i]
+      const g = pixels[i + 1]
+      const b = pixels[i + 2]
+      const rgb = `rgb(${r},${g},${b})`
+      colorCounts[rgb] = (colorCounts[rgb] || 0) + 1
+    }
+
+    const sortedColors = Object.entries(colorCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([color]) => color)
+
+    setDominantColors(sortedColors)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (imageContainerRef.current) {
+        imageContainerRef.current.removeEventListener('click', () => {})
+      }
+    }
+  }, [])
 
   return (
     <ToolLayout
@@ -193,6 +246,7 @@ export default function ImageColorPicker() {
             >
               <div className="relative h-48 md:h-96 bg-gray-700 rounded-lg overflow-hidden">
                 <img 
+                  ref={imageRef}
                   src={imageSrc} 
                   alt="Uploaded" 
                   className="w-full h-full object-contain"
@@ -218,10 +272,7 @@ export default function ImageColorPicker() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl md:text-2xl font-bold text-white">Selected Color</h2>
               <Button 
-                onClick={() => {
-                  setSelectedColor(null)
-                  setShowColorDetails(false)
-                }} 
+                onClick={resetSelection} 
                 variant="destructive" 
                 className="bg-gray-600 text-white hover:bg-gray-500"
               >
@@ -239,10 +290,7 @@ export default function ImageColorPicker() {
                 {getColorString(selectedColor)}
               </span>
               <Button 
-                onClick={() => {
-                  navigator.clipboard.writeText(getColorString(selectedColor))
-                  toast.success('Color copied to clipboard!')
-                }} 
+                onClick={() => copyToClipboard(getColorString(selectedColor))} 
                 variant="default" 
                 size="sm" 
                 className="bg-gray-600 text-white hover:bg-gray-500"
@@ -310,7 +358,7 @@ export default function ImageColorPicker() {
                   className="w-12 h-12 rounded-lg border-2 border-white cursor-pointer hover:scale-110 transition-transform flex flex-col items-center justify-center"
                   style={{ backgroundColor: color }}
                   onClick={() => {
-                    navigator.clipboard.writeText(color)
+                    copyToClipboard(color)
                     toast.success('Color copied to clipboard!')
                   }}
                   title={`Click to copy: ${color}`}
@@ -334,7 +382,7 @@ export default function ImageColorPicker() {
                   className="w-8 h-8 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition-transform"
                   style={{ backgroundColor: color }}
                   onClick={() => {
-                    navigator.clipboard.writeText(color)
+                    copyToClipboard(color)
                     toast.success('Color copied to clipboard!')
                   }}
                   title={`Click to copy: ${color}`}
@@ -420,3 +468,4 @@ export default function ImageColorPicker() {
     </ToolLayout>
   )
 }
+
