@@ -177,7 +177,7 @@ export default function EnhancedImageResizer() {
                   Swap Dimensions
                 </Button>
                 <Checkbox
-                  id="preserve-aspect-ratio"
+                  id=""
                   checked={preserveAspectRatio}
                   onChange={handlePreserveAspectRatioChange}
                 />

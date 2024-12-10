@@ -288,26 +288,41 @@ export default function CSSTriangleGenerator() {
 
             <div className="mt-8">
               <h2 className="text-2xl font-bold text-white mb-4">Generated CSS</h2>
-              <div className="bg-gray-700 p-4 rounded-lg">
+              
+              {/* CSS Code Container */}
+              <div className="bg-gray-700 p-4 rounded-lg overflow-auto">
                 <code className="text-white whitespace-pre-wrap break-all">
                   {generatedCSS}
                 </code>
               </div>
-              <div className="mt-4 flex justify-end space-x-2">
-                <Button onClick={handleReset} variant="destructive" className="text-white border-white hover:bg-gray-700">
+              
+              {/* Buttons */}
+              <div className="mt-4 flex flex-col space-y-2 md:flex-row md:justify-end md:space-y-0 md:space-x-2">
+                <Button
+                  onClick={handleReset}
+                  variant="destructive"
+                  className="text-white border-white hover:bg-gray-700"
+                >
                   <RefreshCw className="h-5 w-5 mr-2" />
                   Reset
                 </Button>
-                <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button
+                  onClick={handleCopy}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                >
                   <Copy className="h-5 w-5 mr-2" />
                   Copy CSS
                 </Button>
-                <Button onClick={handleDownload} className="bg-green-600 hover:bg-green-700 text-white">
+                <Button
+                  onClick={handleDownload}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
                   <Download className="h-5 w-5 mr-2" />
                   Download CSS
                 </Button>
               </div>
             </div>
+
           </div>
         </CardContent>
       </Card>

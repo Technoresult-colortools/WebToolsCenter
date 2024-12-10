@@ -391,6 +391,19 @@ export default function SvgPatternGenerator() {
                   className="w-full"
                 />
               </div>
+              {patternType === 'customImage' && (
+                <div>
+                  <Label htmlFor="image-upload" className="text-white mb-2 block">Upload Image (Max 5MB)</Label>
+                  <Input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    ref={fileInputRef}
+                    className="bg-gray-700 text-white border-gray-600"
+                  />
+                </div>
+              )}
             </div>
           </TabsContent>
           <TabsContent value="advanced">
@@ -570,19 +583,7 @@ export default function SvgPatternGenerator() {
                 </Select>
               </div>
 
-              {patternType === 'customImage' && (
-                <div>
-                  <Label htmlFor="image-upload" className="text-white mb-2 block">Upload Image (Max 5MB)</Label>
-                  <Input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    ref={fileInputRef}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-              )}
+              
             </div>
           </TabsContent>
         </Tabs>

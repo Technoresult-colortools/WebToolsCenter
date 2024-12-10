@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { RefreshCw, Copy, Info, BookOpen, Lightbulb, AlertCircle, Palette } from 'lucide-react'
+import { Copy, Info, BookOpen, Lightbulb, AlertCircle, Palette } from 'lucide-react'
 import Input from "@/components/ui/Input"
 import Image from 'next/image'
 import { Button } from "@/components/ui/Button"
@@ -285,20 +285,7 @@ export default function ColorNameGenerator() {
               >
                 <Lightbulb className="mr-2 h-4 w-4" /> Generate Color Name
               </Button>
-              <Button 
-                variant="secondary" 
-                onClick={() => {
-                  const randomColor = ColorUtils.generateRandomColor()
-                  setColorValue(randomColor)
-                  setColorFormat('hex')
-                  handleGenerateColorName()
-                }}
-              >
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2">
               <Palette className="h-5 w-5 text-gray-400" />
               <input
                 type="color"
@@ -307,6 +294,10 @@ export default function ColorNameGenerator() {
                 className="w-8 h-8 rounded cursor-pointer"
               />
             </div>
+              
+            </div>
+
+            
           </div>
 
           {error && (
@@ -346,7 +337,7 @@ export default function ColorNameGenerator() {
 
           <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
             <BookOpen className="w-6 h-6 mr-2" />
-            How to Use Color Name Generator
+            How to Use Color Name Generator?
           </h2>
           <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
             <li>The tool starts with a random color. You can modify this or enter your own color.</li>

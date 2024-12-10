@@ -369,7 +369,7 @@ export default function ImageColorPicker() {
 
         <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
-          How to Use the Image Color Picker
+          How to Use the Image Color Picker?
         </h2>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
           <li>Upload an image by clicking the upload area or dragging and dropping a file.</li>

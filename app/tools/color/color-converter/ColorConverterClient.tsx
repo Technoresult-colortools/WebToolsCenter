@@ -230,7 +230,7 @@ const ColorConverter: React.FC = () => {
               <Maximize2 className="h-4 w-4" />
             </Button>
           </div>
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-between space-x-2 mt-4">
             <Button onClick={() => copyToClipboard(hex)} className="w-48">
               <Copy className="mr-2 h-4 w-4" /> Copy HEX
             </Button>

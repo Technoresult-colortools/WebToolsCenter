@@ -302,28 +302,33 @@ export default function SvgToPngConverter() {
               </Select>
             </div>
             {exportSize === 'custom' && (
-              <div className="flex space-x-4">
-                <div>
-                  <Label htmlFor="custom-width" className="text-white mb-2 block">Width</Label>
-                  <Input
-                    id="custom-width"
-                    type="number"
-                    value={customWidth}
-                    onChange={(e) => setCustomWidth(Number(e.target.value))}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="custom-height" className="text-white mb-2 block">Height</Label>
-                  <Input
-                    id="custom-height"
-                    type="number"
-                    value={customHeight}
-                    onChange={(e) => setCustomHeight(Number(e.target.value))}
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
+              <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+              <div>
+                <Label htmlFor="custom-width" className="text-white mb-2 block">
+                  Width
+                </Label>
+                <Input
+                  id="custom-width"
+                  type="number"
+                  value={customWidth}
+                  onChange={(e) => setCustomWidth(Number(e.target.value))}
+                  className="bg-gray-700 text-white border-gray-600"
+                />
               </div>
+              <div>
+                <Label htmlFor="custom-height" className="text-white mb-2 block">
+                  Height
+                </Label>
+                <Input
+                  id="custom-height"
+                  type="number"
+                  value={customHeight}
+                  onChange={(e) => setCustomHeight(Number(e.target.value))}
+                  className="bg-gray-700 text-white border-gray-600"
+                />
+              </div>
+            </div>
+            
             )}
           </div>
         </div>
@@ -381,7 +386,7 @@ export default function SvgToPngConverter() {
 
         <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
-          How to Use the SVG to PNG Converter
+          How to Use the SVG to PNG Converter?
         </h2>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
           <li>Upload your SVG file using the file input or enter a valid SVG URL.</li>

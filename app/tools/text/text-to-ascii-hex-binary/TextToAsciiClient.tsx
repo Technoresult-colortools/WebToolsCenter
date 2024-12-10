@@ -113,12 +113,12 @@ export default function TextToAsciiHexBinary() {
     >
       <Toaster position="top-right" />
 
-      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+      <div className="bg-gray-800 rounded-xl shadow-lg p-4 sm:p-8 max-w-4xl mx-auto mb-8">
         <div className="mb-6">
           <Label htmlFor="input-text" className="text-white mb-2 block">
             {reverseMode ? "Enter encoded text:" : "Enter your text:"}
           </Label>
-          <div className="flex items-center space-x-2 mb-4">
+          <div className="flex flex-col space-y-4">
             <Textarea
               id="input-text"
               value={inputText}
@@ -128,43 +128,48 @@ export default function TextToAsciiHexBinary() {
               rows={4}
             />
           </div>
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <Button
-                onClick={handleClear}
-                variant="destructive"
-                className="bg-red-500 hover:bg-red-600 text-white"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="reverse-mode"
-                  checked={reverseMode}
-                  onCheckedChange={setReverseMode}
-                />
-                <Label htmlFor="reverse-mode" className="text-white">
-                  Reverse Mode
-                </Label>
+          <div className="flex flex-col space-y-4 mt-4">
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
+                <Button
+                  onClick={handleClear}
+                  variant="destructive"
+                  className="bg-red-500 hover:bg-red-600 text-white w-full sm:w-auto"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+                <div className="flex items-center space-x-2 w-full sm:w-auto">
+                  <Switch
+                    id="reverse-mode"
+                    checked={reverseMode}
+                    onCheckedChange={setReverseMode}
+                  />
+                  <Label htmlFor="reverse-mode" className="text-white">
+                    Reverse Mode
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 w-full sm:w-auto">
+                  <Switch
+                    id="case-sensitive"
+                    checked={caseSensitive}
+                    onCheckedChange={setCaseSensitive}
+                  />
+                  <Label htmlFor="case-sensitive" className="text-white">
+                    Case Sensitive
+                  </Label>
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="case-sensitive"
-                  checked={caseSensitive}
-                  onCheckedChange={setCaseSensitive}
-                />
-                <Label htmlFor="case-sensitive" className="text-white">
-                  Case Sensitive
-                </Label>
-              </div>
+            
+
+            <div className="flex flex-col items-start space-y-2">
+              <Label className="text-white">Output Separator</Label>
               <Select value={outputFormat} onValueChange={setOutputFormat}>
-                <SelectTrigger className="w-[180px] bg-gray-700 text-white border-gray-600">
+                <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
                   <SelectValue placeholder="Select output format" />
                 </SelectTrigger>
-                <SelectContent className="w-[180px] bg-gray-700 text-white border-gray-600">
+                <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
                   <SelectItem value="space">Space Separated</SelectItem>
                   <SelectItem value="comma">Comma Separated</SelectItem>
                   <SelectItem value="none">No Separator</SelectItem>
@@ -175,22 +180,23 @@ export default function TextToAsciiHexBinary() {
         </div>
 
         <Tabs defaultValue="ascii">
-          <TabsList className="mb-4">
+          <TabsList className="mb-4 flex overflow-x-auto">
             <TabsTrigger value="ascii">ASCII</TabsTrigger>
             <TabsTrigger value="hex">Hexadecimal</TabsTrigger>
             <TabsTrigger value="binary">Binary</TabsTrigger>
             <TabsTrigger value="base64">Base64</TabsTrigger>
           </TabsList>
+          {/* Rest of the Tabs content remains unchanged */}
           <TabsContent value="ascii">
             <div className="bg-gray-700 p-4 rounded-lg mb-4">
               <p className="text-white break-all">{asciiResult || 'ASCII result will appear here'}</p>
             </div>
-            <div className="flex space-x-2">
-              <Button onClick={() => handleCopy(asciiResult)} className="bg-blue-500 hover:bg-blue-600 text-white">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+              <Button onClick={() => handleCopy(asciiResult)} className="bg-blue-500 hover:bg-blue-600 text-white w-full sm:w-auto">
                 <Copy className="h-4 w-4 mr-2" />
                 Copy ASCII
               </Button>
-              <Button onClick={() => handleDownload(asciiResult, 'ascii')} className="bg-green-500 hover:bg-green-600 text-white">
+              <Button onClick={() => handleDownload(asciiResult, 'ascii')} className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto">
                 <FileDown className="h-4 w-4 mr-2" />
                 Download ASCII
               </Button>
@@ -200,12 +206,12 @@ export default function TextToAsciiHexBinary() {
             <div className="bg-gray-700 p-4 rounded-lg mb-4">
               <p className="text-white break-all">{hexResult || 'Hexadecimal result will appear here'}</p>
             </div>
-            <div className="flex space-x-2">
-              <Button onClick={() => handleCopy(hexResult)} className="bg-blue-500 hover:bg-blue-600 text-white">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+              <Button onClick={() => handleCopy(hexResult)} className="bg-blue-500 hover:bg-blue-600 text-white w-full sm:w-auto">
                 <Copy className="h-4 w-4 mr-2" />
                 Copy Hexadecimal
               </Button>
-              <Button onClick={() => handleDownload(hexResult, 'hex')} className="bg-green-500 hover:bg-green-600 text-white">
+              <Button onClick={() => handleDownload(hexResult, 'hex')} className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto">
                 <FileDown className="h-4 w-4 mr-2" />
                 Download Hexadecimal
               </Button>
@@ -215,12 +221,12 @@ export default function TextToAsciiHexBinary() {
             <div className="bg-gray-700 p-4 rounded-lg mb-4">
               <p className="text-white break-all">{binaryResult || 'Binary result will appear here'}</p>
             </div>
-            <div className="flex space-x-2">
-              <Button onClick={() => handleCopy(binaryResult)} className="bg-blue-500 hover:bg-blue-600 text-white">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+              <Button onClick={() => handleCopy(binaryResult)} className="bg-blue-500 hover:bg-blue-600 text-white w-full sm:w-auto">
                 <Copy className="h-4 w-4 mr-2" />
                 Copy Binary
               </Button>
-              <Button onClick={() => handleDownload(binaryResult, 'binary')} className="bg-green-500 hover:bg-green-600 text-white">
+              <Button onClick={() => handleDownload(binaryResult, 'binary')} className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto">
                 <FileDown className="h-4 w-4 mr-2" />
                 Download Binary
               </Button>
@@ -230,12 +236,12 @@ export default function TextToAsciiHexBinary() {
             <div className="bg-gray-700 p-4 rounded-lg mb-4">
               <p className="text-white break-all">{base64Result || 'Base64 result will appear here'}</p>
             </div>
-            <div className="flex space-x-2">
-              <Button onClick={() => handleCopy(base64Result)} className="bg-blue-500 hover:bg-blue-600 text-white">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+              <Button onClick={() => handleCopy(base64Result)} className="bg-blue-500 hover:bg-blue-600 text-white w-full sm:w-auto">
                 <Copy className="h-4 w-4 mr-2" />
                 Copy Base64
               </Button>
-              <Button onClick={() => handleDownload(base64Result, 'base64')} className="bg-green-500 hover:bg-green-600 text-white">
+              <Button onClick={() => handleDownload(base64Result, 'base64')} className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto">
                 <FileDown className="h-4 w-4 mr-2" />
                 Download Base64
               </Button>
@@ -244,8 +250,8 @@ export default function TextToAsciiHexBinary() {
         </Tabs>
       </div>
 
-      <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+      <div className="bg-gray-800 rounded-xl shadow-lg p-4 sm:p-8 max-w-4xl mx-auto mt-8">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 flex items-center">
           <Info className="w-6 h-6 mr-2" />
           What is the Text to ASCII/Hex/Binary Converter?
         </h2>
@@ -262,30 +268,30 @@ export default function TextToAsciiHexBinary() {
             alt="Screenshot of the Text to ASCII/Hex/Binary Converter interface showing input area, conversion options, and multiple output formats" 
             width={600} 
             height={400} 
-            className="rounded-lg shadow-lg"
+            className="rounded-lg shadow-lg w-full h-auto"
           />
         </div>
 
-        <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+        <h2 id="how-to-use" className="text-xl sm:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
           How to Use the Text to ASCII/Hex/Binary Converter
         </h2>
-        <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+        <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm sm:text-base">
           <li>Enter or paste your text into the input area.</li>
           <li>Choose between normal mode (text to encoded) or reverse mode (encoded to text).</li>
           <li>Select your desired output format: ASCII, Hexadecimal, Binary, or Base64.</li>
           <li>Adjust settings like case sensitivity and output separator as needed.</li>
-          <li>View the converted result in real-time as you type or modify settings.</li>
+          <li>View the converted result in real-time View the converted result in real-time as you type or modify settings.</li>
           <li>Use the "Copy" button to copy the result to your clipboard.</li>
           <li>Click "Download" to save the result as a text file.</li>
           <li>Use "Clear" to reset the input and all conversions for a new task.</li>
         </ol>
 
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <Settings className="w-6 h-6 mr-2" />
           Key Features
         </h2>
-        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm sm:text-base">
           <li><strong>Multiple Conversion Formats:</strong> Convert text to ASCII, Hexadecimal, Binary, and Base64.</li>
           <li><strong>Reverse Mode:</strong> Decode ASCII, Hex, Binary, or Base64 back into plain text.</li>
           <li><strong>Real-time Conversion:</strong> See results update instantly as you type or change settings.</li>
@@ -295,22 +301,22 @@ export default function TextToAsciiHexBinary() {
           <li><strong>Clear Function:</strong> Quickly reset the converter for new inputs.</li>
         </ul>
 
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <ArrowRightLeft className="w-6 h-6 mr-2" />
           Understanding the Conversion Process
         </h2>
-        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm sm:text-base">
           <li><strong>ASCII (American Standard Code for Information Interchange):</strong> Represents each character as a number from 0 to 127.</li>
           <li><strong>Hexadecimal:</strong> Base-16 number system, using digits 0-9 and letters A-F. Each ASCII character is represented by two hex digits.</li>
           <li><strong>Binary:</strong> Base-2 number system, using only 0s and 1s. Each ASCII character is represented by 8 bits.</li>
           <li><strong>Base64:</strong> Encodes binary data using 64 characters, useful for transmitting data over text-based protocols.</li>
         </ul>
 
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <Lightbulb className="w-6 h-6 mr-2" />
           Practical Applications
         </h2>
-        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm sm:text-base">
           <li><strong>Programming and Debugging:</strong> Quickly convert between text and its various representations for low-level programming tasks.</li>
           <li><strong>Data Encoding:</strong> Prepare text for transmission over protocols that only support certain character sets.</li>
           <li><strong>Cryptography:</strong> Use as a first step in creating or analyzing simple substitution ciphers.</li>

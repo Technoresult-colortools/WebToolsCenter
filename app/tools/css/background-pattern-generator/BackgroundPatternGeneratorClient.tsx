@@ -343,86 +343,96 @@ ${Array.from({ length: layers }, (_, i) => `
 
             {/* Colors Tab */}
             <TabsContent value="colors">
-              <div className="space-y-4">
-                <h2 className="text-xl md:text-2xl font-bold text-white">Color Settings</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Color 1 */}
-                  <div>
-                    <Label htmlFor="color1" className="text-white mb-2 block">Color 1</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="color1"
-                        type="color"
-                        value={color1}
-                        onChange={(e) => setColor1(e.target.value)}
-                        className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
-                      />
-                      <Input
-                        type="text"
-                        value={color1}
-                        onChange={(e) => setColor1(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
-                  </div>
-                  {/* Color 2 */}
-                  <div>
-                    <Label htmlFor="color2" className="text-white mb-2 block">Color 2</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="color2"
-                        type="color"
-                        value={color2}
-                        onChange={(e) => setColor2(e.target.value)}
-                        className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
-                      />
-                      <Input
-                        type="text"
-                        value={color2}
-                        onChange={(e) => setColor2(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
-                  </div>
-                  {/* Color 3 */}
-                  <div>
-                    <Label htmlFor="color3" className="text-white mb-2 block">Color 3</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="color3"
-                        type="color"
-                        value={color3}
-                        onChange={(e) => setColor3(e.target.value)}
-                        className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
-                      />
-                      <Input
-                        type="text"
-                        value={color3}
-                        onChange={(e) => setColor3(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
-                  </div>
-                  {/* Color 4 */}
-                  <div>
-                    <Label htmlFor="color4" className="text-white mb-2 block">Color 4</Label>
-                    <div className="flex space-x-2">
-                      <Input
-                        id="color4"
-                        type="color"
-                        value={color4}
-                        onChange={(e) => setColor4(e.target.value)}
-                        className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
-                      />
-                      <Input
-                        type="text"
-                        value={color4}
-                        onChange={(e) => setColor4(e.target.value)}
-                        className="flex-grow bg-gray-700 text-white border-gray-600"
-                      />
-                    </div>
+            <div className="space-y-4">
+              <h2 className="text-xl md:text-2xl font-bold text-white">Color Settings</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Color 1 */}
+                <div>
+                  <Label htmlFor="color1" className="text-white mb-2 block">
+                    Color 1
+                  </Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      id="color1"
+                      type="color"
+                      value={color1}
+                      onChange={(e) => setColor1(e.target.value)}
+                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                    />
+                    <Input
+                      type="text"
+                      value={color1}
+                      onChange={(e) => setColor1(e.target.value)}
+                      className="flex-grow bg-gray-700 text-white border-gray-600"
+                    />
                   </div>
                 </div>
+                {/* Color 2 */}
+                <div>
+                  <Label htmlFor="color2" className="text-white mb-2 block">
+                    Color 2
+                  </Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      id="color2"
+                      type="color"
+                      value={color2}
+                      onChange={(e) => setColor2(e.target.value)}
+                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                    />
+                    <Input
+                      type="text"
+                      value={color2}
+                      onChange={(e) => setColor2(e.target.value)}
+                      className="flex-grow bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                </div>
+                {/* Color 3 */}
+                <div>
+                  <Label htmlFor="color3" className="text-white mb-2 block">
+                    Color 3
+                  </Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      id="color3"
+                      type="color"
+                      value={color3}
+                      onChange={(e) => setColor3(e.target.value)}
+                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                    />
+                    <Input
+                      type="text"
+                      value={color3}
+                      onChange={(e) => setColor3(e.target.value)}
+                      className="flex-grow bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                </div>
+                {/* Color 4 */}
+                <div>
+                  <Label htmlFor="color4" className="text-white mb-2 block">
+                    Color 4
+                  </Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      id="color4"
+                      type="color"
+                      value={color4}
+                      onChange={(e) => setColor4(e.target.value)}
+                      className="w-12 h-12 p-1 bg-gray-700 border-gray-600"
+                    />
+                    <Input
+                      type="text"
+                      value={color4}
+                      onChange={(e) => setColor4(e.target.value)}
+                      className="flex-grow bg-gray-700 text-white border-gray-600"
+                    />
+                  </div>
+                </div>
+              </div>
+
+
                 {/* Color Palette Selector */}
                 <div className="relative">
                   <Label htmlFor="colorPalette" className="text-white mb-2 block">Color Palette</Label>
@@ -494,7 +504,7 @@ ${Array.from({ length: layers }, (_, i) => `
                     <SelectTrigger id="blendMode" className="bg-gray-700 text-white border-gray-600">
                       <SelectValue placeholder="Select blend mode" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
+                    <SelectContent className="bg-gray-700 text-white border-gray-600 h-60 overflow-y-auto">
                       {['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion'].map((mode) => (
                         <SelectItem key={mode} value={mode}>
                           {mode.charAt(0).toUpperCase() + mode.slice(1)}
@@ -606,7 +616,7 @@ ${Array.from({ length: layers }, (_, i) => `
 
       <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
         <BookOpen className="w-6 h-6 mr-2" />
-        How to Use the CSS Background Pattern Generator
+        How to Use the CSS Background Pattern Generator?
       </h2>
       <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
         <li>Choose a pattern type from the dropdown menu.</li>

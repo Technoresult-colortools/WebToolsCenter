@@ -171,29 +171,48 @@ export default function ImageToBase64Converter() {
         <TabsContent value="converted">
           {convertedImages.length > 0 && (
             <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mb-2 mx-auto">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-white">Converted Images</h2>
-                <div className="flex space-x-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline">Sort By</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-gray-700 text-white border-gray-600">
-                      <DropdownMenuItem onClick={() => setSortOrder('name')}>Name</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSortOrder('size')}>Size</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setSortOrder('type')}>Type</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <Button onClick={downloadAllBase64} className="bg-green-500 hover:bg-green-600">
-                    <Download size={14} className="mr-2" />
-                    Download All
-                  </Button>
-                  <Button onClick={clearAll} className="bg-red-500 hover:bg-red-600">
-                    <Trash2 size={14} className="mr-2" />
-                    Clear All
-                  </Button>
+              <div className="mb-4">
+                <div className="flex flex-col md:flex-row justify-between items-center">
+                  <h2 className="text-2xl font-bold text-white mb-4 md:mb-0">
+                    Converted Images
+                  </h2>
+                  <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 w-full md:w-auto">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full md:w-auto">
+                          Sort By
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-gray-700 text-white border-gray-600">
+                        <DropdownMenuItem onClick={() => setSortOrder('name')}>
+                          Name
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setSortOrder('size')}>
+                          Size
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setSortOrder('type')}>
+                          Type
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Button
+                      onClick={downloadAllBase64}
+                      className="bg-green-500 hover:bg-green-600 w-full md:w-auto"
+                    >
+                      <Download size={14} className="mr-2" />
+                      Download All
+                    </Button>
+                    <Button
+                      onClick={clearAll}
+                      className="bg-red-500 hover:bg-red-600 w-full md:w-auto"
+                    >
+                      <Trash2 size={14} className="mr-2" />
+                      Clear All
+                    </Button>
+                  </div>
                 </div>
               </div>
+
               <div className="space-y-4">
                 {sortedImages.map((img, index) => (
                   <div key={index} className="bg-gray-700 rounded-lg p-4 shadow-lg">

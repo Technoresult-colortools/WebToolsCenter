@@ -98,13 +98,6 @@ const imageTools = [
     description: 'Convert images to Base64 format for embedding.', 
     gradient: 'from-blue-500 to-indigo-500' 
   },
-  {
-    name: 'Image Caption Generator', 
-    href: '/tools/image/image-caption-generator', 
-    icon: faCommentDots, 
-    description: 'Generate captions for your images using AI.', 
-    gradient: 'from-purple-500 to-pink-500' 
-  },
   { 
     name: 'PNG to SVG Converter', 
     href: '/tools/image/png-to-svg-converter', 

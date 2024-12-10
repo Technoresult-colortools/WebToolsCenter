@@ -220,6 +220,7 @@ export default function SVGBlobGenerator() {
               step={1}
               value={growth}
               onChange={handleGrowthChange}
+              className='mt-2'
 
             />
           </div>
@@ -233,6 +234,7 @@ export default function SVGBlobGenerator() {
               step={1}
               value={edgeCount}
               onChange={handleEdgeCountChange}
+              className='mt-2'
             />
           </div>
 
@@ -245,6 +247,7 @@ export default function SVGBlobGenerator() {
               step={0.01}
               value={complexity}
               onChange={handleComplexityChange}
+              className='mt-2'
             />
           </div>
 
@@ -257,6 +260,7 @@ export default function SVGBlobGenerator() {
               step={0.01}
               value={smoothness}
               onChange={handleSmoothnessChange}
+              className='mt-2'
             />
           </div>
           
@@ -330,7 +334,7 @@ export default function SVGBlobGenerator() {
 
         <h2 id="how-to-use" className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
-          How to Use the SVG Blob Generator
+          How to Use the SVG Blob Generator?
         </h2>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
           <li>Adjust the "Growth" slider to control the overall size and expansion of the blob.</li>

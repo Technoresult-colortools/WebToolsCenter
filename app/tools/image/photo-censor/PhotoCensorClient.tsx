@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/label"
@@ -77,19 +77,24 @@ const PhotoCensor: React.FC = () => {
     toast.success('Censoring applied successfully!')
   }, [image, censorType, intensity, selection])
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+  const handleStart = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
+    if (!imageRef.current) return
+    const rect = imageRef.current.getBoundingClientRect()
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    const x = clientX - rect.left
+    const y = clientY - rect.top
     setSelection({ x, y, width: 0, height: 0 })
     setIsSelecting(true)
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
-    if (!isSelecting) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+  const handleMove = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
+    if (!isSelecting || !imageRef.current) return
+    const rect = imageRef.current.getBoundingClientRect()
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    const x = clientX - rect.left
+    const y = clientY - rect.top
     setSelection(prev => ({
       ...prev,
       width: x - prev.x,
@@ -97,7 +102,7 @@ const PhotoCensor: React.FC = () => {
     }))
   }
 
-  const handleMouseUp = () => {
+  const handleEnd = () => {
     setIsSelecting(false)
     applyCensor()
   }
@@ -123,6 +128,16 @@ const PhotoCensor: React.FC = () => {
     }
     toast.success('All settings reset!')
   }
+
+  useEffect(() => {
+    const preventDefault = (e: TouchEvent) => {
+      e.preventDefault()
+    }
+    document.addEventListener('touchmove', preventDefault, { passive: false })
+    return () => {
+      document.removeEventListener('touchmove', preventDefault)
+    }
+  }, [])
 
   return (
     <ToolLayout
@@ -153,17 +168,13 @@ const PhotoCensor: React.FC = () => {
                 ref={imageRef}
                 src={image}
                 alt="Uploaded image"
-                className={`max-w-full max-h-[500px] object-contain ${
-                  isSelecting 
-                    ? 'cursor-crosshair select-none' 
-                    : 'cursor-crosshair hover:cursor-crosshair select-none'
-                }`}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onTouchStart={(e) => handleMouseDown(e.touches[0] as unknown as React.MouseEvent<HTMLImageElement>)}
-                onTouchMove={(e) => handleMouseMove(e.touches[0] as unknown as React.MouseEvent<HTMLImageElement>)}
-                onTouchEnd={handleMouseUp}
+                className="max-w-full max-h-[500px] object-contain cursor-crosshair select-none"
+                onMouseDown={handleStart}
+                onMouseMove={handleMove}
+                onMouseUp={handleEnd}
+                onTouchStart={handleStart}
+                onTouchMove={handleMove}
+                onTouchEnd={handleEnd}
                 draggable={false}
               />
               {isSelecting && (
@@ -176,7 +187,6 @@ const PhotoCensor: React.FC = () => {
                     top: `${Math.min(selection.y, selection.y + selection.height)}px`,
                     width: `${Math.abs(selection.width)}px`,
                     height: `${Math.abs(selection.height)}px`,
-                    cursor: 'crosshair',
                     pointerEvents: 'none',
                   }}
                 />
@@ -274,7 +284,7 @@ const PhotoCensor: React.FC = () => {
         </h2>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
           <li>Upload your image by clicking on the designated area or dragging and dropping a file.</li>
-          <li>Once uploaded, click and drag on the image to select the area you want to censor.</li>
+          <li>Once uploaded, click and drag (or touch and drag on mobile) on the image to select the area you want to censor.</li>
           <li>Choose your preferred censoring method: Blur, Pixelate, or Black-out.</li>
           <li>For Blur and Pixelate options, adjust the intensity using the slider.</li>
           <li>Click "Apply Censoring" to apply the effect to the selected area.</li>
@@ -288,7 +298,7 @@ const PhotoCensor: React.FC = () => {
           Key Features
         </h2>
         <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li><Scissors className="w-4 h-4 inline-block mr-1" /> <strong>Precise Area Selection:</strong> Click and drag to select exactly what you want to censor</li>
+          <li><Scissors className="w-4 h-4 inline-block mr-1" /> <strong>Precise Area Selection:</strong> Click and drag (or touch and drag on mobile) to select exactly what you want to censor</li>
           <li><Eye className="w-4 h-4 inline-block mr-1" /> <strong>Multiple Censoring Methods:</strong> Choose between Blur, Pixelate, and Black-out</li>
           <li><SlidersIcon className="w-4 h-4 inline-block mr-1" /> <strong>Adjustable Intensity:</strong> Fine-tune the strength of blur and pixelation effects</li>
           <li><RefreshCw className="w-4 h-4 inline-block mr-1" /> <strong>Real-time Preview:</strong> See the censoring effect immediately as you apply it</li>

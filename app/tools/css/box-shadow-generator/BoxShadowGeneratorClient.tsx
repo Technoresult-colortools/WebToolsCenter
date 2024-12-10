@@ -386,28 +386,41 @@ export default function BoxShadowGenerator() {
 
           <div className="mt-8">
             <h2 className="text-2xl font-bold text-white mb-4">Generated CSS</h2>
-            <div className="bg-gray-700 p-4 rounded-lg">
+            
+            {/* CSS Code Container */}
+            <div className="bg-gray-700 p-4 rounded-lg overflow-auto">
               <pre className="text-white whitespace-pre-wrap break-all text-sm">
                 {css}
               </pre>
             </div>
-            <div className="mt-4 flex flex-wrap justify-between items-center">
-              <div className="space-x-2">
-                <Button onClick={handleReset} variant="destructive" className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <RefreshCw className="h-5 w-5 mr-2" />
-                  Reset
-                </Button>
-                <Button onClick={handleCopy} className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Copy className="h-5 w-5 mr-2" />
-                  Copy CSS
-                </Button>
-                <Button onClick={handleDownload} className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Download className="h-5 w-5 mr-2" />
-                  Download CSS
-                </Button>
-              </div>
+
+            {/* Buttons */}
+            <div className="mt-4 flex flex-col space-y-2 sm:flex-row sm:flex-wrap sm:justify-between sm:items-center sm:space-y-0 sm:space-x-2">
+              <Button
+                onClick={handleReset}
+                variant="destructive"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <RefreshCw className="h-5 w-5 mr-2" />
+                Reset
+              </Button>
+              <Button
+                onClick={handleCopy}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Copy className="h-5 w-5 mr-2" />
+                Copy CSS
+              </Button>
+              <Button
+                onClick={handleDownload}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Download className="h-5 w-5 mr-2" />
+                Download CSS
+              </Button>
             </div>
           </div>
+
         </CardContent>
       </Card>
 

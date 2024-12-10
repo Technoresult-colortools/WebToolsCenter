@@ -183,24 +183,39 @@ export default function ColorShadesGenerator() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <Input
-              type="text"
-              value={baseColor}
-              onChange={(e) => setBaseColor(e.target.value)}
-              className="flex-grow bg-gray-700 text-white border-gray-600"
-              placeholder="Enter HEX color"
-            />
-            <Input
+        <div className="flex flex-wrap items-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <Input
+            type="text"
+            value={baseColor}
+            onChange={(e) => setBaseColor(e.target.value)}
+            className="flex-grow bg-gray-700 text-white border-gray-600 w-full sm:w-auto"
+            placeholder="Enter HEX color"
+          />
+          <div className="relative">
+            <input
+              id="color-picker"
               type="color"
               value={baseColor}
               onChange={(e) => setBaseColor(e.target.value)}
-              className="w-12 h-12 p-1 rounded"
+              className="sr-only"
             />
-            <Button onClick={handleRandomColor} className="bg-blue-600 hover:bg-blue-700">
-              <RefreshCw className="mr-2 h-4 w-4" /> Random
-            </Button>
+            <label
+              htmlFor="color-picker"
+              className="w-12 h-12 rounded cursor-pointer border-2 border-white/20 flex items-center justify-center"
+              style={{ backgroundColor: baseColor }}
+            >
+              <div className="w-8 h-8 rounded-sm border border-white/40"></div>
+            </label>
           </div>
+          <Button
+            onClick={handleRandomColor}
+            className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" /> Random
+          </Button>
+        </div>
+
+
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">

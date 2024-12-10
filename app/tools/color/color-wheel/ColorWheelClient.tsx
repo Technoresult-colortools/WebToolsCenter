@@ -106,7 +106,7 @@ export default function ColorWheel() {
   // State Management
   const [selectedHarmony, setSelectedHarmony] = useState(colorHarmonies[0])
   const [baseColor, setBaseColor] = useState('#ff0000')
-  const [customColor, setCustomColor] = useState('#ff0000')
+  const [customColor, setCustomColor] = useState('#ff0071')
   const [isDragging, setIsDragging] = useState(false)
   const [selectedDot, setSelectedDot] = useState(0)
   const [lightness, setLightness] = useState(50)
@@ -233,12 +233,27 @@ export default function ColorWheel() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    canvas.width = harmonyColors.length * 200
-    canvas.height = 200
+    const colorWidth = 200
+    const colorHeight = 150
+    const textHeight = 30
+    canvas.width = harmonyColors.length * colorWidth
+    canvas.height = colorHeight + textHeight
 
     harmonyColors.forEach((color, index) => {
+      // Draw color swatch
       ctx.fillStyle = color
-      ctx.fillRect(index * 200, 0, 200, 200)
+      ctx.fillRect(index * colorWidth, 0, colorWidth, colorHeight)
+
+      // Draw text background
+      ctx.fillStyle = '#f0f0f0'
+      ctx.fillRect(index * colorWidth, colorHeight, colorWidth, textHeight)
+
+      // Draw hex code text
+      ctx.fillStyle = '#000000'
+      ctx.font = '16px Arial'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText(color.toUpperCase(), index * colorWidth + colorWidth / 2, colorHeight + textHeight / 2)
     })
 
     const link = document.createElement('a')
