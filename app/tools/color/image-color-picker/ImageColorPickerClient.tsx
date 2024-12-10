@@ -129,7 +129,7 @@ export default function ImageColorPicker() {
       setIsImageEyeDropperActive(true)
 
       if ('EyeDropper' in window) {
-        // @ts-ignore
+        // @ts-expect-error
         const eyeDropper = new EyeDropper()
         const result = await eyeDropper.open()
         
