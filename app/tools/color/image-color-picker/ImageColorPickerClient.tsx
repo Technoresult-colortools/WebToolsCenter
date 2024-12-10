@@ -10,20 +10,18 @@ import NextImage from 'next/image'
 
 type ColorFormat = 'hex' | 'rgb' | 'hsl'
 
-export default function Component() {
+export default function ImageColorPicker() {
   const [selectedColor, setSelectedColor] = useState<string | null>(null)
   const [imageSrc, setImageSrc] = useState<string | null>(null)
   const [fileName, setFileName] = useState<string>('')
   const [colorFormat, setColorFormat] = useState<ColorFormat>('hex')
   const [showColorDetails, setShowColorDetails] = useState(false)
-  const [magnifierPosition, setMagnifierPosition] = useState({ x: 0, y: 0 })
   const [colorHistory, setColorHistory] = useState<string[]>([])
   const [isImageEyeDropperActive, setIsImageEyeDropperActive] = useState(false)
   const [dominantColors, setDominantColors] = useState<string[]>([])
 
   const imageRef = useRef<HTMLImageElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const magnifierRef = useRef<HTMLCanvasElement>(null)
   const imageContainerRef = useRef<HTMLDivElement>(null)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,85 +51,6 @@ export default function Component() {
       }
     }
   }, [imageSrc])
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (imageRef.current && canvasRef.current && magnifierRef.current) {
-      const rect = imageRef.current.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
-  
-      setMagnifierPosition({ x, y })
-  
-      const magnifierSize = 100
-      const magnifier = magnifierRef.current
-      magnifier.style.left = `${x - magnifierSize / 2}px`
-      magnifier.style.top = `${y - magnifierSize / 2}px`
-  
-      const canvas = canvasRef.current
-      const scaleX = canvas.width / rect.width
-      const scaleY = canvas.height / rect.height
-  
-      const magnifierCtx = magnifier.getContext('2d')!
-      magnifierCtx.drawImage(
-        canvas,
-        (x - magnifierSize / 4) * scaleX,
-        (y - magnifierSize / 4) * scaleY,
-        magnifierSize / 2 * scaleX,
-        magnifierSize / 2 * scaleY,
-        0,
-        0,
-        magnifierSize,
-        magnifierSize
-      )
-
-      // Draw crosshair
-      magnifierCtx.strokeStyle = 'white'
-      magnifierCtx.lineWidth = 2
-      magnifierCtx.beginPath()
-      magnifierCtx.moveTo(magnifierSize / 2, 0)
-      magnifierCtx.lineTo(magnifierSize / 2, magnifierSize)
-      magnifierCtx.moveTo(0, magnifierSize / 2)
-      magnifierCtx.lineTo(magnifierSize, magnifierSize / 2)
-      magnifierCtx.stroke()
-    }
-  }
-
-  const handleColorPick = () => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')!
-      const rect = imageRef.current!.getBoundingClientRect()
-      const scaleX = canvas.width / rect.width
-      const scaleY = canvas.height / rect.height
-      const x = magnifierPosition.x * scaleX
-      const y = magnifierPosition.y * scaleY
-      
-      const color = getAverageColor(ctx, x, y, 3)
-
-      setSelectedColor(color)
-      setShowColorDetails(true)
-      setColorHistory(prevHistory => [color, ...prevHistory.slice(0, 9)])
-    }
-  }
-
-  const getAverageColor = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number): string => {
-    const halfSize = Math.floor(size / 2)
-    const imageData = ctx.getImageData(x - halfSize, y - halfSize, size, size)
-    let r = 0, g = 0, b = 0
-
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      r += imageData.data[i]
-      g += imageData.data[i + 1]
-      b += imageData.data[i + 2]
-    }
-
-    const pixelCount = size * size
-    r = Math.round(r / pixelCount)
-    g = Math.round(g / pixelCount)
-    b = Math.round(b / pixelCount)
-
-    return rgbToHex(r, g, b)
-  }
 
   const rgbToHex = (r: number, g: number, b: number) => {
     return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')
@@ -180,7 +99,7 @@ export default function Component() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       toast.success('Copied to clipboard!')
-    }, (err) => {
+    }).catch(() => {
       toast.error('Failed to copy')
     })
   }
@@ -209,9 +128,8 @@ export default function Component() {
 
       setIsImageEyeDropperActive(true)
 
-      // Check if EyeDropper is supported
       if ('EyeDropper' in window) {
-        // @ts-expect-error - EyeDropper API might not be in TypeScript definitions
+        // @ts-ignore
         const eyeDropper = new EyeDropper()
         const result = await eyeDropper.open()
         
@@ -220,19 +138,13 @@ export default function Component() {
         setColorHistory(prev => [result.sRGBHex, ...prev.slice(0, 9)])
         toast.success('Color picked successfully!')
       } else {
-        // Fallback for mobile devices
-        const toastInfo = (message: string) => {
-          toast(message, {
-            icon: 'ℹ️',
-            style: {
-              background: '#3b82f6',
-              color: '#fff',
-            },
-          });
-        };
-        toastInfo('Color picker not supported on this device. Tap the image to select a color.')
+        toast((t) => (
+          <span>
+            Color picker not supported on this device. Tap the image to select a color.
+            <button onClick={() => toast.dismiss(t.id)}>Dismiss</button>
+          </span>
+        ), { icon: 'ℹ️', style: { background: '#3b82f6', color: '#fff' } })
         
-        // Add click event listener to the image container
         const handleImageClick = (e: MouseEvent) => {
           const rect = imageContainerRef.current!.getBoundingClientRect()
           const x = e.clientX - rect.left
@@ -243,17 +155,16 @@ export default function Component() {
           const imageData = ctx.getImageData(x, y, 1, 1)
           const [r, g, b] = imageData.data
           
-          const hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+          const hex = rgbToHex(r, g, b)
           setSelectedColor(hex)
           setShowColorDetails(true)
           setColorHistory(prev => [hex, ...prev.slice(0, 9)])
           toast.success('Color picked successfully!')
           
-          // Remove the event listener after picking a color
-          imageContainerRef.current!.removeEventListener('click', handleImageClick as EventListener)
+          imageContainerRef.current!.removeEventListener('click', handleImageClick)
         }
         
-        imageContainerRef.current!.addEventListener('click', handleImageClick as EventListener)
+        imageContainerRef.current!.addEventListener('click', handleImageClick)
       }
     } catch (error) {
       toast.error('Failed to pick color')
@@ -557,3 +468,4 @@ export default function Component() {
     </ToolLayout>
   )
 }
+

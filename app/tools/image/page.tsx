@@ -17,7 +17,6 @@ import {
   faSlash,
   faFileImage,
   faCode,
-  faCommentDots,
 } from '@fortawesome/free-solid-svg-icons';
 
 const imageTools = [
