@@ -26,7 +26,7 @@ export default function SHA1Tool() {
   const [encoding, setEncoding] = useState('UTF-8')
   const [iterations, setIterations] = useState(1)
   const [salt, setSalt] = useState('')
-  const [presets, setPresets] = useState<Record<string, any>>({})
+  const [presets, setPresets] = useState<Record<string, any>>({}) // eslint-disable-line @typescript-eslint/no-explicit-any
   const [selectedPreset, setSelectedPreset] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 

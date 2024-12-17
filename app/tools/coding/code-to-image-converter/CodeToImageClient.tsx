@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
-import { Download, Maximize2, X, Copy, RefreshCw, Info, BookOpen, Zap, Lightbulb } from 'lucide-react'
+import { Download, Maximize2, X, Copy, RefreshCw, Info, BookOpen, Lightbulb } from 'lucide-react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import * as prismStyles from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { toPng, toJpeg, toSvg } from 'html-to-image'

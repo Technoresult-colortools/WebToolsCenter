@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Link, Unlink, Upload, Copy, RefreshCw, Check, FileText, Info, Settings, BookOpen, Lightbulb, Download, Eye, EyeOff, AlertTriangle, Shield } from 'lucide-react'
+import { Link, Unlink, Upload, Copy, RefreshCw, Check, FileText, Info, Settings, BookOpen, Lightbulb, Download, AlertTriangle, Shield } from 'lucide-react'
 import { toast, Toaster } from 'react-hot-toast'
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"

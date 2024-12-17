@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Upload, Download, RefreshCw, X, ImageIcon, ZoomIn, ZoomOut, BookOpen, Lightbulb, Info, Link2, Check, Maximize2, Sliders, AlertTriangle, Shield, Settings, Palette } from 'lucide-react'
+import { Upload, Download, RefreshCw, X, ImageIcon, ZoomIn, ZoomOut, BookOpen, Lightbulb, Info, Link2, Maximize2, Sliders, Settings, Palette } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/label"
 import Input from "@/components/ui/Input"

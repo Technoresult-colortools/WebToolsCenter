@@ -40,9 +40,6 @@ const PhotoCensor: React.FC = () => {
   const handleStart = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
     if (!imageRef.current) return
 
-    // Prevent default only on the image
-    e.preventDefault()
-
     const { x, y } = getCoordinates(e)
     startPointRef.current = { x, y }
     
@@ -52,27 +49,24 @@ const PhotoCensor: React.FC = () => {
 
   const handleMove = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
     if (!isSelecting || !startPointRef.current) return
-    e.preventDefault()
 
     const { x, y } = getCoordinates(e)
-    setSelection(prev => ({
-      x: startPointRef.current?.x || 0,
-      y: startPointRef.current?.y || 0,
-      width: x - (startPointRef.current?.x || 0),
-      height: y - (startPointRef.current?.y || 0)
-    }))
+    setSelection({
+      x: Math.min(startPointRef.current.x, x),
+      y: Math.min(startPointRef.current.y, y),
+      width: Math.abs(x - startPointRef.current.x),
+      height: Math.abs(y - startPointRef.current.y)
+    })
   }
 
-  const handleEnd = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
+  const handleEnd = () => {
     if (isSelecting) {
-      e.preventDefault()
       setIsSelecting(false)
       applyCensor()
     }
     startPointRef.current = null
   }
 
-  // Add touch event listeners to allow scrolling when not on the image
   useEffect(() => {
     const container = containerRef.current
     const image = imageRef.current
@@ -80,7 +74,6 @@ const PhotoCensor: React.FC = () => {
     if (!container || !image) return
 
     const handleTouchStart = (e: TouchEvent) => {
-      // Check if the touch is on the image
       const touchedElement = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY)
       if (touchedElement === image) {
         e.preventDefault()
@@ -88,7 +81,6 @@ const PhotoCensor: React.FC = () => {
     }
 
     const handleTouchMove = (e: TouchEvent) => {
-      // Check if the touch is on the image
       const touchedElement = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY)
       if (touchedElement === image) {
         e.preventDefault()
@@ -158,7 +150,6 @@ const PhotoCensor: React.FC = () => {
     setImage(canvas.toDataURL())
     toast.success('Censoring applied successfully!')
   }, [image, censorType, intensity, selection])
-
 
   const handleDownload = () => {
     if (!image) return

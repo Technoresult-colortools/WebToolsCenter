@@ -24,7 +24,7 @@ export default function ReactNativeShadowGenerator() {
   const [androidBackgroundColor, setAndroidBackgroundColor] = useState("#FFFFFF")
   const [activeTab, setActiveTab] = useState("ios")
   const [presetName, setPresetName] = useState("")
-  const [presets, setPresets] = useState<Record<string, any>>({})
+  const [presets, setPresets] = useState<Record<string, any>>({}) // eslint-disable-line @typescript-eslint/no-explicit-any
   const [previewBackground, setPreviewBackground] = useState("#F0F0F0")
   const [previewShape, setPreviewShape] = useState("square")
 

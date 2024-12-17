@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import  Slider from "@/components/ui/Slider"
 import { Card, CardContent } from "@/components/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Upload, Copy, RefreshCw, FileText, Download, Zap, Info, Settings, BookOpen, Lightbulb, Eye, EyeOff } from 'lucide-react'
+import { Upload, Copy, RefreshCw, Download, Zap, Info, Settings, BookOpen, Lightbulb, Eye, EyeOff } from 'lucide-react'
 import { toast, Toaster } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
 import NextImage from 'next/image'

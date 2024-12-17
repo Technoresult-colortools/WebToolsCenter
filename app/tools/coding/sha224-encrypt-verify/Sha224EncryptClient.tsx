@@ -27,7 +27,7 @@ export default function SHA224EncryptVerify() {
   const [encoding, setEncoding] = useState<'utf8' | 'ascii' | 'base64'>('utf8')
   const [iterations, setIterations] = useState(1)
   const [salt, setSalt] = useState('')
-  const [presets, setPresets] = useState<Record<string, any>>({})
+  const [presets, setPresets] = useState<Record<string, any>>({}) // eslint-disable-line @typescript-eslint/no-explicit-any
   const [selectedPreset, setSelectedPreset] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -46,7 +46,7 @@ export default function SHA224EncryptVerify() {
 
   const generateSHA224 = () => {
     try {
-      let hash = crypto.createHash('sha224')
+      const hash = crypto.createHash('sha224')
       hash.update(salt)
       for (let i = 0; i < iterations; i++) {
         hash.update(input, encoding)

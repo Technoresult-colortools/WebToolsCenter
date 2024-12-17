@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
-import { Hash, Copy, RefreshCw, Upload, Download, CheckCircle2, Clipboard, Info, BookOpen, Lightbulb, Eye, EyeOff, Save, Trash2, AlertTriangle, FileText, Shield } from 'lucide-react'
+import { Hash, Copy, RefreshCw, Upload, Download, CheckCircle2, Clipboard, Info, BookOpen, Lightbulb, Save, Trash2, AlertTriangle, FileText, Shield } from 'lucide-react'
 import crypto from 'crypto'
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
@@ -26,7 +26,7 @@ export default function SHA256EncryptVerify() {
   const [encoding, setEncoding] = useState<'utf8' | 'ascii' | 'base64'>('utf8')
   const [iterations, setIterations] = useState(1)
   const [salt, setSalt] = useState('')
-  const [presets, setPresets] = useState<Record<string, any>>({})
+  const [presets, setPresets] = useState<Record<string, any>>({}) // eslint-disable-line @typescript-eslint/no-explicit-any
   const [selectedPreset, setSelectedPreset] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -45,7 +45,7 @@ export default function SHA256EncryptVerify() {
 
   const generateSHA256 = () => {
     try {
-      let hash = crypto.createHash('sha256')
+      const hash = crypto.createHash('sha256')
       hash.update(salt)
       for (let i = 0; i < iterations; i++) {
         hash.update(input, encoding)
