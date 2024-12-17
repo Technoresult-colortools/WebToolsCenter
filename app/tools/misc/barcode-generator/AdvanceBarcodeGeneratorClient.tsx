@@ -8,9 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
-import { Download, Copy, RefreshCw, Info, Lightbulb, BookOpen } from 'lucide-react'
+import { Download, Copy, RefreshCw, Info, Lightbulb, BookOpen, Share2 } from 'lucide-react'
 import JsBarcode from 'jsbarcode'
 import ToolLayout from '@/components/ToolLayout'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import Image from 'next/image'
 
 const barcodeTypes = [
   'CODE128', 'EAN13', 'EAN8', 'UPC', 'CODE39',
@@ -70,7 +72,7 @@ export default function BarCodeGenerator() {
 
   return (
     <ToolLayout
-      title="Advanced Barcode Generator"
+      title="Barcode Generator"
       description="Create Customized Barcode for various purposes"
     >
 
@@ -198,61 +200,96 @@ export default function BarCodeGenerator() {
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-            <Info className="w-6 h-6 mr-2" />
-            About Bar Code Generator
-          </h2>
-          <p className="text-gray-300 mb-4">
-            Our Bar Code Generator is a powerful tool designed to create customizable barcodes for various purposes. Whether you need barcodes for inventory management, product labeling, or any other application, this generator offers a wide range of options to create barcodes that meet your specific requirements.
-          </p>
+        <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+          <Info className="w-6 h-6 mr-2" />
+          About BarCode Generator
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-300 mb-4">
+          Our BarCode Generator is a powerful tool designed to create customizable barcodes for various purposes. Whether you need barcodes for inventory management, product labeling, or any other application, this generator offers a wide range of options to create barcodes that meet your specific requirements.
+        </p>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Key Features
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>🔢 Multiple Barcode Types: Support for various barcode formats including CODE128, EAN13, UPC, CODE39, and more.</li>
-            <li>🎨 Customizable Appearance: Adjust width, height, colors, and font size to match your needs.</li>
-            <li>📏 Flexible Sizing: Create barcodes of different sizes to fit various applications.</li>
-            <li>🖼️ Background Color: Customize the background color to match your design requirements.</li>
-            <li>✍️ Text Display Options: Choose whether to display the barcode text or hide it.</li>
-            <li>💾 Easy Download: Download your generated barcode as a PNG image.</li>
-            <li>📋 Copy SVG: Copy the barcode as SVG for easy integration into digital designs.</li>
-            <li>🔄 Instant Regeneration: Quickly regenerate barcodes with new settings.</li>
-          </ul>
-
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2" />
-            How to Use
-          </h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Enter the data you want to encode in the "Barcode Data" field.</li>
-            <li>Select the appropriate barcode type from the dropdown menu.</li>
-            <li>Adjust the width, height, and font size using the sliders.</li>
-            <li>Choose background and line colors using the color pickers.</li>
-            <li>Toggle the "Show Text" switch to display or hide the barcode text.</li>
-            <li>The barcode will automatically generate based on your settings.</li>
-            <li>Use the "Download" button to save the barcode as a PNG image.</li>
-            <li>Use the "Copy SVG" button to copy the barcode as an SVG for digital use.</li>
-            <li>Click "Regenerate" if you want to refresh the barcode with the same settings.</li>
-          </ol>
-
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Tips & Tricks
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Ensure your barcode data matches the format required by the selected barcode type.</li>
-            <li>For retail applications, consider using EAN13 or UPC formats which are widely recognized.</li>
-            <li>Adjust the width and height to ensure the barcode is easily scannable in your intended application.</li>
-            <li>Use contrasting colors for the background and lines to improve scannability.</li>
-            <li>Test your generated barcodes with different scanners to ensure compatibility.</li>
-            <li>When printing barcodes, ensure your printer resolution is high enough for clear reproduction.</li>
-            <li>For digital use, the SVG format provides better scalability without loss of quality.</li>
-            <li>Regularly update your barcode data to reflect changes in your inventory or product information.</li>
-          </ul>
+        <div className="my-8">
+          <Image 
+            src="/Images/BarCodeGeneratorPreview.png?height=400&width=600" 
+            alt="Screenshot of the Bar Code Generator interface showing barcode options and generated barcode" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
+          />
         </div>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Key Features
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>🔢 Multiple Barcode Types: Support for various barcode formats including CODE128, EAN13, UPC, CODE39, and more.</li>
+          <li>🎨 Customizable Appearance: Adjust width, height, colors, and font size to match your needs.</li>
+          <li>📏 Flexible Sizing: Create barcodes of different sizes to fit various applications.</li>
+          <li>🖼️ Background Color: Customize the background color to match your design requirements.</li>
+          <li>✍️ Text Display Options: Choose whether to display the barcode text or hide it.</li>
+          <li>💾 Easy Download: Download your generated barcode as a PNG image.</li>
+          <li>📋 Copy SVG: Copy the barcode as SVG for easy integration into digital designs.</li>
+          <li>🔄 Instant Regeneration: Quickly regenerate barcodes with new settings.</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <BookOpen className="w-6 h-6 mr-2" />
+          How to Use BarCode Generator?
+        </h2>
+        <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Enter the data you want to encode in the "Barcode Data" field.</li>
+          <li>Select the appropriate barcode type from the dropdown menu.</li>
+          <li>Adjust the width, height, and font size using the sliders.</li>
+          <li>Choose background and line colors using the color pickers.</li>
+          <li>Toggle the "Show Text" switch to display or hide the barcode text.</li>
+          <li>The barcode will automatically generate based on your settings.</li>
+          <li>Use the "Download" button to save the barcode as a PNG image.</li>
+          <li>Use the "Copy SVG" button to copy the barcode as an SVG for digital use.</li>
+          <li>Click "Regenerate" if you want to refresh the barcode with the same settings.</li>
+        </ol>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Tips & Tricks
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Ensure your barcode data matches the format required by the selected barcode type.</li>
+          <li>For retail applications, consider using EAN13 or UPC formats which are widely recognized.</li>
+          <li>Adjust the width and height to ensure the barcode is easily scannable in your intended application.</li>
+          <li>Use contrasting colors for the background and lines to improve scannability.</li>
+          <li>Test your generated barcodes with different scanners to ensure compatibility.</li>
+          <li>When printing barcodes, ensure your printer resolution is high enough for clear reproduction.</li>
+          <li>For digital use, the SVG format provides better scalability without loss of quality.</li>
+          <li>Regularly update your barcode data to reflect changes in your inventory or product information.</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Share2 className="w-6 h-6 mr-2" />
+          Applications and Use Cases
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Retail: Generate barcodes for product labeling and inventory management.</li>
+          <li>Logistics: Create barcodes for tracking packages and shipments.</li>
+          <li>Libraries: Generate barcodes for book cataloging and checkout systems.</li>
+          <li>Healthcare: Produce barcodes for patient identification and medication tracking.</li>
+          <li>Asset Management: Create barcodes for tracking company assets and equipment.</li>
+          <li>Event Management: Generate ticket barcodes for events and conferences.</li>
+          <li>Manufacturing: Use barcodes for production line tracking and quality control.</li>
+          <li>Warehousing: Implement barcode systems for efficient inventory control.</li>
+          <li>Marketing: Create QR codes (a type of 2D barcode) for promotional materials and product packaging.</li>
+          <li>Document Management: Use barcodes for organizing and retrieving important documents.</li>
+        </ul>
+
+        <p className="text-gray-300 mt-6">
+          The Bar Code Generator is an essential tool for businesses and individuals looking to implement efficient tracking and identification systems. By providing a wide range of customization options and supporting multiple barcode formats, this tool enables users to create barcodes tailored to their specific needs. Whether you're managing inventory, organizing assets, or streamlining operations, our Bar Code Generator offers the flexibility and functionality to support your barcode generation requirements.
+        </p>
+      </CardContent>
+    </Card>
   </ToolLayout>
   )
 }

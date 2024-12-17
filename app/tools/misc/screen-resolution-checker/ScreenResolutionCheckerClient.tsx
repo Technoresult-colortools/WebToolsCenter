@@ -23,7 +23,8 @@ import {
 import { Button } from "@/components/ui/Button"
 import { Toaster, toast } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
-import { Card, CardContent } from "@/components/ui/Card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import Image from 'next/image'
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
   Tooltip,
@@ -551,14 +552,27 @@ export default function AdvancedScreenChecker() {
         </div>
       </div>
 
-      <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg p-6">
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+      <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
           <Info className="w-6 h-6 mr-2" />
           What is Screen Resolution Checker?
-        </h2>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
         <p className="text-gray-300 mb-4">
           The Screen Resolution Checker is a comprehensive tool designed to provide detailed information about your display and device capabilities. It offers insights into physical and logical display properties, color characteristics, and system information, making it invaluable for developers, designers, and tech enthusiasts.
         </p>
+
+        <div className="my-8">
+          <Image 
+            src="/Images/ScreenResolutionCheckerPreview.png?height=400&width=600" 
+            alt="Screenshot of the Screen Resolution Checker interface showing display information and pixel grid" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
+          />
+        </div>
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
@@ -576,7 +590,7 @@ export default function AdvancedScreenChecker() {
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <Lightbulb className="w-6 h-6 mr-2" />
-          Key Features:
+          Key Features
         </h2>
         <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
           <li>Detailed physical and logical display information</li>
@@ -593,7 +607,43 @@ export default function AdvancedScreenChecker() {
           <li>Social media sharing functionality</li>
           <li>Responsive design for use on any device</li>
         </ul>
-      </div>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Tips & Tricks
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Use fullscreen mode for the most accurate measurements, especially on mobile devices.</li>
+          <li>Compare results across different devices to understand how your content might appear on various screens.</li>
+          <li>Use the pixel grid to check for potential alignment issues in your designs.</li>
+          <li>Pay attention to the color depth and gamut information when working on color-sensitive projects.</li>
+          <li>Check the touch input capabilities to ensure your designs are optimized for touch devices when necessary.</li>
+          <li>Use the refresh rate information to optimize animations and video content for specific displays.</li>
+          <li>Share your screen information when reporting display-related issues to provide comprehensive details.</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Share2 className="w-6 h-6 mr-2" />
+          Applications and Use Cases
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Web Development: Optimize websites for various screen sizes and resolutions.</li>
+          <li>Graphic Design: Ensure designs are created at the appropriate resolution for different devices.</li>
+          <li>UI/UX Design: Test user interfaces across different screen sizes and pixel densities.</li>
+          <li>Game Development: Adjust game graphics and UI elements based on screen capabilities.</li>
+          <li>Video Production: Optimize video content for different display types and color depths.</li>
+          <li>Tech Support: Quickly gather detailed display information for troubleshooting.</li>
+          <li>Hardware Reviews: Provide accurate display specifications in product reviews.</li>
+          <li>Digital Signage: Ensure content is optimized for large-format displays.</li>
+          <li>Mobile App Development: Test app layouts on various mobile screen resolutions.</li>
+          <li>Accessibility Testing: Verify how content appears at different zoom levels and resolutions.</li>
+        </ul>
+
+        <p className="text-gray-300 mt-6">
+          The Screen Resolution Checker is an essential tool for anyone working with digital displays, from web developers and designers to IT professionals and content creators. By providing comprehensive information about display properties and device capabilities, it enables users to create more responsive, accessible, and visually appealing digital experiences across a wide range of devices and screen types. Whether you're optimizing a website, troubleshooting display issues, or ensuring your designs look great on every device, the Screen Resolution Checker offers the insights you need to make informed decisions.
+        </p>
+      </CardContent>
+    </Card>
     </ToolLayout>
   )
 }

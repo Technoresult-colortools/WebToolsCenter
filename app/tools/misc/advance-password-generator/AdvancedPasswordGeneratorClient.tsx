@@ -11,6 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
 import { RefreshCw, Copy, Eye, EyeOff, Shield, Settings, Sliders, Lock, Filter, Info, BookOpen, Lightbulb } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import Image from 'next/image'
 
 const CHAR_SETS = {
   lowercase: 'abcdefghijklmnopqrstuvwxyz',
@@ -441,52 +443,87 @@ export default function AdvancedPasswordGenerator() {
             </div>
           </Tabs>
         </div>
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-            <Info className="w-6 h-6 mr-2" />
-            What is Advanced Password Generator?
-          </h2>
-          <p className="text-gray-300 mb-4">
-            The Advanced Password Generator is a comprehensive tool designed to help users generate secure and customizable passwords quickly. It allows you to create strong passwords of various lengths and complexities, making it ideal for securing sensitive accounts and data. This tool provides multiple options to include or exclude different character sets, such as uppercase letters, lowercase letters, numbers, and special symbols.
-          </p>
+        <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+          <Info className="w-6 h-6 mr-2" />
+          What is Advanced Password Generator?
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-300 mb-4">
+          The Advanced Password Generator is a comprehensive tool designed to help users generate secure and customizable passwords quickly. It allows you to create strong passwords of various lengths and complexities, making it ideal for securing sensitive accounts and data. This tool provides multiple options to include or exclude different character sets, such as uppercase letters, lowercase letters, numbers, and special symbols.
+        </p>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2" />
-            How to Use Advanced Password Generator?
-          </h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Select the length of the password you wish to generate using the length slider.</li>
-            <li>Choose which types of characters to include in the password by toggling options for uppercase letters, lowercase letters, numbers, and special characters.</li>
-            <li>If you prefer a password without ambiguous characters (such as 0, O, I, l), enable the "Exclude Ambiguous Characters" option.</li>
-            <li>Click the <strong>Generate Password</strong> button to create a new password based on your selected preferences.</li>
-            <li>Use the <strong>Copy</strong> button to copy the generated password to your clipboard for easy use.</li>
-            <li>If you’re not satisfied with the generated password, adjust the settings and generate a new one.</li>
-          </ol>
-
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Key Features
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Customizable password length: Choose a password length ranging from 8 to 64 characters.</li>
-            <li>Character set options: Include or exclude uppercase letters, lowercase letters, numbers, and special symbols.</li>
-            <li>Ambiguity control: Exclude similar-looking characters like O, 0, I, and l to avoid confusion.</li>
-            <li>One-click copy functionality: Easily copy generated passwords to your clipboard.</li>
-            <li>Responsive design: Works seamlessly across various devices, including mobile and desktop.</li>
-          </ul>
-
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Tips & Tricks
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>For optimal security, use a mix of uppercase letters, lowercase letters, numbers, and special symbols in your password.</li>
-            <li>Make your passwords longer for better security. Aim for at least 12-16 characters.</li>
-            <li>Use the "Exclude Ambiguous Characters" option when creating passwords for systems that have difficulty distinguishing between similar characters.</li>
-            <li>Test different password settings to ensure that generated passwords meet the security requirements of the platform you’re using.</li>
-            <li>Store your generated passwords in a password manager to ensure you don’t lose them and to keep them secure.</li>
-          </ul>
+        <div className="my-8">
+          <Image 
+            src="/Images/AdvancePasswordGeneratorPreview.png?height=400&width=600" 
+            alt="Screenshot of the Advanced Password Generator interface showing password options and generated password" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
+          />
         </div>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <BookOpen className="w-6 h-6 mr-2" />
+          How to Use Advanced Password Generator?
+        </h2>
+        <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Select the length of the password you wish to generate using the length slider.</li>
+          <li>Choose which types of characters to include in the password by toggling options for uppercase letters, lowercase letters, numbers, and special characters.</li>
+          <li>If you prefer a password without ambiguous characters (such as 0, O, I, l), enable the "Exclude Ambiguous Characters" option.</li>
+          <li>Click the <strong>Generate Password</strong> button to create a new password based on your selected preferences.</li>
+          <li>Use the <strong>Copy</strong> button to copy the generated password to your clipboard for easy use.</li>
+          <li>If you're not satisfied with the generated password, adjust the settings and generate a new one.</li>
+        </ol>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Key Features
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Customizable password length: Choose a password length ranging from 8 to 64 characters.</li>
+          <li>Character set options: Include or exclude uppercase letters, lowercase letters, numbers, and special symbols.</li>
+          <li>Ambiguity control: Exclude similar-looking characters like O, 0, I, and l to avoid confusion.</li>
+          <li>One-click copy functionality: Easily copy generated passwords to your clipboard.</li>
+          <li>Responsive design: Works seamlessly across various devices, including mobile and desktop.</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Tips & Tricks
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>For optimal security, use a mix of uppercase letters, lowercase letters, numbers, and special symbols in your password.</li>
+          <li>Make your passwords longer for better security. Aim for at least 12-16 characters.</li>
+          <li>Use the "Exclude Ambiguous Characters" option when creating passwords for systems that have difficulty distinguishing between similar characters.</li>
+          <li>Test different password settings to ensure that generated passwords meet the security requirements of the platform you're using.</li>
+          <li>Store your generated passwords in a password manager to ensure you don't lose them and to keep them secure.</li>
+        </ul>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Lightbulb className="w-6 h-6 mr-2" />
+          Applications and Use Cases
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li>Personal Accounts: Generate strong passwords for email, social media, and online banking accounts.</li>
+          <li>Business Security: Create robust passwords for corporate accounts and sensitive business applications.</li>
+          <li>Web Development: Generate secure default passwords for user accounts in web applications.</li>
+          <li>IT Administration: Create complex passwords for system accounts and server access.</li>
+          <li>IoT Devices: Generate unique passwords for smart home devices and IoT gadgets.</li>
+          <li>Password Managers: Use as a complementary tool to generate secure passwords for storage in password managers.</li>
+          <li>Temporary Access: Create one-time use passwords for guest accounts or temporary access scenarios.</li>
+          <li>Security Testing: Generate various password combinations for penetration testing and security audits.</li>
+          <li>Educational Purposes: Demonstrate the principles of strong password creation in cybersecurity courses.</li>
+          <li>API Keys and Tokens: Generate secure strings for use as API keys or authentication tokens in software development.</li>
+        </ul>
+
+        <p className="text-gray-300 mt-6">
+          The Advanced Password Generator is an essential tool for anyone concerned about online security. By creating strong, unique passwords for each of your accounts, you significantly reduce the risk of unauthorized access and potential data breaches. Start using this tool today to enhance your digital security and protect your sensitive information across all your online accounts and platforms.
+        </p>
+      </CardContent>
+    </Card>
   </ToolLayout>
   )
 }

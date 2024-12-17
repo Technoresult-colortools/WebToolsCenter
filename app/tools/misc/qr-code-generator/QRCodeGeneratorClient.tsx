@@ -10,10 +10,11 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Download, FileText, Brush, Sliders, Image, Info, BookOpen, Lightbulb } from 'lucide-react';
+import { Download, FileText, Brush, Sliders, Image, Info, BookOpen, Lightbulb, Share2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ToolLayout from '@/components/ToolLayout'
+import NextImage from 'next/image'
 
 
 const QRCodeCanvas = dynamic(() => import('qrcode.react').then(mod => mod.QRCodeCanvas), { ssr: false });
@@ -424,58 +425,93 @@ export default function QRCodeGenerator() {
             </Button>
           </div>
 
-          <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-              <Info className="w-6 h-6 mr-2" />
-              About QR Code Generator
-            </h2>
-            <p className="text-gray-300 mb-4">
-              The QR Code Generator is a powerful and versatile tool that allows you to create customized QR codes for various purposes. 
-              Whether you need to share a website URL, contact information, Wi-Fi credentials, or any other type of data, this generator provides an easy-to-use interface to create QR codes tailored to your needs.
-            </p>
+          <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+            <CardHeader>
+              <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+                <Info className="w-6 h-6 mr-2" />
+                About QR Code Generator
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-300 mb-4">
+                The QR Code Generator is a powerful and versatile tool that allows you to create customized QR codes for various purposes. 
+                Whether you need to share a website URL, contact information, Wi-Fi credentials, or any other type of data, this generator provides an easy-to-use interface to create QR codes tailored to your needs.
+              </p>
 
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <BookOpen className="w-6 h-6 mr-2" />
-              How to Use QR Code Generator
-            </h2>
-            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Select the QR code type (URL, text, email, phone, SMS, or Wi-Fi) from the dropdown menu.</li>
-              <li>Enter the required information for the selected type in the provided fields.</li>
-              <li>Customize the appearance of your QR code using the options in the "Appearance" tab.</li>
-              <li>Adjust advanced settings like error correction level in the "Advanced" tab.</li>
-              <li>Optionally, add a logo to your QR code using the "Logo" tab.</li>
-              <li>Preview your QR code in real-time as you make changes.</li>
-              <li>Once satisfied, click the "Download QR Code" button to save your generated QR code.</li>
-            </ol>
+              <div className="my-8">
+                <NextImage 
+                  src="/Images/QRCodeGeneratorPreview.png?height=400&width=600" 
+                  alt="Screenshot of the QR Code Generator interface showing customization options and generated QR code" 
+                  width={600} 
+                  height={400}
+                  className="rounded-lg shadow-lg" 
+                />
+              </div>
 
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Lightbulb className="w-6 h-6 mr-2" />
-              Key Features and Tips
-            </h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Multiple QR Code Types: Create QR codes for URLs, plain text, email addresses, phone numbers, SMS messages, and Wi-Fi networks.</li>
-              <li>Customizable Appearance: Adjust the size, colors, and style (squares or dots) of your QR code to match your branding or preferences.</li>
-              <li>Error Correction Levels: Choose from four levels of error correction to balance between code size and scanning reliability.</li>
-              <li>Logo Integration: Add your own logo to the center of the QR code for brand recognition.</li>
-              <li>Real-time Preview: See your QR code update in real-time as you modify settings.</li>
-              <li>Responsive Design: The tool works well on both desktop and mobile devices.</li>
-              <li>Easy Download: Download your QR code as a PNG image with a single click.</li>
-            </ul>
+              <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+                <BookOpen className="w-6 h-6 mr-2" />
+                How to Use QR Code Generator?
+              </h2>
+              <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+                <li>Select the QR code type (URL, text, email, phone, SMS, or Wi-Fi) from the dropdown menu.</li>
+                <li>Enter the required information for the selected type in the provided fields.</li>
+                <li>Customize the appearance of your QR code using the options in the "Appearance" tab.</li>
+                <li>Adjust advanced settings like error correction level in the "Advanced" tab.</li>
+                <li>Optionally, add a logo to your QR code using the "Logo" tab.</li>
+                <li>Preview your QR code in real-time as you make changes.</li>
+                <li>Once satisfied, click the "Download QR Code" button to save your generated QR code.</li>
+              </ol>
 
-            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-              <Lightbulb className="w-6 h-6 mr-2" />
-              Tips for Creating Effective QR Codes
-            </h2>
-            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-              <li>Keep the data concise to reduce QR code complexity.</li>
-              <li>Use a higher error correction level when adding a logo or when the code might be displayed in challenging environments.</li>
-              <li>Ensure sufficient contrast between the foreground and background colors for better scannability.</li>
-              <li>Test your QR code on multiple devices and scanning apps before wide distribution.</li>
-              <li>When using a logo, keep it small (around 20-25% of the QR code size) to maintain scannability.</li>
-              <li>For Wi-Fi QR codes, double-check the network name and password to avoid connection issues.</li>
-              <li>Consider the context where the QR code will be scanned when choosing its size and error correction level.</li>
-            </ul>
-          </div>
+              <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+                <Lightbulb className="w-6 h-6 mr-2" />
+                Key Features
+              </h2>
+              <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+                <li>Multiple QR Code Types: Create QR codes for URLs, plain text, email addresses, phone numbers, SMS messages, and Wi-Fi networks.</li>
+                <li>Customizable Appearance: Adjust the size, colors, and style (squares or dots) of your QR code to match your branding or preferences.</li>
+                <li>Error Correction Levels: Choose from four levels of error correction to balance between code size and scanning reliability.</li>
+                <li>Logo Integration: Add your own logo to the center of the QR code for brand recognition.</li>
+                <li>Real-time Preview: See your QR code update in real-time as you modify settings.</li>
+                <li>Responsive Design: The tool works well on both desktop and mobile devices.</li>
+                <li>Easy Download: Download your QR code as a PNG image with a single click.</li>
+              </ul>
+
+              <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+                <Lightbulb className="w-6 h-6 mr-2" />
+                Tips for Creating Effective QR Codes
+              </h2>
+              <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+                <li>Keep the data concise to reduce QR code complexity.</li>
+                <li>Use a higher error correction level when adding a logo or when the code might be displayed in challenging environments.</li>
+                <li>Ensure sufficient contrast between the foreground and background colors for better scannability.</li>
+                <li>Test your QR code on multiple devices and scanning apps before wide distribution.</li>
+                <li>When using a logo, keep it small (around 20-25% of the QR code size) to maintain scannability.</li>
+                <li>For Wi-Fi QR codes, double-check the network name and password to avoid connection issues.</li>
+                <li>Consider the context where the QR code will be scanned when choosing its size and error correction level.</li>
+              </ul>
+
+              <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+                <Share2 className="w-6 h-6 mr-2" />
+                Applications and Use Cases
+              </h2>
+              <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+                <li>Marketing: Create QR codes for promotional materials, business cards, and product packaging.</li>
+                <li>Education: Share educational resources, course materials, or campus information via QR codes.</li>
+                <li>Events: Use QR codes for ticketing, attendee registration, or sharing event details.</li>
+                <li>Retail: Implement QR codes for contactless payments, product information, or loyalty programs.</li>
+                <li>Hospitality: Provide easy access to menus, Wi-Fi credentials, or hotel information through QR codes.</li>
+                <li>Healthcare: Use QR codes for patient identification, medical record access, or prescription information.</li>
+                <li>Real Estate: Share property listings, virtual tours, or contact information via QR codes.</li>
+                <li>Museums and Galleries: Offer additional information about exhibits or artworks through QR codes.</li>
+                <li>Transportation: Implement QR codes for ticketing, schedules, or route information.</li>
+                <li>Personal Use: Create QR codes for sharing contact information, social media profiles, or personal websites.</li>
+              </ul>
+
+              <p className="text-gray-300 mt-6">
+                The QR Code Generator is a versatile tool that can enhance communication and information sharing across various industries and personal applications. By providing an easy way to create customized QR codes, it enables users to bridge the gap between physical and digital worlds, offering quick access to information and improving user experiences. Whether you're a business owner looking to engage customers, an educator sharing resources, or an individual simplifying information sharing, the QR Code Generator offers the flexibility and functionality to meet your needs.
+              </p>
+            </CardContent>
+          </Card>
   </ToolLayout>  
   );
 }

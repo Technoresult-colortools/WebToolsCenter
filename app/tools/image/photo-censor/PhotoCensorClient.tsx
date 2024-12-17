@@ -19,8 +19,90 @@ const PhotoCensor: React.FC = () => {
   const [selection, setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 })
   const [isSelecting, setIsSelecting] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const startPointRef = useRef<{ x: number, y: number } | null>(null)
+
+  const getCoordinates = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!imageRef.current) return { x: 0, y: 0 }
+
+    const rect = imageRef.current.getBoundingClientRect()
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY
+    
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    }
+  }
+
+  const handleStart = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
+    if (!imageRef.current) return
+
+    // Prevent default only on the image
+    e.preventDefault()
+
+    const { x, y } = getCoordinates(e)
+    startPointRef.current = { x, y }
+    
+    setSelection({ x, y, width: 0, height: 0 })
+    setIsSelecting(true)
+  }
+
+  const handleMove = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
+    if (!isSelecting || !startPointRef.current) return
+    e.preventDefault()
+
+    const { x, y } = getCoordinates(e)
+    setSelection(prev => ({
+      x: startPointRef.current?.x || 0,
+      y: startPointRef.current?.y || 0,
+      width: x - (startPointRef.current?.x || 0),
+      height: y - (startPointRef.current?.y || 0)
+    }))
+  }
+
+  const handleEnd = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
+    if (isSelecting) {
+      e.preventDefault()
+      setIsSelecting(false)
+      applyCensor()
+    }
+    startPointRef.current = null
+  }
+
+  // Add touch event listeners to allow scrolling when not on the image
+  useEffect(() => {
+    const container = containerRef.current
+    const image = imageRef.current
+
+    if (!container || !image) return
+
+    const handleTouchStart = (e: TouchEvent) => {
+      // Check if the touch is on the image
+      const touchedElement = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY)
+      if (touchedElement === image) {
+        e.preventDefault()
+      }
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      // Check if the touch is on the image
+      const touchedElement = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY)
+      if (touchedElement === image) {
+        e.preventDefault()
+      }
+    }
+
+    container.addEventListener('touchstart', handleTouchStart, { passive: false })
+    container.addEventListener('touchmove', handleTouchMove, { passive: false })
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchmove', handleTouchMove)
+    }
+  }, [])
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -77,35 +159,6 @@ const PhotoCensor: React.FC = () => {
     toast.success('Censoring applied successfully!')
   }, [image, censorType, intensity, selection])
 
-  const handleStart = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
-    if (!imageRef.current) return
-    const rect = imageRef.current.getBoundingClientRect()
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-    const x = clientX - rect.left
-    const y = clientY - rect.top
-    setSelection({ x, y, width: 0, height: 0 })
-    setIsSelecting(true)
-  }
-
-  const handleMove = (e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>) => {
-    if (!isSelecting || !imageRef.current) return
-    const rect = imageRef.current.getBoundingClientRect()
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
-    const x = clientX - rect.left
-    const y = clientY - rect.top
-    setSelection(prev => ({
-      ...prev,
-      width: x - prev.x,
-      height: y - prev.y
-    }))
-  }
-
-  const handleEnd = () => {
-    setIsSelecting(false)
-    applyCensor()
-  }
 
   const handleDownload = () => {
     if (!image) return
@@ -129,15 +182,8 @@ const PhotoCensor: React.FC = () => {
     toast.success('All settings reset!')
   }
 
-  useEffect(() => {
-    const preventDefault = (e: TouchEvent) => {
-      e.preventDefault()
-    }
-    document.addEventListener('touchmove', preventDefault, { passive: false })
-    return () => {
-      document.removeEventListener('touchmove', preventDefault)
-    }
-  }, [])
+  
+
 
   return (
     <ToolLayout
@@ -161,7 +207,10 @@ const PhotoCensor: React.FC = () => {
             />
           </label>
         </div>
-        <div className="mb-8 p-4 bg-gray-700 rounded-lg min-h-[300px] flex items-center justify-center">
+        <div 
+          ref={containerRef}
+          className="mb-8 p-4 bg-gray-700 rounded-lg min-h-[300px] flex items-center justify-center overflow-auto"
+        >
           {image ? (
             <div className="relative max-w-full max-h-[500px] flex items-center justify-center">
               <img

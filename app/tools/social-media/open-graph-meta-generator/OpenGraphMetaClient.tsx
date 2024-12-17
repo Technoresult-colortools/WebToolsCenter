@@ -12,6 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
+import Image from 'next/image'
 
 const ogTypes = [
   { value: 'website', label: 'Website', icon: Globe },
@@ -438,61 +439,96 @@ export default function OpenGraphGenerator() {
         </Card>
 
         {/* About section */}
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-            <Info className="w-6 h-6 mr-2" />
-            About Open Graph Meta Generator
-          </h2>
-          <p className="text-gray-300 mb-4">
-            The Open Graph Meta Generator is a powerful tool designed to help you create accurate and comprehensive Open Graph meta tags for your web content. These meta tags control how your content appears when shared on social media platforms, ensuring your links look great and attract more clicks.
-          </p>
+        <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+          <CardHeader>
+            <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+              <Info className="w-6 h-6 mr-2" />
+              About Open Graph Meta Generator
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-300 mb-4">
+              The Open Graph Meta Generator is a powerful tool designed to help you create accurate and comprehensive Open Graph meta tags for your web content. These meta tags control how your content appears when shared on social media platforms, ensuring your links look great and attract more clicks.
+            </p>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Key Features
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Support for various content types including websites, articles, books, profiles, music, and videos.</li>
-            <li>Easy-to-use interface for inputting essential Open Graph properties.</li>
-            <li>Optional fields for more detailed meta tags.</li>
-            <li>Real-time preview of how your content will appear when shared.</li>
-            <li>One-click copying of generated meta tags.</li>
-            <li>Responsive design for use on any device.</li>
-          </ul>
+            <div className="my-8">
+              <Image 
+                src="/Images/OpenGraphMetaPreview.png?height=400&width=600" 
+                alt="Screenshot of the Open Graph Meta Generator interface showing input fields and preview" 
+                width={600} 
+                height={400}
+                className="rounded-lg shadow-lg" 
+              />
+            </div>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2" />
-            How to Use the Open Graph Meta Generator
-          </h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Select the content type that best matches your page from the dropdown menu.</li>
-            <li>Fill in the required fields: Title, URL, and Image URL. These are marked with a red asterisk (*).</li>
-            <li>Add a description to provide context for your shared content.</li>
-            <li>Toggle the "Show Optional Fields" switch to access additional properties like Site Name, Locale, Determiner, Video URL, and Audio URL.</li>
-            <li>Fill in any relevant optional fields based on your content type. For example, if you selected "Article", you'll see fields for Author, Published Time, Modified Time, Section, and Tags.</li>
-            <li>As you fill in the fields, watch the preview update in real-time to see how your content will appear when shared.</li>
-            <li>Review the generated meta tags in the code box below the form.</li>
-            <li>Click the "Copy Meta Tags" button to copy the generated tags to your clipboard.</li>
-            <li>Paste the meta tags into the &lt;head&gt; section of your HTML document.</li>
-            <li>Use the "Reset" button to clear all fields and start over if needed.</li>
-          </ol>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Lightbulb className="w-6 h-6 mr-2" />
+              Key Features
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Support for various content types including websites, articles, books, profiles, music, and videos.</li>
+              <li>Easy-to-use interface for inputting essential Open Graph properties.</li>
+              <li>Optional fields for more detailed meta tags.</li>
+              <li>Real-time preview of how your content will appear when shared.</li>
+              <li>One-click copying of generated meta tags.</li>
+              <li>Responsive design for use on any device.</li>
+            </ul>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Eye className="w-6 h-6 mr-2" />
-            Tips for Effective Open Graph Tags
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Use high-quality, relevant images that are at least 1200x630 pixels for best results on most social platforms.</li>
-            <li>Keep your title concise and compelling, ideally under 60 characters to prevent truncation.</li>
-            <li>Write clear, informative descriptions that summarize your content in 2-4 sentences.</li>
-            <li>Use the appropriate content type to ensure the most relevant meta tags are generated for your page.</li>
-            <li>Include optional fields like site name and locale for more comprehensive tags and better representation of your content.</li>
-            <li>For articles, books, and other types with specific fields, fill in as much information as possible for rich previews.</li>
-            <li>Regularly update your Open Graph tags, especially for dynamic content or pages that change frequently.</li>
-            <li>Test your tags using social media platform debugging tools (like the Facebook Sharing Debugger) to ensure they appear correctly.</li>
-            <li>Remember that some platforms may have specific requirements or preferences for Open Graph tags, so research the platforms where you frequently share content.</li>
-          </ul>
-        </div>
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <BookOpen className="w-6 h-6 mr-2" />
+              How to Use the Open Graph Meta Generator?
+            </h2>
+            <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Select the content type that best matches your page from the dropdown menu.</li>
+              <li>Fill in the required fields: Title, URL, and Image URL. These are marked with a red asterisk (*).</li>
+              <li>Add a description to provide context for your shared content.</li>
+              <li>Toggle the "Show Optional Fields" switch to access additional properties like Site Name, Locale, Determiner, Video URL, and Audio URL.</li>
+              <li>Fill in any relevant optional fields based on your content type. For example, if you selected "Article", you'll see fields for Author, Published Time, Modified Time, Section, and Tags.</li>
+              <li>As you fill in the fields, watch the preview update in real-time to see how your content will appear when shared.</li>
+              <li>Review the generated meta tags in the code box below the form.</li>
+              <li>Click the "Copy Meta Tags" button to copy the generated tags to your clipboard.</li>
+              <li>Paste the meta tags into the &lt;head&gt; section of your HTML document.</li>
+              <li>Use the "Reset" button to clear all fields and start over if needed.</li>
+            </ol>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Eye className="w-6 h-6 mr-2" />
+              Tips for Effective Open Graph Tags
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Use high-quality, relevant images that are at least 1200x630 pixels for best results on most social platforms.</li>
+              <li>Keep your title concise and compelling, ideally under 60 characters to prevent truncation.</li>
+              <li>Write clear, informative descriptions that summarize your content in 2-4 sentences.</li>
+              <li>Use the appropriate content type to ensure the most relevant meta tags are generated for your page.</li>
+              <li>Include optional fields like site name and locale for more comprehensive tags and better representation of your content.</li>
+              <li>For articles, books, and other types with specific fields, fill in as much information as possible for rich previews.</li>
+              <li>Regularly update your Open Graph tags, especially for dynamic content or pages that change frequently.</li>
+              <li>Test your tags using social media platform debugging tools (like the Facebook Sharing Debugger) to ensure they appear correctly.</li>
+              <li>Remember that some platforms may have specific requirements or preferences for Open Graph tags, so research the platforms where you frequently share content.</li>
+            </ul>
+
+            <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+              <Share2 className="w-6 h-6 mr-2" />
+              Applications and Use Cases
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+              <li>Social Media Marketing: Enhance the appearance of shared links on platforms like Facebook, Twitter, and LinkedIn.</li>
+              <li>SEO Optimization: Improve click-through rates from social media platforms, indirectly boosting your SEO efforts.</li>
+              <li>E-commerce: Create attractive product previews when sharing items on social media.</li>
+              <li>Content Marketing: Ensure your blog posts and articles look professional and engaging when shared.</li>
+              <li>Personal Branding: Customize how your personal website or portfolio appears in social media shares.</li>
+              <li>Event Promotion: Create eye-catching previews for event pages to increase attendance.</li>
+              <li>App Marketing: Improve the appearance of app store links when shared on social platforms.</li>
+              <li>Video Content: Customize video previews for better engagement on social media.</li>
+              <li>News and Media: Ensure news articles and media content are presented accurately and attractively when shared.</li>
+              <li>Educational Resources: Improve the visibility and appeal of online courses or educational content.</li>
+            </ul>
+
+            <p className="text-gray-300 mt-6">
+              The Open Graph Meta Generator is an essential tool for anyone looking to optimize their web content for social media sharing. By creating accurate and comprehensive Open Graph meta tags, you can significantly improve how your content appears across various platforms, leading to increased engagement and traffic. Start using this tool today to ensure your content stands out in the crowded social media landscape!
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </ToolLayout>
   )

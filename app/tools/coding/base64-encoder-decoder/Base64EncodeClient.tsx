@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/Card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import ToolLayout from '@/components/ToolLayout'
+import NextImage from 'next/image'
 
 const MAX_FILE_SIZE_MB = 5
 const ALLOWED_FILE_TYPES = ['text/plain', 'image/png', 'image/jpeg', 'application/pdf']
@@ -277,9 +278,19 @@ export default function Base64EncoderDecoder() {
           Base64 is a binary-to-text encoding scheme that represents binary data in an ASCII string format. It's commonly used to encode binary data for storage or transfer in environments that only support text content, such as email attachments, XML, or JSON. This tool provides a user-friendly interface for encoding and decoding Base64 data, with additional features for file handling and advanced options.
         </p>
 
+        <div className="my-8">
+          <NextImage 
+            src="/Images/Base64EncoderPreview.png?height=400&width=600" 
+            alt="Screenshot of the Code to Image Converter interface showing code input area and customization options" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
+          />
+        </div>
+
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
-          How to Use Base64 Encoder/Decoder
+          How to Use Base64 Encoder/Decoder?
         </h2>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
           <li>Choose between Encode and Decode tabs.</li>

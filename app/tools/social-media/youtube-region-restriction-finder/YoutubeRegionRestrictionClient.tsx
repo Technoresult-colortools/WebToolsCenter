@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Search, RefreshCw, AlertCircle, Globe, Info, Lightbulb, BookOpen, Check, X, Share2, History } from 'lucide-react'
+import { Search, RefreshCw, AlertCircle, Globe, Info, Lightbulb, BookOpen, Check, X, Share2, History, LockIcon, BarChart } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Toaster, toast } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
+import NextImage from 'next/image'
 import {
   Card,
   CardContent,
@@ -19,6 +20,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import WorldMap from './WorldMap'
+import CountryList from './CountryList'
 
 interface RegionAvailability {
   [key: string]: {
@@ -35,23 +38,8 @@ interface VideoDetails {
   publishedAt: string;
 }
 
-const regions = [
-  { code: 'US', name: 'United States', flag: '🇺🇸' },
-  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
-  { code: 'CA', name: 'Canada', flag: '🇨🇦' },
-  { code: 'AU', name: 'Australia', flag: '🇦🇺' },
-  { code: 'DE', name: 'Germany', flag: '🇩🇪' },
-  { code: 'FR', name: 'France', flag: '🇫🇷' },
-  { code: 'JP', name: 'Japan', flag: '🇯🇵' },
-  { code: 'IN', name: 'India', flag: '🇮🇳' },
-  { code: 'BR', name: 'Brazil', flag: '🇧🇷' },
-  { code: 'RU', name: 'Russia', flag: '🇷🇺' },
-  { code: 'KR', name: 'South Korea', flag: '🇰🇷' },
-  { code: 'ES', name: 'Spain', flag: '🇪🇸' },
-  { code: 'IT', name: 'Italy', flag: '🇮🇹' },
-  { code: 'NL', name: 'Netherlands', flag: '🇳🇱' },
-  { code: 'SE', name: 'Sweden', flag: '🇸🇪' }
-]
+// Import the full list of countries from a separate file
+import { countries } from './countries'
 
 export default function YouTubeRegionRestrictionFinder() {
   const [videoUrl, setVideoUrl] = useState('')
@@ -78,7 +66,7 @@ export default function YouTubeRegionRestrictionFinder() {
   const fetchVideoDetails = async (videoId: string) => {
     try {
       const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=AIzaSyA0PxWAlxu6KE9o9bkn1K5mjlbtBFiSmes`
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
       )
       const data = await response.json()
       
@@ -124,18 +112,18 @@ export default function YouTubeRegionRestrictionFinder() {
 
       // Check region availability
       const availabilityData: RegionAvailability = {}
-      const checkPromises = regions.map(async (region) => {
+      const checkPromises = countries.map(async (country) => {
         try {
           const response = await fetch(
-            `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoId}&regionCode=${region.code}&key=AIzaSyA0PxWAlxu6KE9o9bkn1K5mjlbtBFiSmes`
+            `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoId}&regionCode=${country.code}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
           )
           const data = await response.json()
-          availabilityData[region.code] = {
+          availabilityData[country.code] = {
             available: data.items && data.items.length > 0,
             lastChecked: new Date().toISOString()
           }
         } catch (err) {
-          availabilityData[region.code] = {
+          availabilityData[country.code] = {
             available: false,
             lastChecked: new Date().toISOString()
           }
@@ -180,6 +168,12 @@ export default function YouTubeRegionRestrictionFinder() {
     }
   }
 
+  const clearSearchHistory = () => {
+    setSearchHistory([])
+    localStorage.removeItem('searchHistory')
+    toast.success('Search history cleared!')
+  }
+
   return (
     <ToolLayout
       title="YouTube Region Restriction Finder"
@@ -187,7 +181,7 @@ export default function YouTubeRegionRestrictionFinder() {
     >
       <Toaster position="top-right" />
       
-      <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-6xl mx-auto mt-8">
         <CardHeader>
           <CardTitle>Check Video Availability</CardTitle>
           <CardDescription>Enter a YouTube video URL to check its regional availability</CardDescription>
@@ -220,7 +214,7 @@ export default function YouTubeRegionRestrictionFinder() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Check video availability in {regions.length} regions</p>
+                    <p>Check video availability in {countries.length} regions</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -273,36 +267,29 @@ export default function YouTubeRegionRestrictionFinder() {
           )}
 
           {availability && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Region Availability</CardTitle>
-                <CardDescription>Check marks indicate where the video is available</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                  {regions.map((region) => (
-                    <TooltipProvider key={region.code}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center space-x-2 p-2 rounded-lg bg-gray-100 text-black dark:bg-gray-800">
-                            <span>{region.flag}</span>
-                            {availability[region.code]?.available ? (
-                              <Check className="text-green-500" size={20} />
-                            ) : (
-                              <X className="text-red-500" size={20} />
-                            )}
-                            <span>{region.name}</span>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Last checked: {new Date(availability[region.code]?.lastChecked).toLocaleString()}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <>
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>World Map Availability</CardTitle>
+                  <CardDescription>Colored map showing video availability by country</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="w-full overflow-x-auto">
+                    <WorldMap availability={availability} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Detailed Country Availability</CardTitle>
+                  <CardDescription>Comprehensive list of video availability by country</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <CountryList availability={availability} countries={countries} />
+                </CardContent>
+              </Card>
+            </>
           )}
 
           {!availability && !error && (
@@ -315,9 +302,19 @@ export default function YouTubeRegionRestrictionFinder() {
           {searchHistory.length > 0 && (
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <History className="mr-2" size={20} />
-                  Recent Searches
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <History className="mr-2" size={20} />
+                    Recent Searches
+                  </div>
+                  <Button
+                    onClick={clearSearchHistory}
+                    variant="outline"
+                    size="sm"
+                    className="text-red-500 hover:text-red-600"
+                  >
+                    Clear History
+                  </Button>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -337,40 +334,68 @@ export default function YouTubeRegionRestrictionFinder() {
           )}
         </CardContent>
       </Card>
-
-      <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+      <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
           <Info className="w-6 h-6 mr-2" />
           About YouTube Region Restriction Finder
-        </h2>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
         <p className="text-gray-300 mb-4">
-          Our YouTube Region Restriction Finder is a powerful tool designed to help you check the availability of YouTube videos across different regions. This tool is perfect for content creators, marketers, and viewers who want to understand the global reach of a video or identify potential region restrictions.
+          Our YouTube Region Restriction Finder is a powerful and comprehensive tool designed to help content creators, marketers, researchers, and viewers understand the global availability of YouTube videos. This innovative tool allows you to check the accessibility of any YouTube video across numerous countries worldwide, providing valuable insights into content distribution and potential region restrictions.
         </p>
+
+        <div className="my-8">
+          <NextImage 
+            src="/Images/YoutubeMetadataPreview3.png?height=400&width=600" 
+            alt="Screenshot of the Code to Image Converter interface showing code input area and customization options" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
+          />
+        </div>
+
+       
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <Lightbulb className="w-6 h-6 mr-2" />
           Key Features
         </h2>
         <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>Instantly check video availability across multiple regions by entering the video URL.</li>
-          <li>View availability status for 10 major countries including the US, UK, Canada, Australia, Germany, France, Japan, India, Brazil, and Russia.</li>
-          <li>Easy-to-understand visual representation of availability using checkmarks and crosses.</li>
-          <li>Quick and efficient API-based checking process.</li>
-          <li>Clean and user-friendly interface for a smooth experience.</li>
+          <li>Check video availability across multiple regions by simply entering the video URL.</li>
+          <li>Interactive world map visualization of video accessibility.</li>
+          <li>Comprehensive list of all countries with their respective availability status.</li>
+          <li>Detailed video information including title, channel, view count, and publish date.</li>
+          <li>Color-coded availability status for easy interpretation (green for available, red for restricted).</li>
+          <li>Search history feature for quick access to previously checked videos.</li>
+          <li>Share functionality to easily distribute your findings.</li>
+          <li>User-friendly interface with responsive design for all devices.</li>
           <li>No login required - use the tool directly in your browser.</li>
-          <li>Compatible with all devices and browsers.</li>
+          <li>Fast and efficient API-based checking process.</li>
+          <li>Compatible with all modern web browsers.</li>
         </ul>
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
-          How to Use YouTube Region Restriction Finder
+          How to Use YouTube Region Restriction Finder?
         </h2>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>Copy the URL of the YouTube video you want to check.</li>
+          <li>Copy the URL of the YouTube video you want to analyze.</li>
           <li>Paste the URL into the input field of the YouTube Region Restriction Finder.</li>
           <li>Click the "Check Availability" button to start the process.</li>
-          <li>View the availability status for each region in the results section.</li>
-          <li>Use the "Reset" button to clear the results and check another video.</li>
+          <li>View the results in the interactive interface:</li>
+          <ul className="list-disc list-inside ml-6">
+            <li>World Map: See a visual representation of video availability.</li>
+            <li>Country List: Check detailed availability status for each country.</li>
+            <li>Video Details: View information about the checked video.</li>
+          </ul>
+          <li>Use the additional features:</li>
+          <ul className="list-disc list-inside ml-6">
+            <li>Reset: Clear the current results to check a new video.</li>
+            <li>Share: Copy a link to your results for easy sharing.</li>
+            <li>Recent Searches: Quickly access your previously checked videos.</li>
+          </ul>
         </ol>
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
@@ -378,15 +403,43 @@ export default function YouTubeRegionRestrictionFinder() {
           Tips and Tricks
         </h2>
         <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>Use this tool to ensure your content is available in your target markets.</li>
-          <li>If you find your video is restricted in certain regions, consider reviewing your content for potential copyright issues or policy violations.</li>
-          <li>For content creators, use this tool to verify the global reach of your videos after publishing.</li>
-          <li>Marketers can use this tool to check competitor video availability across different regions.</li>
-          <li>If you're experiencing issues viewing a video, use this tool to check if it's due to region restrictions.</li>
-          <li>Remember that region restrictions can change over time, so it's worth rechecking videos periodically.</li>
-          <li>Keep in mind that this tool checks a sample of major countries and may not represent all global restrictions.</li>
+          <li>Use the tool to ensure your content is available in your target markets before promoting it.</li>
+          <li>Check competitor videos to understand their global reach and content strategy.</li>
+          <li>If you find your video is restricted in certain regions, review your content for potential copyright issues or policy violations.</li>
+          <li>Regularly recheck your videos, as region restrictions can change over time.</li>
+          <li>Use the share feature to collaborate with team members or clients on content distribution strategies.</li>
+          <li>Combine the region restriction data with other analytics to create comprehensive content performance reports.</li>
+          <li>Pay attention to patterns in region restrictions to inform your future content creation and distribution strategies.</li>
+          <li>Use the tool to troubleshoot viewer reports of inaccessible content in specific regions.</li>
+          <li>Consider using a VPN in conjunction with this tool to verify results from different locations.</li>
+          <li>Keep in mind that some restrictions may be temporary due to ongoing reviews or appeals.</li>
         </ul>
-      </div>
+
+        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
+          <Share2 className="w-6 h-6 mr-2" />
+          Applications and Use Cases
+        </h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
+          <li><Globe className="inline-block w-4 h-4 mr-2" /> Global Content Strategy: Optimize your content distribution for international audiences.</li>
+          <li><LockIcon className="inline-block w-4 h-4 mr-2" /> Copyright Compliance: Ensure your content adheres to regional copyright laws and licensing agreements.</li>
+          <li><Search className="inline-block w-4 h-4 mr-2" /> Market Research: Analyze the global reach of viral videos or trending content.</li>
+          <li><BarChart className="inline-block w-4 h-4 mr-2" /> Competitive Analysis: Compare your video availability with competitors in key markets.</li>
+          <li><Globe className="inline-block w-4 h-4 mr-2" /> Localization Planning: Identify regions where your content is restricted to plan localized versions.</li>
+          <li><LockIcon className="inline-block w-4 h-4 mr-2" /> Troubleshooting: Quickly identify and address region-specific playback issues.</li>
+          <li><Search className="inline-block w-4 h-4 mr-2" /> Educational Research: Study the impact of region restrictions on the spread of educational content.</li>
+          <li><BarChart className="inline-block w-4 h-4 mr-2" /> Marketing Campaigns: Ensure promotional videos are accessible in target markets before launching campaigns.</li>
+          <li><Globe className="inline-block w-4 h-4 mr-2" /> Content Acquisition: Evaluate the global availability of content before purchasing rights or partnering with creators.</li>
+          <li><LockIcon className="inline-block w-4 h-4 mr-2" /> Policy Compliance: Verify that your content meets platform policies and guidelines across different regions.</li>
+        </ul>
+
+        <p className="text-gray-300 mt-6">
+          The YouTube Region Restriction Finder is an invaluable tool for anyone working with YouTube content on a global scale. It provides crucial insights into content availability, helping you make informed decisions about your video distribution strategy. Whether you're a content creator, marketer, researcher, or simply a curious viewer, this tool offers a window into the complex world of international content distribution on YouTube. Start exploring the global reach of YouTube videos today and unlock new opportunities for your content!
+        </p>
+      </CardContent>
+    </Card>
+
+      
     </ToolLayout>
   )
 }
+

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
         title: 'Open Graph Meta Generator | Optimize Social Sharing',
         description: 'Craft Open Graph meta tags tailored for your content. Boost social media visibility with real-time preview and instant code generation.',
         type: 'website',
+        url: 'https://webtoolscenter.com/tools/social-media/open-graph-meta-generator',
     },
     twitter: {
         card: 'summary_large_image',
