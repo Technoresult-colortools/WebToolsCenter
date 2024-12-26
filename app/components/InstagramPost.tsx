@@ -97,7 +97,7 @@ const InstagramPost = React.forwardRef<HTMLDivElement, InstagramPostProps>(({
     const mentionRegex = /@[a-zA-Z0-9]+/g
     const urlRegex = /(https?:\/\/[^\s]+)/g
 
-    let processedText = text
+    const processedText = text
       .replace(hashtagRegex, '<span class="text-[#00376b]">$&</span>')
       .replace(mentionRegex, '<span class="text-[#00376b]">$&</span>')
       .replace(urlRegex, '<a href="$1" class="text-[#00376b]" target="_blank" rel="noopener noreferrer">$1</a>')

@@ -9,7 +9,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { url } = req.body;
 
     try {
-        const username = url.split('/').pop();
         const response = await axios.get(`https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`);
 
         const data = response.data;
