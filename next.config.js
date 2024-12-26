@@ -31,6 +31,7 @@ const nextConfig = {
   // Enable experimental features if needed
   experimental: {
     serverComponentsExternalPackages: ['sharp', 'potrace'],
+    serverActions: true,
   },
 
   // Environment configuration

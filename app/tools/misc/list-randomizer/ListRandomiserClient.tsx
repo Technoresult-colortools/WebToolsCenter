@@ -9,10 +9,11 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
-import { Shuffle, Copy, Upload, Download, Undo, Redo, Save, FolderOpen, Info, BookOpen, Lightbulb } from 'lucide-react';
+import { Shuffle, Copy, Upload, Download, Undo, Redo, Save, FolderOpen, Info, BookOpen, Lightbulb, Share2 } from 'lucide-react';
 import seedrandom from 'seedrandom';
-import ToolLayout from '@/components/ToolLayout'
-
+import ToolLayout from '@/components/ToolLayout';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import Image from 'next/image'
 
 export default function ListRandomizer() {
   const [inputList, setInputList] = useState<string>('');
@@ -225,267 +226,300 @@ export default function ListRandomizer() {
   return (
     <ToolLayout
       title="List Randomizer"
-      description="Powerfull tool designed to shuffle and manipulate list of items"
+      description="Powerful tool designed to shuffle and manipulate lists of items"
     >
-
       <Toaster position="top-right" />
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Input List</h2>
-              <Textarea
-                value={inputList}
-                onChange={handleInputChange}
-                placeholder="Enter your list items here, one per line"
-                className="w-full h-64 p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
+      {/* Input and Settings Section */}
+      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Input List</h2>
+            <Textarea
+              value={inputList}
+              onChange={handleInputChange}
+              placeholder="Enter your list items here, one per line"
+              className="w-full h-64 p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
+            />
+            <div className="mt-4">
+              <Label htmlFor="separator" className="text-white mb-2 block">Separator</Label>
+              <Select value={separator} onValueChange={handleSeparatorChange}>
+                <SelectTrigger id="separator" className="bg-gray-700 text-white border-gray-600">
+                  <SelectValue>{separator === '\n' ? 'New line' : separator || 'Select separator'}</SelectValue>
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 text-white border-gray-600">
+                  <SelectItem value="\n">New line</SelectItem>
+                  <SelectItem value=",">Comma</SelectItem>
+                  <SelectItem value=";">Semicolon</SelectItem>
+                  <SelectItem value="\t">Tab</SelectItem>
+                  <SelectItem value="custom">Custom</SelectItem>
+                </SelectContent>
+              </Select>
+              {separator === 'custom' && (
+                <Input
+                  value={customSeparator}
+                  onChange={handleCustomSeparatorChange}
+                  placeholder="Enter custom separator"
+                  className="mt-2 bg-gray-700 text-white border-gray-600"
+                />
+              )}
+            </div>
+            <div className="mt-4">
+              <Button onClick={() => document.getElementById('file-upload')?.click()} className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Upload className="h-5 w-5 mr-2" />
+                Upload List
+              </Button>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".txt,.csv"
+                onChange={handleFileUpload}
+                className="hidden"
               />
-              <div className="mt-4">
-                <Label htmlFor="separator" className="text-white mb-2 block">Separator</Label>
-                <Select value={separator} onValueChange={handleSeparatorChange}>
-                  <SelectTrigger id="separator" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue>{separator === '\n' ? 'New line' : separator || 'Select separator'}</SelectValue>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Randomization Settings</h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="trim-items" className="text-white">Trim items</Label>
+                <Switch
+                  id="trim-items"
+                  checked={trimItems}
+                  onCheckedChange={setTrimItems}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="remove-duplicates" className="text-white">Remove duplicates</Label>
+                <Switch
+                  id="remove-duplicates"
+                  checked={removeDuplicates}
+                  onCheckedChange={setRemoveDuplicates}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="sort-before-randomize" className="text-white">Sort before randomize</Label>
+                <Switch
+                  id="sort-before-randomize"
+                  checked={sortBeforeRandomize}
+                  onCheckedChange={setSortBeforeRandomize}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="case-insensitive" className="text-white">Case-insensitive</Label>
+                <Switch
+                  id="case-insensitive"
+                  checked={caseInsensitive}
+                  onCheckedChange={setCaseInsensitive}
+                />
+              </div>
+              <div>
+                <Label htmlFor="randomization-method" className="text-white mb-2 block">Randomization Method</Label>
+                <Select value={randomizationMethod} onValueChange={setRandomizationMethod}>
+                  <SelectTrigger id="randomization-method" className="bg-gray-700 text-white border-gray-600">
+                    <SelectValue placeholder="Select method" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="\n">New line</SelectItem>
-                    <SelectItem value=",">Comma</SelectItem>
-                    <SelectItem value=";">Semicolon</SelectItem>
-                    <SelectItem value="\t">Tab</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
+                    <SelectItem value="fisher-yates">Fisher-Yates Shuffle</SelectItem>
+                    <SelectItem value="sort">JavaScript Sort</SelectItem>
                   </SelectContent>
                 </Select>
-                {separator === 'custom' && (
-                  <Input
-                    value={customSeparator}
-                    onChange={handleCustomSeparatorChange}
-                    placeholder="Enter custom separator"
-                    className="mt-2 bg-gray-700 text-white border-gray-600"
-                  />
-                )}
               </div>
-              <div className="mt-4">
-                <Button onClick={() => document.getElementById('file-upload')?.click()} className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Upload className="h-5 w-5 mr-2" />
-                  Upload List
-                </Button>
-                <input
-                  id="file-upload"
-                  type="file"
-                  accept=".txt,.csv"
-                  onChange={handleFileUpload}
-                  className="hidden"
+              <div>
+                <Label htmlFor="subset-size" className="text-white mb-2 block">Subset Size (0 for all): {subsetSize}</Label>
+                <Slider
+                  id="subset-size"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={subsetSize}
+                  onChange={(value) => setSubsetSize(value)}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="weighted-randomization" className="text-white">Weighted Randomization</Label>
+                <Switch
+                  id="weighted-randomization"
+                  checked={weightedRandomization}
+                  onCheckedChange={setWeightedRandomization}
+                />
+              </div>
+              <div>
+                <Label htmlFor="seed" className="text-white mb-2 block">Random Seed (optional)</Label>
+                <Input
+                  id="seed"
+                  value={seed}
+                  onChange={(e) => setSeed(e.target.value)}
+                  placeholder="Enter a seed for reproducible results"
+                  className="bg-gray-700 text-white border-gray-600"
+                />
+              </div>
+              <div>
+                <Label htmlFor="group-size" className="text-white mb-2 block">Group Size: {groupSize}</Label>
+                <Slider
+                  id="group-size"
+                  min={1}
+                  max={10}
+                  step={1}
+                  value={groupSize}
+                  onChange={(value) => setGroupSize(value)}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="reverse-output" className="text-white">Reverse Output</Label>
+                <Switch
+                  id="reverse-output"
+                  checked={reverseOutput}
+                  onCheckedChange={setReverseOutput}
                 />
               </div>
             </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Randomization Settings</h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="trim-items" className="text-white">Trim items</Label>
-                  <Switch
-                    id="trim-items"
-                    checked={trimItems}
-                    onCheckedChange={setTrimItems}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="remove-duplicates" className="text-white">Remove duplicates</Label>
-                  <Switch
-                    id="remove-duplicates"
-                    checked={removeDuplicates}
-                    onCheckedChange={setRemoveDuplicates}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="sort-before-randomize" className="text-white">Sort before randomize</Label>
-                  <Switch
-                    id="sort-before-randomize"
-                    checked={sortBeforeRandomize}
-                    onCheckedChange={setSortBeforeRandomize}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="case-insensitive" className="text-white">Case-insensitive</Label>
-                  <Switch
-                    id="case-insensitive"
-                    checked={caseInsensitive}
-                    onCheckedChange={setCaseInsensitive}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="randomization-method" className="text-white mb-2 block">Randomization Method</Label>
-                  <Select value={randomizationMethod} onValueChange={setRandomizationMethod}>
-                    <SelectTrigger id="randomization-method" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select method" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="fisher-yates">Fisher-Yates Shuffle</SelectItem>
-                      <SelectItem value="sort">JavaScript Sort</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="subset-size" className="text-white mb-2 block">Subset Size (0 for all): {subsetSize}</Label>
-                  <Slider
-                    id="subset-size"
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={subsetSize}
-                    onChange={(value) => setSubsetSize(value)}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="weighted-randomization" className="text-white">Weighted Randomization</Label>
-                  <Switch
-                    id="weighted-randomization"
-                    checked={weightedRandomization}
-                    onCheckedChange={setWeightedRandomization}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="seed" className="text-white mb-2 block">Random Seed (optional)</Label>
-                  <Input
-                    id="seed"
-                    value={seed}
-                    onChange={(e) => setSeed(e.target.value)}
-                    placeholder="Enter a seed for reproducible results"
-                    className="bg-gray-700 text-white border-gray-600"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="group-size" className="text-white mb-2 block">Group Size: {groupSize}</Label>
-                  <Slider
-                    id="group-size"
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={groupSize}
-                    onChange={(value) => setGroupSize(value)}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="reverse-output" className="text-white">Reverse Output</Label>
-                  <Switch
-                    id="reverse-output"
-                    checked={reverseOutput}
-                    onCheckedChange={setReverseOutput}
-                  />
-                </div>
-              </div>
-              <Button onClick={randomizeList} className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white">
-                <Shuffle className="h-5 w-5 mr-2" />
-                Randomize List
-              </Button>
-            </div>
+            <Button onClick={randomizeList} className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white">
+              <Shuffle className="h-5 w-5 mr-2" />
+              Randomize List
+            </Button>
           </div>
         </div>
+      </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Randomized Output</h2>
-          <Textarea
-            value={outputList}
-            readOnly
-            className="w-full h-64 p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
+      {/* Output Section */}
+      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+        <h2 className="text-2xl font-bold text-white mb-4">Randomized Output</h2>
+        <Textarea
+          value={outputList}
+          readOnly
+          className="w-full h-64 p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
+        />
+        <div className="mt-4 flex flex-wrap justify-between gap-2">
+          <Button onClick={handleCopyToClipboard} className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Copy className="h-5 w-5 mr-2" />
+            Copy to Clipboard
+          </Button>
+          <Button onClick={handleDownload} className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Download className="h-5 w-5 mr-2" />
+            Download Result
+          </Button>
+          <Button onClick={undo} disabled={historyIndex <= 0} className="bg-yellow-600 hover:bg-yellow-700 text-white">
+            <Undo className="h-5 w-5 mr-2" />
+            Undo
+          </Button>
+          <Button onClick={redo} disabled={historyIndex >= history.length - 1} className="bg-yellow-600 hover:bg-yellow-700 text-white">
+            <Redo className="h-5 w-5 mr-2" />
+            Redo
+          </Button>
+          <Button onClick={saveConfiguration} className="bg-teal-600 hover:bg-teal-700 text-white">
+            <Save className="h-5 w-5 mr-2" />
+            Save Config
+          </Button>
+          <Button onClick={loadConfiguration} className="bg-teal-600 hover:bg-teal-700 text-white">
+            <FolderOpen className="h-5 w-5 mr-2" />
+            Load Config
+          </Button>
+        </div>
+      </div>
+
+      <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+          <Info className="w-6 h-6 mr-2" />
+          About List Randomizer
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="text-gray-300">
+        <p className="mb-4">
+          The List Randomizer is a powerful and versatile tool designed to shuffle and manipulate lists of items with precision and flexibility. Whether you're a researcher conducting a random sampling, a teacher assigning random groups, a project manager allocating tasks, or simply someone looking to introduce an element of chance into your decision-making, this tool offers a comprehensive suite of features to meet your randomization needs.
+        </p>
+
+        <div className="my-8">
+          <Image 
+            src="/Images/ListRandomizerPreview.png?height=400&width=600" 
+            alt="Screenshot of the List Randomizer interface showing input area, randomization options, and output" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
           />
-          <div className="mt-4 flex flex-wrap justify-between gap-2">
-            <Button onClick={handleCopyToClipboard} className="bg-blue-600 hover:bg-blue-700 text-white">
-              <Copy className="h-5 w-5 mr-2" />
-              Copy to Clipboard
-            </Button>
-            <Button onClick={handleDownload} className="bg-purple-600 hover:bg-purple-700 text-white">
-              <Download className="h-5 w-5 mr-2" />
-              Download Result
-            </Button>
-            <Button onClick={undo} disabled={historyIndex <= 0} className="bg-yellow-600 hover:bg-yellow-700 text-white">
-              <Undo className="h-5 w-5 mr-2" />
-              Undo
-            </Button>
-            <Button onClick={redo} disabled={historyIndex >= history.length - 1} className="bg-yellow-600 hover:bg-yellow-700 text-white">
-              <Redo className="h-5 w-5 mr-2" />
-              Redo
-            </Button>
-            <Button onClick={saveConfiguration} className="bg-teal-600 hover:bg-teal-700 text-white">
-              <Save className="h-5 w-5 mr-2" />
-              Save Config
-            </Button>
-            <Button onClick={loadConfiguration} className="bg-teal-600 hover:bg-teal-700 text-white">
-              <FolderOpen className="h-5 w-5 mr-2" />
-              Load Config
-            </Button>
-          </div>
         </div>
 
-        <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
-            <Info className="w-6 h-6 mr-2" />
-            What is List Randomizer?
-          </h2>
-          <p className="text-gray-300 mb-4">
-            The List Randomizer is a powerful tool designed to shuffle and manipulate lists of items. Whether you're conducting a random draw, organizing a playlist, or simply need to randomize data, this tool offers a wide range of features to meet your needs. With options for different randomization methods, custom separators, and advanced settings like weighted randomization and grouping, you can achieve precise control over your randomized output.
-          </p>
-          <p className="text-gray-300 mb-4">
-            This tool is perfect for researchers, educators, project managers, and anyone who needs to introduce randomness or reorganize lists in their work or personal projects. The ability to save and load configurations makes it easy to replicate your randomization processes, ensuring consistency across multiple sessions.
-          </p>
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <BookOpen className="w-5 h-5 mr-2" />
+          How to Use List Randomizer?
+        </h2>
+        <ol className="list-decimal pl-6 space-y-2">
+          <li>Enter your list items in the input textarea or upload a text file.</li>
+          <li>Choose the appropriate separator for your list items (newline, comma, semicolon, tab, or custom).</li>
+          <li>Adjust the randomization settings according to your needs:
+            <ul className="list-disc pl-6 mt-2 space-y-1">
+              <li>Set trimming, duplicate removal, and sorting options</li>
+              <li>Choose the randomization method (Fisher-Yates or JavaScript Sort)</li>
+              <li>Adjust subset size, grouping, and other advanced options</li>
+            </ul>
+          </li>
+          <li>Click the "Randomize List" button to generate a randomized version of your list.</li>
+          <li>View the randomized output in the result textarea.</li>
+          <li>Use the undo/redo buttons to navigate through your randomization history.</li>
+          <li>Copy the result to your clipboard or download it as a text file.</li>
+          <li>Save your current configuration for future use or load a previously saved configuration.</li>
+        </ol>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2" />
-            How to Use List Randomizer?
-          </h2>
-          <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Enter your list items in the input textarea or upload a text file.</li>
-            <li>Choose the appropriate separator for your list items.</li>
-            <li>Adjust the randomization settings according to your needs:
-              <ul className="list-disc list-inside ml-4">
-                <li>Set trimming, duplicate removal, and sorting options</li>
-                <li>Choose the randomization method</li>
-                <li>Adjust subset size, grouping, and other advanced options</li>
-              </ul>
-            </li>
-            <li>Click the <strong>Randomize List</strong> button to generate a randomized version of your list.</li>
-            <li>View the randomized output in the result textarea.</li>
-            <li>Use the undo/redo buttons to navigate through your randomization history.</li>
-            <li>Copy the result to your clipboard or download it as a text file.</li>
-            <li>Save your current configuration for future use or load a previously saved configuration.</li>
-          </ol>
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <Lightbulb className="w-5 h-5 mr-2" />
+          Key Features
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Multiple input methods: Enter text directly or upload files</li>
+          <li>Flexible separators: Choose from common separators or use a custom one</li>
+          <li>Advanced randomization options: Fisher-Yates shuffle or JavaScript sort</li>
+          <li>List preprocessing: Trim items, remove duplicates, and sort before randomization</li>
+          <li>Subset selection: Choose a specific number of items from the randomized list</li>
+          <li>Weighted randomization: Prioritize items based on their original position</li>
+          <li>Grouping: Organize randomized items into groups of a specified size</li>
+          <li>Reversible output: Option to reverse the final randomized list</li>
+          <li>Reproducible results: Use a seed for consistent randomization across sessions</li>
+          <li>Undo/Redo functionality: Navigate through your randomization history</li>
+          <li>Configuration management: Save and load your randomization settings</li>
+          <li>Export options: Copy to clipboard or download as a text file</li>
+        </ul>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Key Features
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Multiple input methods: Enter text directly or upload files.</li>
-            <li>Flexible separators: Choose from common separators or use a custom one.</li>
-            <li>Advanced randomization options: Fisher-Yates shuffle or JavaScript sort.</li>
-            <li>List preprocessing: Trim items, remove duplicates, and sort before randomization.</li>
-            <li>Subset selection: Choose a specific number of items from the randomized list.</li>
-            <li>Weighted randomization: Prioritize items based on their original position.</li>
-            <li>Grouping: Organize randomized items into groups of a specified size.</li>
-            <li>Reversible output: Option to reverse the final randomized list.</li>
-            <li>Reproducible results: Use a seed for consistent randomization across sessions.</li>
-            <li>Undo/Redo functionality: Navigate through your randomization history.</li>
-            <li>Configuration management: Save and load your randomization settings.</li>
-            <li>Export options: Copy to clipboard or download as a text file.</li>
-          </ul>
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <Share2 className="w-5 h-5 mr-2" />
+          Applications and Use Cases
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Research: Randomize participant lists or create random samples for studies</li>
+          <li>Education: Assign random groups for projects or create randomized test question orders</li>
+          <li>Project Management: Randomly assign tasks to team members or prioritize project backlogs</li>
+          <li>Game Development: Generate random events, loot drops, or NPC behaviors</li>
+          <li>Music and Media: Create shuffled playlists or randomize content order</li>
+          <li>Decision Making: Use randomization to make unbiased choices or break ties</li>
+          <li>Data Analysis: Perform random sampling or create control groups for experiments</li>
+          <li>Event Planning: Randomize seating arrangements or determine presentation orders</li>
+          <li>Sports and Competitions: Create random tournament brackets or team matchups</li>
+          <li>Software Testing: Generate random input data for thorough application testing</li>
+        </ul>
 
-          <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-            <Lightbulb className="w-6 h-6 mr-2" />
-            Tips & Tricks
-          </h2>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-            <li>Use seeds for consistency: When you need to reproduce the same random order, use a specific seed value.</li>
-            <li>Combine features: Use sorting with weighted randomization for a semi-random order that preserves some original structure.</li>
-            <li>Grouping for team assignment: Use the grouping feature to quickly divide a list of names into teams or groups.</li>
-            <li>Custom separators: For complex data, use a unique custom separator to ensure accurate list item separation.</li>
-            <li>Save configurations: Create and save different configurations for various randomization tasks you perform regularly.</li>
-            <li>Subset for sampling: Use the subset feature to randomly select a sample from a larger population.</li>
-            <li>Reverse for alternative view: After randomizing, use the reverse option to see if any interesting patterns emerge from the bottom up.</li>
-            <li>Undo for comparisons: Use the undo/redo feature to quickly compare different randomization results.</li>
-            <li>Weighted randomization for priority: Use this feature when you want to maintain some influence of the original order.</li>
-            <li>Combine with other tools: Use the randomized output with other tools in the WebToolsCenter for more complex data processing tasks.</li>
-          </ul>
-        </div>
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <Lightbulb className="w-5 h-5 mr-2" />
+          Tips and Tricks
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Use seeds for consistency: When you need to reproduce the same random order, use a specific seed value</li>
+          <li>Combine features: Use sorting with weighted randomization for a semi-random order that preserves some original structure</li>
+          <li>Grouping for team assignment: Use the grouping feature to quickly divide a list of names into teams or groups</li>
+          <li>Custom separators: For complex data, use a unique custom separator to ensure accurate list item separation</li>
+          <li>Save configurations: Create and save different configurations for various randomization tasks you perform regularly</li>
+          <li>Subset for sampling: Use the subset feature to randomly select a sample from a larger population</li>
+          <li>Reverse for alternative view: After randomizing, use the reverse option to see if any interesting patterns emerge from the bottom up</li>
+          <li>Undo for comparisons: Use the undo/redo feature to quickly compare different randomization results</li>
+          <li>Weighted randomization for priority: Use this feature when you want to maintain some influence of the original order</li>
+          <li>Combine with other tools: Use the randomized output with other tools in your workflow for more complex data processing tasks</li>
+        </ul>
+
+        <p className="mt-6">
+          The List Randomizer is an essential tool for anyone working with lists that require randomization or reorganization. Its combination of powerful features and user-friendly interface makes it suitable for both simple and complex randomization tasks. Whether you're a professional looking to introduce controlled randomness into your work or an individual seeking a fair way to make decisions, the List Randomizer provides the flexibility and reliability you need.
+        </p>
+      </CardContent>
+    </Card>
   </ToolLayout>
   );
 }

@@ -371,18 +371,19 @@ export default function InstagramFilters() {
                   <Upload className="w-4 h-4 mr-2" />
                   Upload Image
                 </Button>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 w-full">
                   <Input
                     placeholder="Enter image URL..."
                     value={urlInput}
                     onChange={(e) => setUrlInput(e.target.value)}
-                    className='text-gray-700'
+                    className="text-gray-700 flex-1"
                   />
-                  <Button onClick={handleUrlUpload}>
+                  <Button onClick={handleUrlUpload} className="flex items-center justify-center sm:w-auto">
                     <Link2 className="w-4 h-4 mr-2" />
                     Load URL
                   </Button>
                 </div>
+
               </div>
             </TabsContent>
             <TabsContent value="download" className="space-y-4">

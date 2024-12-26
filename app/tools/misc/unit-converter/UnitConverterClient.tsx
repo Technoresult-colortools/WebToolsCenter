@@ -1,171 +1,16 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { ArrowLeftRight, Copy, Check, RefreshCw, Info, Lightbulb, BookOpen } from 'lucide-react'
+import { ArrowLeftRight, Copy, Check, RefreshCw, Info, BookOpen, Lightbulb, Share2 } from 'lucide-react'
 import { Toaster, toast } from 'react-hot-toast'
 import { Button } from "@/components/ui/Button"
-import Input from "@/components/ui/Input"
+import  Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
 import ToolLayout from '@/components/ToolLayout'
-
-type UnitCategory = {
-  name: string
-  units: string[]
-  convert: (value: number, from: string, to: string) => number
-}
-
-const categories: UnitCategory[] = [
-  {
-    name: 'Length',
-    units: ['Meters', 'Kilometers', 'Centimeters', 'Millimeters', 'Miles', 'Yards', 'Feet', 'Inches'],
-    convert: (value, from, to) => {
-      const meterValues: { [key: string]: number } = {
-        Meters: 1,
-        Kilometers: 1000,
-        Centimeters: 0.01,
-        Millimeters: 0.001,
-        Miles: 1609.34,
-        Yards: 0.9144,
-        Feet: 0.3048,
-        Inches: 0.0254,
-      }
-      const meters = value * meterValues[from]
-      return meters / meterValues[to]
-    },
-  },
-  {
-    name: 'Weight',
-    units: ['Kilograms', 'Grams', 'Milligrams', 'Pounds', 'Ounces', 'Tons'],
-    convert: (value, from, to) => {
-      const gramValues: { [key: string]: number } = {
-        Kilograms: 1000,
-        Grams: 1,
-        Milligrams: 0.001,
-        Pounds: 453.592,
-        Ounces: 28.3495,
-        Tons: 1000000,
-      }
-      const grams = value * gramValues[from]
-      return grams / gramValues[to]
-    },
-  },
-  {
-    name: 'Temperature',
-    units: ['Celsius', 'Fahrenheit', 'Kelvin'],
-    convert: (value, from, to) => {
-      if (from === 'Celsius' && to === 'Fahrenheit') {
-        return (value * 9) / 5 + 32
-      } else if (from === 'Fahrenheit' && to === 'Celsius') {
-        return ((value - 32) * 5) / 9
-      } else if (from === 'Celsius' && to === 'Kelvin') {
-        return value + 273.15
-      } else if (from === 'Kelvin' && to === 'Celsius') {
-        return value - 273.15
-      } else if (from === 'Fahrenheit' && to === 'Kelvin') {
-        return ((value - 32) * 5) / 9 + 273.15
-      } else if (from === 'Kelvin' && to === 'Fahrenheit') {
-        return ((value - 273.15) * 9) / 5 + 32
-      }
-      return value
-    },
-  },
-  {
-    name: 'Volume',
-    units: ['Liters', 'Milliliters', 'Cubic Meters', 'Gallons', 'Quarts', 'Pints', 'Cups'],
-    convert: (value, from, to) => {
-      const literValues: { [key: string]: number } = {
-        Liters: 1,
-        Milliliters: 0.001,
-        'Cubic Meters': 1000,
-        Gallons: 3.78541,
-        Quarts: 0.946353,
-        Pints: 0.473176,
-        Cups: 0.236588,
-      }
-      const liters = value * literValues[from]
-      return liters / literValues[to]
-    },
-  },
-  {
-    name: 'Area',
-    units: ['Square Meters', 'Square Kilometers', 'Square Feet', 'Square Yards', 'Acres', 'Hectares'],
-    convert: (value, from, to) => {
-      const squareMeterValues: { [key: string]: number } = {
-        'Square Meters': 1,
-        'Square Kilometers': 1000000,
-        'Square Feet': 0.092903,
-        'Square Yards': 0.836127,
-        Acres: 4046.86,
-        Hectares: 10000,
-      }
-      const squareMeters = value * squareMeterValues[from]
-      return squareMeters / squareMeterValues[to]
-    },
-  },
-  {
-    name: 'Time',
-    units: ['Seconds', 'Minutes', 'Hours', 'Days', 'Weeks', 'Months', 'Years'],
-    convert: (value, from, to) => {
-      const secondValues: { [key: string]: number } = {
-        Seconds: 1,
-        Minutes: 60,
-        Hours: 3600,
-        Days: 86400,
-        Weeks: 604800,
-        Months: 2629746, // Average month (30.44 days)
-        Years: 31556952, // Average year (365.24 days)
-      }
-      const seconds = value * secondValues[from]
-      return seconds / secondValues[to]
-    },
-  },
-  {
-    name: 'Speed',
-    units: ['Meters per Second', 'Kilometers per Hour', 'Miles per Hour', 'Knots'],
-    convert: (value, from, to) => {
-      const mpsValues: { [key: string]: number } = {
-        'Meters per Second': 1,
-        'Kilometers per Hour': 0.277778,
-        'Miles per Hour': 0.44704,
-        'Knots': 0.514444,
-      }
-      const mps = value * mpsValues[from]
-      return mps / mpsValues[to]
-    },
-  },
-  {
-    name: 'Data',
-    units: ['Bits', 'Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Terabytes'],
-    convert: (value, from, to) => {
-      const bitValues: { [key: string]: number } = {
-        Bits: 1,
-        Bytes: 8,
-        Kilobytes: 8 * 1024,
-        Megabytes: 8 * 1024 * 1024,
-        Gigabytes: 8 * 1024 * 1024 * 1024,
-        Terabytes: 8 * 1024 * 1024 * 1024 * 1024,
-      }
-      const bits = value * bitValues[from]
-      return bits / bitValues[to]
-    },
-  },
-  {
-    name: 'Energy',
-    units: ['Joules', 'Calories', 'Kilocalories', 'Watt-hours', 'Kilowatt-hours'],
-    convert: (value, from, to) => {
-      const jouleValues: { [key: string]: number } = {
-        Joules: 1,
-        Calories: 4.184,
-        Kilocalories: 4184,
-        'Watt-hours': 3600,
-        'Kilowatt-hours': 3600000,
-      }
-      const joules = value * jouleValues[from]
-      return joules / jouleValues[to]
-    },
-  },
-]
+import { categories } from './unitCategories'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import Image from 'next/image'
 
 const UnitConverter = () => {
   const [category, setCategory] = useState(categories[0])
@@ -204,7 +49,7 @@ const UnitConverter = () => {
   }
 
   const addToHistory = (conversion: string) => {
-    setConversionHistory((prev) => [conversion, ...prev.slice(0, 9)])
+    setConversionHistory((prev) => [conversion, ...prev.slice(0, 19)])
   }
 
   const copyToClipboard = () => {
@@ -332,67 +177,100 @@ const UnitConverter = () => {
           </Button>
         </div>
       </div>
-
-      <div className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
+      <Card className="bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 max-w-4xl mx-auto mt-8">
+      <CardHeader>
+        <CardTitle className="text-xl md:text-2xl font-semibold text-white mb-4 flex items-center">
           <Info className="w-6 h-6 mr-2" />
-          About Unit Converter
-        </h2>
-        <p className="text-gray-300 mb-4">
-          Our Advanced Unit Converter is a powerful tool designed to help you quickly and accurately convert between various units of measurement. Whether you're working on a scientific project, cooking, or just need to convert units for everyday tasks, this tool has you covered.
+          About Advanced Unit Converter
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="text-gray-300">
+        <p className="mb-4">
+          The Advanced Unit Converter is a powerful and versatile tool designed to simplify the process of converting between various units of measurement. With its intuitive interface and comprehensive unit categories, it's perfect for students, professionals, and anyone needing quick and accurate conversions.
         </p>
 
-        <h2  className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-          <Lightbulb className="w-6 h-6 mr-2" />
-          Key Features
-        </h2>
-        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>🔄 Multiple Categories: Convert units across length, weight, temperature, volume, area, time, speed, data, and energy.</li>
-          <li>⚡ Real-time Conversion: See results instantly as you type.</li>
-          <li>🔀 Unit Swapping: Easily switch between 'from' and 'to' units with one click.</li>
-          <li>📋 Copy to Clipboard: Quickly copy conversion results for use elsewhere.</li>
-          <li>📜 Conversion History: Keep track of your recent conversions.</li>
-          <li>🖥️ Responsive Design: Use on any device, from desktop to mobile.</li>
-          <li>🎨 User-friendly Interface: Clean and intuitive design for easy navigation.</li>
-          <li>🌐 Expanded Categories: Now includes Time, Speed, Data, and Energy conversions.</li>
-        </ul>
+        <div className="my-8">
+          <Image 
+            src="/Images/UnitConverterPreview.png?height=400&width=600" 
+            alt="Screenshot of the Advanced Unit Converter interface showing conversion options and results" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
+          />
+        </div>
 
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-          <BookOpen className="w-6 h-6 mr-2" />
-          How to Use
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <BookOpen className="w-5 h-5 mr-2" />
+          How to Use Advanced Unit Converter?
         </h2>
-        <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>Select the category of units you want to convert (e.g., Length, Weight).</li>
+        <ol className="list-decimal pl-6 space-y-2">
+          <li>Select the category of units you want to convert (e.g., Length, Weight, Temperature).</li>
           <li>Choose the unit you're converting from in the "From" dropdown.</li>
           <li>Enter the value you want to convert in the input field.</li>
           <li>Select the unit you're converting to in the "To" dropdown.</li>
           <li>The converted value will appear automatically in the result field.</li>
           <li>Use the "Swap" button to quickly reverse the conversion.</li>
           <li>Click "Copy" to copy the conversion result to your clipboard.</li>
-          <li>View your conversion history below the main converter.</li>
+          <li>Switch to the "History" tab to view your recent conversions.</li>
         </ol>
 
-        <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
-          <Lightbulb className="w-6 h-6 mr-2" />
-          Tips & Tricks
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <Lightbulb className="w-5 h-5 mr-2" />
+          Key Features
         </h2>
-        <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li>Use the tab key to quickly navigate between input fields and dropdowns.</li>
-          <li>For temperature conversions, remember that the relationships between units are not linear.</li>
-          <li>When converting between metric and imperial units, use the length converter for accurate results.</li>
-          <li>For precise scientific calculations, always verify the number of decimal places in the result.</li>
-          <li>Use the conversion history to keep track of multiple conversions without the need for manual note-taking.</li>
-          <li>When working with very large or very small numbers, consider using scientific notation for input.</li>
-          <li>Remember that for weight conversions, "ton" refers to the metric ton (1000 kg) in this converter.</li>
-          <li>For area conversions, be mindful of the difference between square units (e.g., square meters) and non-square units (e.g., acres).</li>
-          <li>For time conversions, be aware that months and years are based on average values and may not be exact for specific dates.</li>
-          <li>When converting speeds, remember that knots are often used in nautical and aviation contexts.</li>
-          <li>For data conversions, keep in mind the difference between bits (b) and bytes (B) - there are 8 bits in a byte.</li>
-          <li>Energy conversions can be useful for understanding power consumption or nutritional information.</li>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Wide range of unit categories: Length, Weight, Temperature, Volume, Area, Time, Speed, Data, Energy, and Pressure.</li>
+          <li>Extensive list of units within each category for precise conversions.</li>
+          <li>Real-time conversion as you type.</li>
+          <li>Swap function to quickly reverse conversion direction.</li>
+          <li>Copy to clipboard functionality for easy sharing.</li>
+          <li>Conversion history to keep track of recent conversions.</li>
+          <li>Clean and intuitive tabbed interface.</li>
+          <li>Responsive design for use on desktop and mobile devices.</li>
         </ul>
-      </div>
+
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <Share2 className="w-5 h-5 mr-2" />
+          Applications and Use Cases
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Education: For math, science, and engineering calculations.</li>
+          <li>Engineering: Convert between different units for design and calculations.</li>
+          <li>Cooking: Convert between volume and weight measurements for recipes.</li>
+          <li>Fitness and Health: Convert between units for weight, length, and energy.</li>
+          <li>Travel: Convert units when visiting countries with different measurement systems.</li>
+          <li>Construction: Convert units of length, area, and volume for building projects.</li>
+          <li>Science: Perform conversions for various scientific calculations and experiments.</li>
+          <li>International Trade: Convert units for shipping and logistics.</li>
+          <li>IT and Networking: Use data conversions for storage and bandwidth calculations.</li>
+          <li>Energy Management: Convert between energy units for power consumption analysis.</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold text-white mt-6 mb-3 flex items-center">
+          <Lightbulb className="w-5 h-5 mr-2" />
+          Tips and Tricks
+        </h2>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Use the tab key to quickly navigate between input fields and dropdowns.</li>
+          <li>Utilize the swap function to quickly check reverse conversions.</li>
+          <li>Check the conversion history tab to review and re-use recent conversions.</li>
+          <li>For complex calculations, use the copy function to easily transfer results to other applications.</li>
+          <li>When working with temperature, remember that the relationships between units are not linear.</li>
+          <li>For precise scientific calculations, always verify the number of decimal places in the result.</li>
+          <li>Use the pressure conversion feature for weather-related calculations or engineering applications.</li>
+          <li>Leverage the energy conversion for calculations related to power consumption or nutritional information.</li>
+          <li>When working with digital data, remember the difference between bits (b) and bytes (B) - there are 8 bits in a byte.</li>
+          <li>For astronomical distances, consider using the length converter with larger units like light-years or astronomical units.</li>
+        </ul>
+
+        <p className="mt-6">
+          The Advanced Unit Converter is an essential tool for anyone who regularly works with different units of measurement. Its combination of a wide range of unit categories, user-friendly interface, and helpful features like conversion history make it a versatile solution for both simple and complex conversion tasks. Whether you're a student, professional, or just someone who needs to convert units in daily life, this tool is designed to make the process quick, easy, and accurate.
+        </p>
+      </CardContent>
+    </Card>
     </ToolLayout>
   )
 }
 
 export default UnitConverter
+
