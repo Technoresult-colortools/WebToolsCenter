@@ -6,8 +6,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
-    const { url } = req.body;
-
     try {
         const response = await axios.get(`https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=${process.env.INSTAGRAM_ACCESS_TOKEN}`);
 
