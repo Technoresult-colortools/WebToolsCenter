@@ -1,7 +1,7 @@
 {
     "functions": {
       "app/api/render-instagram-post/**": {
-        "memory": 3008,
+        "memory": 512,
         "maxDuration": 60
       }
     }
