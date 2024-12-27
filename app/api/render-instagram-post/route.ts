@@ -29,25 +29,26 @@ interface PostProps {
 
 export async function POST(req: Request) {
   try {
-    const postProps: PostProps = await req.json()
-    
+    const postProps: PostProps = await req.json();
+
     // Initialize Puppeteer with Sparticuz Chromium
-    const executablePath = await chromium.executablePath()
+    const executablePath = await chromium.executablePath();
 
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath,
       headless: chromium.headless,
-    })
-    
-    const page = await browser.newPage()
+    });
 
+    const page = await browser.newPage();
+
+    // Set viewport for the Instagram post dimensions
     await page.setViewport({
       width: 375,
       height: 470,
-      deviceScaleFactor: 2
-    })
+      deviceScaleFactor: 2,
+    });
 
     const processText = (text: string) => {
       return text
