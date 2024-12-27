@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import chromium from '@sparticuz/chromium'
+import chromium from '@sparticuz/chromium-min'
 import puppeteer from 'puppeteer-core'
 
 interface Comment {
@@ -32,10 +32,12 @@ export async function POST(req: Request) {
     const postProps: PostProps = await req.json()
     
     // Initialize Puppeteer with Sparticuz Chromium
+    const executablePath = await chromium.executablePath()
+
     const browser = await puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
+      executablePath,
       headless: chromium.headless,
     })
     
