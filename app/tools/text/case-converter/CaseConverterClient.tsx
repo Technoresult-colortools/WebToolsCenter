@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import ToolLayout from '@/components/ToolLayout';
+import { Select } from '@/components/ui/select1';
+
 
 const MAX_CHARS = 5000;
 
@@ -49,12 +51,26 @@ function convertCase(text: string, caseType: string): string {
     default:
       return text;
   }
+
 }
+const caseOptions = [
+    { value: "lower", label: "lowercase" },
+    { value: "upper", label: "UPPERCASE" },
+    { value: "title", label: "Title Case" },
+    { value: "sentence", label: "Sentence case" },
+    { value: "camel", label: "camelCase" },
+    { value: "pascal", label: "PascalCase" },
+    { value: "snake", label: "snake_case" },
+    { value: "kebab", label: "kebab-case" },
+    { value: "toggle", label: "ToGgLe CaSe" },
+    { value: "alternate", label: "Alternate WORDS" },
+    { value: "dot", label: "dot.case" }
+  ];
 
 export default function CaseConverter() {
   const [inputText, setInputText] = useState('');
   const [outputText, setOutputText] = useState('');
-  const [selectedCase, setSelectedCase] = useState('lower');
+  const [selectedCase, setSelectedCase] = React.useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
@@ -180,27 +196,13 @@ export default function CaseConverter() {
             </p>
 
             <div className="mt-4">
-              <label htmlFor="case-select" className="block text-lg font-medium text-gray-200 mb-2">
-                Select Case:
-              </label>
-              <select
-                id="case-select"
-                value={selectedCase}
-                onChange={(e) => setSelectedCase(e.target.value)}
-                className="w-full bg-gray-700/50 text-white border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="lower">lowercase</option>
-                <option value="upper">UPPERCASE</option>
-                <option value="title">Title Case</option>
-                <option value="sentence">Sentence case</option>
-                <option value="camel">camelCase</option>
-                <option value="pascal">PascalCase</option>
-                <option value="snake">snake_case</option>
-                <option value="kebab">kebab-case</option>
-                <option value="toggle">ToGgLe CaSe</option>
-                <option value="alternate">Alternate WORDS</option>
-                <option value="dot">dot.case</option>
-              </select>
+              <Select
+                label="Select a case"
+                options={caseOptions}
+                selectedKey={selectedCase}
+                onSelectionChange={(key) => setSelectedCase(key)}
+                className="max-w-full"
+              />
             </div>
 
             <Button

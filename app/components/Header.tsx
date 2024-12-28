@@ -192,7 +192,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-[60]">
-      <div className="w-full bg-gray-800 bg-opacity-90 backdrop-filter backdrop-blur-lg shadow-lg">
+      <div className="w-full bg-gray-800  backdrop-filter backdrop-blur-lg shadow-lg">
         <div className="max-w-[1920px] mx-auto">
           <div className="px-4 py-4">
             

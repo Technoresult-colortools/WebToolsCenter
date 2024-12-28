@@ -7,6 +7,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Copy, Download, RefreshCw, Settings, Info, Lightbulb, BookOpen, ArrowLeftRight, Zap, Type, Puzzle } from 'lucide-react';
 import ToolLayout from '@/components/ToolLayout'
+import { Select } from '@/components/ui/select1';
+
+const reverseOption = [
+  {value: "character", label: "By Character"},
+ {value: "word", label:  "By Word"},
+ {value: "sentence", label: "By Sentence"}
+]
 
 export default function TextReverser() {
   const [inputText, setInputText] = useState('');
@@ -63,20 +70,16 @@ export default function TextReverser() {
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Enter your text here..."
             />
-
+            
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Reverse Mode:
-              </label>
-              <select
-                className="bg-gray-700 text-white border-gray-600 rounded-md p-2 w-full"
-                value={reverseMode}
-                onChange={(e) => setReverseMode(e.target.value)}
-              >
-                <option value="character">By Character</option>
-                <option value="word">By Word</option>
-                <option value="sentence">By Sentence</option>
-              </select>
+              <Select
+                label="Reverse Mode"
+                options={reverseOption}
+                selectedKey={reverseMode}
+                onSelectionChange={(key) => setReverseMode(key)}
+                className="max-w-full"
+                placeholder="Select Reverse Mode"
+              />
             </div>
 
             <div className="mb-6 flex flex-wrap justify-center gap-4">
