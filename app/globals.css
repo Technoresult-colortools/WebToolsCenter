@@ -20,8 +20,10 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-  margin-right: calc(-1 * (100vw - 100%)); /* Prevents layout shift */
-}
+    padding-right: 0 !important; /* Prevent padding changes */
+    padding-left: 0 !important;
+  }
+  
 
 /* Existing Shades styles */
 .shade {

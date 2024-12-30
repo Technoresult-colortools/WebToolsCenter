@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
@@ -114,18 +114,21 @@ export default function BarCodeGenerator() {
                 </div>
 
                 <div>
-                  <Label htmlFor="barcode-type" className="text-white mb-2 block">Barcode Type</Label>
-                  <Select value={barcodeType} onValueChange={setBarcodeType}>
-                    <SelectTrigger id="barcode-type" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select barcode type" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      {barcodeTypes.map((type) => (
-                        <SelectItem key={type} value={type}>{type}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="barcode-type" className="text-white mb-2 block">
+                    Barcode Type
+                  </Label>
+                  <Select
+                    label="Select barcode type"
+                    options={barcodeTypes.map((type) => ({
+                      value: type,
+                      label: type,
+                    }))}
+                    selectedKey={barcodeType}
+                    onSelectionChange={(key) => setBarcodeType(key as string)}
+                    
+                  />
                 </div>
+
 
                 <div>
                   <Label htmlFor="width-slider" className="text-white mb-2 block">Width: {width}</Label>

@@ -268,7 +268,7 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1023)
+      setIsMobile(window.innerWidth < 1290)
     }
 
     checkMobile()

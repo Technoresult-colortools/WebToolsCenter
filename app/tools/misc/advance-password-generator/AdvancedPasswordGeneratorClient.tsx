@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import Checkbox from "@/components/ui/Checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
 import { RefreshCw, Copy, Eye, EyeOff, Shield, Settings, Sliders, Lock, Filter, Info, BookOpen, Lightbulb } from 'lucide-react'
@@ -388,26 +388,22 @@ export default function AdvancedPasswordGenerator() {
               
               <TabsContent value="custom">
                 <div className="space-y-6">
-                  <div>
-                    <Label htmlFor="password-count" className="text-white mb-2 block">
-                      Number of Passwords
-                    </Label>
-                    <Select 
-                      value={passwordCount.toString()} 
-                      onValueChange={(value) => setPasswordCount(parseInt(value))}
-                    >
-                      <SelectTrigger className="w-32">
-                        <SelectValue placeholder="Select count" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        {[1, 2, 3, 4, 5].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            {num}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div>
+                  <Label htmlFor="password-count" className="text-white mb-2 block">
+                    Number of Passwords
+                  </Label>
+                  <Select
+                    label="Select count"
+                    options={[1, 2, 3, 4, 5].map((num) => ({
+                      value: num.toString(),
+                      label: num.toString(),
+                    }))}
+                    selectedKey={passwordCount.toString()}
+                    onSelectionChange={(key) => setPasswordCount(parseInt(key as string))}
+                    className="w-32"
+                  />
+                </div>
+
                   
                   <div>
                     <CheckboxItem 

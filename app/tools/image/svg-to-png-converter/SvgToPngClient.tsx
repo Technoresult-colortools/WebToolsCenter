@@ -6,10 +6,18 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Upload, Download, RefreshCw, Eye, EyeOff, AlertTriangle, Info, BookOpen, Lightbulb, Sliders, Palette, Copy, Maximize2 } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
+
+const exportSizeOptions = [
+  { value: "custom", label: "Custom" },
+  { value: "1200x630", label: "OG Image (1200x630)" },
+  { value: "1080x1080", label: "Instagram Square (1080x1080)" },
+  { value: "1080x1920", label: "Instagram Story (1080x1920)" },
+  { value: "1280x720", label: "YouTube Thumbnail (1280x720)" },
+];
 
 export default function SvgToPngConverter() {
   const [svgFile, setSvgFile] = useState<File | null>(null)
@@ -288,18 +296,13 @@ export default function SvgToPngConverter() {
             </div>
             <div>
               <Label htmlFor="export-size" className="text-white mb-2 block">Export Size</Label>
-              <Select value={exportSize} onValueChange={setExportSize}>
-                <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
-                  <SelectValue placeholder="Select export size" />
-                </SelectTrigger>
-                <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                  <SelectItem value="custom">Custom</SelectItem>
-                  <SelectItem value="1200x630">OG Image (1200x630)</SelectItem>
-                  <SelectItem value="1080x1080">Instagram Square (1080x1080)</SelectItem>
-                  <SelectItem value="1080x1920">Instagram Story (1080x1920)</SelectItem>
-                  <SelectItem value="1280x720">YouTube Thumbnail (1280x720)</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                label="Select export size"
+                options={exportSizeOptions}
+                selectedKey={exportSize}
+                onSelectionChange={(key) => setExportSize(key)}
+                className="w-full"
+              />
             </div>
             {exportSize === 'custom' && (
               <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">

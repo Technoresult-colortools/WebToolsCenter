@@ -1,10 +1,12 @@
+
+
 import React from 'react';
 import { Select as NextUISelect, SelectItem } from "@nextui-org/react";
 
 export interface Option {
   value: string;
   key?: string;
-  label: string;
+  label: string | React.ReactNode;  
 }
 
 interface CustomSelectProps<T extends string> {
@@ -56,7 +58,7 @@ export function Select<T extends string>({
         innerWrapper: "group-data-[has-value=true]:pt-0",
         mainWrapper: "h-12",
         selectorIcon: "text-white/90 right-3",
-        listboxWrapper: "max-h-[200px]",
+        listboxWrapper: "max-h-[200px] overflow-y-auto",
         listbox: "bg-gray-700 custom-scrollbar",
         popoverContent: "bg-gray-700 border-gray-600 rounded-xl"
       }}

@@ -1,7 +1,3 @@
-// Layout.tsx
-
-
-
 
 'use client'
 
