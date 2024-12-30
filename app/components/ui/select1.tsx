@@ -2,15 +2,15 @@ import React from 'react';
 import { Select as NextUISelect, SelectItem } from "@nextui-org/react";
 
 export interface Option {
-  value?: string;
+  value: string;
   key?: string;
   label: string;
 }
 
-interface CustomSelectProps {
-  options: Option[];
-  selectedKey?: string;
-  onSelectionChange?: (key: string) => void;
+interface CustomSelectProps<T extends string> {
+  options: readonly Option[];
+  selectedKey?: T;
+  onSelectionChange?: (key: T) => void;
   label?: string;
   placeholder?: string;
   className?: string;
@@ -19,7 +19,7 @@ interface CustomSelectProps {
   id?: string;
 }
 
-export const Select = ({
+export function Select<T extends string>({
   options,
   selectedKey,
   onSelectionChange,
@@ -30,9 +30,9 @@ export const Select = ({
   errorMessage,
   id,
   ...props
-}: CustomSelectProps) => {
+}: CustomSelectProps<T>) {
   const normalizedOptions = options.map(option => ({
-    key: option.key || option.value || '',
+    key: option.key || option.value,
     label: option.label
   }));
 
@@ -45,7 +45,7 @@ export const Select = ({
       selectedKeys={selectedKey ? [selectedKey] : []}
       className={className}
       onSelectionChange={(keys) => {
-        const key = Array.from(keys)[0]?.toString();
+        const key = Array.from(keys)[0]?.toString() as T;
         if (key) onSelectionChange?.(key);
       }}
       classNames={{
@@ -56,7 +56,7 @@ export const Select = ({
         innerWrapper: "group-data-[has-value=true]:pt-0",
         mainWrapper: "h-12",
         selectorIcon: "text-white/90 right-3",
-        listboxWrapper: "max-h-[400px]",
+        listboxWrapper: "max-h-[200px]",
         listbox: "bg-gray-700 custom-scrollbar",
         popoverContent: "bg-gray-700 border-gray-600 rounded-xl"
       }}
@@ -77,6 +77,7 @@ export const Select = ({
       ))}
     </NextUISelect>
   );
-};
+}
 
 export default Select;
+

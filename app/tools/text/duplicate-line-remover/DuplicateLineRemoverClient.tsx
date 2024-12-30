@@ -8,13 +8,7 @@ import Input from "@/components/ui/Input"
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, ArrowDown, ArrowUp, Info, Lightbulb, BookOpen, FileDown, FileUp, Settings, Filter, Zap } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +18,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from 'next/image'
+
+const filterModeOptions = [
+  { value: "remove", label: "Remove duplicates" },
+  { value: "keep", label: "Keep only duplicates" },
+];
 
 export default function DuplicateLineRemover() {
   const [inputText, setInputText] = useState('')
@@ -202,15 +201,14 @@ export default function DuplicateLineRemover() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Select value={filterMode} onValueChange={setFilterMode}>
-            <SelectTrigger className="w-[180px] bg-gray-700 text-white border-gray-600">
-              <SelectValue placeholder="Select filter mode" />
-            </SelectTrigger>
-            <SelectContent className="w-[180px] bg-gray-700 text-white border-gray-600">
-              <SelectItem value="remove">Remove duplicates</SelectItem>
-              <SelectItem value="keep">Keep only duplicates</SelectItem>
-            </SelectContent>
-          </Select>
+          <Select
+            label="Select Filter Mode"
+            options={filterModeOptions}
+            selectedKey={filterMode}
+            onSelectionChange={(key) => setFilterMode(key)}
+            className="max-w-full"
+            placeholder="Select Filter Mode"
+          />
 
           <Input
             placeholder="Custom separator (optional)"

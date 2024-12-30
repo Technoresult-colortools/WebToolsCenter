@@ -5,11 +5,17 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Upload, Download, Info, BookOpen, Lightbulb, Trash, Eye, Scissors, SlidersIcon, Lock, RefreshCw, Smartphone } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
+
+const conversionMethodOptions = [
+  { value: "default", label: "Default" },
+  { value: "traced", label: "Traced Outlines" },
+  { value: "pixel", label: "Pixel Perfect" },
+];
 
 export default function PNGtoSVGConverter() {
   const [file, setFile] = useState<File | null>(null)
@@ -174,16 +180,13 @@ export default function PNGtoSVGConverter() {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="conversionMethod" className="text-white mb-2 block">Conversion Method</Label>
-                <Select value={conversionMethod} onValueChange={(value: 'default' | 'traced' | 'pixel') => setConversionMethod(value)}>
-                  <SelectTrigger id="conversionMethod" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select conversion method" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="traced">Traced Outlines</SelectItem>
-                    <SelectItem value="pixel">Pixel Perfect</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Select Conversion Method"
+                  options={conversionMethodOptions}
+                  selectedKey={conversionMethod}
+                  onSelectionChange={(key) => setConversionMethod(key as "default" | "traced" | "pixel")}
+                  className="max-w-full"
+                />
               </div>
 
               <div>

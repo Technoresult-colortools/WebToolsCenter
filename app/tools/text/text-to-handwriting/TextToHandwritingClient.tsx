@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/Button"
 import  Input from "@/components/ui/Input"
 
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+
 import ToolLayout from '@/components/ToolLayout'
 import { Label } from "@/components/ui/label"
 import { Toaster, toast } from 'react-hot-toast'
 import { Download, ChevronLeft, ChevronRight, RefreshCw, Info, BookOpen, Settings, ArrowRightLeft, Lightbulb } from 'lucide-react'
 import { jsPDF } from 'jspdf'
+import { Select } from '@/components/ui/select1';
 
 declare const Image: {
   new (): HTMLImageElement;
@@ -343,6 +344,59 @@ export default function TextToHandwriting() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
             <div className="space-y-4 sm:space-y-6">
+              <div className="bg-white rounded-lg shadow-lg p-2 sm:p-4">
+                <canvas
+                  key={key}
+                  ref={canvasRef}
+                  width={PAGE_WIDTH}
+                  height={PAGE_HEIGHT}
+                  className="w-full h-auto border border-gray-300"
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Button
+                  onClick={() => setState(prevState => ({ ...prevState, currentPage: Math.max(0, prevState.currentPage - 1) }))}
+                  disabled={state.currentPage === 0}
+                  variant="outline"
+                >
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  Previous Page
+                </Button>
+                
+                <span>Page {state.currentPage + 1} of {state.pages.length}</span>
+                
+                <Button
+                  onClick={() => setState(prevState => ({ ...prevState, currentPage: Math.min(prevState.pages.length - 1, prevState.currentPage + 1) }))}
+                  disabled={state.currentPage === state.pages.length - 1}
+                  variant="outline"
+                >
+                  Next Page
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <Button
+                  onClick={() => handleDownload('png')}
+                  className="flex-1"
+                  variant="default"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download PNG
+                </Button>
+                
+                <Button
+                  onClick={() => handleDownload('pdf')}
+                  className="flex-1"
+                  variant="default"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download PDF
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-4 sm:space-y-6">
               <Textarea
                 value={state.inputText}
                 onChange={(e) => setState(prevState => ({ ...prevState, inputText: e.target.value }))}
@@ -353,37 +407,24 @@ export default function TextToHandwriting() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Font Style</Label>
-                  <Select value={state.selectedFont} onValueChange={handleFontChange}>
-                    <SelectTrigger className="bg-gray-800 border-gray-700">
-                      <SelectValue placeholder="Select font" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-800 border-gray-700 h-40 overflow-y-auto">
-                      {HANDWRITING_FONTS.map(font => (
-                        <SelectItem key={font.name} value={font.name}>
-                          {font.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    label='Select Font'
+                    options={HANDWRITING_FONTS.map(font => ({ value: font.name, label: font.name }))}
+                    selectedKey={state.selectedFont}
+                    onSelectionChange={(value) => handleFontChange(value)}
+                    placeholder="Select font"
+                  />
                 </div>
                 
                 <div className="space-y-2">
                   <Label>Pen Type</Label>
                   <Select 
-                    value={state.penType} 
-                    onValueChange={handlePenTypeChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select pen type" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-800 border-gray-700 h-40 overflow-y-auto">
-                      {Object.keys(PEN_TYPE_STYLES).map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type.charAt(0) + type.slice(1).toLowerCase()}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    label='Select Pen'
+                    options={Object.keys(PEN_TYPE_STYLES).map(type => ({ value: type, label: type.charAt(0) + type.slice(1).toLowerCase() }))}
+                    selectedKey={state.penType}
+                    onSelectionChange={(value) => handlePenTypeChange(value as keyof typeof PEN_TYPE_STYLES)}
+                    placeholder="Select pen type"
+                  />
                 </div>
               </div>
 
@@ -457,34 +498,24 @@ export default function TextToHandwriting() {
 
               <div className="space-y-2">
                 <Label>Ink Color</Label>
-                <Select value={state.inkColor} onValueChange={(value) => setState(prevState => ({ ...prevState, inkColor: value }))}>
-                  <SelectTrigger className="bg-gray-800 border-gray-700">
-                    <SelectValue placeholder="Select ink color" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
-                    {Object.entries(INK_COLORS).map(([key, value]) => (
-                      <SelectItem key={key} value={value}>
-                        {key.charAt(0) + key.slice(1).toLowerCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  label='Select InkColor'
+                  options={Object.entries(INK_COLORS).map(([key, value]) => ({ value, label: key.charAt(0) + key.slice(1).toLowerCase() }))}
+                  selectedKey={state.inkColor}
+                  onSelectionChange={(value) => setState(prevState => ({ ...prevState, inkColor: value }))}
+                  placeholder="Select ink color"
+                />
               </div>
 
               <div className="space-y-2">
                 <Label>Paper Type</Label>
-                <Select value={state.pageBackground} onValueChange={handleBackgroundChange}>
-                  <SelectTrigger className="bg-gray-800 border-gray-700">
-                    <SelectValue placeholder="Select paper type" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-700">
-                    {Object.entries(PAGE_BACKGROUNDS).map(([key, value]) => (
-                      <SelectItem key={key} value={value}>
-                        {key.charAt(0) + key.slice(1).toLowerCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  label='Select Paper Type'
+                  options={Object.entries(PAGE_BACKGROUNDS).map(([key, value]) => ({ value, label: key.charAt(0) + key.slice(1).toLowerCase() }))}
+                  selectedKey={state.pageBackground}
+                  onSelectionChange={handleBackgroundChange}
+                  placeholder="Select paper type"
+                />
               </div>
 
               <div className="space-y-2">
@@ -501,60 +532,6 @@ export default function TextToHandwriting() {
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Reset All Settings
               </Button>
-            </div>
-
-            <div className="space-y-4 sm:space-y-6">
-              <div className="bg-white rounded-lg shadow-lg p-2 sm:p-4">
-                <canvas
-                  key={key}
-                  ref={canvasRef}
-                  width={PAGE_WIDTH}
-                  height={PAGE_HEIGHT}
-                  className="w-full h-auto border border-gray-300"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Button
-                  onClick={() => setState(prevState => ({ ...prevState, currentPage: Math.max(0, prevState.currentPage - 1) }))}
-                  disabled={state.currentPage === 0}
-                  variant="outline"
-                >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  Previous Page
-                </Button>
-                
-                <span>Page {state.currentPage + 1} of {state.pages.length}</span>
-                
-                <Button
-                  onClick={() => setState(prevState => ({ ...prevState, currentPage: Math.min(prevState.pages.length - 1, prevState.currentPage + 1) }))}
-                  disabled={state.currentPage === state.pages.length - 1}
-                  variant="outline"
-                >
-                  Next Page
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <Button
-                  onClick={() => handleDownload('png')}
-                  className="flex-1"
-                  variant="default"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download PNG
-                </Button>
-                
-                <Button
-                  onClick={() => handleDownload('pdf')}
-                  className="flex-1"
-                  variant="default"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download PDF
-                </Button>
-              </div>
             </div>
           </div>
         </div>

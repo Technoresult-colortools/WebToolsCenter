@@ -6,17 +6,17 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Info, Lightbulb, BookOpen, ArrowRightLeft, Settings, FileDown } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
+
+const outputFormatOptions = [
+  { value: "space", label: "Space Separated" },
+  { value: "comma", label: "Comma Separated" },
+  { value: "none", label: "No Separator" },
+];
 
 export default function TextToAsciiHexBinary() {
   const [inputText, setInputText] = useState('')
@@ -165,16 +165,15 @@ export default function TextToAsciiHexBinary() {
 
             <div className="flex flex-col items-start space-y-2">
               <Label className="text-white">Output Separator</Label>
-              <Select value={outputFormat} onValueChange={setOutputFormat}>
-                <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
-                  <SelectValue placeholder="Select output format" />
-                </SelectTrigger>
-                <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                  <SelectItem value="space">Space Separated</SelectItem>
-                  <SelectItem value="comma">Comma Separated</SelectItem>
-                  <SelectItem value="none">No Separator</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                label="Output Separator"
+                options={outputFormatOptions}
+                selectedKey={outputFormat}
+                onSelectionChange={(key) => setOutputFormat(key)}
+                className="max-w-full"
+                placeholder="Select Output Separator"
+              />
+              
             </div>
           </div>
         </div>

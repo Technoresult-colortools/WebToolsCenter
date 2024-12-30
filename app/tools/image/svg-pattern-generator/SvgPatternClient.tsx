@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
 import { Download, RefreshCw, Copy, Upload, Maximize2, X, Settings, Sliders, Palette, Image as ImageIcon, Info, BookOpen, Lightbulb } from 'lucide-react'
@@ -28,6 +28,45 @@ const exportSizes: Record<ExportSize, { width: number; height: number }> = {
   instagramStory: { width: 1080, height: 1920 },
   custom: { width: 800, height: 600 },
 }
+
+const patternTypeOptions = [
+  { value: "circles", label: "Circles" },
+  { value: "squares", label: "Squares" },
+  { value: "triangles", label: "Triangles" },
+  { value: "hexagons", label: "Hexagons" },
+  { value: "zigzag", label: "Zigzag" },
+  { value: "brikwall1", label: "Brick Wall-1" },
+  { value: "polkaDots", label: "Polka Dots" },
+  { value: "stripes", label: "Stripes" },
+  { value: "chevron", label: "Chevron" },
+  { value: "modernCircles", label: "Modern Circles" },
+  { value: "concentricCircles", label: "Concentric Circles" },
+  { value: "nestedSquares", label: "Nested Squares" },
+  { value: "triangleGrid", label: "Triangle Grid" },
+  { value: "waves", label: "Waves" },
+  { value: "dots3D", label: "3D Dots" },
+  { value: "crosshatch", label: "Crosshatch" },
+  { value: "spiral", label: "Spiral" },
+  { value: "flowerOfLife", label: "Flower of Life" },
+  { value: "customImage", label: "Custom Image" },
+];
+
+const exportSizeOptions = [
+  { value: "facebookCover", label: "Facebook Cover" },
+  { value: "youtubeCover", label: "YouTube Cover" },
+  { value: "youtubeThumbnail", label: "YouTube Thumbnail" },
+  { value: "ogImage", label: "OG Image" },
+  { value: "instagramSquare", label: "Instagram Square" },
+  { value: "instagramLandscape", label: "Instagram Landscape" },
+  { value: "instagramPortrait", label: "Instagram Portrait" },
+  { value: "instagramStory", label: "Instagram Story" },
+  { value: "custom", label: "Custom Size" },
+];
+
+const exportFormatOptions = [
+  { value: "svg", label: "SVG" },
+  { value: "png", label: "PNG" },
+];
 
 export default function SvgPatternGenerator() {
   const [patternType, setPatternType] = useState<PatternType>('modernCircles')
@@ -336,34 +375,16 @@ export default function SvgPatternGenerator() {
           </TabsList>
           <TabsContent value="basic">
             <div className="space-y-4">
-              <div>
+             <div className="mt-4">
                 <Label htmlFor="pattern-type" className="text-white mb-2 block">Pattern Type</Label>
-                <Select value={patternType} onValueChange={(value: PatternType) => setPatternType(value)}>
-                  <SelectTrigger id="pattern-type" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select pattern type" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 text-white border-gray-600 max-h-60 overflow-y-auto">
-                    <SelectItem value="circles">Circles</SelectItem>
-                    <SelectItem value="squares">Squares</SelectItem>
-                    <SelectItem value="triangles">Triangles</SelectItem>
-                    <SelectItem value="hexagons">Hexagons</SelectItem>
-                    <SelectItem value="zigzag">Zigzag</SelectItem>
-                    <SelectItem value="brikwall1">Brick Wall-1</SelectItem>
-                    <SelectItem value="polkaDots">Polka Dots</SelectItem>
-                    <SelectItem value="stripes">Stripes</SelectItem>
-                    <SelectItem value="chevron">Chevron</SelectItem>
-                    <SelectItem value="modernCircles">Modern Circles</SelectItem>
-                    <SelectItem value="concentricCircles">Concentric Circles</SelectItem>
-                    <SelectItem value="nestedSquares">Nested Squares</SelectItem>
-                    <SelectItem value="triangleGrid">Triangle Grid</SelectItem>
-                    <SelectItem value="waves">Waves</SelectItem>
-                    <SelectItem value="dots3D">3D Dots</SelectItem>
-                    <SelectItem value="crosshatch">Crosshatch</SelectItem>
-                    <SelectItem value="spiral">Spiral</SelectItem>
-                    <SelectItem value="flowerOfLife">Flower of Life</SelectItem>
-                    <SelectItem value="customImage">Custom Image</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Select Pattern Type"
+                  options={patternTypeOptions}
+                  selectedKey={patternType}
+                  onSelectionChange={(key) => setPatternType(key as PatternType)}
+                  placeholder="Select pattern type"
+                  className="max-w-full"
+                />
               </div>
 
               <div>
@@ -525,22 +546,14 @@ export default function SvgPatternGenerator() {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="export-size" className="text-white mb-2 block">Export Size</Label>
-                <Select value={exportSize} onValueChange={(value: ExportSize) => setExportSize(value)}>
-                  <SelectTrigger id="export-size" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select export size" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 text-white border-gray-600 h-40 overflow-y-auto">
-                    <SelectItem value="facebookCover">Facebook Cover</SelectItem>
-                    <SelectItem value="youtubeCover">YouTube Cover</SelectItem>
-                    <SelectItem value="youtubeThumbnail">YouTube Thumbnail</SelectItem>
-                    <SelectItem value="ogImage">OG Image</SelectItem>
-                    <SelectItem value="instagramSquare">Instagram Square</SelectItem>
-                    <SelectItem value="instagramLandscape">Instagram Landscape</SelectItem>
-                    <SelectItem value="instagramPortrait">Instagram Portrait</SelectItem>
-                    <SelectItem value="instagramStory">Instagram Story</SelectItem>
-                    <SelectItem value="custom">Custom Size</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Select Export Size"
+                  options={exportSizeOptions}
+                  selectedKey={exportSize}
+                  onSelectionChange={(key) => setExportSize(key as ExportSize)}
+                  placeholder="Select export size"
+                  className="max-w-full"
+                />
               </div>
 
               {exportSize === 'custom' && (
@@ -572,15 +585,14 @@ export default function SvgPatternGenerator() {
                 <label htmlFor="export-format" className="block text-sm font-medium text-gray-300 mb-2">
                   Export Format:
                 </label>
-                <Select value={exportFormat} onValueChange={(value: ExportFormat) => setExportFormat(value)}>
-                  <SelectTrigger id="export-format" className="bg-gray-800 text-gray-200 border border-gray-600">
-                    <SelectValue placeholder="Select export format" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 text-gray-200 border border-gray-600">
-                    <SelectItem value="svg">SVG</SelectItem>
-                    <SelectItem value="png">PNG</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Select Export Format"
+                  options={exportFormatOptions}
+                  selectedKey={exportFormat}
+                  onSelectionChange={(key) => setExportFormat(key as ExportFormat)}
+                  placeholder="Select export format"
+                  className="max-w-full"
+                />
               </div>
 
               

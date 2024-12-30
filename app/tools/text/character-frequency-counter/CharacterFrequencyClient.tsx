@@ -7,13 +7,7 @@ import { Button } from "@/components/ui/Button"
 import Input  from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +19,16 @@ import {
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, Download, RefreshCw, BarChart, Info, Lightbulb, BookOpen, Settings, Filter} from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
+
+const countModeOptions = [
+  { value: "character", label: "Character Frequency" },
+  { value: "word", label: "Word Frequency" },
+];
+
+const sortOrderOptions = [
+  { value: "descending", label: "Descending" },
+  { value: "ascending", label: "Ascending" },
+];
 
 export default function CharacterFrequencyCounter() {
   const [inputText, setInputText] = useState('')
@@ -114,32 +118,24 @@ export default function CharacterFrequencyCounter() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <Label htmlFor="mode" className="block text-sm font-medium text-gray-300 mb-2">
-              Count Mode:
-            </Label>
-            <Select value={mode} onValueChange={setMode}>
-              <SelectTrigger id="mode" className="w-full bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select mode" />
-              </SelectTrigger>
-              <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                <SelectItem value="character">Character Frequency</SelectItem>
-                <SelectItem value="word">Word Frequency</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select
+              label="Count Mode"
+              options={countModeOptions}
+              selectedKey={mode}
+              onSelectionChange={(key) => setMode(key)}
+              className="max-w-full"
+              placeholder="Select Count Mode"
+            />
           </div>
           <div>
-            <Label htmlFor="sort-order" className="block text-sm font-medium text-gray-300 mb-2">
-              Sort Order:
-            </Label>
-            <Select value={sortOrder} onValueChange={setSortOrder}>
-              <SelectTrigger id="sort-order" className="w-full bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select sort order" />
-              </SelectTrigger>
-              <SelectContent className="w-full bg-gray-700 text-white border-gray-600" >
-                <SelectItem value="descending">Descending</SelectItem>
-                <SelectItem value="ascending">Ascending</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select
+              label="Sort Order"
+              options={sortOrderOptions}
+              selectedKey={sortOrder}
+              onSelectionChange={(key) => setSortOrder(key)}
+              className="max-w-full"
+              placeholder="Select Sort Order"
+            />
           </div>
         </div>
 

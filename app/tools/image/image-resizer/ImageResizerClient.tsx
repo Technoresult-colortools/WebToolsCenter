@@ -5,12 +5,18 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Checkbox from "@/components/ui/Checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
 import { Upload, Download, RefreshCw, ArrowLeftRight, Info, Lightbulb, BookOpen, ImageIcon } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 import NextImage from 'next/image'
+
+const formatOptions = [
+  { value: "png", label: "PNG" },
+  { value: "jpeg", label: "JPEG" },
+  { value: "webp", label: "WebP" },
+];
 
 export default function EnhancedImageResizer() {
   const [originalImage, setOriginalImage] = useState<HTMLImageElement | null>(null)
@@ -192,16 +198,13 @@ export default function EnhancedImageResizer() {
 
             <div className="mb-8">
               <Label htmlFor="format" className="text-white mb-2 block">Output Format</Label>
-              <Select value={format} onValueChange={setFormat}>
-                <SelectTrigger id="format" className="bg-gray-700 text-white border-gray-600">
-                  <SelectValue placeholder="Select format" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 text-white border-gray-600">
-                  <SelectItem value="png">PNG</SelectItem>
-                  <SelectItem value="jpeg">JPEG</SelectItem>
-                  <SelectItem value="webp">WebP</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                label="Select Format"
+                options={formatOptions}
+                selectedKey={format}
+                onSelectionChange={(key) => setFormat(key)}
+                className="max-w-full"
+              />
             </div>
 
             <div className="mb-8">

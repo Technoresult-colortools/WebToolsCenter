@@ -4,11 +4,11 @@ import React, { useState, useRef, useCallback } from 'react';
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Button } from "@/components/ui/Button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
 import { Toaster, toast } from 'react-hot-toast';
 import { RotateCw, CropIcon, RefreshCw, Upload, Info, BookOpen, Lightbulb, Download } from 'lucide-react';
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image';
+import { Select } from '@/components/ui/select1';
 
 function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: number) {
   return centerCrop(
@@ -26,15 +26,35 @@ function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: numbe
   )
 }
 
+const aspectRatioOptions = [
+  { value: '16:9', label: '16:9 - Landscape' },
+  { value: '4:3', label: '4:3 - Standard' },
+  { value: '1:1', label: '1:1 - Square' },
+  { value: '2:3', label: '2:3 - Portrait' },
+  { value: '9:16', label: '9:16 - Mobile' },
+  { value: '3:4', label: '3:4 - Classic Portrait' },
+  { value: '3:2', label: '3:2 - Classic Photo' },
+  { value: '21:9', label: '21:9 - Ultrawide' },
+  { value: 'free', label: 'Free Selection' },
+];
+
+const imageFormatOptions = [
+  { value: "image/png", label: "PNG" },
+  { value: "image/jpeg", label: "JPEG" },
+  { value: "image/webp", label: "WebP" },
+];
+
 export default function EnhancedImageCropper() {
   const [imgSrc, setImgSrc] = useState('');
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
-  const [aspect, setAspect] = useState<number | undefined>(16 / 9);
+  const [aspect, setAspect] = useState<number | undefined>(undefined); // Default to free selection
   const imgRef = useRef<HTMLImageElement>(null);
   const [rotate, setRotate] = useState(0);
   const [scale, setScale] = useState(1);
   const [imageFormat, setImageFormat] = useState('image/png');
+  const [naturalWidth, setNaturalWidth] = useState(0);
+  const [naturalHeight, setNaturalHeight] = useState(0);
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -47,7 +67,29 @@ export default function EnhancedImageCropper() {
     }
   };
 
+  const calculateDimensions = () => {
+    if (!naturalWidth || !naturalHeight) return { width: 0, height: 0 };
+    
+    const containerWidth = 800; // Maximum width
+    const containerHeight = 600; // Maximum height
+    
+    const ratio = Math.min(
+      containerWidth / naturalWidth,
+      containerHeight / naturalHeight
+    );
+    
+    return {
+      width: naturalWidth * ratio,
+      height: naturalHeight * ratio
+    };
+  };
+
+  const dimensions = calculateDimensions();
+
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    setNaturalWidth(e.currentTarget.naturalWidth);
+    setNaturalHeight(e.currentTarget.naturalHeight);
+    
     if (aspect) {
       const { width, height } = e.currentTarget;
       setCrop(centerAspectCrop(width, height, aspect));
@@ -136,12 +178,12 @@ export default function EnhancedImageCropper() {
       setAspect(width / height);
     }
     
-    if (imgRef.current && aspect) {
+    if (imgRef.current && value !== 'free') {
       const { width, height } = imgRef.current;
-      setCrop(centerAspectCrop(width, height, aspect));
+      const [aspectWidth, aspectHeight] = value.split(':').map(Number);
+      setCrop(centerAspectCrop(width, height, aspectWidth / aspectHeight));
     }
   };
-
   const handleDownload = () => {
     if (!imgSrc) return;
 
@@ -154,7 +196,7 @@ export default function EnhancedImageCropper() {
   return (
     <ToolLayout
       title="Image Cropper"
-      description="Edit and customize your images with precision using the Enhanced Image Cropper. Perfect for social media, websites, or print, offering flexibility and professional results"
+      description="Edit and customize your images with precision using the Enhanced Image Cropper"
     >
       <Toaster position="top-right" />
 
@@ -178,13 +220,14 @@ export default function EnhancedImageCropper() {
         </div>
 
         {imgSrc ? (
-          <div className="mb-8 flex justify-center items-center">
-            <div className="border-4 border-blue-500 rounded-lg overflow-hidden">
+          <div className="mb-8">
+            <div className="relative w-full h-[600px] border-4 border-blue-500 rounded-lg overflow-hidden bg-gray-900 flex items-center justify-center">
               <ReactCrop
                 crop={crop}
                 onChange={(_, percentCrop) => setCrop(percentCrop)}
                 onComplete={(c) => setCompletedCrop(c)}
                 aspect={aspect}
+                className="max-w-full max-h-full"
               >
                 <img
                   ref={imgRef}
@@ -193,7 +236,10 @@ export default function EnhancedImageCropper() {
                   style={{
                     transform: `rotate(${rotate}deg) scale(${scale})`,
                     maxWidth: '100%',
-                    maxHeight: '70vh',
+                    maxHeight: '100%',
+                    width: `${dimensions.width}px`,
+                    height: `${dimensions.height}px`,
+                    objectFit: 'contain'
                   }}
                   onLoad={onImageLoad}
                 />
@@ -201,36 +247,30 @@ export default function EnhancedImageCropper() {
             </div>
           </div>
         ) : (
-          <div className="bg-gray-700 rounded-lg p-16 text-center mb-8">
-            <Upload className="w-16 h-16 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-400">Upload an image to start cropping</p>
+          <div className="w-full h-[600px] bg-gray-700 rounded-lg flex items-center justify-center">
+            <div className="text-center">
+              <Upload className="w-16 h-16 mx-auto text-gray-400 mb-2" />
+              <p className="text-gray-400">Upload an image to start cropping</p>
+            </div>
           </div>
         )}
 
-        <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
-          <Select onValueChange={handleAspectChange} value={aspect ? `${aspect}` : 'free'}>
-            <SelectTrigger className="w-[180px] bg-gray-700 text-white border-gray-600">
-              <SelectValue placeholder="Aspect Ratio" />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-700 text-white border-gray-600">
-              <SelectItem value="free">Free Selection</SelectItem>
-              <SelectItem value="16:9">16:9</SelectItem>
-              <SelectItem value="4:3">4:3</SelectItem>
-              <SelectItem value="1:1">1:1</SelectItem>
-              <SelectItem value="2:3">2:3</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="flex flex-wrap justify-between items-center mt-4 mb-4 gap-4">
+        <Select
+          label="Select AspectRatio"
+          options={aspectRatioOptions}
+          selectedKey={aspect ? (aspect === 16/9 ? "16:9" : aspect === 4/3 ? "4:3" : aspect === 1 ? "1:1" : aspect === 2/3 ? "2:3" : aspect === 9/16 ? "9:16" : aspect === 3/4 ? "3:4" : aspect === 3/2 ? "3:2" : aspect === 21/9 ? "21:9" : "free") : "free"}
+          onSelectionChange={(value) => handleAspectChange(value)}
+          placeholder="Aspect Ratio"
+        />
 
-          <Select onValueChange={setImageFormat} value={imageFormat}>
-            <SelectTrigger className="w-[180px] bg-gray-700 text-white border-gray-600">
-              <SelectValue placeholder="Image Format" />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-700 text-white border-gray-600">
-              <SelectItem value="image/png">PNG</SelectItem>
-              <SelectItem value="image/jpeg">JPEG</SelectItem>
-              <SelectItem value="image/webp">WebP</SelectItem>
-            </SelectContent>
-          </Select>
+          <Select
+            label="Select Image Format"
+            options={imageFormatOptions}
+            selectedKey={imageFormat}
+            onSelectionChange={(value) => setImageFormat(value)}
+            placeholder="Image Format"
+          />
 
           <div className="flex flex-wrap gap-2">
             <Button onClick={handleRotate} className="bg-blue-600 hover:bg-blue-700 text-white">

@@ -5,19 +5,14 @@ import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster, toast } from 'react-hot-toast';
+import { Select } from '@/components/ui/select1';
 import Image from 'next/image'
 import Link from 'next/link'
 import { 
   Copy, RefreshCw, ArrowRight, Wand2, Info, Lightbulb, 
   BookOpen, ChartColumnBig, History, Download, Upload, Settings2, Zap, Type, Settings, FileUp, FileDown, BarChart2
 } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select";
+
 import {
   Card,
   CardContent,
@@ -46,6 +41,12 @@ interface TextStats {
   sentences: number;
   averageWordLength: number;
 }
+
+const styleOptions = [
+  { value: "standard", label: "Standard Title Case" },
+  { value: "all", label: "Capitalize All Words" },
+  { value: "first", label: "First Word Only" },
+];
 
 export default function TitleCaseConverter() {
   const [inputText, setInputText] = useState('');
@@ -202,18 +203,13 @@ export default function TitleCaseConverter() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <Select
-                      value={selectedStyle}
-                      onValueChange={setSelectedStyle}
-                    >
-                      <SelectTrigger className="bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select style" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="standard">Standard Title Case</SelectItem>
-                        <SelectItem value="all">Capitalize All Words</SelectItem>
-                        <SelectItem value="first">First Word Only</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      label="Select Style"
+                      options={styleOptions}
+                      selectedKey={selectedStyle}
+                      onSelectionChange={(key) => setSelectedStyle(key)}
+                      className="max-w-full"
+                      placeholder="Select Style"
+                    />
 
                     <div className="flex items-center justify-end space-x-4">
                       <Label htmlFor="preserve-formatting" className="text-white">

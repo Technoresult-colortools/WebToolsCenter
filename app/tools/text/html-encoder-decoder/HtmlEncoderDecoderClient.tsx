@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Wand2, Code, FileText, History, Download, Upload, Clipboard, Info, BookOpen, Lightbulb, Settings } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1'
 import ToolLayout from '@/components/ToolLayout'
 import {
   DropdownMenu,
@@ -17,14 +17,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from 'next/image'
 
 interface HistoryEntry {
   input: string
   output: string
   mode: 'encode' | 'decode'
-  format: 'html' | 'url' | 'base64'
   timestamp: Date
 }
+
+const encodingOptions = [
+  { value: "named", label: "Named Entities" },
+  { value: "decimal", label: "Decimal Entities" },
+  { value: "hexadecimal", label: "Hexadecimal Entities" },
+];
 
 export default function HTMLEncoderDecoder() {
   const [inputText, setInputText] = useState('')
@@ -35,93 +41,52 @@ export default function HTMLEncoderDecoder() {
   const [encodeNonASCII, setEncodeNonASCII] = useState(false)
   const [history, setHistory] = useState<HistoryEntry[]>([])
   const [showHistory, setShowHistory] = useState(false)
-  const [encodingFormat, setEncodingFormat] = useState<'html' | 'url' | 'base64'>('html')
-  const [minifyHTML, setMinifyHTML] = useState(false)
-  const [escapeJS, setEscapeJS] = useState(false)
-  const [customEntities, ] = useState<Record<string, string>>({})
+  const [encodingType, setEncodingType] = useState<'named' | 'decimal' | 'hexadecimal'>('named')
 
   useEffect(() => {
     processText(inputText)
-  }, [inputText, mode, preserveNewlines, encodeQuotes, encodeNonASCII, encodingFormat, minifyHTML, escapeJS, customEntities])
+  }, [inputText, mode, preserveNewlines, encodeQuotes, encodeNonASCII, encodingType])
 
   const processText = (text: string) => {
     let processedText = ''
     
     if (mode === 'encode') {
-      switch (encodingFormat) {
-        case 'html':
-          processedText = encodeHTML(text)
-          break
-        case 'url':
-          processedText = encodeURIComponent(text)
-          break
-        case 'base64':
-          processedText = btoa(unescape(encodeURIComponent(text)))
-          break
-      }
+      processedText = encodeHTML(text)
     } else {
-      switch (encodingFormat) {
-        case 'html':
-          processedText = decodeHTML(text)
-          break
-        case 'url':
-          try {
-            processedText = decodeURIComponent(text)
-          } catch {
-            processedText = 'Invalid URL-encoded string'
-          }
-          break
-        case 'base64':
-          try {
-            processedText = decodeURIComponent(escape(atob(text)))
-          } catch {
-            processedText = 'Invalid Base64 string'
-          }
-          break
-      }
-    }
-
-    if (minifyHTML && encodingFormat === 'html') {
-      processedText = processedText.replace(/>\s+</g, '><').trim()
-    }
-
-    if (escapeJS) {
-      processedText = processedText
-        .replace(/\\/g, '\\\\')
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, '\\n')
-        .replace(/\r/g, '\\r')
-        .replace(/\t/g, '\\t')
+      processedText = decodeHTML(text)
     }
 
     setOutputText(processedText)
   }
 
   const encodeHTML = (text: string) => {
-    let result = text.replace(/&/g, '&amp;')
-                     .replace(/</g, '&lt;')
-                     .replace(/>/g, '&gt;')
-    
-    if (encodeQuotes) {
-      result = result.replace(/"/g, '&quot;')
-                     .replace(/'/g, '&#39;')
+    let result = text
+
+    const encodeChar = (char: string) => {
+      const code = char.charCodeAt(0)
+      switch (encodingType) {
+        case 'named':
+          return namedEntities[char] || `&#${code};`
+        case 'decimal':
+          return `&#${code};`
+        case 'hexadecimal':
+          return `&#x${code.toString(16)};`
+      }
     }
+
+    if (encodeQuotes) {
+      result = result.replace(/['"]/g, encodeChar)
+    }
+    
+    result = result.replace(/[<>&]/g, encodeChar)
     
     if (!preserveNewlines) {
       result = result.replace(/\n/g, '')
     }
     
     if (encodeNonASCII) {
-      result = result.replace(/[^\x00-\x7F]/g, function(char) {
-        return '&#x' + char.charCodeAt(0).toString(16) + ';'
-      })
+      result = result.replace(/[^\x00-\x7F]/g, encodeChar)
     }
-
-    // Apply custom entities
-    Object.entries(customEntities).forEach(([char, entity]) => {
-      result = result.replace(new RegExp(char, 'g'), entity)
-    })
     
     return result
   }
@@ -129,14 +94,7 @@ export default function HTMLEncoderDecoder() {
   const decodeHTML = (text: string) => {
     const textarea = document.createElement('textarea')
     textarea.innerHTML = text
-    let result = textarea.value
-
-    // Reverse custom entities
-    Object.entries(customEntities).forEach(([char, entity]) => {
-      result = result.replace(new RegExp(entity, 'g'), char)
-    })
-
-    return result
+    return textarea.value
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -161,7 +119,6 @@ export default function HTMLEncoderDecoder() {
         input: inputText,
         output: outputText,
         mode,
-        format: encodingFormat,
         timestamp: new Date()
       }].slice(-10))
     }
@@ -191,7 +148,7 @@ export default function HTMLEncoderDecoder() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${mode}d-text-${encodingFormat}-${new Date().toISOString().slice(0, 10)}.txt`
+    a.download = `${mode}d-html-${new Date().toISOString().slice(0, 10)}.txt`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -212,15 +169,22 @@ export default function HTMLEncoderDecoder() {
     }
   }
 
+  const namedEntities: { [key: string]: string } = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '&': '&amp;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }
 
   return (
     <ToolLayout
       title="HTML Encoder/Decoder"
-      description="Encode and Decode text in multiple formats, including HTML entities, URL encoding, and Base64"
+      description="Encode and Decode HTML entities with various options"
     >
       <Toaster position="top-right" />
 
-      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
+      <div className="bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto mb-8">
         <Tabs defaultValue="input" className="mb-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="input">Input</TabsTrigger>
@@ -253,111 +217,97 @@ export default function HTMLEncoderDecoder() {
           </TabsContent>
         </Tabs>
 
-        <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-          <div className="flex items-center gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div className="flex items-center justify-center sm:justify-start">
             <Button
               variant={mode === 'encode' ? "default" : "outline"}
               onClick={toggleMode}
-              className="py-2 px-4"
+              className="w-full sm:w-auto"
             >
               {mode === 'encode' ? <Code className="h-4 w-4 mr-2" /> : <FileText className="h-4 w-4 mr-2" />}
               {mode === 'encode' ? 'Encode' : 'Decode'}
             </Button>
-            
+          </div>
+          
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1">
             <Select
-              value={encodingFormat}
-              onValueChange={(value: 'html' | 'url' | 'base64') => setEncodingFormat(value)}
-            >
-              <SelectTrigger className="w-[180px] bg-gray-700 text-white">
-                <SelectValue placeholder="Select format" />
-              </SelectTrigger>
-              <SelectContent className="w-[180px] bg-gray-700 text-white">
-                <SelectItem value="html">HTML Entities</SelectItem>
-                <SelectItem value="url">URL Encoding</SelectItem>
-                <SelectItem value="base64">Base64</SelectItem>
-              </SelectContent>
-            </Select>
+              label="Encoding Type"
+              options={encodingOptions}
+              selectedKey={encodingType}
+              onSelectionChange={(key) => setEncodingType(key as 'named' | 'decimal' | 'hexadecimal')}
+              className="w-full"
+              placeholder="Select Encoding Type"
+            />
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" className="bg-gray-700 text-white border-gray-600">
-                <Settings className="mr-2 h-4 w-4" />
-                Options
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-gray-700 text-white border-gray-600">
-              <DropdownMenuLabel>Encoding Options</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setPreserveNewlines(!preserveNewlines)}>
-                <input
-                  type="checkbox"
-                  checked={preserveNewlines}
-                  onChange={() => setPreserveNewlines(!preserveNewlines)}
-                  className="mr-2"
-                />
-                Preserve newlines
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setEncodeQuotes(!encodeQuotes)}>
-                <input
-                  type="checkbox"
-                  checked={encodeQuotes}
-                  onChange={() => setEncodeQuotes(!encodeQuotes)}
-                  className="mr-2"
-                />
-                Encode quotes
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setEncodeNonASCII(!encodeNonASCII)}>
-                <input
-                  type="checkbox"
-                  checked={encodeNonASCII}
-                  onChange={() => setEncodeNonASCII(!encodeNonASCII)}
-                  className="mr-2"
-                />
-                Encode non-ASCII
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setMinifyHTML(!minifyHTML)}>
-                <input
-                  type="checkbox"
-                  checked={minifyHTML}
-                  onChange={() => setMinifyHTML(!minifyHTML)}
-                  className="mr-2"
-                />
-                Minify HTML
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setEscapeJS(!escapeJS)}>
-                <input
-                  type="checkbox"
-                  checked={escapeJS}
-                  onChange={() => setEscapeJS(!escapeJS)}
-                  className="mr-2"
-                />
-                Escape for JavaScript
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center justify-center sm:justify-end lg:col-start-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary" className="bg-gray-700 text-white border-gray-600 w-full sm:w-auto">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Options
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-gray-700 text-white border-gray-600">
+                <DropdownMenuLabel>Encoding Options</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setPreserveNewlines(!preserveNewlines)}>
+                  <input
+                    type="checkbox"
+                    checked={preserveNewlines}
+                    onChange={() => setPreserveNewlines(!preserveNewlines)}
+                    className="mr-2"
+                  />
+                  Preserve newlines
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setEncodeQuotes(!encodeQuotes)}>
+                  <input
+                    type="checkbox"
+                    checked={encodeQuotes}
+                    onChange={() => setEncodeQuotes(!encodeQuotes)}
+                    className="mr-2"
+                  />
+                  Encode quotes
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setEncodeNonASCII(!encodeNonASCII)}>
+                  <input
+                    type="checkbox"
+                    checked={encodeNonASCII}
+                    onChange={() => setEncodeNonASCII(!encodeNonASCII)}
+                    className="mr-2"
+                  />
+                  Encode non-ASCII
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
-        <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-          <div className="flex gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button 
               variant="destructive" 
               onClick={handleClear}
+              className="w-full sm:w-auto"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               Clear
             </Button>
             
-            <Button onClick={() => setShowHistory(!showHistory)}>
+            <Button 
+              onClick={() => setShowHistory(!showHistory)}
+              className="w-full sm:w-auto"
+            >
               <History className="h-4 w-4 mr-2" />
               History
             </Button>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
             <Button
               variant="outline"
               onClick={() => document.getElementById('file-upload')?.click()}
+              className="w-full sm:w-auto"
             >
               <Upload className="h-4 w-4 mr-2" />
               Upload
@@ -372,7 +322,7 @@ export default function HTMLEncoderDecoder() {
             
             <Button 
               onClick={handleProcess}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
             >
               <Wand2 className="h-4 w-4 mr-2" />
               {mode === 'encode' ? 'Encode' : 'Decode'}
@@ -380,10 +330,10 @@ export default function HTMLEncoderDecoder() {
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Button 
             onClick={handleCopy} 
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
           >
             <Copy className="h-4 w-4 mr-2" />
             Copy Result
@@ -392,6 +342,7 @@ export default function HTMLEncoderDecoder() {
           <Button 
             onClick={handleDownload}
             variant="outline"
+            className="w-full sm:w-auto"
           >
             <Download className="h-4 w-4 mr-2" />
             Download Result
@@ -406,7 +357,7 @@ export default function HTMLEncoderDecoder() {
             {history.map((entry, index) => (
               <div key={index} className="bg-gray-700 p-4 rounded-lg">
                 <div className="flex justify-between text-gray-300 mb-2">
-                  <span>{entry.mode === 'encode' ? 'Encoded' : 'Decoded'} ({entry.format})</span>
+                  <span>{entry.mode === 'encode' ? 'Encoded' : 'Decoded'}</span>
                   <span>{entry.timestamp.toLocaleString()}</span>
                 </div>
                 <div className="text-white">
@@ -431,63 +382,72 @@ export default function HTMLEncoderDecoder() {
           About HTML Encoder/Decoder
         </h2>
         <p className="text-gray-300 mb-4">
-          The HTML Encoder/Decoder is a powerful and versatile tool designed for developers, web designers, and content creators. It offers comprehensive functionality for encoding and decoding text in multiple formats, including HTML entities, URL encoding, and Base64. This tool goes beyond basic conversion, providing advanced options for handling special characters, preserving formatting, and preparing text for various web-related tasks.
+          The HTML Encoder/Decoder is a powerful tool designed for web developers, content creators, and anyone working with HTML. It provides a simple and efficient way to convert plain text into HTML entities and vice versa, ensuring that your content displays correctly in web browsers and prevents potential security vulnerabilities.
         </p>
+
+        <div className="my-8">
+          <Image 
+            src="/Images/HTMLEncoderDecoderPreview.png?height=400&width=600" 
+            alt="Screenshot of the HTML Encoder/Decoder interface showing input and output areas, encoding options, and various controls" 
+            width={600} 
+            height={400}
+            className="rounded-lg shadow-lg" 
+          />
+        </div>
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
           Key Features
         </h2>
         <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li><strong>Multi-format Support:</strong> Encode and decode text using HTML entities, URL encoding, or Base64.</li>
-          <li><strong>Advanced Options:</strong> Customize the encoding process with options like preserving newlines, encoding quotes, and handling non-ASCII characters.</li>
-          <li><strong>HTML Minification:</strong> Compress HTML by removing unnecessary whitespace.</li>
-          <li><strong>JavaScript Escaping:</strong> Prepare text for use within JavaScript strings.</li>
-          <li><strong>Custom Entity Mapping:</strong> Define and use custom character-to-entity mappings.</li>
-          <li><strong>File Handling:</strong> Upload text files for processing and download the results.</li>
-          <li><strong>History Tracking:</strong> Keep a record of recent encodings and decodings for easy reference.</li>
-          <li><strong>Clipboard Integration:</strong> Quickly paste text from and copy results to the clipboard.</li>
+          <li><strong>Bidirectional Conversion:</strong> Easily encode plain text to HTML entities and decode HTML entities back to plain text.</li>
+          <li><strong>Multiple Encoding Types:</strong> Choose between named entities, decimal entities, or hexadecimal entities for encoding.</li>
+          <li><strong>Customizable Options:</strong> Control how newlines, quotes, and non-ASCII characters are handled during encoding.</li>
+          <li><strong>Real-time Processing:</strong> See the results of your encoding or decoding instantly as you type or modify options.</li>
+          <li><strong>File Handling:</strong> Upload text files for processing and download the results with ease.</li>
+          <li><strong>History Tracking:</strong> Keep a record of your recent encodings and decodings for reference.</li>
+          <li><strong>Clipboard Integration:</strong> Quickly paste text from and copy results to your clipboard.</li>
         </ul>
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <Lightbulb className="w-6 h-6 mr-2" />
-          Practical Applications
+          Use Cases
         </h2>
         <ul className="list-disc list-inside text-gray-300 space-y-2 text-sm md:text-base">
-          <li><strong>Web Development:</strong> Prepare text content for safe use in HTML, XML, or JavaScript contexts.</li>
-          <li><strong>SEO Optimization:</strong> Encode meta tags and URLs to ensure proper rendering across different platforms.</li>
-          <li><strong>Data Interchange:</strong> Convert data between different encoding formats for API communications.</li>
-          <li><strong>Content Management:</strong> Process user-generated content to prevent XSS attacks and ensure proper display.</li>
-          <li><strong>Email Template Creation:</strong> Encode special characters in email content for compatibility across email clients.</li>
-          <li><strong>Debugging:</strong> Decode encoded strings to investigate issues in web applications or network requests.</li>
+          <li><strong>Content Management:</strong> Safely prepare text for use in HTML documents, avoiding rendering issues and potential XSS vulnerabilities.</li>
+          <li><strong>Data Scraping:</strong> Clean and process HTML content extracted from web pages.</li>
+          <li><strong>Email Template Creation:</strong> Ensure special characters in email content display correctly across different email clients.</li>
+          <li><strong>XML Processing:</strong> Prepare text for use in XML documents, ensuring proper escaping of special characters.</li>
+          <li><strong>Debugging:</strong> Decode encoded HTML to investigate rendering issues or unexpected behavior in web applications.</li>
+          <li><strong>Accessibility:</strong> Ensure that screen readers and other assistive technologies can correctly interpret your web content.</li>
         </ul>
 
         <h2 className="text-xl md:text-2xl font-semibold text-white mb-4 mt-8 flex items-center">
           <BookOpen className="w-6 h-6 mr-2" />
-          How to Use HTML Encoder/Decoder
+          How to Use
         </h2>
         <ol className="list-decimal list-inside text-gray-300 space-y-2 text-sm md:text-base">
           <li>Choose between "Encode" and "Decode" mode based on your task.</li>
-          <li>Select the appropriate encoding format (HTML entities, URL encoding, or Base64).</li>
+          <li>Select the encoding type (Named, Decimal, or Hexadecimal entities) when in encode mode.</li>
           <li>Enter or paste your text into the input field, or upload a text file.</li>
           <li>Adjust the encoding options as needed:
             <ul className="list-disc list-inside ml-6 mt-2">
               <li>Toggle preservation of newlines</li>
               <li>Choose whether to encode quotes</li>
               <li>Enable non-ASCII character encoding</li>
-              <li>Activate HTML minification or JavaScript escaping if required</li>
             </ul>
           </li>
-          <li>Click the "Encode" or "Decode" button to process your text.</li>
-          <li>View the result in the output field.</li>
+          <li>View the processed result in real-time in the output field.</li>
+          <li>Use the "Encode" or "Decode" button to process the entire text at once.</li>
           <li>Copy the result to your clipboard or download it as a text file.</li>
           <li>Optionally, review your encoding/decoding history for reference.</li>
         </ol>
 
         <p className="text-gray-300 mt-8">
-          Whether you're working on web development projects, managing content across different platforms, or dealing with data interchange, the HTML Encoder/Decoder provides a comprehensive solution for all your text encoding and decoding needs. Its intuitive interface and powerful features make it an essential tool for anyone working with web technologies and text processing.
+          Whether you're a web developer ensuring your content renders correctly, a content creator preparing text for various platforms, or a security professional safeguarding against XSS attacks, the HTML Encoder/Decoder is an indispensable tool in your web development toolkit. Its user-friendly interface, coupled with powerful features, streamlines the process of working with HTML entities, saving you time and reducing errors in your web projects.
         </p>
       </div>
     </ToolLayout>
   )
 }
+
