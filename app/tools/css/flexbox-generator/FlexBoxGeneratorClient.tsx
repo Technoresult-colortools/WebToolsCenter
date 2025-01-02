@@ -236,6 +236,7 @@ export default function FlexboxGenerator() {
                   <Select
                     options={setting.options.map(option => ({ value: option, label: option }))}
                     selectedKey={setting.value}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     onSelectionChange={(key) => setting.setter(key as any)}
                     label={`Select ${setting.label.toLowerCase()}`}
                     placeholder={`Select ${setting.label.toLowerCase()}`}
