@@ -272,6 +272,7 @@ ${Array.from({ length: layers }, (_, i) => `
                         onSelectionChange={(value: PatternType) => setPatternType(value)}
                         placeholder="Select pattern type"
                         className="w-full"
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         options={Object.entries(shapesData).map(([value, data]: [string, any]) => ({
                           value,
                           label: (
@@ -282,6 +283,7 @@ ${Array.from({ length: layers }, (_, i) => `
                           )
                         }))}
                       />
+
                     </div>
 
                     {/* Size Slider */}

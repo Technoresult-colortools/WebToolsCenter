@@ -340,11 +340,13 @@ export default function FlexboxGenerator() {
                             { value: 'stretch', label: 'Stretch' },
                           ]}
                           selectedKey={item.alignSelf}
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
                           onSelectionChange={(key) => updateItem(index, 'alignSelf', key as AlignSelf)}
                           label="Select align self"
                           placeholder="Select align self"
                           className="w-full"
                         />
+
                       </div>
                       <div>
                         <Label htmlFor={`order-${index}`} className="text-white mb-2 block">Order</Label>

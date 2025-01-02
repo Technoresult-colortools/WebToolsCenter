@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
-import { Value } from '@radix-ui/react-select'
+
 
 const ogTypes = [
   { value: 'website', label: 'Website', icon: Globe },
