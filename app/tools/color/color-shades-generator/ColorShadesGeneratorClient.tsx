@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { toast, Toaster } from 'react-hot-toast'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import ToolLayout from '@/components/ToolLayout'
 
 interface Shade {
@@ -235,16 +235,19 @@ export default function ColorShadesGenerator() {
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Shade Type
             </label>
-            <Select value={shadeType} onValueChange={(value: 'tint' | 'shade' | 'both') => setShadeType(value)}>
-              <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select shade type" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 text-white border-gray-600">
-                <SelectItem value="tint">Tint (Lighter)</SelectItem>
-                <SelectItem value="shade">Shade (Darker)</SelectItem>
-                <SelectItem value="both">Both</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select
+                label="Select shade type"
+                options={[
+                  { value: "tint", label: "Tint (Lighter)" },
+                  { value: "shade", label: "Shade (Darker)" },
+                  { value: "both", label: "Both" },
+                ]}
+                selectedKey={shadeType}
+                onSelectionChange={setShadeType}
+                placeholder="Select shade type"
+                className="w-full "
+              />
+
           </div>
 
           {error && (

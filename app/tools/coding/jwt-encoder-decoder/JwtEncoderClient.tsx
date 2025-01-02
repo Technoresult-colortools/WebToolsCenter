@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import Input from "@/components/ui/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Switch } from "@/components/ui/switch"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
@@ -238,16 +238,17 @@ export default function JWTEncoderDecoder() {
             <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
               <div className="w-full md:w-1/2">
                 <Label htmlFor="algorithm" className="text-white mb-2 block">Algorithm</Label>
-                <Select value={algorithm} onValueChange={(value: Algorithm) => setAlgorithm(value)}>
-                  <SelectTrigger className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select algorithm" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 text-white border-gray-600">
-                    {['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512'].map((alg) => (
-                      <SelectItem key={alg} value={alg}>{alg}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Algorithm"
+                  options={['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES256', 'ES384', 'ES512'].map((alg) => ({
+                    value: alg,
+                    label: alg,
+                  }))}
+                  selectedKey={algorithm}
+                  onSelectionChange={(value) => setAlgorithm(value as Algorithm)}
+                  placeholder="Select algorithm"
+                />
+
               </div>
               <div className="w-full md:w-1/2">
                 <Label htmlFor="signingKey" className="text-white mb-2 block">Signing Key</Label>

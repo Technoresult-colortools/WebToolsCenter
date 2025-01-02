@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Plus, Minus, Info, BookOpen, Lightbulb, } from 'lucide-react'
@@ -215,35 +215,34 @@ export default function FlexboxGenerator() {
             <div>
               <h2 className="text-2xl font-bold text-white mb-4">Container Settings</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  { label: 'Flex Direction', value: flexDirection, setter: setFlexDirection, options: ['row', 'row-reverse', 'column', 'column-reverse'] },
-                  { label: 'Justify Content', value: justifyContent, setter: setJustifyContent, options: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly'] },
-                  { label: 'Align Items', value: alignItems, setter: setAlignItems, options: ['flex-start', 'flex-end', 'center', 'stretch', 'baseline'] },
-                  { label: 'Flex Wrap', value: flexWrap, setter: setFlexWrap, options: ['nowrap', 'wrap', 'wrap-reverse'] },
-                  { label: 'Align Content', value: alignContent, setter: setAlignContent, options: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'stretch'] },
-                ].map((setting) => (
-                  <div key={setting.label}>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Label htmlFor={setting.label} className="text-white mb-2 block">{setting.label}</Label>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{tooltips[setting.label.toLowerCase().replace(' ', '')]}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <Select value={setting.value} onValueChange={// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (value: any) => setting.setter(value)}>
-                      <SelectTrigger id={setting.label} className="bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder={`Select ${setting.label.toLowerCase()}`} />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        {setting.options.map((option) => (
-                          <SelectItem key={option} value={option}>{option}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+              {[
+                { label: 'Flex Direction', value: flexDirection, setter: setFlexDirection, options: ['row', 'row-reverse', 'column', 'column-reverse'] },
+                { label: 'Justify Content', value: justifyContent, setter: setJustifyContent, options: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly'] },
+                { label: 'Align Items', value: alignItems, setter: setAlignItems, options: ['flex-start', 'flex-end', 'center', 'stretch', 'baseline'] },
+                { label: 'Flex Wrap', value: flexWrap, setter: setFlexWrap, options: ['nowrap', 'wrap', 'wrap-reverse'] },
+                { label: 'Align Content', value: alignContent, setter: setAlignContent, options: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'stretch'] },
+              ].map((setting) => (
+                <div key={setting.label}>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Label htmlFor={setting.label} className="text-white mb-2 block">{setting.label}</Label>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{tooltips[setting.label.toLowerCase().replace(' ', '')]}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <Select
+                    options={setting.options.map(option => ({ value: option, label: option }))}
+                    selectedKey={setting.value}
+                    onSelectionChange={(key) => setting.setter(key as any)}
+                    label={`Select ${setting.label.toLowerCase()}`}
+                    placeholder={`Select ${setting.label.toLowerCase()}`}
+                  />
+
+
+
                   </div>
                 ))}
                 <div>
@@ -293,7 +292,7 @@ export default function FlexboxGenerator() {
               <h2 className="text-2xl font-bold text-white mb-4">Item Settings</h2>
               <div className="space-y-4">
                 {items.map((item, index) => (
-                  <div key={index} className="bg-gray-700 p-4 rounded-lg">
+                  <div key={index} className="bg-gray-800 p-4 rounded-lg">
                     <h3 className="text-white font-bold mb-2">Item {index + 1}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
@@ -330,19 +329,22 @@ export default function FlexboxGenerator() {
                       </div>
                       <div>
                         <Label htmlFor={`alignSelf-${index}`} className="text-white mb-2 block">Align Self</Label>
-                        <Select value={item.alignSelf} onValueChange={(value: AlignSelf) => updateItem(index, 'alignSelf', value)}>
-                          <SelectTrigger id={`alignSelf-${index}`} className="bg-gray-600 text-white border-gray-500">
-                            <SelectValue placeholder="Select align self" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-600 text-white border-gray-500">
-                            <SelectItem value="auto">Auto</SelectItem>
-                            <SelectItem value="flex-start">Flex Start</SelectItem>
-                            <SelectItem value="flex-end">Flex End</SelectItem>
-                            <SelectItem value="center">Center</SelectItem>
-                            <SelectItem value="baseline">Baseline</SelectItem>
-                            <SelectItem value="stretch">Stretch</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Select
+                          id={`alignSelf-${index}`}
+                          options={[
+                            { value: 'auto', label: 'Auto' },
+                            { value: 'flex-start', label: 'Flex Start' },
+                            { value: 'flex-end', label: 'Flex End' },
+                            { value: 'center', label: 'Center' },
+                            { value: 'baseline', label: 'Baseline' },
+                            { value: 'stretch', label: 'Stretch' },
+                          ]}
+                          selectedKey={item.alignSelf}
+                          onSelectionChange={(key) => updateItem(index, 'alignSelf', key as AlignSelf)}
+                          label="Select align self"
+                          placeholder="Select align self"
+                          className="w-full"
+                        />
                       </div>
                       <div>
                         <Label htmlFor={`order-${index}`} className="text-white mb-2 block">Order</Label>

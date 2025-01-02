@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
 import { Hash, Copy, RefreshCw, Upload, Download, CheckCircle2, Clipboard, Info, BookOpen, Lightbulb, Save, Trash2, Shield, FileText, AlertTriangle } from 'lucide-react'
@@ -279,16 +279,18 @@ export default function SHA1Tool() {
 
         <div className="mt-4">
           <Label htmlFor="encoding" className="text-white mb-2 block">Input Encoding</Label>
-          <Select value={encoding} onValueChange={setEncoding}>
-            <SelectTrigger id="encoding" className="w-40 bg-gray-700 text-white border-gray-600">
-              <SelectValue placeholder="Select encoding" />
-            </SelectTrigger>
-            <SelectContent className="w-40 bg-gray-700 text-white border-gray-600">
-              <SelectItem value="UTF-8">UTF-8</SelectItem>
-              <SelectItem value="Base64">Base64</SelectItem>
-              <SelectItem value="Hex">Hexadecimal</SelectItem>
-            </SelectContent>
-          </Select>
+          <Select
+              selectedKey={encoding}
+              onSelectionChange={setEncoding}
+              label="Encoding"
+              options={[
+                { value: "UTF-8", label: "UTF-8" },
+                { value: "Base64", label: "Base64" },
+                { value: "Hex", label: "Hexadecimal" },
+              ]}
+              placeholder="Select encoding"
+            />
+
         </div>
 
         <div className="mt-4">
@@ -363,16 +365,17 @@ export default function SHA1Tool() {
         <div className="mt-4 space-y-4">
           <Label htmlFor="preset-select" className="text-white block">Presets</Label>
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-2">
-            <Select value={selectedPreset} onValueChange={loadPreset}>
-              <SelectTrigger id="preset-select" className="w-full md:w-64 bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select a preset" />
-              </SelectTrigger>
-              <SelectContent className="w-full md:w-64 bg-gray-700 text-white border-gray-600">
-                {Object.keys(presets).map((presetName) => (
-                  <SelectItem key={presetName} value={presetName}>{presetName}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <Select
+            selectedKey={selectedPreset}
+            onSelectionChange={loadPreset}
+            label="Preset"
+            options={Object.keys(presets).map((presetName) => ({
+              value: presetName,
+              label: presetName
+            }))}
+         
+          />
+
             <Button onClick={savePreset} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
               <Save className="w-4 h-4 mr-2" />
               Save Preset

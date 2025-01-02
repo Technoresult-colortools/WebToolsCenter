@@ -9,7 +9,7 @@ import { FileLock, FileLock2, Upload, Copy, RefreshCw, Info, BookOpen, Settings,
 import { toast, Toaster } from 'react-hot-toast'
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/Card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import ToolLayout from '@/components/ToolLayout'
 import NextImage from 'next/image'
 
@@ -245,16 +245,19 @@ export default function Base64EncoderDecoder() {
             <h3 className="text-lg font-semibold text-white">Advanced Options</h3>
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
               <Label htmlFor="encoding" className="text-white mb-2 block">Encoding:</Label>
-              <Select value={encoding} onValueChange={setEncoding}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select encoding" />
-                </SelectTrigger>
-                <SelectContent className='bg-gray-700 text-white border-gray-600'>
-                  <SelectItem value="UTF-8">UTF-8</SelectItem>
-                  <SelectItem value="ASCII">ASCII</SelectItem>
-                  <SelectItem value="ISO-8859-1">ISO-8859-1</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                label="Encoding"
+                options={[
+                  { value: "UTF-8", label: "UTF-8" },
+                  { value: "ASCII", label: "ASCII" },
+                  { value: "ISO-8859-1", label: "ISO-8859-1" },
+                ]}
+                selectedKey={encoding}
+                onSelectionChange={setEncoding}
+                placeholder="Select encoding"
+                className="w-[180px] "
+              />
+
             </div>
           </div>
 

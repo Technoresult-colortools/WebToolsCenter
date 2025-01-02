@@ -4,7 +4,7 @@ import React, { useState, useRef, ChangeEvent, useEffect, useCallback } from 're
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
 import { Download, Maximize2, X, Copy, RefreshCw, Info, BookOpen, Lightbulb } from 'lucide-react'
@@ -360,18 +360,16 @@ export default function CodeToImageConverter() {
               </div>
               <div>
                 <Label htmlFor="language" className="text-white mb-2 block">Language</Label>
-                <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger id="language" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600 overflow-y-auto h-40">
-                    {languages.map((lang) => (
-                      <SelectItem key={lang.value} value={lang.value}>
-                        {lang.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Language"
+                  options={languages}
+                  selectedKey={language}
+                  onSelectionChange={setLanguage}
+                  placeholder="Select language"
+                  className="w-full"
+
+                />
+
               </div>
               <div>
                 <Label htmlFor="fileName" className="text-white mb-2 block">File Name</Label>
@@ -386,48 +384,51 @@ export default function CodeToImageConverter() {
             <TabsContent value="style" className="space-y-4">
               <div>
                 <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
-                <Select value={theme} onValueChange={setTheme}>
-                  <SelectTrigger id="theme" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select theme" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600 overflow-y-auto h-40 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
-                    {themes.map((themeOption) => (
-                      <SelectItem key={themeOption.value} value={themeOption.value}>
-                        {themeOption.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Theme"
+                  options={themes}
+                  selectedKey={theme}
+                  onSelectionChange={setTheme}
+                  placeholder="Select theme"
+                  className="w-full "
+                  
+                />
+
               </div>
               <div>
                 <Label htmlFor="backgroundType" className="text-white mb-2 block">Background Type</Label>
-                <Select value={backgroundType} onValueChange={(value) => setBackgroundType(value as BackgroundType)}>
-                  <SelectTrigger id="backgroundType" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select background type" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="none">None</SelectItem>
-                    <SelectItem value="gradient">Gradient</SelectItem>
-                    <SelectItem value="solid">Solid Color</SelectItem>
-                    <SelectItem value="image">Image</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Background Type"
+                  options={[
+                    { value: "none", label: "None" },
+                    { value: "gradient", label: "Gradient" },
+                    { value: "solid", label: "Solid Color" },
+                    { value: "image", label: "Image" },
+                  ]}
+                  selectedKey={backgroundType}
+                  onSelectionChange={(value) => setBackgroundType(value as BackgroundType)}
+                  placeholder="Select background type"
+                  className="w-full "
+
+                />
+
               </div>
               {backgroundType === 'gradient' && (
                 <div>
                   <Label htmlFor="gradient" className="text-white mb-2 block">Gradient</Label>
-                  <Select value={gradient} onValueChange={setGradient}>
-                    <SelectTrigger id="gradient" className="w-full bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select gradient" />
-                    </SelectTrigger>
-                    <SelectContent className="w-full bg-gray-700 text-white border-gray-600 overflow-y-auto h-40 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
-                      {gradients.map((gradientOption) => (
-                        <SelectItem key={gradientOption.value} value={gradientOption.value}>
-                          {gradientOption.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    label="Gradient"
+                    options={gradients.map((gradientOption) => ({
+                      value: gradientOption.value,
+                      label: gradientOption.label,
+                    }))}
+                    selectedKey={gradient}
+                    onSelectionChange={setGradient}
+                    placeholder="Select gradient"
+                    className="w-full "
+                  
+                  />
+
                 </div>
               )}
               {backgroundType === 'solid' && (
@@ -469,16 +470,20 @@ export default function CodeToImageConverter() {
             <TabsContent value="settings" className="space-y-4">
               <div>
                 <Label htmlFor="layout" className="text-white mb-2 block">Layout</Label>
-                <Select value={layout} onValueChange={setLayout}>
-                  <SelectTrigger id="layout" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select layout" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="compact">Compact</SelectItem>
-                    <SelectItem value="square">Square</SelectItem>
-                    <SelectItem value="wide">Wide</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Layout"
+                  options={[
+                    { value: "compact", label: "Compact" },
+                    { value: "square", label: "Square" },
+                    { value: "wide", label: "Wide" },
+                  ]}
+                  selectedKey={layout}
+                  onSelectionChange={setLayout}
+                  placeholder="Select layout"
+                  className="w-full "
+
+                />
+
               </div>
               <div className="flex items-center space-x-2">
                 <Switch
@@ -501,34 +506,39 @@ export default function CodeToImageConverter() {
                   </div>
                   <div>
                     <Label htmlFor="watermarkPosition" className="text-white mb-2 block">Watermark Position</Label>
-                    <Select value={watermarkPosition} onValueChange={setWatermarkPosition}>
-                      <SelectTrigger id="watermarkPosition" className="w-full bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select position" />
-                      </SelectTrigger>
-                      <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="top-left">Top Left</SelectItem>
-                        <SelectItem value="top-right">Top Right</SelectItem>
-                        <SelectItem value="bottom-left">Bottom Left</SelectItem>
-                        <SelectItem value="bottom-right">Bottom Right</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      label="Watermark Position"
+                      options={[
+                        { value: "top-left", label: "Top Left" },
+                        { value: "top-right", label: "Top Right" },
+                        { value: "bottom-left", label: "Bottom Left" },
+                        { value: "bottom-right", label: "Bottom Right" },
+                      ]}
+                      selectedKey={watermarkPosition}
+                      onSelectionChange={setWatermarkPosition}
+                      placeholder="Select position"
+                      className="w-full "
+
+                    />
+
                   </div>
                 </>
               )}
               <div>
                 <Label htmlFor="fontFamily" className="text-white mb-2 block">Font Family</Label>
-                <Select value={fontFamily} onValueChange={setFontFamily}>
-                  <SelectTrigger id="fontFamily" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select font family" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600 overflow-y-auto h-40 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-700">
-                    {fontFamilies.map((font) => (
-                      <SelectItem key={font.value} value={font.value}>
-                        {font.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Font Family"
+                  options={fontFamilies.map((font) => ({
+                    value: font.value,
+                    label: font.label,
+                  }))}
+                  selectedKey={fontFamily}
+                  onSelectionChange={setFontFamily}
+                  placeholder="Select font family"
+                  className="w-full "
+                  
+                />
+
               </div>
               <div>
                 <Label htmlFor="fontSize" className="text-white mb-2 block">Font Size</Label>
@@ -581,16 +591,20 @@ export default function CodeToImageConverter() {
             <TabsContent value="export" className="space-y-4">
               <div>
                 <Label htmlFor="exportFormat" className="text-white mb-2 block">Export Format</Label>
-                <Select value={exportFormat} onValueChange={(value) => setExportFormat(value as ExportFormat)}>
-                  <SelectTrigger id="exportFormat" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select export format" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="png">PNG</SelectItem>
-                    <SelectItem value="jpeg">JPEG</SelectItem>
-                    <SelectItem value="svg">SVG</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Export Format"
+                  options={[
+                    { value: 'png', label: 'PNG' },
+                    { value: 'jpeg', label: 'JPEG' },
+                    { value: 'svg', label: 'SVG' },
+                  ]}
+                  selectedKey={exportFormat}
+                  onSelectionChange={(value) => setExportFormat(value as ExportFormat)}
+                  placeholder="Select export format"
+                  className="w-full "
+
+                />
+
               </div>
               <div className="flex items-center space-x-2">
                 <Switch

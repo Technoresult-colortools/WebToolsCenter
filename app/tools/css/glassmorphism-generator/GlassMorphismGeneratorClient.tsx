@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { RefreshCw, Copy, Info, BookOpen, Lightbulb, Download, } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
@@ -195,16 +195,20 @@ const GlassmorphismGenerator = () => {
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="shape" className="text-white mb-2 block">Shape</Label>
-                  <Select value={shape} onValueChange={(value: GlassShape) => setShape(value)}>
-                    <SelectTrigger id="shape" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select shape" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="rectangle">Rectangle</SelectItem>
-                      <SelectItem value="circle">Circle</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    id="shape"
+                    options={[
+                      { value: 'rectangle', label: 'Rectangle' },
+                      { value: 'circle', label: 'Circle' },
+                      { value: 'custom', label: 'Custom' },
+                    ]}
+                    selectedKey={shape}
+                    onSelectionChange={(value: GlassShape) => setShape(value)}
+                    label="Select shape"
+                    placeholder="Select shape"
+              
+                  />
+
                 </div>
 
                 {shape === 'custom' && (

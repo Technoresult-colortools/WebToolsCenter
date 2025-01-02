@@ -5,7 +5,7 @@ import { Copy, RefreshCw, Share2, Globe, Newspaper, Book, User, Music, Film, Tv,
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
+import { Value } from '@radix-ui/react-select'
 
 const ogTypes = [
   { value: 'website', label: 'Website', icon: Globe },
@@ -205,21 +206,25 @@ export default function OpenGraphGenerator() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="type" className="text-sm text-gray-300">Content Type</Label>
-                <Select value={type} onValueChange={setType}>
-                  <SelectTrigger id="type" className="w-full bg-gray-700 border-gray-600 text-white">
-                    <SelectValue placeholder="Select content type" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                    {ogTypes.map(({ value, label, icon: Icon }) => (
-                      <SelectItem key={value} value={value}>
-                        <div className="flex items-center gap-2">
-                          <Icon className="w-4 h-4" />
-                          {label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select 
+                  label="Content Type" 
+                  options={ogTypes.map(({ value, label, icon: Icon }) => ({ 
+                    value, 
+                    label: (
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        {label}
+                      </div>
+                    ),
+                  }))} 
+                  selectedKey={type} 
+                  onSelectionChange={(key) => setType(key)} 
+                  placeholder="Select content type" 
+                  className="w-full"
+                />
+
+
+
               </div>
 
               <div className="space-y-2">
@@ -302,17 +307,20 @@ export default function OpenGraphGenerator() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="determiner" className="text-sm text-gray-300">Determiner</Label>
-                    <Select value={metadata.determiner} onValueChange={(value) => handleChange('determiner', value)}>
-                      <SelectTrigger id="determiner" className="w-full bg-gray-700 border-gray-600 text-white">
-                        <SelectValue placeholder="Auto" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                        <SelectItem value="auto">Auto</SelectItem>
-                        <SelectItem value="a">A</SelectItem>
-                        <SelectItem value="an">An</SelectItem>
-                        <SelectItem value="the">The</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      label="Determiner"
+                      options={[
+                        { value: "auto", label: "Auto" },
+                        { value: "a", label: "A" },
+                        { value: "an", label: "An" },
+                        { value: "the", label: "The" },
+                      ]}
+                      selectedKey={metadata.determiner}
+                      onSelectionChange={(key) => handleChange("determiner", key)}
+                      placeholder="Auto"
+                      className="w-full"
+                    />
+
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="videoUrl" className="text-sm text-gray-300">Video URL</Label>

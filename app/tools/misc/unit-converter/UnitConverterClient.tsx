@@ -6,7 +6,7 @@ import { Toaster, toast } from 'react-hot-toast'
 import { Button } from "@/components/ui/Button"
 import  Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import ToolLayout from '@/components/ToolLayout'
 import { categories } from './unitCategories'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
@@ -77,27 +77,21 @@ const UnitConverter = () => {
             <h2 className="text-xl font-semibold text-white mb-2">Category</h2>
           </Label>
           <Select
-            value={category.name}
-            onValueChange={(value) => {
-              const newCategory = categories.find((c) => c.name === value)
+            label="Select category"
+            options={categories.map((cat) => ({ value: cat.name, label: cat.name }))}
+            selectedKey={category.name}
+            onSelectionChange={(key) => {
+              const newCategory = categories.find((c) => c.name === key)
               if (newCategory) {
                 setCategory(newCategory)
                 setFromUnit(newCategory.units[0])
                 setToUnit(newCategory.units[1])
               }
             }}
-          >
-            <SelectTrigger id="category" className="bg-gray-700 border-gray-600 text-white">
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-700 border-gray-600 text-white">
-              {categories.map((cat) => (
-                <SelectItem key={cat.name} value={cat.name}>
-                  {cat.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder="Select category"
+           
+          />
+
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -105,23 +99,19 @@ const UnitConverter = () => {
             <Label htmlFor="fromUnit" className="text-gray-300 mb-2">
               From
             </Label>
-            <Select value={fromUnit} onValueChange={setFromUnit}>
-              <SelectTrigger id="fromUnit" className="bg-gray-700 border-gray-600 text-white">
-                <SelectValue placeholder="Select unit" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                {category.units.map((unit) => (
-                  <SelectItem key={unit} value={unit}>
-                    {unit}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              label="From Unit"
+              options={category.units.map((unit) => ({ value: unit, label: unit }))}
+              selectedKey={fromUnit}
+              onSelectionChange={(key) => setFromUnit(key)}
+              placeholder="Select unit"
+           
+            />
             <Input
               type="number"
               value={fromValue}
               onChange={handleFromValueChange}
-              className="mt-2 bg-gray-700 border-gray-600 text-white"
+              className="mt-2"
               placeholder="Enter value"
             />
           </div>
@@ -129,18 +119,15 @@ const UnitConverter = () => {
             <Label htmlFor="toUnit" className="text-gray-300 mb-2">
               To
             </Label>
-            <Select value={toUnit} onValueChange={setToUnit}>
-              <SelectTrigger id="toUnit" className="bg-gray-700 border-gray-600 text-white">
-                <SelectValue placeholder="Select unit" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                {category.units.map((unit) => (
-                  <SelectItem key={unit} value={unit}>
-                    {unit}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              label="To Unit"
+              options={category.units.map((unit) => ({ value: unit, label: unit }))}
+              selectedKey={toUnit}
+              onSelectionChange={(key) => setToUnit(key)}
+              placeholder="Select unit"
+             
+            />
+
             <Input
               type="text"
               value={toValue}

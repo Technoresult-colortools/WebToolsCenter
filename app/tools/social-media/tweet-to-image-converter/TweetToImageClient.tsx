@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast';
 import { Download, Info, Lightbulb, BookOpen, RefreshCw, Layout, ImageIcon, Sliders, Type, } from 'lucide-react';
 import { exportComponentAsJPEG, exportComponentAsPNG } from 'react-component-export-image';
@@ -333,46 +333,53 @@ export default function TweetToImageConverter() {
                 <TabsContent value="layout">
                   <div>
                     <Label htmlFor="layout" className="text-white mb-2 block">Layout</Label>
-                    <Select value={layout} onValueChange={(value: 'wide' | 'compact' | 'square') => setLayout(value)}>
-                      <SelectTrigger id="layout" className="w-full bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select Layout" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="wide">Wide</SelectItem>
-                        <SelectItem value="compact">Compact</SelectItem>
-                        <SelectItem value="square">Square</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      label="Select Layout"
+                      options={[
+                        { value: 'wide', label: 'Wide' },
+                        { value: 'compact', label: 'Compact' },
+                        { value: 'square', label: 'Square' },
+                      ]}
+                      selectedKey={layout}
+                      onSelectionChange={(value) => setLayout(value as 'wide' | 'compact' | 'square')}
+                      placeholder="Select Layout"
+                      className="w-full "
+                    />
+
                   </div>
                 </TabsContent>
                 <TabsContent value="background">
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="background-type" className="text-white mb-2 block">Background Type</Label>
-                      <Select value={backgroundType} onValueChange={(value: 'gradient' | 'solid' | 'image') => setBackgroundType(value)}>
-                        <SelectTrigger id="background-type" className="w-full bg-gray-700 text-white border-gray-600">
-                          <SelectValue placeholder="Select Background Type" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-700 text-white border-gray-600">
-                          <SelectItem value="gradient">Gradient</SelectItem>
-                          <SelectItem value="solid">Solid Color</SelectItem>
-                          <SelectItem value="image">Image</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Select
+                        label="Select Background Type"
+                        options={[
+                          { value: 'gradient', label: 'Gradient' },
+                          { value: 'solid', label: 'Solid Color' },
+                          { value: 'image', label: 'Image' },
+                        ]}
+                        selectedKey={backgroundType}
+                        onSelectionChange={(value) => setBackgroundType(value as 'gradient' | 'solid' | 'image')}
+                        placeholder="Select Background Type"
+                        className="w-full "
+                      />
                     </div>
                     {backgroundType === 'gradient' && (
                       <div>
                         <Label htmlFor="gradient-color" className="text-white mb-2 block">Gradient Color</Label>
-                        <Select value={gradientColor} onValueChange={(value: GradientKey) => setGradientColor(value)}>
-                          <SelectTrigger id="gradient-color" className="w-full bg-gray-700 text-white border-gray-600">
-                            <SelectValue placeholder="Select Gradient" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-700 text-white border-gray-600 max-h-40 overflow-y-auto">
-                            {(Object.keys(gradients) as GradientKey[]).map((key) => (
-                              <SelectItem key={key} value={key}>{key}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Select
+                          label="Select Gradient"
+                          options={(Object.keys(gradients) as GradientKey[]).map((key) => ({
+                            value: key,
+                            label: key,
+                          }))}
+                          selectedKey={gradientColor}
+                          onSelectionChange={(value) => setGradientColor(value as GradientKey)}
+                          placeholder="Select Gradient"
+                          className="w-full "
+                        />
+
                       </div>
                     )}
                     {backgroundType === 'solid' && (
@@ -422,7 +429,7 @@ export default function TweetToImageConverter() {
                       placeholder="Add a comment..."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      className="bg-gray-700 text-white border-gray-600"
+                      className="w-full bg-gray-700 text-white border-gray-600"
                     />
                   </div>
                 </TabsContent>

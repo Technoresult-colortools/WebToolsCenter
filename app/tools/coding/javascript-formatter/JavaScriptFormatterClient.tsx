@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Input from "@/components/ui/Input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -260,16 +260,20 @@ const formatJS = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Label htmlFor="indentSize" className="text-white">Indent Size:</Label>
-                  <Select value={indentSize} onValueChange={setIndentSize}>
-                    <SelectTrigger className="w-[180px] bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select indent size" />
-                    </SelectTrigger>
-                    <SelectContent className="w-[180px] bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="2">2 spaces</SelectItem>
-                      <SelectItem value="4">4 spaces</SelectItem>
-                      <SelectItem value="8">8 spaces</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    label="Indent Size"
+                    options={[
+                      { value: '2', label: '2 spaces' },
+                      { value: '4', label: '4 spaces' },
+                      { value: '8', label: '8 spaces' },
+                    ]}
+                    selectedKey={indentSize}
+                    onSelectionChange={setIndentSize}
+                    placeholder="Select indent size"
+                    className="w-[180px] "
+                  
+                  />
+
                 </div>
               </div>
             </TabsContent>

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/label"
 import Input from "@/components/ui/Input"
 import Slider from "@/components/ui/Slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { toast, Toaster } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
@@ -389,16 +389,19 @@ export default function InstagramFilters() {
             <TabsContent value="download" className="space-y-4">
               <h3 className="text-lg font-semibold text-white">Download Options</h3>
               <div className="flex gap-2">
-                <Select value={downloadFormat} onValueChange={setDownloadFormat}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue placeholder="Format" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="png">PNG</SelectItem>
-                    <SelectItem value="jpeg">JPEG</SelectItem>
-                    <SelectItem value="webp">WebP</SelectItem>
-                  </SelectContent>
-                </Select>
+              <Select
+                label="Download Format"
+                options={[
+                  { value: 'png', label: 'PNG' },
+                  { value: 'jpeg', label: 'JPEG' },
+                  { value: 'webp', label: 'WebP' },
+                ]}
+                selectedKey={downloadFormat}
+                onSelectionChange={(key) => setDownloadFormat(key)}
+                placeholder="Format"
+                className="w-36"
+              />
+
                 <Button onClick={downloadImage} disabled={!image}>
                   <Download className="w-4 h-4 mr-2" />
                   Download

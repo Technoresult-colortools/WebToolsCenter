@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Download, Plus, Trash2, Info, BookOpen, Lightbulb, ArrowUpDown } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
@@ -169,16 +169,18 @@ export default function BoxShadowGenerator() {
                 <TabsContent value="shadows" className="space-y-4">
                   <div className="flex items-center justify-between mb-2">
                     <Label htmlFor="unit" className="text-white mr-4">Unit:</Label>
-                    <Select value={unit} onValueChange={(value: BoxShadowUnit) => setUnit(value)}>
-                      <SelectTrigger id="unit" className="w-24 bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select unit" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="px">px</SelectItem>
-                        <SelectItem value="em">em</SelectItem>
-                        <SelectItem value="rem">rem</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      selectedKey={unit}
+                      onSelectionChange={(value: BoxShadowUnit) => setUnit(value)}
+                      label="Unit"
+                      options={[
+                        { value: "px", label: "px" },
+                        { value: "em", label: "em" },
+                        { value: "rem", label: "rem" },
+                      ]}
+                      placeholder="Select unit"
+                    />
+
                   </div>
                   {shadows.map((shadow, index) => (
                     <div key={index} className="bg-gray-700 p-4 rounded-lg space-y-2">

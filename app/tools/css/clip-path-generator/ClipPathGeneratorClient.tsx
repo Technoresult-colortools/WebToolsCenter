@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
@@ -297,121 +297,178 @@ export default function ClipPathGenerator() {
                 </TabsTrigger>
               </TabsList>
                 <TabsContent value="shape">
-                <div>
+                <div className="mt-4">
                   <Label htmlFor="shape" className="text-white mb-2 block">Clip Path Shape</Label>
-                  <Select value={shape} onValueChange={(value: Shape) => setShape(value)}>
-                    <SelectTrigger id="shape" className="w-full sm:w-64 bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select shape" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-[300px] overflow-y-auto bg-gray-700 text-white border-gray-600">
-                      <SelectGroup>
-                        <SelectLabel>Basic Shapes</SelectLabel>
-                        <SelectItem value="triangle">
-                          <div className="flex items-center">
+                  <Select
+                    label="Select Shape"
+                    selectedKey={shape}
+                    onSelectionChange={(value: Shape) => setShape(value)}
+                    placeholder="Select shape"
+                    className="w-full sm:w-64"
+                    options={[
+                      {
+                        value: "group-basic",
+                        label: "Basic Shapes",
+                        isLabel: true
+                      },
+                      {
+                        value: "triangle",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="triangle" />
-                            <span className="ml-2">Triangle</span>
+                            <span>Triangle</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="rectangle">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "rectangle",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="rectangle" />
-                            <span className="ml-2">Rectangle</span>
+                            <span>Rectangle</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="circle">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "circle",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="circle" />
-                            <span className="ml-2">Circle</span>
+                            <span>Circle</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="ellipse">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "ellipse",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="ellipse" />
-                            <span className="ml-2">Ellipse</span>
+                            <span>Ellipse</span>
                           </div>
-                        </SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Polygons</SelectLabel>
-                        <SelectItem value="pentagon">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "group-polygons",
+                        label: "Polygons",
+                        isLabel: true
+                      },
+                      {
+                        value: "pentagon",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="pentagon" />
-                            <span className="ml-2">Pentagon</span>
+                            <span>Pentagon</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="hexagon">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "hexagon",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="hexagon" />
-                            <span className="ml-2">Hexagon</span>
+                            <span>Hexagon</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="octagon">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "octagon",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="octagon" />
-                            <span className="ml-2">Octagon</span>
+                            <span>Octagon</span>
                           </div>
-                        </SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Arrows</SelectLabel>
-                        <SelectItem value="chevronLeft">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "group-arrows",
+                        label: "Arrows",
+                        isLabel: true
+                      },
+                      {
+                        value: "chevronLeft",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="chevronLeft" />
-                            <span className="ml-2">Chevron Left</span>
+                            <span>Chevron Left</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="chevronRight">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "chevronRight",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="chevronRight" />
-                            <span className="ml-2">Chevron Right</span>
+                            <span>Chevron Right</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="arrowLeft">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "arrowLeft",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="arrowLeft" />
-                            <span className="ml-2">Arrow Left</span>
+                            <span>Arrow Left</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="arrowRight">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "arrowRight",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="arrowRight" />
-                            <span className="ml-2">Arrow Right</span>
+                            <span>Arrow Right</span>
                           </div>
-                        </SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Special Shapes</SelectLabel>
-                        <SelectItem value="star">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "group-special",
+                        label: "Special Shapes",
+                        isLabel: true
+                      },
+                      {
+                        value: "star",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="star" />
-                            <span className="ml-2">Star</span>
+                            <span>Star</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="heart">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "heart",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="heart" />
-                            <span className="ml-2">Heart</span>
+                            <span>Heart</span>
                           </div>
-                        </SelectItem>
-                        <SelectItem value="messageBox">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "messageBox",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <ShapeIcon shape="messageBox" />
-                            <span className="ml-2">Message Box</span>
+                            <span>Message Box</span>
                           </div>
-                        </SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Other</SelectLabel>
-                        <SelectItem value="custom">
-                          <div className="flex items-center">
+                        )
+                      },
+                      {
+                        value: "group-other",
+                        label: "Other",
+                        isLabel: true
+                      },
+                      {
+                        value: "custom",
+                        label: (
+                          <div className="flex items-center gap-2">
                             <Shapes className="w-4 h-4" />
-                            <span className="ml-2">Custom</span>
+                            <span>Custom</span>
                           </div>
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
+                        )
+                      }
+                    ]}
+                  />
+                </div> 
                 </TabsContent>
                 <TabsContent value="size">
                   <div className="space-y-4">

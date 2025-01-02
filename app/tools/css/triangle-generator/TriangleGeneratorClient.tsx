@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast, Toaster } from 'react-hot-toast'
 import { Copy, RefreshCw, Download, Info, Lightbulb, BookOpen, Palette, Maximize2, X, Sliders } from 'lucide-react'
@@ -196,21 +196,25 @@ export default function CSSTriangleGenerator() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="direction" className="text-white mb-2 block">Direction</Label>
-                    <Select value={direction} onValueChange={(value: TriangleDirection) => setDirection(value)}>
-                      <SelectTrigger id="direction" className="bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select direction" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="top">Top</SelectItem>
-                        <SelectItem value="top-right">Top Right</SelectItem>
-                        <SelectItem value="right">Right</SelectItem>
-                        <SelectItem value="bottom-right">Bottom Right</SelectItem>
-                        <SelectItem value="bottom">Bottom</SelectItem>
-                        <SelectItem value="bottom-left">Bottom Left</SelectItem>
-                        <SelectItem value="left">Left</SelectItem>
-                        <SelectItem value="top-left">Top Left</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      id="direction"
+                      options={[
+                        { value: 'top', label: 'Top' },
+                        { value: 'top-right', label: 'Top Right' },
+                        { value: 'right', label: 'Right' },
+                        { value: 'bottom-right', label: 'Bottom Right' },
+                        { value: 'bottom', label: 'Bottom' },
+                        { value: 'bottom-left', label: 'Bottom Left' },
+                        { value: 'left', label: 'Left' },
+                        { value: 'top-left', label: 'Top Left' },
+                      ]}
+                      selectedKey={direction}
+                      onSelectionChange={(value: TriangleDirection) => setDirection(value)}
+                      label="Select direction"
+                      placeholder="Select direction"
+
+                    />
+
                   </div>
 
                   <div>

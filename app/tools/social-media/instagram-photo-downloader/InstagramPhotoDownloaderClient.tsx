@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster, toast } from 'react-hot-toast';
@@ -240,16 +240,19 @@ export default function InstagramPhotoDownloader() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <Label htmlFor="image-quality" className="text-white mb-2 block">Image Quality</Label>
-                                <Select value={imageQuality} onValueChange={(value: ImageQuality) => setImageQuality(value)}>
-                                    <SelectTrigger id="image-quality" className="bg-gray-700 text-white border-gray-600">
-                                        <SelectValue placeholder="Select image quality" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                                        <SelectItem value="low">Low</SelectItem>
-                                        <SelectItem value="medium">Medium</SelectItem>
-                                        <SelectItem value="high">High</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Select
+                                    label="Image Quality"
+                                    options={[
+                                        { value: 'low', label: 'Low' },
+                                        { value: 'medium', label: 'Medium' },
+                                        { value: 'high', label: 'High' },
+                                    ]}
+                                    selectedKey={imageQuality}
+                                    onSelectionChange={(key) => setImageQuality(key as ImageQuality)}
+                                    placeholder="Select image quality"
+                                 
+                                    />
+
                             </div>
 
                             <div className="flex items-center justify-between">

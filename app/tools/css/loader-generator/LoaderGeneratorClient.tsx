@@ -10,7 +10,7 @@ import Slider from "@/components/ui/Slider"
 import { Card, CardContent } from "@/components/ui/Card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -221,19 +221,19 @@ export default function LoaderGenerator() {
         <div className="max-w-7xl mx-auto">
           <div className="bg-gray-900 rounded-xl shadow-lg p-4 md:p-6 lg:p-8 mb-8">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-            <Select 
-              value={selectedCategory} 
-              onValueChange={handleCategoryChange}
-            >
-                <SelectTrigger className="w-full sm:w-48 bg-gray-800 text-white border-gray-700">
-                  <SelectValue placeholder="Select Category" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 text-white border-gray-700">
-                  {Object.keys(loaderCategories).map((category) => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <Select
+                id="category"
+                options={Object.keys(loaderCategories).map((category) => ({
+                  value: category,
+                  label: category,
+                }))}
+                selectedKey={selectedCategory}
+                onSelectionChange={handleCategoryChange}
+                label="Select Category"
+                placeholder="Select Category"
+                className="w-full sm:w-48 "
+              />
+
               
               <span className="text-gray-300 text-sm font-medium">
                 {categoryLoaders.length} loaders available

@@ -81,26 +81,69 @@ body {
   visibility: visible;
 }
 
-/* Add this to your globals.css */
-.custom-scrollbar::-webkit-scrollbar {
+/* Modern Scrollbar Styles */
+
+/* For Webkit browsers (Chrome, Safari, newer versions of Opera) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937; /* gray-800 */
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563; /* gray-600 */
+  border-radius: 8px;
+  border: 2px solid #1f2937; /* Creates padding effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f5156; /* gray-500 */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1f2937; /* thumb and track color */
+}
+
+/* Specific styles for the Select component */
+.select-scrollbar {
+  scrollbar-gutter: stable;
+  overflow-y: auto;
+}
+
+.select-scrollbar::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #1f2937;
-  border-radius: 8px;
+.select-scrollbar::-webkit-scrollbar-track {
+  background: #374151; /* gray-700 */
+  border-radius: 6px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4f46e5;
-  border-radius: 8px;
+.select-scrollbar::-webkit-scrollbar-thumb {
+  background: #6b7280; /* gray-500 */
+  border-radius: 6px;
+  border: 1px solid #374151;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6366f1;
+.select-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af; /* gray-400 */
 }
 
+/* Optional: Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
 
 
 

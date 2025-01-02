@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { toast, Toaster } from 'react-hot-toast'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import ToolLayout from '@/components/ToolLayout'
 
 function mixColors(color1: string, color2: string, weight: number = 0.5) {
@@ -357,17 +357,20 @@ export default function ColorMixer() {
                   <label htmlFor="color-format" className="block text-sm font-medium text-gray-300 mb-2">
                     Color Format
                   </label>
-                  <Select onValueChange={(value: 'hex' | 'rgb' | 'hsl' | 'cmyk') => setColorFormat(value)} value={colorFormat}>
-                    <SelectTrigger id="color-format" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select color format" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="hex">HEX</SelectItem>
-                      <SelectItem value="rgb">RGB</SelectItem>
-                      <SelectItem value="hsl">HSL</SelectItem>
-                      <SelectItem value="cmyk">CMYK</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    label="Select color format"
+                    options={[
+                      { value: "hex", label: "HEX" },
+                      { value: "rgb", label: "RGB" },
+                      { value: "hsl", label: "HSL" },
+                      { value: "cmyk", label: "CMYK" },
+                    ]}
+                    selectedKey={colorFormat}
+                    onSelectionChange={(value) => setColorFormat(value as 'hex' | 'rgb' | 'hsl' | 'cmyk')}
+                    placeholder="Select color format"
+
+                  />
+
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {mixedColors.map((color, index) => (

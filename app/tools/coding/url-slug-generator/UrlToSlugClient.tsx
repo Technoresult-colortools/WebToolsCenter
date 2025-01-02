@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
 import { BookOpen, Copy, Info, Lightbulb, RefreshCw, Download, Eye, EyeOff, AlertTriangle, Shield, Settings } from 'lucide-react'
@@ -235,16 +235,14 @@ export default function URLSlugCreator() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="separator" className="text-white mb-2 block text-sm sm:text-base">Separator</Label>
-              <Select value={separator} onValueChange={setSeparator}>
-                <SelectTrigger id="separator" className="w-full bg-gray-700 text-white border-gray-600 text-sm sm:text-base">
-                  <SelectValue placeholder="Select separator" />
-                </SelectTrigger>
-                <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                  {separators.map((sep) => (
-                    <SelectItem key={sep.value} value={sep.value}>{sep.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Select
+                selectedKey={separator}
+                onSelectionChange={setSeparator}
+                label="Separator"
+                options={separators.map((sep) => ({ value: sep.value, label: sep.label }))}
+                placeholder="Select separator"
+              />
+
             </div>
             {separator === 'custom' && (
               <div>
@@ -260,29 +258,25 @@ export default function URLSlugCreator() {
             )}
             <div>
               <Label htmlFor="casing" className="text-white mb-2 block text-sm sm:text-base">Casing</Label>
-              <Select value={casing} onValueChange={setCasing}>
-                <SelectTrigger id="casing" className="w-full bg-gray-700 text-white border-gray-600 text-sm sm:text-base">
-                  <SelectValue placeholder="Select casing" />
-                </SelectTrigger>
-                <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                  {casings.map((c) => (
-                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Select
+                selectedKey={casing}
+                onSelectionChange={setCasing}
+                label="Casing"
+                options={casings.map((c) => ({ value: c.value, label: c.label }))}
+                placeholder="Select casing"
+              />
+
             </div>
             <div>
               <Label htmlFor="transliteration" className="text-white mb-2 block text-sm sm:text-base">Transliteration</Label>
-              <Select value={transliteration} onValueChange={setTransliteration}>
-                <SelectTrigger id="transliteration" className="w-full bg-gray-700 text-white border-gray-600 text-sm sm:text-base">
-                  <SelectValue placeholder="Select transliteration" />
-                </SelectTrigger>
-                <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                  {transliterationOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Select
+                selectedKey={transliteration}
+                onSelectionChange={setTransliteration}
+                label="Transliteration"
+                options={transliterationOptions.map((option) => ({ value: option.value, label: option.label }))}
+                placeholder="Select transliteration"
+              />
+
             </div>
           </div>
   

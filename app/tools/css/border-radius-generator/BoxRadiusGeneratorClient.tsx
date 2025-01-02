@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Download, Info, BookOpen, Lightbulb, Maximize2, X, } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
@@ -165,17 +165,19 @@ export default function EnhancedBorderRadiusGenerator() {
                 <TabsContent value="corners" className="space-y-4">
                   <div className="flex items-center justify-between mb-2">
                     <Label htmlFor="unit" className="text-white mr-4">Unit:</Label>
-                    <Select value={unit} onValueChange={(value: BorderRadiusUnit) => setUnit(value)}>
-                      <SelectTrigger id="unit" className="w-24 bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select unit" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="px">px</SelectItem>
-                        <SelectItem value="%">%</SelectItem>
-                        <SelectItem value="em">em</SelectItem>
-                        <SelectItem value="rem">rem</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      selectedKey={unit}
+                      onSelectionChange={(value: BorderRadiusUnit) => setUnit(value)}
+                      label="Unit"
+                      options={[
+                        { value: "px", label: "px" },
+                        { value: "%", label: "%" },
+                        { value: "em", label: "em" },
+                        { value: "rem", label: "rem" },
+                      ]}
+                      placeholder="Select unit"
+                    />
+
                   </div>
                   <div className="flex items-center justify-between mb-2">
                     <Label htmlFor="linked" className="text-white">Link Corners</Label>
@@ -277,18 +279,18 @@ export default function EnhancedBorderRadiusGenerator() {
                   </div>
                   <div>
                     <Label htmlFor="borderStyle" className="text-white">Border Style</Label>
-                    <Select value={borderStyle} onValueChange={(value: string) => setBorderStyle(value)}>
-                      <SelectTrigger id="borderStyle" className="w-full mt-2 bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select border style" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        {borderStyles.map((style) => (
-                          <SelectItem key={style} value={style}>
-                            {style.charAt(0).toUpperCase() +style.slice(1)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      selectedKey={borderStyle}
+                      onSelectionChange={(value: string) => setBorderStyle(value)}
+                      label="Border Style"
+                      options={borderStyles.map((style) => ({
+                        value: style,
+                        label: style.charAt(0).toUpperCase() + style.slice(1),
+                      }))}
+                      placeholder="Select border style"
+                      className='mt-2'
+                    />
+
                   </div>
                 </TabsContent>
               </Tabs>

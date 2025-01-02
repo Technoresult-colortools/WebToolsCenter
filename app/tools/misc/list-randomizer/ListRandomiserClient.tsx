@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select";
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider";
 import { Toaster, toast } from 'react-hot-toast';
 import { Shuffle, Copy, Upload, Download, Undo, Redo, Save, FolderOpen, Info, BookOpen, Lightbulb, Share2 } from 'lucide-react';
@@ -242,19 +242,23 @@ export default function ListRandomizer() {
               className="w-full h-64 p-2 bg-gray-700 text-white border border-gray-600 rounded-md"
             />
             <div className="mt-4">
-              <Label htmlFor="separator" className="text-white mb-2 block">Separator</Label>
-              <Select value={separator} onValueChange={handleSeparatorChange}>
-                <SelectTrigger id="separator" className="bg-gray-700 text-white border-gray-600">
-                  <SelectValue>{separator === '\n' ? 'New line' : separator || 'Select separator'}</SelectValue>
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 text-white border-gray-600">
-                  <SelectItem value="\n">New line</SelectItem>
-                  <SelectItem value=",">Comma</SelectItem>
-                  <SelectItem value=";">Semicolon</SelectItem>
-                  <SelectItem value="\t">Tab</SelectItem>
-                  <SelectItem value="custom">Custom</SelectItem>
-                </SelectContent>
-              </Select>
+            <Label htmlFor="separator" className="text-white mb-2 block">
+              Separator
+            </Label>
+            <Select
+              label="Select separator"
+              options={[
+                { value: '\n', label: 'New line' },
+                { value: ',', label: 'Comma' },
+                { value: ';', label: 'Semicolon' },
+                { value: '\t', label: 'Tab' },
+                { value: 'custom', label: 'Custom' },
+              ]}
+              selectedKey={separator}
+              onSelectionChange={(key) => handleSeparatorChange(key as string)}
+              placeholder={separator === '\n' ? 'New line' : separator || 'Select separator'}
+              
+            />
               {separator === 'custom' && (
                 <Input
                   value={customSeparator}
@@ -316,15 +320,17 @@ export default function ListRandomizer() {
               </div>
               <div>
                 <Label htmlFor="randomization-method" className="text-white mb-2 block">Randomization Method</Label>
-                <Select value={randomizationMethod} onValueChange={setRandomizationMethod}>
-                  <SelectTrigger id="randomization-method" className="bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select method" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="fisher-yates">Fisher-Yates Shuffle</SelectItem>
-                    <SelectItem value="sort">JavaScript Sort</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Select method"
+                  options={[
+                    { value: 'fisher-yates', label: 'Fisher-Yates Shuffle' },
+                    { value: 'sort', label: 'JavaScript Sort' },
+                  ]}
+                  selectedKey={randomizationMethod}
+                  onSelectionChange={(key) => setRandomizationMethod(key as string)}
+                  placeholder="Select method"
+                  
+                />
               </div>
               <div>
                 <Label htmlFor="subset-size" className="text-white mb-2 block">Subset Size (0 for all): {subsetSize}</Label>
@@ -382,7 +388,6 @@ export default function ListRandomizer() {
           </div>
         </div>
       </div>
-
       {/* Output Section */}
       <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
         <h2 className="text-2xl font-bold text-white mb-4">Randomized Output</h2>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Copy, RefreshCw, Download, Shuffle, Eye, Palette, Droplet, Grid, ImageIcon, Wand2, Lightbulb, Settings, Sun, Moon } from 'lucide-react'
 import Input from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/Card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
@@ -249,19 +249,22 @@ export default function ColorPaletteGenerator() {
                   <label htmlFor="harmony-type" className="block text-sm font-medium text-gray-300 mb-2">
                     Harmony Type
                   </label>
-                  <Select value={harmonyType} onValueChange={setHarmonyType}>
-                    <SelectTrigger className="w-full bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select harmony type" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600">
-                      <SelectItem value="analogous">Analogous</SelectItem>
-                      <SelectItem value="monochromatic">Monochromatic</SelectItem>
-                      <SelectItem value="triadic">Triadic</SelectItem>
-                      <SelectItem value="complementary">Complementary</SelectItem>
-                      <SelectItem value="split-complementary">Split Complementary</SelectItem>
-                      <SelectItem value="tetradic">Tetradic</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    label="Select harmony type"
+                    options={[
+                      { value: "analogous", label: "Analogous" },
+                      { value: "monochromatic", label: "Monochromatic" },
+                      { value: "triadic", label: "Triadic" },
+                      { value: "complementary", label: "Complementary" },
+                      { value: "split-complementary", label: "Split Complementary" },
+                      { value: "tetradic", label: "Tetradic" },
+                    ]}
+                    selectedKey={harmonyType}
+                    onSelectionChange={setHarmonyType}
+                    placeholder="Select harmony type"
+                    className="w-full "
+                  />
+
                 </div>
               )}
 

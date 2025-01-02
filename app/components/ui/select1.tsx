@@ -1,12 +1,11 @@
-
-
 import React from 'react';
 import { Select as NextUISelect, SelectItem } from "@nextui-org/react";
 
 export interface Option {
   value: string;
   key?: string;
-  label: string | React.ReactNode;  
+  label: string | React.ReactNode;
+  isLabel?: boolean;  // Added for group labels
 }
 
 interface CustomSelectProps<T extends string> {
@@ -35,8 +34,13 @@ export function Select<T extends string>({
 }: CustomSelectProps<T>) {
   const normalizedOptions = options.map(option => ({
     key: option.key || option.value,
-    label: option.label
+    label: option.label,
+    isLabel: option.isLabel
   }));
+
+  const selectedOption = normalizedOptions.find(option => 
+    option.key === selectedKey && !option.isLabel
+  );
 
   return (
     <NextUISelect
@@ -48,7 +52,14 @@ export function Select<T extends string>({
       className={className}
       onSelectionChange={(keys) => {
         const key = Array.from(keys)[0]?.toString() as T;
-        if (key) onSelectionChange?.(key);
+        if (key && onSelectionChange) onSelectionChange(key);
+      }}
+      renderValue={() => {
+        return selectedOption ? (
+          <div className="flex items-center gap-2">
+            {selectedOption.label}
+          </div>
+        ) : null;
       }}
       classNames={{
         base: "max-w-full",
@@ -58,28 +69,52 @@ export function Select<T extends string>({
         innerWrapper: "group-data-[has-value=true]:pt-0",
         mainWrapper: "h-12",
         selectorIcon: "text-white/90 right-3",
-        listboxWrapper: "max-h-[200px] overflow-y-auto",
-        listbox: "bg-gray-700 custom-scrollbar",
-        popoverContent: "bg-gray-700 border-gray-600 rounded-xl"
+        listboxWrapper: "max-h-[300px] select-scrollbar rounded-lg",
+        listbox: "bg-gray-700",
+        popoverContent: [
+          "bg-gray-700 border-gray-600 rounded-xl",
+          "before:content-[''] before:w-full before:h-full before:absolute",
+          "before:top-0 before:left-0 before:rounded-xl before:transition-all",
+          "before:duration-200 before:opacity-0 before:scale-95",
+          "data-[entering=true]:before:opacity-100 data-[entering=true]:before:scale-100",
+        ].join(" ")
       }}
       aria-label={label}
       radius="lg"
       variant="bordered"
       isInvalid={error}
       errorMessage={errorMessage}
+      popoverProps={{
+        classNames: {
+          base: "before:bg-gray-700 before:border-gray-600 before:rounded-xl",
+          content: "p-0 border-none shadow-xl"
+        },
+        placement: "bottom",
+        offset: 5,
+        backdrop: "transparent"
+      }}
       {...props}
     >
-      {normalizedOptions.map((option) => (
-        <SelectItem 
-          key={option.key} 
-          className="text-white data-[hover=true]:bg-gray-600/50 data-[selected=true]:bg-gray-600 py-2.5 px-3"
-        >
-          {option.label}
-        </SelectItem>
-      ))}
+      {normalizedOptions.map((option) => 
+        option.isLabel ? (
+          <SelectItem 
+            key={option.key}
+            className="text-white/60 font-semibold text-sm px-3 py-1.5 cursor-default"
+            disableAnimation
+          >
+            {option.label}
+          </SelectItem>
+        ) : (
+          <SelectItem 
+            key={option.key} 
+            className="text-white data-[hover=true]:bg-gray-600/50 data-[selected=true]:bg-gray-600 py-2.5 px-3"
+          >
+            {option.label}
+          </SelectItem>
+        )
+      )}
     </NextUISelect>
   );
 }
 
 export default Select;
-

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
 import { Hash, Copy, RefreshCw, Upload, Download, CheckCircle2, Clipboard, Info, BookOpen, Lightbulb, AlertCircle, FileText, Shield } from 'lucide-react'
 import crypto from 'crypto-js'
@@ -218,16 +218,18 @@ export default function MD5Tool() {
 
             <div className="mt-4">
               <Label htmlFor="encoding" className="text-white mb-2 block">Input Encoding</Label>
-              <Select value={encoding} onValueChange={setEncoding}>
-                <SelectTrigger id="encoding" className="w-full bg-gray-700 text-white border-gray-600">
-                  <SelectValue placeholder="Select encoding" />
-                </SelectTrigger>
-                <SelectContent className='bg-gray-700 text-white border-gray-600'>
-                  <SelectItem value="UTF-8">UTF-8</SelectItem>
-                  <SelectItem value="Base64">Base64</SelectItem>
-                  <SelectItem value="Hex">Hexadecimal</SelectItem>
-                </SelectContent>
-              </Select>
+              <Select
+                selectedKey={encoding}
+                onSelectionChange={setEncoding}
+                label="Encoding"
+                options={[
+                  { value: "UTF-8", label: "UTF-8" },
+                  { value: "Base64", label: "Base64" },
+                  { value: "Hex", label: "Hexadecimal" },
+                ]}
+                placeholder="Select encoding"
+              />
+
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">

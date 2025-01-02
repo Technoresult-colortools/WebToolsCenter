@@ -6,7 +6,7 @@ import Input  from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Copy, Download, Plus, Minus, RotateCcw, Shuffle, Info, BookOpen, Lightbulb, Palette, Code, Maximize2, X } from 'lucide-react'
@@ -194,19 +194,19 @@ export default function GradientGeneratorPage() {
                 <div className="flex-1 space-y-4">
                   <div>
                     <Label htmlFor="gradient-type" className="text-white">Gradient Type</Label>
-                    <Select 
-                      onValueChange={(value: GradientType) => setGradientType(value)} 
-                      value={gradientType}
-                    >
-                      <SelectTrigger id="gradient-type" className="bg-gray-700 text-white mt-2 border-gray-600">
-                        <SelectValue placeholder="Select gradient type" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="linear">Linear</SelectItem>
-                        <SelectItem value="radial">Radial</SelectItem>
-                        <SelectItem value="conic">Conic</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      label="Select gradient type"
+                      options={[
+                        { value: "linear", label: "Linear" },
+                        { value: "radial", label: "Radial" },
+                        { value: "conic", label: "Conic" },
+                      ]}
+                      selectedKey={gradientType}
+                      onSelectionChange={(value) => setGradientType(value as GradientType)}
+                      placeholder="Select gradient type"
+                  
+                    />
+
                   </div>
                   {gradientType !== 'radial' && (
                     <div>
@@ -252,35 +252,35 @@ export default function GradientGeneratorPage() {
                     <>
                       <div>
                         <Label htmlFor="shape" className="text-white">Shape</Label>
-                        <Select 
-                          onValueChange={(value: 'circle' | 'ellipse') => setShape(value)} 
-                          value={shape}
-                        >
-                          <SelectTrigger id="shape" className="bg-gray-700 text-white border-gray-600">
-                            <SelectValue placeholder="Select shape" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-700 text-white border-gray-600">
-                            <SelectItem value="circle">Circle</SelectItem>
-                            <SelectItem value="ellipse">Ellipse</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Select
+                          label="Select shape"
+                          options={[
+                            { value: "circle", label: "Circle" },
+                            { value: "ellipse", label: "Ellipse" },
+                          ]}
+                          selectedKey={shape}
+                          onSelectionChange={(value) => setShape(value as 'circle' | 'ellipse')}
+                          placeholder="Select shape"
+              
+                        />
+
                       </div>
                       <div>
                         <Label htmlFor="size" className="text-white">Size</Label>
-                        <Select 
-                          onValueChange={(value: 'closest-side' | 'farthest-side' | 'closest-corner' | 'farthest-corner') => setSize(value)} 
-                          value={size}
-                        >
-                          <SelectTrigger id="size" className="bg-gray-700 text-white border-gray-600">
-                            <SelectValue placeholder="Select size" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-700 text-white border-gray-600">
-                            <SelectItem value="closest-side">Closest Side</SelectItem>
-                            <SelectItem value="farthest-side">Farthest Side</SelectItem>
-                            <SelectItem value="closest-corner">Closest Corner</SelectItem>
-                            <SelectItem value="farthest-corner">Farthest Corner</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Select
+                          label="Select size"
+                          options={[
+                            { value: "closest-side", label: "Closest Side" },
+                            { value: "farthest-side", label: "Farthest Side" },
+                            { value: "closest-corner", label: "Closest Corner" },
+                            { value: "farthest-corner", label: "Farthest Corner" },
+                          ]}
+                          selectedKey={size}
+                          onSelectionChange={(value) => setSize(value as 'closest-side' | 'farthest-side' | 'closest-corner' | 'farthest-corner')}
+                          placeholder="Select size"
+          
+                        />
+
                       </div>
                     </>
                   )}

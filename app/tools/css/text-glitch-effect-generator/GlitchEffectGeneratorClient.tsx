@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast, Toaster } from 'react-hot-toast'
 import { Copy, RefreshCw, Info, BookOpen, Lightbulb, Download, Palette, Eye, EyeOff, Maximize2, X, Sliders, } from 'lucide-react'
@@ -330,22 +330,26 @@ ${generatedCSS}
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="glitchEffect" className="text-white mb-2 block">Glitch Effect</Label>
-                    <Select value={glitchEffect} onValueChange={(value: GlitchEffect) => setGlitchEffect(value)}>
-                      <SelectTrigger id="glitchEffect" className="bg-gray-700 text-white border-gray-600">
-                        <SelectValue placeholder="Select glitch effect" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 text-white border-gray-600">
-                        <SelectItem value="rgb-split">RGB Split</SelectItem>
-                        <SelectItem value="color">Color</SelectItem>
-                        <SelectItem value="noise">Noise</SelectItem>
-                        <SelectItem value="transformation">Transformation</SelectItem>
-                        <SelectItem value="glitch-clip">Glitch Clip</SelectItem>
-                        <SelectItem value="distortion">Distortion</SelectItem>
-                        <SelectItem value="pixelate">Pixelate</SelectItem>
-                        <SelectItem value="wave">Wave</SelectItem>
-                        <SelectItem value="custom">Custom</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Select
+                      id="glitchEffect"
+                      options={[
+                        { value: 'rgb-split', label: 'RGB Split' },
+                        { value: 'color', label: 'Color' },
+                        { value: 'noise', label: 'Noise' },
+                        { value: 'transformation', label: 'Transformation' },
+                        { value: 'glitch-clip', label: 'Glitch Clip' },
+                        { value: 'distortion', label: 'Distortion' },
+                        { value: 'pixelate', label: 'Pixelate' },
+                        { value: 'wave', label: 'Wave' },
+                        { value: 'custom', label: 'Custom' },
+                      ]}
+                      selectedKey={glitchEffect}
+                      onSelectionChange={(value: GlitchEffect) => setGlitchEffect(value)}
+                      label="Select glitch effect"
+                      placeholder="Select glitch effect"
+
+                    />
+
                   </div>
 
                   <div>

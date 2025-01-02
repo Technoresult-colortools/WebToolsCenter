@@ -7,7 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Toaster, } from 'react-hot-toast'
 import { RefreshCw, Download, Info, BookOpen, Lightbulb, Code, Eye, Edit, Trash, Plus, Paintbrush } from 'lucide-react'
 import TreeView from './Treeview'
@@ -395,89 +395,96 @@ export default function JSONViewerEditor() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           <div>
             <Label htmlFor="theme" className="text-white mb-2 block">Theme</Label>
-            <Select value={theme} onValueChange={(value) => setTheme(value as keyof typeof themes)}>
-              <SelectTrigger id="theme" className="bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select theme" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 text-white border-gray-600 h-40 overflow-y-auto">
-                {Object.keys(themes).map((themeName) => (
-                  <SelectItem key={themeName} value={themeName}>{themeName}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              label="Theme"
+              options={Object.keys(themes).map((themeName) => ({
+                value: themeName,
+                label: themeName,
+              }))}
+              selectedKey={theme}
+              onSelectionChange={(value) => setTheme(value as keyof typeof themes)}
+              placeholder="Select theme"
+  
+
+            />
+
           </div>
           <div>
             <Label htmlFor="icon-style" className="text-white mb-2 block">Icon Style</Label>
-            <Select value={iconStyle} onValueChange={(value) => setIconStyle(value as 'triangle' | 'circle')}>
-              <SelectTrigger id="icon-style" className="bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select icon style" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 text-white border-gray-600">
-                <SelectItem value="triangle">Triangle</SelectItem>
-                <SelectItem value="circle">Circle</SelectItem>
-                <SelectItem value="square">Square</SelectItem>
-                <SelectItem value="arrow">Arrow</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select
+              label="Icon Style"
+              options={['triangle', 'circle', 'square', 'arrow'].map((style) => ({
+                value: style,
+                label: style.charAt(0).toUpperCase() + style.slice(1),
+              }))}
+              selectedKey={iconStyle}
+              onSelectionChange={(value) => setIconStyle(value as 'triangle' | 'circle')}
+              placeholder="Select icon style"
+
+            />
+
           </div>
           <div>
             <Label htmlFor="indent-width" className="text-white mb-2 block">Indent Width</Label>
-            <Select value={indentWidth.toString()} onValueChange={(value) => setIndentWidth(Number(value) as 0 | 1 | 2 | 3 | 4)}>
-              <SelectTrigger id="indent-width" className="bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select indent width" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 text-white border-gray-600">
-                {[0, 1, 2, 3, 4].map((width) => (
-                  <SelectItem key={width} value={width.toString()}>{width}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              label="Indent Width"
+              options={[0, 1, 2, 3, 4].map((width) => ({
+                value: width.toString(),
+                label: width,
+              }))}
+              selectedKey={indentWidth.toString()}
+              onSelectionChange={(value) => setIndentWidth(Number(value) as 0 | 1 | 2 | 3 | 4)}
+              placeholder="Select indent width"
+            />
+
           </div>
           <div>
             <Label htmlFor="collapse-branches" className="text-white mb-2 block">Collapse Branches</Label>
-            <Select value={collapseBranches} onValueChange={(value) => setCollapseBranches(value as "don't collapse" | "collapse all" | "collapse after one branch" | "collapse after two branches")}>
-              <SelectTrigger id="collapse-branches" className="bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select collapse option" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 text-white border-gray-600">
-                <SelectItem value="don't collapse">Don't Collapse</SelectItem>
-                <SelectItem value="collapse all">Collapse All</SelectItem>
-                <SelectItem value="collapse after one branch">Collapse After One Branch</SelectItem>
-                <SelectItem value="collapse after two branches">Collapse After Two Branches</SelectItem>
-              </SelectContent>
-            </Select>
+            <Select
+              label="Collapse Option"
+              options={[
+                { value: "don't collapse", label: "Don't Collapse" },
+                { value: "collapse all", label: "Collapse All" },
+                { value: "collapse after one branch", label: "Collapse After One Branch" },
+                { value: "collapse after two branches", label: "Collapse After Two Branches" },
+              ]}
+              selectedKey={collapseBranches}
+              onSelectionChange={(value) =>
+                setCollapseBranches(value as "don't collapse" | "collapse all" | "collapse after one branch" | "collapse after two branches")
+              }
+              placeholder="Select collapse option"
+
+            />
+
           </div>
           <div>
             <Label htmlFor="group-arrays" className="text-white mb-2 block">Group Arrays After Length</Label>
-            <Select 
-              value={groupArraysAfterLength.toString()} 
-              onValueChange={(value) => setGroupArraysAfterLength(Number(value))}
-            >
-              <SelectTrigger id="group-arrays" className="bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select group length" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 text-white border-gray-600">
-                {[10, 50, 100, 500, 1000].map((length) => (
-                  <SelectItem key={length} value={length.toString()}>{length}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              label="Group Length"
+              options={[10, 50, 100, 500, 1000].map((length) => ({
+                value: length.toString(),
+                label: length.toString(),
+              }))}
+              selectedKey={groupArraysAfterLength.toString()}
+              onSelectionChange={(value) => setGroupArraysAfterLength(Number(value))}
+              placeholder="Select group length"
+
+            />
+
           </div>
           <div>
             <Label htmlFor="collapse-strings" className="text-white mb-2 block">Collapse Strings After Length</Label>
-            <Select 
-              value={collapseStringsAfterLength.toString()} 
-              onValueChange={(value) => setCollapseStringsAfterLength(Number(value))}
-            >
-              <SelectTrigger id="collapse-strings" className="bg-gray-700 text-white border-gray-600">
-                <SelectValue placeholder="Select collapse length" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 text-white border-gray-600">
-                {[0, 5, 10, 15, 20].map((length) => (
-                  <SelectItem key={length} value={length.toString()}>{length}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Select
+              label="Collapse Length"
+              options={[0, 5, 10, 15, 20].map((length) => ({
+                value: length.toString(),
+                label: length.toString(),
+              }))}
+              selectedKey={collapseStringsAfterLength.toString()}
+              onSelectionChange={(value) => setCollapseStringsAfterLength(Number(value))}
+             
+            />
+
           </div>
         </div>
 

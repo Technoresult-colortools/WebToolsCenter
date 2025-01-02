@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Toaster, toast } from 'react-hot-toast'
@@ -231,17 +231,20 @@ export default function CSSCubicBezierGenerator() {
               {/* Presets */}
               <div>
                 <Label htmlFor="preset" className="text-white mb-2 block">Predefined Easing Functions</Label>
-                <Select value={presetName} onValueChange={handlePresetChange}>
-                  <SelectTrigger id="preset" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select a preset" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="custom">Custom</SelectItem>
-                    {Object.keys(presets).map((preset) => (
-                      <SelectItem key={preset} value={preset}>{preset}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Select
+                  label="Select Easing Function"
+                  selectedKey={presetName}
+                  onSelectionChange={handlePresetChange}
+                  placeholder="Select a preset"
+                  className="w-full"
+                  options={[
+                    { value: 'custom', label: 'Custom' },
+                    ...Object.keys(presets).map(preset => ({
+                      value: preset,
+                      label: preset
+                    }))
+                  ]}
+                />
               </div>
 
               {/* Duration */}

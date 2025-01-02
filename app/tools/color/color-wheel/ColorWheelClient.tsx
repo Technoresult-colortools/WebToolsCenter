@@ -8,6 +8,7 @@ import { toast, Toaster } from 'react-hot-toast'
 import { Card, CardContent, CardHeader, CardTitle} from "@/components/ui/Card"
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
+import { Select } from '@/components/ui/select1';
 
 // Color Harmonies Configuration
 const colorHarmonies = [
@@ -370,17 +371,20 @@ export default function ColorWheel() {
               {/* Color Harmony Selector */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300">Color Harmony:</label>
-                <select
-                  value={selectedHarmony.name}
-                  onChange={(e) => setSelectedHarmony(colorHarmonies.find(h => h.name === e.target.value) || colorHarmonies[0])}
-                  className="w-full p-2 rounded bg-gray-700 text-white"
-                >
-                  {colorHarmonies.map((harmony) => (
-                    <option key={harmony.name} value={harmony.name}>
-                      {harmony.name}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  label="Select Harmony"
+                  options={colorHarmonies.map((harmony) => ({
+                    value: harmony.name,
+                    label: harmony.name,
+                  }))}
+                  selectedKey={selectedHarmony.name}
+                  onSelectionChange={(value) =>
+                    setSelectedHarmony(colorHarmonies.find((h) => h.name === value) || colorHarmonies[0])
+                  }
+                  placeholder="Select Harmony"
+                  className="w-full p-2 "
+                />
+
               </div>
             </CardContent>
           </Card>

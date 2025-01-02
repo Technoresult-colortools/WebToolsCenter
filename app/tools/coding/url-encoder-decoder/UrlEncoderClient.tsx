@@ -9,7 +9,7 @@ import { Link, Unlink, Upload, Copy, RefreshCw, Check, FileText, Info, Settings,
 import { toast, Toaster } from 'react-hot-toast'
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
@@ -289,31 +289,35 @@ export default function URLEncoderDecoder() {
             {activeTab === 'encode' && (
               <div>
                 <Label htmlFor="encode-mode" className="text-white mb-2 block">Encode Mode</Label>
-                <Select value={encodeMode} onValueChange={(value: 'standard' | 'all' | 'component') => setEncodeMode(value)}>
-                  <SelectTrigger id="encode-mode" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select encode mode" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="standard">Standard (RFC 3986)</SelectItem>
-                    <SelectItem value="all">Encode All Characters</SelectItem>
-                    <SelectItem value="component">Encode URI Component</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  selectedKey={encodeMode}
+                  onSelectionChange={(value: 'standard' | 'all' | 'component') => setEncodeMode(value)}
+                  label="Encode Mode"
+                  options={[
+                    { value: 'standard', label: 'Standard (RFC 3986)' },
+                    { value: 'all', label: 'Encode All Characters' },
+                    { value: 'component', label: 'Encode URI Component' },
+                  ]}
+                  placeholder="Select encode mode"
+                />
+
               </div>
             )}
             {activeTab === 'decode' && (
               <div>
                 <Label htmlFor="decode-mode" className="text-white mb-2 block">Decode Mode</Label>
-                <Select value={decodeMode} onValueChange={(value: 'standard' | 'plus' | 'component') => setDecodeMode(value)}>
-                  <SelectTrigger id="decode-mode" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select decode mode" />
-                  </SelectTrigger>
-                  <SelectContent className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectItem value="standard">Standard</SelectItem>
-                    <SelectItem value="plus">Decode '+' as Space</SelectItem>
-                    <SelectItem value="component">Decode URI Component</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  selectedKey={decodeMode}
+                  onSelectionChange={(value: 'standard' | 'plus' | 'component') => setDecodeMode(value)}
+                  label="Decode Mode"
+                  options={[
+                    { value: 'standard', label: 'Standard' },
+                    { value: 'plus', label: 'Decode \'+\' as Space' },
+                    { value: 'component', label: 'Decode URI Component' },
+                  ]}
+                  placeholder="Select decode mode"
+                />
+
               </div>
             )}
           </div>

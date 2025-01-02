@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import Image from 'next/image'
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -266,23 +266,22 @@ ${Array.from({ length: layers }, (_, i) => `
                     {/* Pattern Type */}
                     <div>
                       <Label htmlFor="patternType" className="text-white mb-2 block">Pattern Type</Label>
-                      <Select value={patternType} onValueChange={(value: PatternType) => setPatternType(value)}>
-                        <SelectTrigger id="patternType" className="bg-gray-700 text-white border-gray-600">
-                          <SelectValue placeholder="Select pattern type" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-700 text-white border-gray-600 h-48 overflow-y-auto">
-                          
-                          {Object.entries(shapesData).map(// eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          ([value, data]: [string, any]) => (
-                            <SelectItem key={value} value={value}>
-                              <div className="flex items-center">
-                                {React.createElement(ShapeIcons[data.icon as keyof typeof ShapeIcons])}
-                                <span className="ml-2">{value.charAt(0).toUpperCase() + value.slice(1)}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Select
+                        label="Select Pattern"
+                        selectedKey={patternType}
+                        onSelectionChange={(value: PatternType) => setPatternType(value)}
+                        placeholder="Select pattern type"
+                        className="w-full"
+                        options={Object.entries(shapesData).map(([value, data]: [string, any]) => ({
+                          value,
+                          label: (
+                            <div className="flex items-center gap-2">
+                              {React.createElement(ShapeIcons[data.icon as keyof typeof ShapeIcons])}
+                              <span>{value.charAt(0).toUpperCase() + value.slice(1)}</span>
+                            </div>
+                          )
+                        }))}
+                      />
                     </div>
 
                     {/* Size Slider */}
@@ -500,18 +499,30 @@ ${Array.from({ length: layers }, (_, i) => `
 
                 <div>
                   <Label htmlFor="blendMode" className="text-white mb-2 block">Blend Mode</Label>
-                  <Select value={blendMode} onValueChange={setBlendMode}>
-                    <SelectTrigger id="blendMode" className="bg-gray-700 text-white border-gray-600">
-                      <SelectValue placeholder="Select blend mode" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-700 text-white border-gray-600 h-60 overflow-y-auto">
-                      {['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion'].map((mode) => (
-                        <SelectItem key={mode} value={mode}>
-                          {mode.charAt(0).toUpperCase() + mode.slice(1)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    label="Select Blend Mode"
+                    selectedKey={blendMode}
+                    onSelectionChange={setBlendMode}
+                    placeholder="Select blend mode"
+                    className="w-full"
+                    options={[
+                      'normal',
+                      'multiply',
+                      'screen',
+                      'overlay',
+                      'darken',
+                      'lighten',
+                      'color-dodge',
+                      'color-burn',
+                      'hard-light',
+                      'soft-light',
+                      'difference',
+                      'exclusion'
+                    ].map(mode => ({
+                      value: mode,
+                      label: mode.charAt(0).toUpperCase() + mode.slice(1)
+                    }))}
+                  />
                 </div>
               </div>
             </TabsContent>

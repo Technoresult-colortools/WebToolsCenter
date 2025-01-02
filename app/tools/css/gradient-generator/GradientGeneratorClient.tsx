@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast, Toaster } from 'react-hot-toast'
 import { Copy, Shuffle, Plus, Minus, Info, BookOpen, Lightbulb, Download, Eye, EyeOff, Maximize2, X, Sliders, Code } from 'lucide-react'
@@ -243,29 +243,37 @@ export default function CSSGradientGenerator() {
                     <>
                       <div>
                         <Label htmlFor="gradientShape" className="text-white">Shape</Label>
-                        <Select value={gradientShape} onValueChange={(value: GradientShape) => setGradientShape(value)}>
-                          <SelectTrigger id="gradientShape" className="bg-gray-700 text-white border-gray-600">
-                            <SelectValue placeholder="Select shape" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-700 text-white border-gray-600">
-                            <SelectItem value="circle">Circle</SelectItem>
-                            <SelectItem value="ellipse">Ellipse</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Select
+                          id="gradientShape"
+                          options={[
+                            { value: 'circle', label: 'Circle' },
+                            { value: 'ellipse', label: 'Ellipse' },
+                          ]}
+                          selectedKey={gradientShape}
+                          onSelectionChange={(value: GradientShape) => setGradientShape(value)}
+                          label="Select gradient shape"
+                          placeholder="Select shape"
+                     
+                        />
+
                       </div>
                       <div>
                         <Label htmlFor="gradientSize" className="text-white">Size</Label>
-                        <Select value={gradientSize} onValueChange={(value: GradientSize) => setGradientSize(value)}>
-                          <SelectTrigger id="gradientSize" className="bg-gray-700 text-white border-gray-600">
-                            <SelectValue placeholder="Select size" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-700 text-white border-gray-600">
-                            <SelectItem value="closest-side">Closest Side</SelectItem>
-                            <SelectItem value="closest-corner">Closest Corner</SelectItem>
-                            <SelectItem value="farthest-side">Farthest Side</SelectItem>
-                            <SelectItem value="farthest-corner">Farthest Corner</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Select
+                          id="gradientSize"
+                          options={[
+                            { value: 'closest-side', label: 'Closest Side' },
+                            { value: 'closest-corner', label: 'Closest Corner' },
+                            { value: 'farthest-side', label: 'Farthest Side' },
+                            { value: 'farthest-corner', label: 'Farthest Corner' },
+                          ]}
+                          selectedKey={gradientSize}
+                          onSelectionChange={(value: GradientSize) => setGradientSize(value)}
+                          label="Select gradient size"
+                          placeholder="Select size"
+
+                        />
+
                       </div>
                     </>
                   )}

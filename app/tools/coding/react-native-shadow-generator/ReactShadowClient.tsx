@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Smartphone, Copy, TabletSmartphone, Info, Lightbulb, Settings, BookOpen, Palette, Sliders, Download, RefreshCw, Upload } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 import { Toaster, toast } from 'react-hot-toast'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import Image from 'next/image'
 
 export default function ReactNativeShadowGenerator() {
@@ -367,16 +367,18 @@ const styles = StyleSheet.create({
               </div>
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="preview-shape" className="text-white">Preview Shape</Label>
-                <Select value={previewShape} onValueChange={setPreviewShape}>
-                  <SelectTrigger id="preview-shape" className="w-full bg-gray-700 text-white border-gray-600">
-                    <SelectValue placeholder="Select shape" />
-                  </SelectTrigger>
-                  <SelectContent className='bg-gray-700 text-white border-gray-600'>
-                    <SelectItem value="square">Square</SelectItem>
-                    <SelectItem value="circle">Circle</SelectItem>
-                    <SelectItem value="rounded">Rounded</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Select
+                  selectedKey={previewShape}
+                  onSelectionChange={setPreviewShape}
+                  label="Select Shape"
+                  options={[
+                    { value: "square", label: "Square" },
+                    { value: "circle", label: "Circle" },
+                    { value: "rounded", label: "Rounded" },
+                  ]}
+                  placeholder="Select shape"
+                />
+
               </div>
             </div>
           </div>

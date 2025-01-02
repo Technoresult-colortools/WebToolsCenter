@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react'
 import { Button } from "@/components/ui/Button"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
 import { Copy, Upload, Download, RefreshCw, Minimize, Maximize, Info, BookOpen, Lightbulb, Check, X } from 'lucide-react'
@@ -159,16 +159,17 @@ const JsonValidator = () => {
             <RefreshCw className="h-4 w-4 mr-2" />
             Clear
           </Button>
-          <Select value={indentSize.toString()} onValueChange={(value) => setIndentSize(Number(value))}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select indent size" />
-            </SelectTrigger>
-            <SelectContent className='bg-gray-700 text-white border-gray-600'>
-              <SelectItem value="2">2 spaces</SelectItem>
-              <SelectItem value="4">4 spaces</SelectItem>
-              <SelectItem value="8">8 spaces</SelectItem>
-            </SelectContent>
-          </Select>
+          <Select
+            label="Indent Size"
+            options={[2, 4, 8].map((size) => ({
+              value: size.toString(),
+              label: `${size} spaces`,
+            }))}
+            selectedKey={indentSize.toString()}
+            onSelectionChange={(value) => setIndentSize(Number(value))}
+            placeholder="Select indent size"
+          />
+
           <Button onClick={() => setSortKeys(!sortKeys)}>
             {sortKeys ? <Check className="h-4 w-4 mr-2" /> : <X className="h-4 w-4 mr-2" />}
             Sort Keys

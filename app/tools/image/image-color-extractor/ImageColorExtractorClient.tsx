@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Upload, X, Copy, Info, BookOpen, Lightbulb } from 'lucide-react'
 import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select } from '@/components/ui/select1';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
 import ToolLayout from '@/components/ToolLayout'
@@ -202,17 +202,19 @@ export default function ColorExtractor() {
 
         <div className="mb-8">
           <Label htmlFor="color-count" className="text-white mb-2 block">Number of Colors</Label>
-          <Select value={colorCount.toString()} onValueChange={(value) => setColorCount(parseInt(value, 10))}>
-            <SelectTrigger id="color-count" className="w-full md:w-24 bg-gray-700 text-white border-gray-600">
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-700 text-white border-gray-600">
-              <SelectItem value="6">6</SelectItem>
-              <SelectItem value="12">12</SelectItem>
-              <SelectItem value="16">16</SelectItem>
-              <SelectItem value="21">21</SelectItem>
-            </SelectContent>
-          </Select>
+          <Select
+            label="Color Count"
+            options={[
+              { value: "6", label: "6" },
+              { value: "12", label: "12" },
+              { value: "16", label: "16" },
+              { value: "21", label: "21" },
+            ]}
+            selectedKey={colorCount.toString()}
+            onSelectionChange={(value) => setColorCount(parseInt(value, 10))}
+            placeholder="Select"
+            className="w-32"
+          />
         </div>
 
         {colors.length > 0 && (
