@@ -513,7 +513,7 @@ export default function TextToHandwriting() {
                 <Select
                   label='Select Ink Color'
                   options={[
-                    ...Object.entries(INK_COLORS).map(([key, value]) => ({ value: key, label: key.charAt(0) + key.slice(1).toLowerCase() })),
+                    ...Object.entries(INK_COLORS).map(([key]) => ({ value: key, label: key.charAt(0) + key.slice(1).toLowerCase() })),
                     { value: 'CUSTOM', label: 'Custom' }
                   ]}
                   selectedKey={state.inkColor}

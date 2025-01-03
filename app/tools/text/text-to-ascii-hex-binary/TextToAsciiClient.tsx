@@ -11,7 +11,7 @@ import { Toaster, toast } from 'react-hot-toast'
 import { Copy, RefreshCw, Info, Lightbulb, BookOpen, ArrowRightLeft, Settings, FileDown, Code, Hexagon, Binary, FileCodeIcon } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
-import Base64EncoderDecoder from '@/tools/coding/base64-encoder-decoder/Base64EncodeClient'
+
 
 const outputFormatOptions = [
   { value: "space", label: "Space Separated" },

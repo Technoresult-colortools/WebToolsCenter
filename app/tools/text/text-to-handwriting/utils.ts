@@ -29,8 +29,9 @@ export const fitTextBetweenLines = (
   y: number,
   maxWidth: number,
   lineHeight: number,
-  fontSize: number
+ fontSize: number // eslint-disable-line @typescript-eslint/no-unused-vars
 ) => {
+
   const words = text.split(' ')
   let line = ''
   let posY = y
