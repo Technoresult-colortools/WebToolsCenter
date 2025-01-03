@@ -8,9 +8,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Select } from '@/components/ui/select1';
 import { Toaster, toast } from 'react-hot-toast'
-import { Copy, RefreshCw, Info, Lightbulb, BookOpen, ArrowRightLeft, Settings, FileDown } from 'lucide-react'
+import { Copy, RefreshCw, Info, Lightbulb, BookOpen, ArrowRightLeft, Settings, FileDown, Code, Hexagon, Binary, FileCodeIcon } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 import Image from 'next/image'
+import Base64EncoderDecoder from '@/tools/coding/base64-encoder-decoder/Base64EncodeClient'
 
 const outputFormatOptions = [
   { value: "space", label: "Space Separated" },
@@ -178,13 +179,27 @@ export default function TextToAsciiHexBinary() {
           </div>
         </div>
 
-        <Tabs defaultValue="ascii">
-          <TabsList className="mb-4 flex overflow-x-auto">
-            <TabsTrigger value="ascii">ASCII</TabsTrigger>
-            <TabsTrigger value="hex">Hexadecimal</TabsTrigger>
-            <TabsTrigger value="binary">Binary</TabsTrigger>
-            <TabsTrigger value="base64">Base64</TabsTrigger>
+        <Tabs defaultValue="ascii" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 gap-2 mb-4">
+            <TabsTrigger value="ascii" className="flex items-center justify-center">
+              <Code className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">ASCII</span>
+            </TabsTrigger>
+            <TabsTrigger value="hex" className="flex items-center justify-center">
+              <Hexagon className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Hexadecimal</span>
+            </TabsTrigger>
+            <TabsTrigger value="binary" className="flex items-center justify-center">
+              <Binary className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Binary</span>
+            </TabsTrigger>
+            <TabsTrigger value="base64" className="flex items-center justify-center">
+              <FileCodeIcon className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Base64</span>
+            </TabsTrigger>
           </TabsList>
+
+
           {/* Rest of the Tabs content remains unchanged */}
           <TabsContent value="ascii">
             <div className="bg-gray-700 p-4 rounded-lg mb-4">

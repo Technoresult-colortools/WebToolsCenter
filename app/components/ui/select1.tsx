@@ -1,14 +1,14 @@
 import React from 'react';
-import { Select as NextUISelect, SelectItem } from "@nextui-org/react";
+import { Select as NextUISelect, SelectItem, Selection } from "@nextui-org/react";
 
 export interface Option {
   value: string;
   key?: string;
   label: string | React.ReactNode;
-  isLabel?: boolean;  // Added for group labels
+  isLabel?: boolean;
 }
 
-interface CustomSelectProps<T extends string> {
+interface CustomSelectProps<T extends string | number> {
   options: readonly Option[];
   selectedKey?: T;
   onSelectionChange?: (key: T) => void;
@@ -20,7 +20,7 @@ interface CustomSelectProps<T extends string> {
   id?: string;
 }
 
-export function Select<T extends string>({
+export function Select<T extends string | number>({
   options,
   selectedKey,
   onSelectionChange,
@@ -35,12 +35,25 @@ export function Select<T extends string>({
   const normalizedOptions = options.map(option => ({
     key: option.key || option.value,
     label: option.label,
-    isLabel: option.isLabel
+    isLabel: option.isLabel,
+    value: option.value
   }));
 
-  const selectedOption = normalizedOptions.find(option => 
-    option.key === selectedKey && !option.isLabel
-  );
+  const handleSelectionChange = (selection: Selection) => {
+    if (onSelectionChange) {
+      const selectedValue = Array.from(selection)[0];
+      if (selectedValue) {
+        // Find the original option to get its value
+        const selectedOption = normalizedOptions.find(opt => opt.key === selectedValue);
+        if (selectedOption) {
+          const value = typeof selectedKey === 'number' ? 
+            Number(selectedOption.value) : 
+            selectedOption.value;
+          onSelectionChange(value as T);
+        }
+      }
+    }
+  };
 
   return (
     <NextUISelect
@@ -48,19 +61,9 @@ export function Select<T extends string>({
       label={label}
       labelPlacement="inside"
       placeholder={placeholder}
-      selectedKeys={selectedKey ? [selectedKey] : []}
+      selectedKeys={selectedKey ? new Set([selectedKey.toString()]) : new Set([])}
       className={className}
-      onSelectionChange={(keys) => {
-        const key = Array.from(keys)[0]?.toString() as T;
-        if (key && onSelectionChange) onSelectionChange(key);
-      }}
-      renderValue={() => {
-        return selectedOption ? (
-          <div className="flex items-center gap-2">
-            {selectedOption.label}
-          </div>
-        ) : null;
-      }}
+      onSelectionChange={handleSelectionChange}
       classNames={{
         base: "max-w-full",
         trigger: "bg-gray-700 data-[hover=true]:bg-gray-600 group-data-[focused=true]:bg-gray-600 text-white border-gray-600 h-12 rounded-xl p-4",
@@ -73,10 +76,6 @@ export function Select<T extends string>({
         listbox: "bg-gray-700",
         popoverContent: [
           "bg-gray-700 border-gray-600 rounded-xl",
-          "before:content-[''] before:w-full before:h-full before:absolute",
-          "before:top-0 before:left-0 before:rounded-xl before:transition-all",
-          "before:duration-200 before:opacity-0 before:scale-95",
-          "data-[entering=true]:before:opacity-100 data-[entering=true]:before:scale-100",
         ].join(" ")
       }}
       aria-label={label}
@@ -84,35 +83,21 @@ export function Select<T extends string>({
       variant="bordered"
       isInvalid={error}
       errorMessage={errorMessage}
-      popoverProps={{
-        classNames: {
-          base: "before:bg-gray-700 before:border-gray-600 before:rounded-xl",
-          content: "p-0 border-none shadow-xl"
-        },
-        placement: "bottom",
-        offset: 5,
-        backdrop: "transparent"
-      }}
       {...props}
     >
-      {normalizedOptions.map((option) => 
-        option.isLabel ? (
-          <SelectItem 
-            key={option.key}
-            className="text-white/60 font-semibold text-sm px-3 py-1.5 cursor-default"
-            disableAnimation
-          >
-            {option.label}
-          </SelectItem>
-        ) : (
-          <SelectItem 
-            key={option.key} 
-            className="text-white data-[hover=true]:bg-gray-600/50 data-[selected=true]:bg-gray-600 py-2.5 px-3"
-          >
-            {option.label}
-          </SelectItem>
-        )
-      )}
+      {normalizedOptions.map((option) => (
+        <SelectItem 
+          key={option.key}
+          value={option.key}
+          className={
+            option.isLabel 
+              ? "text-white/60 font-semibold text-sm px-3 py-1.5 cursor-default"
+              : "text-white data-[hover=true]:bg-gray-600/50 data-[selected=true]:bg-gray-600 py-2.5 px-3"
+          }
+        >
+          {option.label}
+        </SelectItem>
+      ))}
     </NextUISelect>
   );
 }
