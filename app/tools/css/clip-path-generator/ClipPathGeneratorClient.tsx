@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Select } from '@/components/ui/select1';
+import { Select } from './select1';
 import Slider from "@/components/ui/Slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Toaster, toast } from 'react-hot-toast'
@@ -216,57 +216,58 @@ export default function ClipPathGenerator() {
           <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-4xl mx-auto mb-8">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-white mb-4">Clip Path Preview</h2>
-              <div 
-                ref={previewRef}
-                className="relative rounded-lg overflow-hidden touch-none border-4 border-gray-700"
-                style={{ width: '100%', paddingBottom: '50.00%'}}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerLeave={handlePointerUp}
-              >
-                <div className="absolute inset-0">
-                  <img 
-                    src={useCustomBackground && customBackgroundUrl ? customBackgroundUrl : imageUrl} 
-                    alt="Clipped image"
-                    className="absolute top-0 left-0 w-full h-full object-cover"
-                    style={{ 
-                      clipPath: clipPath,
-                      WebkitClipPath: clipPath,
-                      opacity: opacity / 100,
-                    }}
-                  />
-                  {!hideGuides && (
-                    <div className="absolute inset-0 pointer-events-none">
-                      <div className="w-full h-full border-2 border-dashed border-blue-500 opacity-50"></div>
-                      <div className="absolute top-1/2 left-0 w-full border-t-2 border-dashed border-blue-500 opacity-50"></div>
-                      <div className="absolute top-0 left-1/2 h-full border-l-2 border-dashed border-blue-500 opacity-50"></div>
-                    </div>
-                  )}
-                  {showOutside && (
-                    <div 
-                      className="absolute inset-0"
+              
+                <div 
+                  ref={previewRef}
+                  className="relative rounded-lg overflow-hidden touch-none border-4 border-gray-700"
+                  style={{ width: '100%', paddingBottom: '50.00%'}}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                  onPointerLeave={handlePointerUp}
+                >
+                  <div className="absolute inset-0">
+                    <img 
+                      src={useCustomBackground && customBackgroundUrl ? customBackgroundUrl : imageUrl} 
+                      alt="Clipped image"
+                      className="absolute top-0 left-0 w-full h-full object-cover"
                       style={{ 
-                        backgroundImage: `url(${useCustomBackground && customBackgroundUrl ? customBackgroundUrl : imageUrl})`,
-                        backgroundSize: 'cover',
-                        backgroundColor: outsideColor,
-                        opacity: 0.1,
+                        clipPath: clipPath,
+                        WebkitClipPath: clipPath,
+                        opacity: opacity / 100,
                       }}
-                    ></div>
-                  )}
-                  {!hideGuides && shape !== 'circle' && shape !== 'ellipse' && points.map(([x, y], index) => (
-                    <div
-                      key={index}
-                      className="absolute w-6 h-6 bg-blue-500 rounded-full cursor-move touch-none"
-                      style={{ 
-                        left: `${((100 - width) / 2) + (x * width) / 100}%`, 
-                        top: `${((100 - height) / 2) + (y * height) / 100}%`, 
-                        transform: 'translate(-50%, -50%)' 
-                      }}
-                      onPointerDown={handlePointerDown(index)}
                     />
-                  ))}
+                    {!hideGuides && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <div className="w-full h-full border-2 border-dashed border-blue-500 opacity-50"></div>
+                        <div className="absolute top-1/2 left-0 w-full border-t-2 border-dashed border-blue-500 opacity-50"></div>
+                        <div className="absolute top-0 left-1/2 h-full border-l-2 border-dashed border-blue-500 opacity-50"></div>
+                      </div>
+                    )}
+                    {showOutside && (
+                      <div 
+                        className="absolute inset-0"
+                        style={{ 
+                          backgroundImage: `url(${useCustomBackground && customBackgroundUrl ? customBackgroundUrl : imageUrl})`,
+                          backgroundSize: 'cover',
+                          backgroundColor: outsideColor,
+                          opacity: 0.1,
+                        }}
+                      ></div>
+                    )}
+                    {!hideGuides && shape !== 'circle' && shape !== 'ellipse' && points && points.length > 0 && points.map(([x, y], index) => (
+                      <div
+                        key={index}
+                        className="absolute w-6 h-6 bg-blue-500 rounded-full cursor-move touch-none"
+                        style={{ 
+                          left: `${((100 - width) / 2) + (x * width) / 100}%`, 
+                          top: `${((100 - height) / 2) + (y * height) / 100}%`, 
+                          transform: 'translate(-50%, -50%)' 
+                        }}
+                        onPointerDown={handlePointerDown(index)}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
               <div className="mt-4">
                 <Button onClick={handleShuffleImage} className="w-full bg-purple-600 hover:bg-purple-700 text-white">
                   <RefreshCw className="h-5 w-5 mr-2" />

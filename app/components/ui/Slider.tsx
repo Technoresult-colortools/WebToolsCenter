@@ -8,9 +8,19 @@ interface SliderProps {
   value: number;
   onChange?: (value: number) => void;
   className?: string;
+  disabled?: boolean; // Added disabled prop
 }
 
-const Slider: React.FC<SliderProps> = ({ id, min, max, step, value, onChange = () => {}, className = '' }) => {
+const Slider: React.FC<SliderProps> = ({
+  id,
+  min,
+  max,
+  step,
+  value,
+  onChange = () => {},
+  className = '',
+  disabled = false // Default to false
+}) => {
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -18,7 +28,7 @@ const Slider: React.FC<SliderProps> = ({ id, min, max, step, value, onChange = (
 
   const updateValue = useCallback(
     (clientX: number) => {
-      if (sliderRef.current) {
+      if (sliderRef.current && !disabled) {
         const rect = sliderRef.current.getBoundingClientRect();
         const x = clientX - rect.left;
         const clampedPercentage = Math.min(Math.max(x / rect.width, 0), 1);
@@ -26,22 +36,23 @@ const Slider: React.FC<SliderProps> = ({ id, min, max, step, value, onChange = (
         onChange(newValue);
       }
     },
-    [max, min, step, onChange]
+    [max, min, step, onChange, disabled]
   );
 
   const handleStart = useCallback((event: React.MouseEvent | React.TouchEvent) => {
+    if (disabled) return;
     event.preventDefault();
     setIsDragging(true);
     updateValue('touches' in event ? event.touches[0].clientX : event.clientX);
-  }, [updateValue]);
+  }, [updateValue, disabled]);
 
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
-      if (isDragging) {
+      if (isDragging && !disabled) {
         updateValue('touches' in event ? event.touches[0].clientX : event.clientX);
       }
     },
-    [isDragging, updateValue]
+    [isDragging, updateValue, disabled]
   );
 
   const handleEnd = useCallback(() => {
@@ -70,6 +81,7 @@ const Slider: React.FC<SliderProps> = ({ id, min, max, step, value, onChange = (
   }, [isDragging, handleMove, handleEnd]);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (disabled) return;
     let newValue = value;
     switch (event.key) {
       case 'ArrowLeft':
@@ -95,14 +107,17 @@ const Slider: React.FC<SliderProps> = ({ id, min, max, step, value, onChange = (
   return (
     <div
       ref={sliderRef}
-      className={`relative h-2 bg-gray-700 rounded-full cursor-pointer ${className}`}
+      className={`relative h-2 bg-gray-700 rounded-full ${
+        disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+      } ${className}`}
       onMouseDown={handleStart}
       onTouchStart={handleStart}
       role="slider"
       aria-valuemin={min}
       aria-valuemax={max}
       aria-valuenow={value}
-      tabIndex={0}
+      aria-disabled={disabled}
+      tabIndex={disabled ? -1 : 0}
       onKeyDown={handleKeyDown}
       id={id}
     >
@@ -111,7 +126,9 @@ const Slider: React.FC<SliderProps> = ({ id, min, max, step, value, onChange = (
         style={{ width: `${percentage}%` }}
       />
       <div
-        className="absolute w-4 h-4 bg-white rounded-full shadow -mt-1 -ml-2"
+        className={`absolute w-4 h-4 bg-white rounded-full shadow -mt-1 -ml-2 ${
+          disabled ? 'cursor-not-allowed' : ''
+        }`}
         style={{ left: `${percentage}%` }}
       />
     </div>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import Image from 'next/image'
 import Input from "@/components/ui/Input"
 import { Label } from "@/components/ui/label"
-import { Select } from '@/components/ui/select1';
+import { Select } from './select1';
 import Slider from "@/components/ui/Slider"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"

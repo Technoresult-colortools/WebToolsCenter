@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { Button } from "@/components/ui/Button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Slider from "@/components/ui/Slider"
 import { Toaster, toast } from 'react-hot-toast'
-import { Upload, Download, RefreshCw, Info, Lightbulb, BookOpen, Scissors, Eye, Lock, SlidersIcon, Smartphone } from 'lucide-react'
+import { Upload, Download, RefreshCw, Info, Lightbulb, BookOpen, Scissors, Eye, Lock, SlidersIcon, Smartphone, Loader2 } from 'lucide-react'
 import ToolLayout from '@/components/ToolLayout'
 
 type CensorType = 'blur' | 'pixelate' | 'black'
@@ -18,6 +18,7 @@ const PhotoCensor: React.FC = () => {
   const [intensity, setIntensity] = useState<number>(10)
   const [selection, setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 })
   const [isSelecting, setIsSelecting] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -108,58 +109,173 @@ const PhotoCensor: React.FC = () => {
     }
   }
 
-  const applyCensor = useCallback(() => {
+  const pixelateArea = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    pixelSize: number
+  ) => {
+    // Get the selected area's image data
+    const imageData = ctx.getImageData(x, y, width, height)
+    const data = imageData.data
+
+    // Loop through each pixel block
+    for (let offsetY = 0; offsetY < height; offsetY += pixelSize) {
+      for (let offsetX = 0; offsetX < width; offsetX += pixelSize) {
+        // Get the color of the first pixel in the block
+        const pixelIndex = (offsetY * width + offsetX) * 4
+        const r = data[pixelIndex]
+        const g = data[pixelIndex + 1]
+        const b = data[pixelIndex + 2]
+        const a = data[pixelIndex + 3]
+
+        // Fill the entire block with this color
+        for (let blockY = 0; blockY < pixelSize && blockY + offsetY < height; blockY++) {
+          for (let blockX = 0; blockX < pixelSize && blockX + offsetX < width; blockX++) {
+            const index = ((offsetY + blockY) * width + (offsetX + blockX)) * 4
+            data[index] = r
+            data[index + 1] = g
+            data[index + 2] = b
+            data[index + 3] = a
+          }
+        }
+      }
+    }
+
+    // Put the modified image data back
+    ctx.putImageData(imageData, x, y)
+  }
+
+
+  const applyCensor = useCallback(async () => {
     if (!image || !imageRef.current || !canvasRef.current) return
 
-    const img = imageRef.current
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    setIsProcessing(true)
 
-    canvas.width = img.naturalWidth
-    canvas.height = img.naturalHeight
 
-    ctx.drawImage(img, 0, 0)
+    setIsProcessing(true)
 
-    const scaleX = img.naturalWidth / img.width
-    const scaleY = img.naturalHeight / img.height
+    try {
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          const img = imageRef.current
+          const canvas = canvasRef.current
+          if (!canvas || !img) {
+            resolve()
+            return
+          }
 
-    const scaledSelection = {
-      x: selection.x * scaleX,
-      y: selection.y * scaleY,
-      width: selection.width * scaleX,
-      height: selection.height * scaleY
+          const ctx = canvas.getContext('2d')
+          if (!ctx) {
+            resolve()
+            return
+          }
+
+          canvas.width = img.naturalWidth
+          canvas.height = img.naturalHeight
+
+          // Rest of the censoring logic remains the same
+          ctx.drawImage(img, 0, 0)
+
+          const scaleX = img.naturalWidth / img.width
+          const scaleY = img.naturalHeight / img.height
+
+          const scaledSelection = {
+            x: Math.floor(selection.x * scaleX),
+            y: Math.floor(selection.y * scaleY),
+            width: Math.floor(selection.width * scaleX),
+            height: Math.floor(selection.height * scaleY)
+          }
+
+          if (censorType === 'blur') {
+            ctx.filter = `blur(${intensity}px)`
+            ctx.drawImage(
+              img,
+              scaledSelection.x,
+              scaledSelection.y,
+              scaledSelection.width,
+              scaledSelection.height,
+              scaledSelection.x,
+              scaledSelection.y,
+              scaledSelection.width,
+              scaledSelection.height
+            )
+          } else if (censorType === 'pixelate') {
+            pixelateArea(
+              ctx,
+              scaledSelection.x,
+              scaledSelection.y,
+              scaledSelection.width,
+              scaledSelection.height,
+              Math.max(1, Math.floor(intensity * 2))
+            )
+          } else if (censorType === 'black') {
+            ctx.fillStyle = 'black'
+            ctx.fillRect(
+              scaledSelection.x,
+              scaledSelection.y,
+              scaledSelection.width,
+              scaledSelection.height
+            )
+          }
+
+          ctx.filter = 'none'
+          setImage(canvas.toDataURL())
+          resolve()
+        }, 0)
+      })
+    } catch (error) {
+      toast.error('Failed to apply censoring effect')
+    } finally {
+      setIsProcessing(false)
     }
-
-    if (censorType === 'blur') {
-      ctx.filter = `blur(${intensity}px)`
-      ctx.drawImage(img, scaledSelection.x, scaledSelection.y, scaledSelection.width, scaledSelection.height, 
-                         scaledSelection.x, scaledSelection.y, scaledSelection.width, scaledSelection.height)
-    } else if (censorType === 'pixelate') {
-      const pixelSize = intensity
-      ctx.imageSmoothingEnabled = false
-      ctx.drawImage(img, scaledSelection.x, scaledSelection.y, scaledSelection.width, scaledSelection.height, 
-                         scaledSelection.x, scaledSelection.y, scaledSelection.width / pixelSize, scaledSelection.height / pixelSize)
-      ctx.drawImage(canvas, scaledSelection.x, scaledSelection.y, scaledSelection.width / pixelSize, scaledSelection.height / pixelSize, 
-                            scaledSelection.x, scaledSelection.y, scaledSelection.width, scaledSelection.height)
-    } else if (censorType === 'black') {
-      ctx.fillStyle = 'black'
-      ctx.fillRect(scaledSelection.x, scaledSelection.y, scaledSelection.width, scaledSelection.height)
-    }
-
-    setImage(canvas.toDataURL())
-    toast.success('Censoring applied successfully!')
   }, [image, censorType, intensity, selection])
+
 
   const handleDownload = () => {
     if (!image) return
-    const link = document.createElement('a')
-    link.href = image
-    link.download = 'censored-image.png'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    toast.success('Censored image downloaded successfully!')
+    
+    // Create a temporary canvas for resizing
+    const tempCanvas = document.createElement('canvas')
+    const tempCtx = tempCanvas.getContext('2d')
+    const img = new Image()
+    
+    img.onload = () => {
+      // Calculate new dimensions (max 1920px width/height while maintaining aspect ratio)
+      let newWidth = img.width
+      let newHeight = img.height
+      const maxDimension = 1920
+      
+      if (newWidth > maxDimension || newHeight > maxDimension) {
+        if (newWidth > newHeight) {
+          newHeight = (newHeight * maxDimension) / newWidth
+          newWidth = maxDimension
+        } else {
+          newWidth = (newWidth * maxDimension) / newHeight
+          newHeight = maxDimension
+        }
+      }
+      
+      tempCanvas.width = newWidth
+      tempCanvas.height = newHeight
+      
+      // Draw and compress the image
+      tempCtx?.drawImage(img, 0, 0, newWidth, newHeight)
+      const compressedImage = tempCanvas.toDataURL('image/jpeg', 0.8) // Use JPEG with 80% quality
+      
+      // Create download link
+      const link = document.createElement('a')
+      link.href = compressedImage
+      link.download = 'censored-image.jpg'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      toast.success('Censored image downloaded successfully!')
+    }
+    
+    img.src = image
   }
 
   const handleReset = () => {
@@ -200,10 +316,18 @@ const PhotoCensor: React.FC = () => {
         </div>
         <div 
           ref={containerRef}
-          className="mb-8 p-4 bg-gray-700 rounded-lg min-h-[300px] flex items-center justify-center overflow-auto"
+          className="mb-8 p-4 bg-gray-700 rounded-lg min-h-[300px] flex items-center justify-center overflow-auto relative"
         >
           {image ? (
             <div className="relative max-w-full max-h-[500px] flex items-center justify-center">
+              {isProcessing && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+                  <div className="text-white text-center">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+                    <p>Processing...</p>
+                  </div>
+                </div>
+              )}
               <img
                 ref={imageRef}
                 src={image}
@@ -241,57 +365,77 @@ const PhotoCensor: React.FC = () => {
         </div>
 
         {image && (
-          <>
-            <div className="mb-8">
-              <h3 className="text-xl font-bold text-white mb-4">Censoring Options</h3>
-              <RadioGroup value={censorType} onValueChange={(value: string) => setCensorType(value as CensorType)} className="mb-4">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="blur" id="blur" />
-                  <Label htmlFor="blur" className="text-white">Blur</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="pixelate" id="pixelate" />
-                  <Label htmlFor="pixelate" className="text-white">Pixelate</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="black" id="black" />
-                  <Label htmlFor="black" className="text-white">Black-out</Label>
-                </div>
-              </RadioGroup>
+        <>
+          <div className="mb-8">
+            <h3 className="text-xl font-bold text-white mb-4">Censoring Options</h3>
+            <RadioGroup value={censorType} onValueChange={(value: string) => setCensorType(value as CensorType)} className="mb-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="blur" id="blur" disabled={isProcessing} />
+                <Label htmlFor="blur" className="text-white">Blur</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="pixelate" id="pixelate" disabled={isProcessing} />
+                <Label htmlFor="pixelate" className="text-white">Pixelate</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="black" id="black" disabled={isProcessing} />
+                <Label htmlFor="black" className="text-white">Black-out</Label>
+              </div>
+            </RadioGroup>
 
-              {censorType !== 'black' && (
-                <div className="mb-4">
-                  <Label htmlFor="intensity" className="text-white mb-2 block">
-                    Intensity: {intensity}
-                  </Label>
-                  <Slider
-                    id="intensity"
-                    min={1}
-                    max={20}
-                    step={1}
-                    value={intensity}
-                    onChange={(value) => setIntensity(value)}
-                  />
-                </div>
+            {censorType !== 'black' && (
+              <div className="mb-4">
+                <Label htmlFor="intensity" className="text-white mb-2 block">
+                  Intensity: {intensity}
+                </Label>
+                <Slider
+                  id="intensity"
+                  min={1}
+                  max={20}
+                  step={1}
+                  value={intensity}
+                  onChange={(value) => setIntensity(value)}
+                  disabled={isProcessing}
+                />
+              </div>
+            )}
+
+            <Button 
+              onClick={applyCensor} 
+              className="bg-green-600 hover:bg-green-700 text-white"
+              disabled={isProcessing}
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                'Apply Censoring'
               )}
+            </Button>
+          </div>
 
-              <Button onClick={applyCensor} className="bg-green-600 hover:bg-green-700 text-white">
-                Apply Censoring
-              </Button>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button onClick={handleDownload} disabled={!image} className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50">
-                <Download className="h-5 w-5 mr-2" />
-                Download Censored Image
-              </Button>
-              <Button onClick={handleReset} className="bg-red-600 hover:bg-red-700 text-white">
-                <RefreshCw className="h-5 w-5 mr-2" />
-                Reset
-              </Button>
-            </div>
-          </>
-        )}
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button 
+              onClick={handleDownload} 
+              disabled={!image || isProcessing} 
+              className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+            >
+              <Download className="h-5 w-5 mr-2" />
+              Download Censored Image
+            </Button>
+            <Button 
+              onClick={handleReset} 
+              disabled={isProcessing}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              <RefreshCw className="h-5 w-5 mr-2" />
+              Reset
+            </Button>
+          </div>
+        </>
+      )}
       </div>
 
       <canvas ref={canvasRef} style={{ display: 'none' }} />
@@ -309,7 +453,7 @@ const PhotoCensor: React.FC = () => {
         </p>
 
         <div className="my-8">
-          <Image 
+          <NextImage 
             src="/Images/PhotoCensorPreview.png?height=400&width=600" 
             alt="Screenshot of the Photo Censor Tool interface showing censoring options and a sample censored image" 
             width={600} 
