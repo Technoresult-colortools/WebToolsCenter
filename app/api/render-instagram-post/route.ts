@@ -399,6 +399,15 @@ export async function POST(req: Request) {
       </html>
     `
 
+    await page.setContent(html, {
+      waitUntil: 'networkidle',
+      timeout: 30000
+    });
+
+    // Ensure everything is loaded
+    await page.waitForLoadState('networkidle');
+
+    // Wait for the container to be ready
     const postContainer = await page.waitForSelector('#instagram-post', {
       state: 'visible',
       timeout: 30000
