@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import chromium from '@sparticuz/chromium-min'
-import puppeteer from 'puppeteer-core'
+import { chromium } from 'playwright'
 
 interface Comment {
   username: string
@@ -32,35 +31,26 @@ export async function POST(req: Request) {
   
   try {
     const postProps: PostProps = await req.json()
-    
-    // Configure chromium with additional arguments for better stability
-    const executablePath = await chromium.executablePath()
 
-    browser = await puppeteer.launch({
+    // Launch browser with specific configurations for serverless environment
+    browser = await chromium.launch({
       args: [
-        ...chromium.args,
-        '--hide-scrollbars',
-        '--disable-web-security',
-        '--disable-features=IsolateOrigins',
-        '--disable-site-isolation-trials',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-first-run',
         '--no-sandbox',
-        '--disable-setuid-sandbox'
-      ],
-      defaultViewport: {
-        width: 375,
-        height: 470,
-        deviceScaleFactor: 2
-      },
-      executablePath: executablePath,
-      headless: true, // Using "new" headless mode for better stability
-      protocolTimeout: 30000,
-    })
-    
-    const page = await browser.newPage()
+        '--no-zygote',
+        '--single-process',
+      ]
+    });
 
-    // Set longer timeout for navigation
-    await page.setDefaultNavigationTimeout(30000)
-    await page.setDefaultTimeout(30000)
+    const context = await browser.newContext({
+      viewport: { width: 375, height: 470 },
+      deviceScaleFactor: 2,
+    });
+    
+    const page = await context.newPage();
 
     const processText = (text: string) => {
       return text
@@ -409,42 +399,40 @@ export async function POST(req: Request) {
       </html>
     `
 
-    await page.setContent(html, { 
-      waitUntil: ['networkidle0', 'domcontentloaded'],
+    const postContainer = await page.waitForSelector('#instagram-post', {
+      state: 'visible',
       timeout: 30000
-    })
+    });
 
-    // Wait for the post container to be rendered
-    await page.waitForSelector('#instagram-post', { timeout: 30000 })
+    if (!postContainer) {
+      throw new Error('Failed to find Instagram post container');
+    }
 
-    // Wait for images if they exist
+    // Handle image loading if present
     if (postProps.postImageUrl) {
       try {
-        await page.waitForSelector(`img[src="${postProps.postImageUrl}"]`, { 
-          timeout: 5000,
-          visible: true 
-        })
+        await page.waitForSelector(`img[src="${postProps.postImageUrl}"]`, {
+          state: 'visible',
+          timeout: 5000
+        });
       } catch (error) {
-        console.warn(`Failed to load image: ${postProps.postImageUrl}`)
+        console.warn(`Failed to load image: ${postProps.postImageUrl}`);
       }
     }
 
-    const element = await page.$('#instagram-post')
-    if (!element) {
-      throw new Error('Instagram post element not found')
-    }
-
-    const buffer = await element.screenshot({
+    // Take the screenshot
+    const buffer = await postContainer.screenshot({
       type: 'png',
       omitBackground: true
-    })
+    });
 
-    await browser.close()
-    browser = null
+    // Clean up
+    await context.close();
+    await browser.close();
 
-    const exportFormat = 'png'
-    const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
-    const filename = `instagram_post_${randomNumber}_webtoolcenter.${exportFormat}`
+    const exportFormat = 'png';
+    const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    const filename = `instagram_post_${randomNumber}_webtoolcenter.${exportFormat}`;
 
     return new NextResponse(buffer, {
       headers: {
@@ -453,17 +441,17 @@ export async function POST(req: Request) {
         'Content-Disposition': `attachment; filename="${filename}"`,
         'Cache-Control': 'no-store'
       }
-    })
+    });
 
   } catch (error) {
-    console.error('Detailed error:', error)
+    console.error('Detailed error:', error);
     
-    // Ensure browser is always closed on error
+    // Ensure browser is closed on error
     if (browser) {
       try {
-        await browser.close()
+        await browser.close();
       } catch (closeError) {
-        console.error('Error closing browser:', closeError)
+        console.error('Error closing browser:', closeError);
       }
     }
 
@@ -476,7 +464,6 @@ export async function POST(req: Request) {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
+    });
   }
 }
-

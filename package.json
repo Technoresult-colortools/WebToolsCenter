@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx playwright install chromium && next build",
     "start": "next start",
     "lint": "next lint",
     "postbuild": "next-sitemap"
@@ -34,7 +34,6 @@
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@sparticuz/chromium": "^131.0.1",
-    "@sparticuz/chromium-min": "^131.0.1",
     "@types/crypto-js": "^4.2.2",
     "@types/dompurify": "^3.0.5",
     "@types/jsrsasign": "^10.5.14",
@@ -74,8 +73,6 @@
     "parser-html": "^1.0.6",
     "potrace": "^2.1.8",
     "prismjs": "^1.29.0",
-    "puppeteer": "^23.11.0",
-    "puppeteer-core": "^23.11.1",
     "qrcode.react": "^4.0.1",
     "react": "^18.3.1",
     "react-colorful": "^5.6.1",
@@ -113,7 +110,8 @@
     "three": "^0.170.0",
     "three-rounded-box": "^0.1.1",
     "uglify-js": "^3.19.3",
-    "use-image": "^1.1.1"
+    "use-image": "^1.1.1",
+    "playwright": "^1.41.0"
   },
   "devDependencies": {
     "@types/eslint": "^9.6.1",
@@ -137,6 +135,7 @@
     "eslint": "^8.0.0",
     "eslint-config-next": "14.2.11",
     "eslint-import-resolver-typescript": "^3.6.3",
+    "playwright": "^1.49.1",
     "postcss": "^8.4.45",
     "prettier": "^3.4.2",
     "tailwindcss": "^3.4.11",
