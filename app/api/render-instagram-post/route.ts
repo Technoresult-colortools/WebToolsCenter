@@ -1,7 +1,6 @@
-// render route.ts
-
 import { NextResponse } from 'next/server'
-import puppeteer from 'puppeteer'
+import chromium from '@sparticuz/chromium-min'
+import puppeteer from 'puppeteer-core'
 
 interface Comment {
   username: string
@@ -29,21 +28,39 @@ interface PostProps {
 }
 
 export async function POST(req: Request) {
+  let browser;
+  
   try {
     const postProps: PostProps = await req.json()
     
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    // Configure chromium with additional arguments for better stability
+    const executablePath = await chromium.executablePath()
+
+    browser = await puppeteer.launch({
+      args: [
+        ...chromium.args,
+        '--hide-scrollbars',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins',
+        '--disable-site-isolation-trials',
+        '--no-sandbox',
+        '--disable-setuid-sandbox'
+      ],
+      defaultViewport: {
+        width: 375,
+        height: 470,
+        deviceScaleFactor: 2
+      },
+      executablePath: executablePath,
+      headless: true, // Using "new" headless mode for better stability
+      protocolTimeout: 30000,
     })
     
     const page = await browser.newPage()
 
-    await page.setViewport({
-      width: 375,
-      height: 470,
-      deviceScaleFactor: 2
-    })
+    // Set longer timeout for navigation
+    await page.setDefaultNavigationTimeout(30000)
+    await page.setDefaultTimeout(30000)
 
     const processText = (text: string) => {
       return text
@@ -393,14 +410,20 @@ export async function POST(req: Request) {
     `
 
     await page.setContent(html, { 
-      waitUntil: 'networkidle0',
+      waitUntil: ['networkidle0', 'domcontentloaded'],
       timeout: 30000
     })
 
-    await page.waitForSelector('#instagram-post')
+    // Wait for the post container to be rendered
+    await page.waitForSelector('#instagram-post', { timeout: 30000 })
+
+    // Wait for images if they exist
     if (postProps.postImageUrl) {
       try {
-        await page.waitForSelector(`img[src="${postProps.postImageUrl}"]`, { timeout: 5000 })
+        await page.waitForSelector(`img[src="${postProps.postImageUrl}"]`, { 
+          timeout: 5000,
+          visible: true 
+        })
       } catch (error) {
         console.warn(`Failed to load image: ${postProps.postImageUrl}`)
       }
@@ -417,8 +440,9 @@ export async function POST(req: Request) {
     })
 
     await browser.close()
+    browser = null
 
-    const exportFormat = 'png';
+    const exportFormat = 'png'
     const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
     const filename = `instagram_post_${randomNumber}_webtoolcenter.${exportFormat}`
 
@@ -430,8 +454,19 @@ export async function POST(req: Request) {
         'Cache-Control': 'no-store'
       }
     })
+
   } catch (error) {
     console.error('Detailed error:', error)
+    
+    // Ensure browser is always closed on error
+    if (browser) {
+      try {
+        await browser.close()
+      } catch (closeError) {
+        console.error('Error closing browser:', closeError)
+      }
+    }
+
     return new NextResponse(JSON.stringify({ 
       error: 'Failed to generate image',
       details: error instanceof Error ? error.message : 'Unknown error',
